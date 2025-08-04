@@ -1,4 +1,4 @@
-class_name Bounce2
+class_name Bounce
 
 # wall [axis:3][2]bool : [ [-x,+x], [-y,+y], [-z,+z] ]
 static func v3f_wall(pos :Vector3, area :AABB, wall :Array, radius :float)->Dictionary:
