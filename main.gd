@@ -3,6 +3,7 @@ extends Node3D
 const WorldSize := Vector3(40,22,1)
 
 func _ready() -> void:
+	get_viewport().size_changed.connect(on_viewport_size_changed)
 	var vp_size = get_viewport().get_visible_rect().size
 	var 짧은길이 = min(vp_size.x,vp_size.y)
 	$"왼쪽패널".size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
@@ -17,6 +18,9 @@ func _ready() -> void:
 	$TimedMessage.panel_hidden.connect(message_hidden)
 	$TimedMessage.show_message("",0)
 
+func on_viewport_size_changed():
+	pass
+	
 func message_hidden(_s :String) -> void:
 	pass
 
