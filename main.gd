@@ -23,6 +23,36 @@ func _ready() -> void:
 	bartree_test()
 	calendar_test()
 	clock_test()
+	line2d_test()
+
+func mashtrail_test() -> void:
+	var mt = preload("res://mesh_trail/mesh_trail.tscn").instantiate(
+	)
+	add_child(mt)
+
+func line2d_test() -> void:
+	var mesh = PlaneMesh.new()
+	mesh.size = Vector2(WorldSize.x, WorldSize.y)
+	mesh.orientation = PlaneMesh.FACE_Z
+	#mesh.flip_faces = flip
+	var size_pixel = Vector2i(2048,2048)
+	var l2d = preload("res://move_line2d/move_line_2d.tscn").instantiate().init_with_random(300, 4, 1, size_pixel)
+	l2d.start()
+	var sv = SubViewport.new()
+	sv.size = size_pixel
+	sv.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	sv.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
+	#sv.transparent_bg = true
+	sv.add_child(l2d)
+	add_child(sv)
+	var sp = MeshInstance3D.new()
+	sp.mesh = mesh
+	sp.position = WorldSize/2 - Vector3(0,0,0.7)
+	sp.material_override = StandardMaterial3D.new()
+	#sp.material_override.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
+	sp.material_override.albedo_texture = sv.get_texture()
+	add_child(sp)
+
 
 func orbit_test() -> void:
 	var diagonal_length = WorldSize.length()/2
@@ -37,11 +67,6 @@ func orbit_test() -> void:
 	os.궤도설정(diagonal_length*1.1, 1.0/3, axis1, a120*2).구설정(2, 1, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
 	os.position = WorldSize/2
 	add_child(os)
-
-func mashtrail_test() -> void:
-	var mt = preload("res://mesh_trail/mesh_trail.tscn").instantiate(
-	)
-	add_child(mt)
 
 func calendar_test() -> void:
 	var ca = preload("res://calendar3d/calendar_3d.tscn").instantiate(
