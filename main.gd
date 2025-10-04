@@ -18,6 +18,13 @@ func _ready() -> void:
 	$TimedMessage.panel_hidden.connect(message_hidden)
 	$TimedMessage.show_message("",0)
 
+	wirenet_test()
+
+func wirenet_test() -> void:
+	var wn = preload("res://wire_net/wire_net.tscn").instantiate()
+	wn.init_with_color(Vector2(40,22), Vector2(41,23), 0.1, Color.BLUE)
+	add_child(wn)
+
 func on_viewport_size_changed():
 	pass
 	
