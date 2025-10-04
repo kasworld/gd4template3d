@@ -18,12 +18,33 @@ func _ready() -> void:
 	$TimedMessage.panel_hidden.connect(message_hidden)
 	$TimedMessage.show_message("",0)
 
-	wirenet_test()
+	#wirenet_test()
+	bartree_test()
 
 func wirenet_test() -> void:
 	var wn = preload("res://wire_net/wire_net.tscn").instantiate()
 	wn.init_with_color(Vector2(40,22), Vector2(41,23), 0.1, Color.BLUE)
 	add_child(wn)
+
+func bartree_test() -> void:
+	var bt = make_tree(0, 20, 10)
+	bt.rotate_x(PI/2)
+	bt.position = WorldSize/2
+	add_child(bt)
+
+func make_tree(i :int, wmax :float, hmax :float)->BarTree2:
+	var tree_width := wmax
+	var tree_height := hmax
+	var bar_width = tree_width * randf_range(0.5 , 2.0)/10
+	var bar_count := randf_range(5,200)
+	var bar_rotation := 0.1
+	var bar_rotation_begin := randf_range(0,2*PI)
+	var t :BarTree2= preload("res://bar_tree_2/bar_tree_2.tscn").instantiate().init_common_params(
+		tree_width, tree_height, bar_width, bar_count, bar_rotation, bar_rotation_begin, 0, true)
+	t.init_with_color(random_color(), random_color())
+	return t
+func random_color()->Color:
+	return Color(randf(),randf(),randf())
 
 func on_viewport_size_changed():
 	pass
