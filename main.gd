@@ -18,10 +18,24 @@ func _ready() -> void:
 	$TimedMessage.panel_hidden.connect(message_hidden)
 	$TimedMessage.show_message("",0)
 
+	orbit_test()
 	wirenet_test()
 	bartree_test()
 	calendar_test()
 	clock_test()
+
+func orbit_test() -> void:
+	var diagonal_length = WorldSize.length()
+	var a120 = PI*2/3
+	var a30 = PI/6
+	var axis1 = Vector3.UP.rotated(Vector3.RIGHT, a30)
+	var os = preload("res://orbit_sphere/orbit_sphere.tscn").instantiate()
+	var mat1 = StandardMaterial3D.new()
+	mat1.albedo_color = Color.GREEN
+	var mat2 = StandardMaterial3D.new()
+	mat2.albedo_color = Color.RED
+	os.궤도설정(diagonal_length*1.1, 1.0/3, axis1, a120*2).구설정(5, 1, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
+	add_child(os)
 
 func mashtrail_test() -> void:
 	var mt = preload("res://mesh_trail/mesh_trail.tscn").instantiate(
