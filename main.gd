@@ -19,7 +19,25 @@ func _ready() -> void:
 	$TimedMessage.show_message("",0)
 
 	#wirenet_test()
-	bartree_test()
+	#bartree_test()
+	#calendar_test()
+	clock_test()
+
+func calendar_test() -> void:
+	var ca = preload("res://calendar3d/calendar_3d.tscn").instantiate(
+		).init(WorldSize.x, WorldSize.y, WorldSize.z, WorldSize.y/2.0 , true )
+	ca.rotate_y(PI/2)
+	ca.rotate_x(PI/2)
+	ca.position = WorldSize/2
+	add_child(ca)
+
+func clock_test() -> void:
+	var ca = preload("res://analogclock3d/analog_clock_3d.tscn").instantiate(
+		).init(WorldSize.y/2, WorldSize.z, WorldSize.y/2.0 , true )
+	ca.rotate_y(PI/2)
+	ca.rotate_x(PI/2)
+	ca.position = WorldSize/2
+	add_child(ca)
 
 func wirenet_test() -> void:
 	var wn = preload("res://wire_net/wire_net.tscn").instantiate()
@@ -27,21 +45,18 @@ func wirenet_test() -> void:
 	add_child(wn)
 
 func bartree_test() -> void:
-	var bt = make_tree(0, 20, 10)
+	var bt = make_tree(20, 10)
 	bt.rotate_x(PI/2)
 	bt.position = WorldSize/2
 	add_child(bt)
-
-func make_tree(i :int, wmax :float, hmax :float)->BarTree2:
-	var tree_width := wmax
-	var tree_height := hmax
+func make_tree(tree_width :float, tree_height :float)->BarTree2:
 	var bar_width = tree_width * randf_range(0.5 , 2.0)/10
 	var bar_count := randf_range(5,200)
 	var bar_rotation := 0.1
 	var bar_rotation_begin := randf_range(0,2*PI)
 	var t :BarTree2= preload("res://bar_tree_2/bar_tree_2.tscn").instantiate().init_common_params(
-		tree_width, tree_height, bar_width, bar_count, bar_rotation, bar_rotation_begin, 0, true)
-	t.init_with_color(random_color(), random_color())
+		tree_width, tree_height, bar_width, bar_count, bar_rotation, bar_rotation_begin, 0, true
+		).init_with_color(random_color(), random_color() )
 	return t
 func random_color()->Color:
 	return Color(randf(),randf(),randf())
