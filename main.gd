@@ -25,8 +25,8 @@ func message_hidden(_s :String) -> void:
 	pass
 
 func set_walls() -> void:
-	$WallBox.mesh.size = WorldSize
-	$WallBox.position = WorldSize/2 - Vector3(0.5,0.5,0)
+	$WallBox.mesh.size = WorldSize + Vector3(1,1,0)
+	$WallBox.position = WorldSize/2 - Vector3(0,0,0.5)
 	$OmniLight3D.position = WorldSize/2 + Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
 
