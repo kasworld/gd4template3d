@@ -42,17 +42,16 @@ func line2d_test() -> void:
 	sv.size = size_pixel
 	sv.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	sv.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
-	#sv.transparent_bg = true
+	sv.transparent_bg = true
 	sv.add_child(l2d)
 	add_child(sv)
 	var sp = MeshInstance3D.new()
 	sp.mesh = mesh
 	sp.position = WorldSize/2 - Vector3(0,0,0.7)
 	sp.material_override = StandardMaterial3D.new()
-	#sp.material_override.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
+	sp.material_override.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
 	sp.material_override.albedo_texture = sv.get_texture()
 	add_child(sp)
-
 
 func orbit_test() -> void:
 	var diagonal_length = WorldSize.length()/2

@@ -62,6 +62,7 @@ offset_bottom = 371.0
 theme = SubResource("Theme_h2yge")
 
 [node name="WallBox" type="MeshInstance3D" parent="."]
+visible = false
 mesh = SubResource("BoxMesh_ig7tw")
 
 [node name="TimedMessage" parent="." instance=ExtResource("5_lquwl")]
