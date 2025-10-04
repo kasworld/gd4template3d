@@ -25,7 +25,7 @@ func _ready() -> void:
 	clock_test()
 
 func orbit_test() -> void:
-	var diagonal_length = WorldSize.length()
+	var diagonal_length = WorldSize.length()/2
 	var a120 = PI*2/3
 	var a30 = PI/6
 	var axis1 = Vector3.UP.rotated(Vector3.RIGHT, a30)
@@ -34,7 +34,8 @@ func orbit_test() -> void:
 	mat1.albedo_color = Color.GREEN
 	var mat2 = StandardMaterial3D.new()
 	mat2.albedo_color = Color.RED
-	os.궤도설정(diagonal_length*1.1, 1.0/3, axis1, a120*2).구설정(5, 1, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
+	os.궤도설정(diagonal_length*1.1, 1.0/3, axis1, a120*2).구설정(2, 1, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
+	os.position = WorldSize/2
 	add_child(os)
 
 func mashtrail_test() -> void:
