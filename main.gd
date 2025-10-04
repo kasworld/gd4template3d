@@ -18,25 +18,30 @@ func _ready() -> void:
 	$TimedMessage.panel_hidden.connect(message_hidden)
 	$TimedMessage.show_message("",0)
 
-	#wirenet_test()
-	#bartree_test()
-	#calendar_test()
+	wirenet_test()
+	bartree_test()
+	calendar_test()
 	clock_test()
+
+func mashtrail_test() -> void:
+	var mt = preload("res://mesh_trail/mesh_trail.tscn").instantiate(
+	)
+	add_child(mt)
 
 func calendar_test() -> void:
 	var ca = preload("res://calendar3d/calendar_3d.tscn").instantiate(
-		).init(WorldSize.x, WorldSize.y, WorldSize.z, WorldSize.y/2.0 , true )
+		).init(WorldSize.x/2, WorldSize.y, WorldSize.z, WorldSize.y/2.0 , false )
 	ca.rotate_y(PI/2)
 	ca.rotate_x(PI/2)
-	ca.position = WorldSize/2
+	ca.position = Vector3(WorldSize.x/4,WorldSize.y/2,WorldSize.z/2)
 	add_child(ca)
 
 func clock_test() -> void:
 	var ca = preload("res://analogclock3d/analog_clock_3d.tscn").instantiate(
-		).init(WorldSize.y/2, WorldSize.z, WorldSize.y/2.0 , true )
+		).init(WorldSize.x/4, WorldSize.z, WorldSize.y/2.0 ,9.0, false )
 	ca.rotate_y(PI/2)
 	ca.rotate_x(PI/2)
-	ca.position = WorldSize/2
+	ca.position = Vector3(WorldSize.x/4*3,WorldSize.y/2,WorldSize.z/2)
 	add_child(ca)
 
 func wirenet_test() -> void:
@@ -45,7 +50,7 @@ func wirenet_test() -> void:
 	add_child(wn)
 
 func bartree_test() -> void:
-	var bt = make_tree(20, 10)
+	var bt = make_tree(WorldSize.x/3, WorldSize.y/3)
 	bt.rotate_x(PI/2)
 	bt.position = WorldSize/2
 	add_child(bt)
