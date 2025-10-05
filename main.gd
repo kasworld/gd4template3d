@@ -18,14 +18,14 @@ func _ready() -> void:
 	$TimedMessage.panel_hidden.connect(message_hidden)
 	$TimedMessage.show_message("",0)
 
-	#orbit_demo()
+	orbit_demo()
 	wirenet_demo()
-	#bartree_demo()
-	#calendar_demo()
-	#clock_demo()
-	#line2d_demo()
-	#arrow3d_demo()
-	#valvehandle_demo()
+	bartree_demo()
+	calendar_demo()
+	clock_demo()
+	line2d_demo()
+	arrow3d_demo()
+	valvehandle_demo()
 	meshtrail_demo()
 
 var b_box :AABB
@@ -35,25 +35,25 @@ func meshtrail_demo() -> void:
 	b_box = AABB( Vector3(0,0,-10), bound_size)
 	var ball = preload("res://mesh_trail/mesh_trail.tscn").instantiate()
 	var radius = 0.5
-	var count = 50 #randi_range(10,100)
+	var count = randi_range(10,100)
 	var startpos = b_box.get_center()
 	match randi_range(0,3):
 		0:
-			ball.init_OnBounce().set_get_random_color_fn(random_color).init( bounce, radius, count, mt, startpos)
+			ball.init_OnBounce().set_get_random_color_fn(random_color).init( bounce_fn, radius, count, mt, startpos)
 		1:
-			ball.init_MeshGradient().set_get_random_color_fn(random_color).init( bounce, radius, count, mt, startpos)
+			ball.init_MeshGradient().set_get_random_color_fn(random_color).init( bounce_fn, radius, count, mt, startpos)
 		2:
-			ball.init_ByPosition(b_box).init( bounce, radius, count, mt, startpos)
+			ball.init_ByPosition(b_box).init( bounce_fn, radius, count, mt, startpos)
 		3:
-			ball.init_ByPositionFn(get_color_ByPosition).init( bounce, radius, count, mt, startpos)
-	add_child(ball)
+			ball.init_ByPositionFn(get_color_ByPosition).init( bounce_fn, radius, count, mt, startpos)
+	$DemoContainer.add_child(ball)
 func get_color_ByPosition(pos :Vector3) -> Color:
 	var co :Color
 	for i in 3:
 		co[i] = (pos[i] - b_box.position[i]) / b_box.size[i]
 	co = co.inverted()
 	return co
-func bounce(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
+func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	return Bounce.v3f(pos, b_box, radius)
 	
 func arrow3d_demo() -> void:
@@ -61,14 +61,14 @@ func arrow3d_demo() -> void:
 	).set_color(Color.GREEN).set_size(2,0.1,0.3)
 	aw.rotate_x(-PI/2)
 	aw.position.z = 1
-	add_child(aw)
+	$DemoContainer.add_child(aw)
 
 func valvehandle_demo() -> void:
 	var vh = preload("res://valve_handle/valve_handle.tscn").instantiate(
 	).init(1,1)
 	vh.rotate_x(PI/2)
 	vh.position = Vector3(WorldSize.x,WorldSize.y,0)
-	add_child(vh)
+	$DemoContainer.add_child(vh)
 
 func line2d_demo() -> void:
 	var mesh = PlaneMesh.new()
@@ -91,7 +91,7 @@ func line2d_demo() -> void:
 	sp.material_override = StandardMaterial3D.new()
 	sp.material_override.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
 	sp.material_override.albedo_texture = sv.get_texture()
-	add_child(sp)
+	$DemoContainer.add_child(sp)
 
 func orbit_demo() -> void:
 	var diagonal_length = WorldSize.length()/2
@@ -105,7 +105,7 @@ func orbit_demo() -> void:
 	mat2.albedo_color = Color.RED
 	os.궤도설정(diagonal_length*1.1, 1.0/3, axis1, a120*2).구설정(2, 1, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
 	os.position = WorldSize/2
-	add_child(os)
+	$DemoContainer.add_child(os)
 
 func calendar_demo() -> void:
 	var ca = preload("res://calendar3d/calendar_3d.tscn").instantiate(
@@ -113,7 +113,7 @@ func calendar_demo() -> void:
 	ca.rotate_y(PI/2)
 	ca.rotate_x(PI/2)
 	ca.position = Vector3(WorldSize.x/4,WorldSize.y/2,WorldSize.z/2)
-	add_child(ca)
+	$DemoContainer.add_child(ca)
 
 func clock_demo() -> void:
 	var ca = preload("res://analogclock3d/analog_clock_3d.tscn").instantiate(
@@ -121,18 +121,18 @@ func clock_demo() -> void:
 	ca.rotate_y(PI/2)
 	ca.rotate_x(PI/2)
 	ca.position = Vector3(WorldSize.x/4*3,WorldSize.y/2,WorldSize.z/2)
-	add_child(ca)
+	$DemoContainer.add_child(ca)
 
 func wirenet_demo() -> void:
 	var wn = preload("res://wire_net/wire_net.tscn").instantiate()
 	wn.init_with_color(Vector2(40,22), Vector2(41,23), 0.1, Color.BLUE)
-	add_child(wn)
+	$DemoContainer.add_child(wn)
 
 func bartree_demo() -> void:
 	var bt = make_tree(WorldSize.x/3, WorldSize.y/3)
 	bt.rotate_x(PI/2)
 	bt.position = WorldSize/2
-	add_child(bt)
+	$DemoContainer.add_child(bt)
 func make_tree(tree_width :float, tree_height :float)->BarTree2:
 	var bar_width = tree_width * randf_range(0.5 , 2.0)/10
 	var bar_count := randf_range(5,200)

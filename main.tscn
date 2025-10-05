@@ -71,3 +71,5 @@ theme = SubResource("Theme_7mycd")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("3_h2yge")
+
+[node name="DemoContainer" type="Node3D" parent="."]
