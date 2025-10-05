@@ -49,7 +49,7 @@ func set_get_random_color_fn(fn :Callable) -> MeshTrail:
 func get_random_color() -> Color:
 	return Color(randf(),randf(),randf())
 
-var velocity :Vector3
+var head_velocity :Vector3
 var bounce_fn :Callable
 var radius :float
 var speed_max :float
@@ -65,7 +65,7 @@ func init(bounce_fn_a :Callable, radius_a :float, mesh_count :int, mesh_type, in
 	rotation_velocity_deviation = rotation_velocity_deviation_a
 	speed_max = radius * 120
 	speed_min = radius * 80
-	velocity = Vector3( (randf()-0.5)*speed_max, (randf()-0.5)*speed_max, (randf()-0.5)*speed_max)
+	head_velocity = Vector3( (randf()-0.5)*speed_max, (randf()-0.5)*speed_max, (randf()-0.5)*speed_max)
 	color_from = get_random_color_fn.call()
 	color_to = get_random_color_fn.call()
 	make_mat_multi(new_mesh_by_type(mesh_type,radius), mesh_count, initial_pos)
@@ -112,14 +112,13 @@ func move(delta :float) -> void:
 	move_trail(delta, old_cursor, obj_cursor)
 
 func move_trail(delta: float, oldi :int, newi:int) -> void:
-	#print_debug(oldi," ",newi," ", velocity, delta)
 	var oldpos = $MultiMeshInstance3D.multimesh.get_instance_transform(oldi).origin
-	var newpos = oldpos + velocity * delta
+	var newpos = oldpos + head_velocity * delta
 	var bn = bounce_fn.call(oldpos,newpos,radius)
 	for i in 3:
 		# change vel on bounce
 		if bn.bounced[i] != 0 :
-			velocity[i] = -randf_range(speed_min, speed_max)*bn.bounced[i]
+			head_velocity[i] = -randf_range(speed_min, speed_max)*bn.bounced[i]
 
 	if bn.bounced != Vector3i.ZERO:
 		if color_mode == ColorMode.OnBounce:
@@ -127,13 +126,13 @@ func move_trail(delta: float, oldi :int, newi:int) -> void:
 		current_rotation_velocity =  randfn(0, rotation_velocity_deviation)
 	current_rotation += current_rotation_velocity * delta
 
-	set_multi_pos_rot(newi, bn.pos, velocity.normalized(), current_rotation)
+	set_multi_pos_rot(newi, bn.pos, head_velocity.normalized(), current_rotation)
 	set_color_by_mode(newi, newpos)
 
-	if velocity.length() > speed_max:
-		velocity = velocity.normalized() * speed_max
-	if velocity.length() < speed_min:
-		velocity = velocity.normalized() * speed_min
+	if head_velocity.length() > speed_max:
+		head_velocity = head_velocity.normalized() * speed_max
+	if head_velocity.length() < speed_min:
+		head_velocity = head_velocity.normalized() * speed_min
 
 func new_mesh_by_type(mesh_type , r :float) -> Mesh:
 	var mesh:Mesh
