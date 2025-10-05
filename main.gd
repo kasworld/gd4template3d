@@ -35,17 +35,18 @@ func meshtrail_demo() -> void:
 	b_box = AABB( Vector3(0,0,-10), bound_size)
 	var ball = preload("res://mesh_trail/mesh_trail.tscn").instantiate()
 	var radius = 0.5
-	var count = randi_range(10,100)
+	var count = randi_range(10,20)
 	var startpos = b_box.get_center()
 	match randi_range(0,3):
 		0:
-			ball.init_OnBounce().set_get_random_color_fn(random_color).init( bounce_fn, radius, count, mt, startpos)
+			ball.init_OnBounce().set_get_random_color_fn(random_color)
 		1:
-			ball.init_MeshGradient().set_get_random_color_fn(random_color).init( bounce_fn, radius, count, mt, startpos)
+			ball.init_MeshGradient().set_get_random_color_fn(random_color)
 		2:
-			ball.init_ByPosition(b_box).init( bounce_fn, radius, count, mt, startpos)
+			ball.init_ByPosition(b_box)
 		3:
-			ball.init_ByPositionFn(get_color_ByPosition).init( bounce_fn, radius, count, mt, startpos)
+			ball.init_ByPositionFn(get_color_ByPosition)
+	ball.init( bounce_fn, radius, count, mt, startpos).set_speed(5,10,0.05)
 	$DemoContainer.add_child(ball)
 func get_color_ByPosition(pos :Vector3) -> Color:
 	var co :Color

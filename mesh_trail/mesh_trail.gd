@@ -63,12 +63,19 @@ func init(bounce_fn_a :Callable, radius_a :float, mesh_count :int, mesh_type, in
 	radius = radius_a
 	bounce_fn = bounce_fn_a
 	rotation_velocity_deviation = rotation_velocity_deviation_a
-	speed_max = radius * 120
-	speed_min = radius * 80
+	speed_max = radius * 40
+	speed_min = radius * 20
 	head_velocity = Vector3( (randf()-0.5)*speed_max, (randf()-0.5)*speed_max, (randf()-0.5)*speed_max)
 	color_from = get_random_color_fn.call()
 	color_to = get_random_color_fn.call()
 	make_mat_multi(new_mesh_by_type(mesh_type,radius), mesh_count, initial_pos)
+	old_tick = Time.get_unix_time_from_system()
+	return self
+
+func set_speed(mins :float, maxs :float, tick_sec :float) -> MeshTrail:
+	speed_max = maxs
+	speed_min = mins
+	$Timer.wait_time = tick_sec
 	return self
 
 func make_mat_multi(mesh :Mesh, count :int, initial_pos:Vector3):
@@ -102,8 +109,11 @@ func set_multi_pos_rot(i :int, pos :Vector3, axis :Vector3, rot :float) -> void:
 	t = t.rotated_local(axis, rot)
 	$MultiMeshInstance3D.multimesh.set_instance_transform(i,t )
 
-func _process(delta: float) -> void:
-	move(delta)
+var old_tick :float
+func _on_timer_timeout() -> void:
+	var new_tick = Time.get_unix_time_from_system()
+	move(new_tick - old_tick)
+	old_tick = new_tick
 
 func move(delta :float) -> void:
 	var old_cursor = obj_cursor
@@ -167,6 +177,3 @@ func new_mesh_by_type(mesh_type , r :float) -> Mesh:
 			mesh.font_size = r*200
 			mesh.text = "%s" % mesh_type
 	return mesh
-
-#func random_positive(w :float) -> float:
-	#return randf_range(w/10,w)

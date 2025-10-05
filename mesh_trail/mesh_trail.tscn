@@ -12,3 +12,9 @@ script = ExtResource("1_8pbi7")
 
 [node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="."]
 multimesh = SubResource("MultiMesh_0ntik")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.05
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
