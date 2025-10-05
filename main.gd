@@ -18,19 +18,36 @@ func _ready() -> void:
 	$TimedMessage.panel_hidden.connect(message_hidden)
 	$TimedMessage.show_message("",0)
 
-	orbit_test()
-	wirenet_test()
-	bartree_test()
-	calendar_test()
-	clock_test()
-	line2d_test()
+	orbit_demo()
+	wirenet_demo()
+	bartree_demo()
+	calendar_demo()
+	clock_demo()
+	line2d_demo()
+	arrow3d_demo()
+	valvehandle_demo()
 
-func mashtrail_test() -> void:
+func mashtrail_demo() -> void:
 	var mt = preload("res://mesh_trail/mesh_trail.tscn").instantiate(
 	)
 	add_child(mt)
+	
+func arrow3d_demo() -> void:
+	var aw = preload("res://arrow3d/arrow_3d.tscn").instantiate(
+	).set_color(Color.GREEN).set_size(2,0.1,0.3)
+	aw.rotate_x(-PI/2)
+	aw.position.z = 1
+	add_child(aw)
 
-func line2d_test() -> void:
+func valvehandle_demo() -> void:
+	var vh = preload("res://valve_handle/valve_handle.tscn").instantiate(
+	).init(1,1)
+	vh.rotate_x(PI/2)
+	vh.position = Vector3(WorldSize.x,WorldSize.y,0)
+	add_child(vh)
+
+
+func line2d_demo() -> void:
 	var mesh = PlaneMesh.new()
 	mesh.size = Vector2(WorldSize.x, WorldSize.y)
 	mesh.orientation = PlaneMesh.FACE_Z
@@ -53,7 +70,7 @@ func line2d_test() -> void:
 	sp.material_override.albedo_texture = sv.get_texture()
 	add_child(sp)
 
-func orbit_test() -> void:
+func orbit_demo() -> void:
 	var diagonal_length = WorldSize.length()/2
 	var a120 = PI*2/3
 	var a30 = PI/6
@@ -67,7 +84,7 @@ func orbit_test() -> void:
 	os.position = WorldSize/2
 	add_child(os)
 
-func calendar_test() -> void:
+func calendar_demo() -> void:
 	var ca = preload("res://calendar3d/calendar_3d.tscn").instantiate(
 		).init(WorldSize.x/2, WorldSize.y, WorldSize.z, WorldSize.y/2.0 , false )
 	ca.rotate_y(PI/2)
@@ -75,7 +92,7 @@ func calendar_test() -> void:
 	ca.position = Vector3(WorldSize.x/4,WorldSize.y/2,WorldSize.z/2)
 	add_child(ca)
 
-func clock_test() -> void:
+func clock_demo() -> void:
 	var ca = preload("res://analogclock3d/analog_clock_3d.tscn").instantiate(
 		).init(WorldSize.x/4, WorldSize.z, WorldSize.y/2.0 ,9.0, false )
 	ca.rotate_y(PI/2)
@@ -83,12 +100,12 @@ func clock_test() -> void:
 	ca.position = Vector3(WorldSize.x/4*3,WorldSize.y/2,WorldSize.z/2)
 	add_child(ca)
 
-func wirenet_test() -> void:
+func wirenet_demo() -> void:
 	var wn = preload("res://wire_net/wire_net.tscn").instantiate()
 	wn.init_with_color(Vector2(40,22), Vector2(41,23), 0.1, Color.BLUE)
 	add_child(wn)
 
-func bartree_test() -> void:
+func bartree_demo() -> void:
 	var bt = make_tree(WorldSize.x/3, WorldSize.y/3)
 	bt.rotate_x(PI/2)
 	bt.position = WorldSize/2
