@@ -18,19 +18,43 @@ func _ready() -> void:
 	$TimedMessage.panel_hidden.connect(message_hidden)
 	$TimedMessage.show_message("",0)
 
-	orbit_demo()
+	#orbit_demo()
 	wirenet_demo()
-	bartree_demo()
-	calendar_demo()
-	clock_demo()
-	line2d_demo()
-	arrow3d_demo()
-	valvehandle_demo()
+	#bartree_demo()
+	#calendar_demo()
+	#clock_demo()
+	#line2d_demo()
+	#arrow3d_demo()
+	#valvehandle_demo()
+	meshtrail_demo()
 
-func mashtrail_demo() -> void:
-	var mt = preload("res://mesh_trail/mesh_trail.tscn").instantiate(
-	)
-	add_child(mt)
+var b_box :AABB
+func meshtrail_demo() -> void:
+	var mt = ["♠","♣","♥","♦" ,"★","☆","♩","♪","♬"].pick_random()
+	var bound_size = Vector3(WorldSize.x, WorldSize.y, 20)
+	b_box = AABB( Vector3(0,0,-10), bound_size)
+	var ball = preload("res://mesh_trail/mesh_trail.tscn").instantiate()
+	var radius = 0.5
+	var count = 50 #randi_range(10,100)
+	var startpos = b_box.get_center()
+	match randi_range(0,3):
+		0:
+			ball.init_OnBounce().set_get_random_color_fn(random_color).init( bounce, radius, count, mt, startpos)
+		1:
+			ball.init_MeshGradient().set_get_random_color_fn(random_color).init( bounce, radius, count, mt, startpos)
+		2:
+			ball.init_ByPosition(b_box).init( bounce, radius, count, mt, startpos)
+		3:
+			ball.init_ByPositionFn(get_color_ByPosition).init( bounce, radius, count, mt, startpos)
+	add_child(ball)
+func get_color_ByPosition(pos :Vector3) -> Color:
+	var co :Color
+	for i in 3:
+		co[i] = (pos[i] - b_box.position[i]) / b_box.size[i]
+	co = co.inverted()
+	return co
+func bounce(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
+	return Bounce.v3f(pos, b_box, radius)
 	
 func arrow3d_demo() -> void:
 	var aw = preload("res://arrow3d/arrow_3d.tscn").instantiate(
@@ -45,7 +69,6 @@ func valvehandle_demo() -> void:
 	vh.rotate_x(PI/2)
 	vh.position = Vector3(WorldSize.x,WorldSize.y,0)
 	add_child(vh)
-
 
 func line2d_demo() -> void:
 	var mesh = PlaneMesh.new()
