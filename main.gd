@@ -60,16 +60,12 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 func arrow3d_demo() -> void:
 	var aw = preload("res://arrow3d/arrow_3d.tscn").instantiate(
 	).set_color(Color.GREEN).set_size(2,0.1,0.3)
-	#aw.rotate_x(-PI/2)
-	#aw.position.z = 1
 	aw.position = WorldSize/4
 	$DemoContainer.add_child(aw)
 
 func valvehandle_demo() -> void:
 	var vh = preload("res://valve_handle/valve_handle.tscn").instantiate(
 	).init(1,1)
-	#vh.rotate_x(PI/2)
-	#vh.position = Vector3(WorldSize.x,WorldSize.y,0)
 	vh.position = WorldSize *0.75
 	$DemoContainer.add_child(vh)
 
@@ -166,6 +162,7 @@ func _process(_delta: float) -> void:
 	if camera_move:
 		$Camera3D.position = Vector3(sin(t)*WorldSize.x/2, cos(t)*WorldSize.y/2, WorldSize.length()*0.4 ) + WorldSize/2
 		$Camera3D.look_at(WorldSize/2)
+	#Animation3D.handle_animation()
 
 var key2fn = {
 	KEY_ESCAPE:_on_button_esc_pressed,
