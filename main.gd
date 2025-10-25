@@ -19,10 +19,11 @@ func _ready() -> void:
 	$TimedMessage.show_message("",0)
 
 	$Maze3D.init_with_color(
-		Maze3DSetting.new().make_default(), 
+		Maze3DSetting.new_default(), 
 		NamedColorList.color_list.pick_random()[0], 
 		NamedColorList.color_list.pick_random()[0], 
 		)
+	$Maze3D.position.x = WorldSize.x
 	orbit_demo()
 	wirenet_demo()
 	bartree_demo()
