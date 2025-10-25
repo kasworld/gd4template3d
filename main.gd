@@ -19,7 +19,8 @@ func _ready() -> void:
 	$TimedMessage.show_message("",0)
 
 	$Maze3D.init_with_color(
-		Maze3DSetting.new_default(), 
+		Maze3DSetting.new_default(),
+		Callable(),
 		NamedColorList.color_list.pick_random()[0], 
 		NamedColorList.color_list.pick_random()[0], 
 		)
