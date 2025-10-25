@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://c6maulcewyhy5"]
+[gd_scene load_steps=11 format=3 uid="uid://c6maulcewyhy5"]
 
 [ext_resource type="Script" uid="uid://bgj25qi5j8dgh" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Environment" uid="uid://dq6rkclkoup3n" path="res://skymap/skymap.tres" id="3_h2yge"]
 [ext_resource type="PackedScene" uid="uid://dl14flc0fkeyt" path="res://axis_arrow3d/axis_arrow_3d.tscn" id="4_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://bdycgvb1g25w" path="res://maze_3d/maze_3d.tscn" id="5_7mycd"]
 [ext_resource type="PackedScene" uid="uid://c6cct2gj2a3im" path="res://timed_message/timed_message.tscn" id="5_lquwl"]
 
 [sub_resource type="Theme" id="Theme_h2yge"]
@@ -33,11 +34,13 @@ fov = 90.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 5, 15)
 shadow_enabled = true
 shadow_opacity = 0.5
+omni_range = 1000.0
 omni_attenuation = 0.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 0, 0)
 shadow_enabled = true
+directional_shadow_max_distance = 1000.0
 sky_mode = 1
 
 [node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
@@ -76,3 +79,5 @@ environment = ExtResource("3_h2yge")
 [node name="DemoContainer" type="Node3D" parent="."]
 
 [node name="AxisArrow3D" parent="." instance=ExtResource("4_1bvp3")]
+
+[node name="Maze3D" parent="." instance=ExtResource("5_7mycd")]

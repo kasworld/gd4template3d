@@ -18,6 +18,11 @@ func _ready() -> void:
 	$TimedMessage.panel_hidden.connect(message_hidden)
 	$TimedMessage.show_message("",0)
 
+	$Maze3D.init_with_color(
+		Maze3DSetting.new().make_default(), 
+		NamedColorList.color_list.pick_random()[0], 
+		NamedColorList.color_list.pick_random()[0], 
+		)
 	orbit_demo()
 	wirenet_demo()
 	bartree_demo()
@@ -160,7 +165,7 @@ var camera_move = false
 func _process(_delta: float) -> void:
 	var t = Time.get_unix_time_from_system() /-3.0
 	if camera_move:
-		$Camera3D.position = Vector3(sin(t)*WorldSize.x/2, cos(t)*WorldSize.y/2, WorldSize.length()*0.4 ) + WorldSize/2
+		$Camera3D.position = Vector3(sin(t)*WorldSize.x, cos(t)*WorldSize.y, WorldSize.length()*0.6 ) + WorldSize/2
 		$Camera3D.look_at(WorldSize/2)
 	#Animation3D.handle_animation()
 
@@ -185,6 +190,6 @@ func _on_카메라변경_pressed() -> void:
 		reset_camera_pos()
 
 func reset_camera_pos()->void:
-	$Camera3D.position = Vector3(WorldSize.x/2, WorldSize.y/2, WorldSize.x/2 *1.1)
+	$Camera3D.position = Vector3(WorldSize.x/2, WorldSize.y/2, WorldSize.x)
 	$Camera3D.look_at(WorldSize/2)
-	$Camera3D.far = WorldSize.length()
+	$Camera3D.far = WorldSize.length()*2
