@@ -18,14 +18,7 @@ func _ready() -> void:
 	$TimedMessage.panel_hidden.connect(message_hidden)
 	$TimedMessage.show_message("",0)
 
-	$Maze3D.init_with_color(
-		Maze3DSetting.new_default(),
-		Callable(),
-		random_color(), 
-		random_color(), 
-		random_color(), 
-		)
-	$Maze3D.position.x = WorldSize.x
+	maze3d_demo()
 	orbit_demo()
 	wirenet_demo()
 	bartree_demo()
@@ -35,6 +28,23 @@ func _ready() -> void:
 	arrow3d_demo()
 	valvehandle_demo()
 	meshtrail_demo()
+
+func maze3d_demo() -> void:
+	var ms := Maze3DSetting.new_default()
+	ms.MazeSize = Vector2i(8,5)
+	ms.MazeSize += Vector2i(randi_range(-1,1), randi_range(-1,1) )
+	ms.StoryH *= pow(2, randf()*2 -1 )
+	ms.LaneW = WorldSize.x/ms.MazeSize.x
+	$Maze3D.init_with_color(
+		ms,
+		Callable(),
+		random_color(), 
+		random_color(), 
+		random_color(), 
+		)
+	$Maze3D.position.x = WorldSize.x/2
+	$Maze3D.position.y = -ms.StoryH/2
+	
 
 var b_box :AABB
 func meshtrail_demo() -> void:
