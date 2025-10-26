@@ -21,8 +21,9 @@ func _ready() -> void:
 	$Maze3D.init_with_color(
 		Maze3DSetting.new_default(),
 		Callable(),
-		NamedColorList.color_list.pick_random()[0], 
-		NamedColorList.color_list.pick_random()[0], 
+		random_color(), 
+		random_color(), 
+		random_color(), 
 		)
 	$Maze3D.position.x = WorldSize.x
 	orbit_demo()
@@ -66,14 +67,14 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	
 func arrow3d_demo() -> void:
 	var aw = preload("res://arrow3d/arrow_3d.tscn").instantiate(
-	).set_color(Color.GREEN).set_size(2,0.1,0.3)
-	aw.position = WorldSize/4
+	).set_color(random_color()).set_size(5,0.2,0.6)
+	aw.position = WorldSize/4 + Vector3(0,0,4)
 	$DemoContainer.add_child(aw)
 
 func valvehandle_demo() -> void:
 	var vh = preload("res://valve_handle/valve_handle.tscn").instantiate(
-	).init(1,1)
-	vh.position = WorldSize *0.75
+	).init(2,2,4, random_color())
+	vh.position = WorldSize *0.75 + Vector3(0,0,4)
 	$DemoContainer.add_child(vh)
 
 func line2d_demo() -> void:
@@ -106,9 +107,9 @@ func orbit_demo() -> void:
 	var axis1 = Vector3.UP.rotated(Vector3.RIGHT, a30)
 	var os = preload("res://orbit_sphere/orbit_sphere.tscn").instantiate()
 	var mat1 = StandardMaterial3D.new()
-	mat1.albedo_color = Color.GREEN
+	mat1.albedo_color = random_color()
 	var mat2 = StandardMaterial3D.new()
-	mat2.albedo_color = Color.RED
+	mat2.albedo_color = random_color()
 	os.궤도설정(diagonal_length*1.1, 1.0/3, axis1, a120*2).구설정(2, 1, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
 	os.position = WorldSize/2
 	$DemoContainer.add_child(os)
@@ -131,7 +132,7 @@ func clock_demo() -> void:
 
 func wirenet_demo() -> void:
 	var wn = preload("res://wire_net/wire_net.tscn").instantiate()
-	wn.init_with_color(Vector2(40,22), Vector2(41,23), 0.1, Color.BLUE)
+	wn.init_with_color(Vector2(40,22), Vector2(41,23), 0.1, random_color())
 	$DemoContainer.add_child(wn)
 
 func bartree_demo() -> void:
@@ -149,7 +150,7 @@ func make_tree(tree_width :float, tree_height :float)->BarTree2:
 		).init_with_color(random_color(), random_color() )
 	return t
 func random_color()->Color:
-	return Color(randf(),randf(),randf())
+	return NamedColorList.color_list.pick_random()[0]
 
 func on_viewport_size_changed():
 	pass
