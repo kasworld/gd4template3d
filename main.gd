@@ -38,13 +38,13 @@ func maze3d_demo() -> void:
 	$Maze3D.init_with_color(
 		ms,
 		Callable(),
-		random_color(), 
-		random_color(), 
-		random_color(), 
+		random_color(),
+		random_color(),
+		random_color(),
 		)
 	$Maze3D.position.x = WorldSize.x/2
 	$Maze3D.position.y = -ms.StoryH/2
-	
+
 
 var b_box :AABB
 func meshtrail_demo() -> void:
@@ -74,7 +74,7 @@ func get_color_ByPosition(pos :Vector3) -> Color:
 	return co
 func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	return Bounce.v3f(pos, b_box, radius)
-	
+
 func arrow3d_demo() -> void:
 	var aw = preload("res://arrow3d/arrow_3d.tscn").instantiate(
 	).set_color(random_color()).set_size(5,0.2,0.6)
@@ -164,7 +164,7 @@ func random_color()->Color:
 
 func on_viewport_size_changed():
 	pass
-	
+
 func message_hidden(_s :String) -> void:
 	pass
 

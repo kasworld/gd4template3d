@@ -3,21 +3,80 @@ class_name Animation3D
 signal animation_ended(st :Node3D, ani :Dictionary)
 
 var animation_list :Array[Dictionary]
-# {Name,  Node3d, Field(position, rotation) , StartValue, EndValue , StartTick, DurSec } 
+# {Name,  Node3d, Field(position, rotation) , StartValue, EndValue , StartTick, DurSec }
 
-func start_move(name :String, node :Node3D, src_pos :Vector3, dst_pos: Vector3, dur_sec :float) -> Dictionary:
+func get_animation_count() -> int:
+	return animation_list.size()
+
+func is_empty() -> bool:
+	return animation_list.is_empty()
+
+func is_Name_exist(name :String) -> bool:
+	for d in animation_list:
+		if d.Name == name:
+			return true
+	return false
+
+func find_by_Name(name :String) -> Array[Dictionary]:
+	var rtn :Array[Dictionary]
+	for d in animation_list:
+		if d.Name == name:
+			rtn.append(d)
+	return rtn
+
+func is_Field_exist(field :String) -> bool:
+	for d in animation_list:
+		if d.Field == field:
+			return true
+	return false
+
+func find_by_Field(field :String) -> Array[Dictionary]:
+	var rtn :Array[Dictionary]
+	for d in animation_list:
+		if d.Field == field:
+			rtn.append(d)
+	return rtn
+
+func start_move(name :String, node :Node3D, src_val :Vector3, dst_val: Vector3, dur_sec :float) -> Dictionary:
 	var ani := {
 		"Name" : name, # for end signal
-		"Node3d" : node, 
+		"Node3d" : node,
 		"Field" : "position",
-		"StartValue" : src_pos, 
-		"EndValue" : dst_pos, 
+		"StartValue" : src_val,
+		"EndValue" : dst_val,
 		"StartTick" : Time.get_unix_time_from_system(),
 		"DurSec" : dur_sec,
 	}
 	animation_list.append(ani)
 	return ani
-	
+
+func start_rotate(name :String, node :Node3D, src_val :Vector3, dst_val: Vector3, dur_sec :float) -> Dictionary:
+	var ani := {
+		"Name" : name, # for end signal
+		"Node3d" : node,
+		"Field" : "rotation",
+		"StartValue" : src_val,
+		"EndValue" : dst_val,
+		"StartTick" : Time.get_unix_time_from_system(),
+		"DurSec" : dur_sec,
+	}
+	animation_list.append(ani)
+	return ani
+
+func start_scale(name :String, node :Node3D, src_val :Vector3, dst_val: Vector3, dur_sec :float) -> Dictionary:
+	var ani := {
+		"Name" : name, # for end signal
+		"Node3d" : node,
+		"Field" : "scale",
+		"StartValue" : src_val,
+		"EndValue" : dst_val,
+		"StartTick" : Time.get_unix_time_from_system(),
+		"DurSec" : dur_sec,
+	}
+	animation_list.append(ani)
+	return ani
+
+
 func handle_animation() -> void:
 	var timenow := Time.get_unix_time_from_system()
 	var new_list :Array[Dictionary]
@@ -29,5 +88,9 @@ func handle_animation() -> void:
 		new_list.append(ani)
 		match ani.Field:
 			"position":
-				ani.Node3d.position = lerp(ani.StartValue, ani.EndValue, rate)
+				ani.Node3d.position = ani.StartValue.lerp(ani.EndValue, rate)
+			"rotation":
+				ani.Node3d.rotation = ani.StartValue.lerp(ani.EndValue, rate)
+			"scale":
+				ani.Node3d.scale = ani.StartValue.lerp(ani.EndValue, rate)
 	animation_list = new_list
