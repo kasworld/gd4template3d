@@ -1,6 +1,20 @@
 extends Node3D
 
 const WorldSize := Vector3(40,22,1)
+const AnimationDuration := 1.0
+
+var main_animation := Animation3D.new()
+func main_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
+	if main_animation.is_empty():
+		start_all_animation()
+func start_rotate_animation(nd :Node3D, axis :int, ani_dur :float) -> void:
+	var diff :float = [PI/2,-PI/2].pick_random()
+	main_animation.start_rotate_subfield("ani_rot", nd, axis , nd.rotation[axis], nd.rotation[axis] + diff, ani_dur)
+func start_all_animation() -> void:
+	start_rotate_animation($Arrow3D,
+		[Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random(),
+		AnimationDuration)
+	start_rotate_animation($ValveHandle, Vector3.Axis.AXIS_Y, AnimationDuration)
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(on_viewport_size_changed)
@@ -29,6 +43,9 @@ func _ready() -> void:
 	valvehandle_demo()
 	meshtrail_demo()
 
+	main_animation.animation_ended.connect(main_animation_ended)
+	start_all_animation()
+
 func maze3d_demo() -> void:
 	var ms := Maze3DSetting.new_default()
 	ms.MazeSize = Vector2i(8,5)
@@ -44,7 +61,6 @@ func maze3d_demo() -> void:
 		)
 	$Maze3D.position.x = WorldSize.x/2
 	$Maze3D.position.y = -ms.StoryH/2
-
 
 var b_box :AABB
 func meshtrail_demo() -> void:
@@ -76,16 +92,12 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	return Bounce.v3f(pos, b_box, radius)
 
 func arrow3d_demo() -> void:
-	var aw = preload("res://arrow3d/arrow_3d.tscn").instantiate(
-	).set_color(random_color()).set_size(5,0.2,0.6)
-	aw.position = WorldSize/4 + Vector3(0,0,4)
-	$DemoContainer.add_child(aw)
+	$Arrow3D.set_color(random_color()).set_size(5,0.2,0.6)
+	$Arrow3D.position = WorldSize/4 + Vector3(0,0,4)
 
 func valvehandle_demo() -> void:
-	var vh = preload("res://valve_handle/valve_handle.tscn").instantiate(
-	).init(2,2,4, random_color())
-	vh.position = WorldSize *0.75 + Vector3(0,0,4)
-	$DemoContainer.add_child(vh)
+	$ValveHandle.init(2,2,4, random_color())
+	$ValveHandle.position = WorldSize *0.75 + Vector3(0,0,4)
 
 func line2d_demo() -> void:
 	var mesh = PlaneMesh.new()
@@ -180,7 +192,7 @@ func _process(_delta: float) -> void:
 	if camera_move:
 		$Camera3D.position = Vector3(sin(t)*WorldSize.x, cos(t)*WorldSize.y, WorldSize.length()*0.6 ) + WorldSize/2
 		$Camera3D.look_at(WorldSize/2)
-	#Animation3D.handle_animation()
+	main_animation.handle_animation()
 
 var key2fn = {
 	KEY_ESCAPE:_on_button_esc_pressed,
