@@ -196,6 +196,8 @@ func _process(_delta: float) -> void:
 var key2fn = {
 	KEY_ESCAPE:_on_button_esc_pressed,
 	KEY_ENTER:_on_카메라변경_pressed,
+	KEY_INSERT:_on_button_fov_up_pressed,
+	KEY_DELETE:_on_button_fov_down_pressed,
 }
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed:
@@ -212,6 +214,12 @@ func _on_카메라변경_pressed() -> void:
 	camera_move = !camera_move
 	if camera_move == false:
 		reset_camera_pos()
+
+func _on_button_fov_up_pressed() -> void:
+	MovingCameraLight.GetCurrentCamera().fov_camera_inc()
+
+func _on_button_fov_down_pressed() -> void:
+	MovingCameraLight.GetCurrentCamera().fov_camera_dec()
 
 func reset_camera_pos()->void:
 	$FixedCameraLight.make_current()
