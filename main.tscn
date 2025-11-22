@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://c6maulcewyhy5"]
+[gd_scene load_steps=14 format=3 uid="uid://c6maulcewyhy5"]
 
 [ext_resource type="Script" uid="uid://bgj25qi5j8dgh" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Environment" uid="uid://dq6rkclkoup3n" path="res://skymap/skymap.tres" id="3_h2yge"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://c6cct2gj2a3im" path="res://timed_message/timed_message.tscn" id="5_lquwl"]
 [ext_resource type="PackedScene" uid="uid://c8npqlgeyy3xa" path="res://arrow3d/arrow_3d.tscn" id="6_7mycd"]
 [ext_resource type="PackedScene" uid="uid://d4kkhfcvaexg1" path="res://valve_handle/valve_handle.tscn" id="7_272bh"]
+[ext_resource type="PackedScene" uid="uid://ces3a6yv0c5fi" path="res://moving_carmera_light/moving_camera_light.tscn" id="8_5vw27"]
 
 [sub_resource type="Theme" id="Theme_h2yge"]
 default_font_size = 48
@@ -29,6 +30,7 @@ script = ExtResource("1_ig7tw")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
+visible = false
 keep_aspect = 0
 fov = 90.0
 
@@ -87,3 +89,7 @@ environment = ExtResource("3_h2yge")
 [node name="Arrow3D" parent="." instance=ExtResource("6_7mycd")]
 
 [node name="ValveHandle" parent="." instance=ExtResource("7_272bh")]
+
+[node name="MovingCameraLight" parent="." instance=ExtResource("8_5vw27")]
+
+[node name="FixedCameraLight" parent="." instance=ExtResource("8_5vw27")]

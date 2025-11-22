@@ -188,10 +188,9 @@ func set_walls() -> void:
 
 var camera_move = false
 func _process(_delta: float) -> void:
-	var t = Time.get_unix_time_from_system() /-3.0
 	if camera_move:
-		$Camera3D.position = Vector3(sin(t)*WorldSize.x, cos(t)*WorldSize.y, WorldSize.length()*0.6 ) + WorldSize/2
-		$Camera3D.look_at(WorldSize/2)
+		$MovingCameraLight.make_current()
+		$MovingCameraLight.move_hober_around_z(WorldSize/2, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
 	main_animation.handle_animation()
 
 var key2fn = {
@@ -215,6 +214,8 @@ func _on_카메라변경_pressed() -> void:
 		reset_camera_pos()
 
 func reset_camera_pos()->void:
-	$Camera3D.position = Vector3(WorldSize.x/2, WorldSize.y/2, WorldSize.x)
-	$Camera3D.look_at(WorldSize/2)
-	$Camera3D.far = WorldSize.length()*2
+	$FixedCameraLight.make_current()
+	$FixedCameraLight.set_center_pos_far(
+		WorldSize/2,
+		Vector3(WorldSize.x/2, WorldSize.y/2, WorldSize.x),
+		WorldSize.length()*2)
