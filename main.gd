@@ -1,6 +1,6 @@
 extends Node3D
 
-const WorldSize := Vector3(40,22,1)
+const WorldSize := Vector3(40,22,20)
 const AnimationDuration := 1.0
 
 var main_animation := Animation3D.new()
@@ -23,8 +23,8 @@ func _ready() -> void:
 	$"왼쪽패널".size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
 	$오른쪽패널.size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
 	$오른쪽패널.position = Vector2(vp_size.x/2 + 짧은길이/2, 0)
-	$AxisArrow3D.set_size(5)
-	set_walls()
+	$OmniLight3D.position = WorldSize/2 + Vector3(0,0,WorldSize.length())
+	$OmniLight3D.omni_range = WorldSize.length()*2
 	$FixedCameraLight.set_center_pos_far(
 		WorldSize/2,
 		Vector3(WorldSize.x/2, WorldSize.y/2, WorldSize.x),
@@ -35,6 +35,8 @@ func _ready() -> void:
 	$TimedMessage.panel_hidden.connect(message_hidden)
 	$TimedMessage.show_message("",0)
 
+	$AxisArrow3D.set_size(10)
+	wallbox_demo()
 	maze3d_demo()
 	orbit_demo()
 	wirenet_demo()
@@ -49,11 +51,16 @@ func _ready() -> void:
 	main_animation.animation_ended.connect(main_animation_ended)
 	start_all_animation()
 
+func wallbox_demo() -> void:
+	$WallBox.mesh.size = WorldSize #+ Vector3(1,1,5)
+	$WallBox.position = WorldSize/2 + Vector3(0,0,-WorldSize.z/2)
+	$WallBox.mesh.material.albedo_color = Color(random_color(), 0.5)
+
 func maze3d_demo() -> void:
 	var ms := Maze3DSetting.new_default()
 	ms.MazeSize = Vector2i(8,5)
 	ms.MazeSize += Vector2i(randi_range(-1,1), randi_range(-1,1) )
-	ms.StoryH *= pow(2, randf()*2 -1 )
+	ms.StoryH = WorldSize.y /4
 	ms.LaneW = WorldSize.x/ms.MazeSize.x
 	$Maze3D.init_with_color(
 		ms,
@@ -63,13 +70,13 @@ func maze3d_demo() -> void:
 		random_color(),
 		)
 	$Maze3D.position.x = WorldSize.x/2
-	$Maze3D.position.y = -ms.StoryH/2
+	$Maze3D.position.y = -ms.StoryH
 
 var b_box :AABB
 func meshtrail_demo() -> void:
 	var mt = ["♠","♣","♥","♦" ,"★","☆","♩","♪","♬"].pick_random()
-	var bound_size = Vector3(WorldSize.x, WorldSize.y, 20)
-	b_box = AABB( Vector3(0,0,-10), bound_size)
+	var bound_size = WorldSize # Vector3(WorldSize.x, WorldSize.y, 20)
+	b_box = AABB( Vector3(0,0,-WorldSize.z/2), bound_size)
 	var ball = preload("res://mesh_trail/mesh_trail.tscn").instantiate()
 	var radius = 0.5
 	var count = randi_range(10,20)
@@ -96,11 +103,11 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 
 func arrow3d_demo() -> void:
 	$Arrow3D.set_color(random_color()).set_size(5,0.2,0.6)
-	$Arrow3D.position = WorldSize/4 + Vector3(0,0,4)
+	$Arrow3D.position = Vector3(WorldSize.x/4, WorldSize.y/4, WorldSize.z/4)
 
 func valvehandle_demo() -> void:
 	$ValveHandle.init(2,2,4, random_color())
-	$ValveHandle.position = WorldSize *0.75 + Vector3(0,0,4)
+	$ValveHandle.position = Vector3(WorldSize.x*3/4, WorldSize.y/4, WorldSize.z/4)
 
 func line2d_demo() -> void:
 	var mesh = PlaneMesh.new()
@@ -119,7 +126,7 @@ func line2d_demo() -> void:
 	add_child(sv)
 	var sp = MeshInstance3D.new()
 	sp.mesh = mesh
-	sp.position = WorldSize/2 - Vector3(0,0,0.7)
+	sp.position = WorldSize/2 + Vector3(0,0,-1.0)
 	sp.material_override = StandardMaterial3D.new()
 	sp.material_override.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
 	sp.material_override.albedo_texture = sv.get_texture()
@@ -141,29 +148,30 @@ func orbit_demo() -> void:
 
 func calendar_demo() -> void:
 	var ca = preload("res://calendar3d/calendar_3d.tscn").instantiate(
-		).init(WorldSize.x/2, WorldSize.y, WorldSize.z, WorldSize.y/2.0 , false )
+		).init(WorldSize.x/2, WorldSize.y, 1, WorldSize.y/2.0 , false )
 	ca.rotate_y(PI/2)
 	ca.rotate_x(PI/2)
-	ca.position = Vector3(WorldSize.x/4,WorldSize.y/2,WorldSize.z/2)
+	ca.position = Vector3(WorldSize.x/4,WorldSize.y/2,0)
 	$DemoContainer.add_child(ca)
 
 func clock_demo() -> void:
 	var ca = preload("res://analogclock3d/analog_clock_3d.tscn").instantiate(
-		).init(WorldSize.x/4, WorldSize.z, WorldSize.y/2.0 ,9.0, false )
+		).init(WorldSize.x/4, 1, WorldSize.y/2.0 ,9.0, false )
 	ca.rotate_y(PI/2)
 	ca.rotate_x(PI/2)
-	ca.position = Vector3(WorldSize.x/4*3,WorldSize.y/2,WorldSize.z/2)
+	ca.position = Vector3(WorldSize.x/4*3,WorldSize.y/2,0)
 	$DemoContainer.add_child(ca)
 
 func wirenet_demo() -> void:
 	var wn = preload("res://wire_net/wire_net.tscn").instantiate()
 	wn.init_with_color(Vector2(40,22), Vector2(41,23), 0.1, random_color())
+	wn.position.z = -WorldSize.z/2 +1
 	$DemoContainer.add_child(wn)
 
 func bartree_demo() -> void:
 	var bt = make_tree(WorldSize.x/3, WorldSize.y/3)
 	bt.rotate_x(PI/2)
-	bt.position = WorldSize/2
+	bt.position = WorldSize/2 + Vector3(0,0,-WorldSize.z+2)
 	$DemoContainer.add_child(bt)
 func make_tree(tree_width :float, tree_height :float)->BarTree2:
 	var bar_width = tree_width * randf_range(0.5 , 2.0)/10
@@ -183,16 +191,19 @@ func on_viewport_size_changed():
 func message_hidden(_s :String) -> void:
 	pass
 
-func set_walls() -> void:
-	$WallBox.mesh.size = WorldSize + Vector3(1,1,0)
-	$WallBox.position = WorldSize/2 - Vector3(0,0,0.5)
-	$OmniLight3D.position = WorldSize/2 + Vector3(0,0,WorldSize.length())
-	$OmniLight3D.omni_range = WorldSize.length()*2
-
 func _process(_delta: float) -> void:
+	main_animation.handle_animation()
 	if $MovingCameraLight.is_current_camera():
 		$MovingCameraLight.move_hober_around_z(WorldSize/2, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
-	main_animation.handle_animation()
+
+func _on_카메라변경_pressed() -> void:
+	MovingCameraLight.NextCamera()
+
+func _on_button_fov_up_pressed() -> void:
+	MovingCameraLight.GetCurrentCamera().fov_camera_inc()
+
+func _on_button_fov_down_pressed() -> void:
+	MovingCameraLight.GetCurrentCamera().fov_camera_dec()
 
 var key2fn = {
 	KEY_ESCAPE:_on_button_esc_pressed,
@@ -210,12 +221,3 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _on_button_esc_pressed() -> void:
 	get_tree().quit()
-
-func _on_카메라변경_pressed() -> void:
-	MovingCameraLight.NextCamera()
-
-func _on_button_fov_up_pressed() -> void:
-	MovingCameraLight.GetCurrentCamera().fov_camera_inc()
-
-func _on_button_fov_down_pressed() -> void:
-	MovingCameraLight.GetCurrentCamera().fov_camera_dec()
