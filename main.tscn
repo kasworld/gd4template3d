@@ -69,6 +69,14 @@ offset_right = 344.0
 offset_bottom = 371.0
 theme = SubResource("Theme_h2yge")
 
+[node name="LabelPerformance" type="Label" parent="오른쪽패널"]
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="LabelInfo" type="Label" parent="오른쪽패널"]
+layout_mode = 2
+autowrap_mode = 3
+
 [node name="WallBox" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_ig7tw")
 

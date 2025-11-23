@@ -148,7 +148,7 @@ func orbit_demo() -> void:
 
 func calendar_demo() -> void:
 	var ca = preload("res://calendar3d/calendar_3d.tscn").instantiate(
-		).init(WorldSize.x/2, WorldSize.y, 1, WorldSize.y/2.0 , false )
+		).init(WorldSize.x/2, WorldSize.y, 2, WorldSize.y/2.0 , false )
 	ca.rotate_y(PI/2)
 	ca.rotate_x(PI/2)
 	ca.position = Vector3(WorldSize.x/4,WorldSize.y/2,0)
@@ -156,7 +156,7 @@ func calendar_demo() -> void:
 
 func clock_demo() -> void:
 	var ca = preload("res://analogclock3d/analog_clock_3d.tscn").instantiate(
-		).init(WorldSize.x/4, 1, WorldSize.y/2.0 ,9.0, false )
+		).init(WorldSize.x/4, 2, WorldSize.y/2.0 ,9.0, false )
 	ca.rotate_y(PI/2)
 	ca.rotate_x(PI/2)
 	ca.position = Vector3(WorldSize.x/4*3,WorldSize.y/2,0)
@@ -185,6 +185,22 @@ func make_tree(tree_width :float, tree_height :float)->BarTree2:
 func random_color()->Color:
 	return NamedColorList.color_list.pick_random()[0]
 
+func label_demo() -> void:
+	if $"오른쪽패널/LabelPerformance".visible:
+		$"오른쪽패널/LabelPerformance".text = """%d FPS (%.2f mspf)
+Currently rendering: occlusion culling:%s
+%d objects
+%dK primitive indices
+%d draw calls""" % [
+		Engine.get_frames_per_second(),1000.0 / Engine.get_frames_per_second(),
+		get_tree().root.use_occlusion_culling,
+		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME),
+		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME) * 0.001,
+		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME),
+		]
+	if $"오른쪽패널/LabelInfo".visible:
+		$"오른쪽패널/LabelInfo".text = "%s" % [ MovingCameraLight.GetCurrentCamera() ]
+
 func on_viewport_size_changed():
 	pass
 
@@ -192,6 +208,7 @@ func message_hidden(_s :String) -> void:
 	pass
 
 func _process(_delta: float) -> void:
+	label_demo()
 	main_animation.handle_animation()
 	if $MovingCameraLight.is_current_camera():
 		$MovingCameraLight.move_hober_around_z(WorldSize/2, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
