@@ -72,3 +72,6 @@ func make_current() -> void:
 	CurrentNumber = number
 	CurrentNumber %= SelfList.size()
 	$Camera3D.current = true
+
+func is_current_camera() -> bool:
+	return number == CurrentNumber

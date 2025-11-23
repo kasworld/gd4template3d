@@ -25,7 +25,10 @@ func _ready() -> void:
 	$오른쪽패널.position = Vector2(vp_size.x/2 + 짧은길이/2, 0)
 	$AxisArrow3D.set_size(5)
 	set_walls()
-	reset_camera_pos()
+	$FixedCameraLight.set_center_pos_far(
+		WorldSize/2,
+		Vector3(WorldSize.x/2, WorldSize.y/2, WorldSize.x),
+		WorldSize.length()*2)
 
 	var msgrect = Rect2( vp_size.x * 0.1 ,vp_size.y * 0.4 , vp_size.x * 0.8 , vp_size.y * 0.25 )
 	$TimedMessage.init(80, msgrect, tr("gd4template3d 1.0.0"))
@@ -186,10 +189,8 @@ func set_walls() -> void:
 	$OmniLight3D.position = WorldSize/2 + Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
 
-var camera_move = false
 func _process(_delta: float) -> void:
-	if camera_move:
-		$MovingCameraLight.make_current()
+	if $MovingCameraLight.is_current_camera():
 		$MovingCameraLight.move_hober_around_z(WorldSize/2, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
 	main_animation.handle_animation()
 
@@ -211,19 +212,10 @@ func _on_button_esc_pressed() -> void:
 	get_tree().quit()
 
 func _on_카메라변경_pressed() -> void:
-	camera_move = !camera_move
-	if camera_move == false:
-		reset_camera_pos()
+	MovingCameraLight.NextCamera()
 
 func _on_button_fov_up_pressed() -> void:
 	MovingCameraLight.GetCurrentCamera().fov_camera_inc()
 
 func _on_button_fov_down_pressed() -> void:
 	MovingCameraLight.GetCurrentCamera().fov_camera_dec()
-
-func reset_camera_pos()->void:
-	$FixedCameraLight.make_current()
-	$FixedCameraLight.set_center_pos_far(
-		WorldSize/2,
-		Vector3(WorldSize.x/2, WorldSize.y/2, WorldSize.x),
-		WorldSize.length()*2)
