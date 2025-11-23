@@ -8,7 +8,7 @@ func init_OnBounce() -> MeshTrail:
 	color_mode = ColorMode.OnBounce
 	return self
 
-# for ColorMode.MeshGradient 
+# for ColorMode.MeshGradient
 var color_from :Color # or current color
 var color_to :Color
 var color_progress :int # 0 to mesh_count-1
@@ -34,7 +34,7 @@ func init_ByPositionFn(fn :Callable) -> MeshTrail:
 	color_mode = ColorMode.ByPosition
 	get_color_ByPosition_fn = fn
 	return self
-	
+
 var get_color_ByPosition_fn = get_color_ByPosition
 func get_color_ByPosition(pos :Vector3) -> Color:
 	var co :Color
@@ -103,7 +103,7 @@ func set_color_by_mode(mesh_index :int, pos :Vector3) -> void:
 		ColorMode.MeshGradient:
 			co = get_color_MeshGradient()
 	$MultiMeshInstance3D.multimesh.set_instance_color(mesh_index, co)
-	
+
 func set_multi_pos_rot(i :int, pos :Vector3, axis :Vector3, rot :float) -> void:
 	var t := Transform3D(Basis(), pos)
 	t = t.rotated_local(axis, rot)
@@ -174,6 +174,6 @@ func new_mesh_by_type(mesh_type , r :float) -> Mesh:
 			mesh = TextMesh.new()
 			mesh.depth = r/4
 			mesh.pixel_size = r / 10
-			mesh.font_size = r*200
+			mesh.font_size = r*50
 			mesh.text = "%s" % mesh_type
 	return mesh

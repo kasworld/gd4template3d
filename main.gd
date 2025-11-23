@@ -78,7 +78,7 @@ func meshtrail_demo() -> void:
 	var bound_size = WorldSize # Vector3(WorldSize.x, WorldSize.y, 20)
 	b_box = AABB( Vector3(0,0,-WorldSize.z/2), bound_size)
 	var ball = preload("res://mesh_trail/mesh_trail.tscn").instantiate()
-	var radius = 0.5
+	var radius = 1.0
 	var count = randi_range(10,20)
 	var startpos = b_box.get_center()
 	match randi_range(0,3):
