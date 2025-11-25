@@ -36,6 +36,8 @@ func _ready() -> void:
 	$TimedMessage.show_message("",0)
 
 	$AxisArrow3D.set_size(10)
+	$BarGauge.init(WorldSize.y, Vector3(1, WorldSize.y, 1), Color.GREEN, Color.RED)
+	$BarGauge.position.x = -1
 	wallbox_demo()
 	maze3d_demo()
 	orbit_demo()
@@ -209,6 +211,10 @@ func message_hidden(_s :String) -> void:
 
 func _process(_delta: float) -> void:
 	label_demo()
+	if randi_range(0,1) == 0:
+		$BarGauge.inc_current_value()
+	else:
+		$BarGauge.dec_current_value()
 	main_animation.handle_animation()
 	if $MovingCameraLight.is_current_camera():
 		$MovingCameraLight.move_hober_around_z(WorldSize/2, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )

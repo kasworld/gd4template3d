@@ -174,6 +174,6 @@ func new_mesh_by_type(mesh_type , r :float) -> Mesh:
 			mesh = TextMesh.new()
 			mesh.depth = r/4
 			mesh.pixel_size = r / 10
-			mesh.font_size = r*50
+			mesh.font_size = r*40
 			mesh.text = "%s" % mesh_type
 	return mesh
