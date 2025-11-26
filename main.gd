@@ -16,6 +16,9 @@ func start_all_animation() -> void:
 		AnimationDuration)
 	start_rotate_animation($ValveHandle, Vector3.Axis.AXIS_Y, AnimationDuration)
 
+var gauge_list :Array
+
+
 func _ready() -> void:
 	get_viewport().size_changed.connect(on_viewport_size_changed)
 	var vp_size = get_viewport().get_visible_rect().size
@@ -31,13 +34,21 @@ func _ready() -> void:
 		WorldSize.length()*2)
 
 	var msgrect = Rect2( vp_size.x * 0.1 ,vp_size.y * 0.4 , vp_size.x * 0.8 , vp_size.y * 0.25 )
-	$TimedMessage.init(80, msgrect, tr("gd4template3d 1.0.0"))
+	$TimedMessage.init(80, msgrect,
+		"%s %s" % [
+			ProjectSettings.get_setting("application/config/name"),
+			ProjectSettings.get_setting("application/config/version")
+			] )
+
 	$TimedMessage.panel_hidden.connect(message_hidden)
 	$TimedMessage.show_message("",0)
 
 	$AxisArrow3D.set_size(10)
-	$BarGauge.init(WorldSize.y, Vector3(1, WorldSize.y, 1), Color.GREEN, Color.RED)
-	$BarGauge.position.x = -1
+	for i in WorldSize.x:
+		var bg = preload("res://bar_gauge/bar_gauge.tscn").instantiate().init(WorldSize.y, Vector3(1, WorldSize.y, 1), Color.GREEN, Color.RED)
+		bg.position = Vector3(0.5+i, 0.5, 0.5 -WorldSize.z/2)
+		gauge_list.append(bg)
+		add_child(bg)
 	wallbox_demo()
 	maze3d_demo()
 	orbit_demo()
@@ -211,10 +222,8 @@ func message_hidden(_s :String) -> void:
 
 func _process(_delta: float) -> void:
 	label_demo()
-	if randi_range(0,1) == 0:
-		$BarGauge.inc_current_value()
-	else:
-		$BarGauge.dec_current_value()
+	for bg in gauge_list:
+		bg.inc_current_value([-1,1].pick_random())
 	main_animation.handle_animation()
 	if $MovingCameraLight.is_current_camera():
 		$MovingCameraLight.move_hober_around_z(WorldSize/2, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )

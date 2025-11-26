@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c6maulcewyhy5"]
+[gd_scene load_steps=14 format=3 uid="uid://c6maulcewyhy5"]
 
 [ext_resource type="Script" uid="uid://bgj25qi5j8dgh" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Environment" uid="uid://dq6rkclkoup3n" path="res://skymap/skymap.tres" id="3_h2yge"]
@@ -8,7 +8,6 @@
 [ext_resource type="PackedScene" uid="uid://c8npqlgeyy3xa" path="res://arrow3d/arrow_3d.tscn" id="6_7mycd"]
 [ext_resource type="PackedScene" uid="uid://d4kkhfcvaexg1" path="res://valve_handle/valve_handle.tscn" id="7_272bh"]
 [ext_resource type="PackedScene" uid="uid://ces3a6yv0c5fi" path="res://moving_carmera_light/moving_camera_light.tscn" id="8_5vw27"]
-[ext_resource type="PackedScene" uid="uid://bs27xy18qt4s2" path="res://bar_gauge/bar_gauge.tscn" id="9_kek77"]
 
 [sub_resource type="Theme" id="Theme_h2yge"]
 default_font_size = 48
@@ -101,5 +100,3 @@ environment = ExtResource("3_h2yge")
 [node name="MovingCameraLight" parent="." instance=ExtResource("8_5vw27")]
 
 [node name="FixedCameraLight" parent="." instance=ExtResource("8_5vw27")]
-
-[node name="BarGauge" parent="." instance=ExtResource("9_kek77")]
