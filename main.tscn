@@ -97,6 +97,8 @@ environment = ExtResource("3_h2yge")
 
 [node name="ValveHandle" parent="." instance=ExtResource("7_272bh")]
 
-[node name="MovingCameraLight" parent="." instance=ExtResource("8_5vw27")]
-
 [node name="FixedCameraLight" parent="." instance=ExtResource("8_5vw27")]
+
+[node name="MovingCameraLightHober" parent="." instance=ExtResource("8_5vw27")]
+
+[node name="MovingCameraLightAround" parent="." instance=ExtResource("8_5vw27")]

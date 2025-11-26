@@ -232,8 +232,10 @@ func _process(_delta: float) -> void:
 	for bg in gauge_list:
 		bg.inc_current_value([-1,1].pick_random())
 	main_animation.handle_animation()
-	if $MovingCameraLight.is_current_camera():
-		$MovingCameraLight.move_hober_around_z(WorldSize/2, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
+	if $MovingCameraLightHober.is_current_camera():
+		$MovingCameraLightHober.move_hober_around_z(WorldSize/2, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
+	elif $MovingCameraLightAround.is_current_camera():
+		$MovingCameraLightAround.move_around_y(WorldSize/2, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
 
 func _on_카메라변경_pressed() -> void:
 	MovingCameraLight.NextCamera()
