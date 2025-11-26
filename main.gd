@@ -63,11 +63,12 @@ func bargauge_demo() -> void:
 		var irate = float(i) / WorldSize.x
 		var bg = preload("res://bar_gauge/bar_gauge.tscn").instantiate().init(
 			WorldSize.y,
-			Vector3(1, WorldSize.y, 1),
+			Vector3(0.9, WorldSize.y, 0.9),
 			lerp(Color.GREEN, Color.BLUE, irate),
 			lerp(Color.RED, Color.YELLOW, irate),
 			)
 		bg.position = Vector3(0.5+i, 0.5, 0.5 -WorldSize.z/2)
+		bg.set_current_value(bg.max_value/2)
 		gauge_list.append(bg)
 		add_child(bg)
 
@@ -228,8 +229,8 @@ func message_hidden(_s :String) -> void:
 
 func _process(_delta: float) -> void:
 	label_demo()
-	for bg in gauge_list:
-		bg.inc_current_value([-1,1].pick_random())
+	for i in gauge_list.size()/4:
+		gauge_list.pick_random().inc_current_value([-1,1].pick_random())
 	main_animation.handle_animation()
 	if $MovingCameraLightHober.is_current_camera():
 		$MovingCameraLightHober.move_hober_around_z(WorldSize/2, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
