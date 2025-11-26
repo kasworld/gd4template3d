@@ -18,8 +18,8 @@ func start_all_animation() -> void:
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(on_viewport_size_changed)
-	var vp_size = get_viewport().get_visible_rect().size
-	var 짧은길이 = min(vp_size.x,vp_size.y)
+	var vp_size := get_viewport().get_visible_rect().size
+	var 짧은길이 :float = min(vp_size.x, vp_size.y)
 	$"왼쪽패널".size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
 	$오른쪽패널.size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
 	$오른쪽패널.position = Vector2(vp_size.x/2 + 짧은길이/2, 0)
@@ -30,7 +30,7 @@ func _ready() -> void:
 		Vector3(WorldSize.x/2, WorldSize.y/2, WorldSize.x),
 		WorldSize.length()*2)
 
-	var msgrect = Rect2( vp_size.x * 0.1 ,vp_size.y * 0.4 , vp_size.x * 0.8 , vp_size.y * 0.25 )
+	var msgrect := Rect2( vp_size.x * 0.1 ,vp_size.y * 0.4 , vp_size.x * 0.8 , vp_size.y * 0.25 )
 	$TimedMessage.init(80, msgrect,
 		"%s %s" % [
 			ProjectSettings.get_setting("application/config/name"),
@@ -60,8 +60,8 @@ func _ready() -> void:
 var gauge_list :Array
 func bargauge_demo() -> void:
 	for i in WorldSize.x:
-		var irate = float(i) / WorldSize.x
-		var bg = preload("res://bar_gauge/bar_gauge.tscn").instantiate().init(
+		var irate := float(i) / WorldSize.x
+		var bg :BarGauge = preload("res://bar_gauge/bar_gauge.tscn").instantiate().init(
 			WorldSize.y,
 			Vector3(0.9, WorldSize.y, 0.9),
 			lerp(Color.GREEN, Color.BLUE, irate),
@@ -94,13 +94,13 @@ func maze3d_demo() -> void:
 
 var b_box :AABB
 func meshtrail_demo() -> void:
-	var mt = ["♠","♣","♥","♦" ,"★","☆","♩","♪","♬"].pick_random()
-	var bound_size = WorldSize # Vector3(WorldSize.x, WorldSize.y, 20)
+	var mt :String = ["♠","♣","♥","♦" ,"★","☆","♩","♪","♬"].pick_random()
+	var bound_size := WorldSize # Vector3(WorldSize.x, WorldSize.y, 20)
 	b_box = AABB( Vector3(0,0,-WorldSize.z/2), bound_size)
-	var ball = preload("res://mesh_trail/mesh_trail.tscn").instantiate()
-	var radius = 1.0
-	var count = randi_range(10,20)
-	var startpos = b_box.get_center()
+	var ball :MeshTrail = preload("res://mesh_trail/mesh_trail.tscn").instantiate()
+	var radius := 1.0
+	var count := randi_range(10,20)
+	var startpos := b_box.get_center()
 	match randi_range(0,3):
 		0:
 			ball.init_OnBounce().set_get_random_color_fn(random_color)
@@ -130,21 +130,21 @@ func valvehandle_demo() -> void:
 	$ValveHandle.position = Vector3(WorldSize.x*3/4, WorldSize.y/4, WorldSize.z/4)
 
 func line2d_demo() -> void:
-	var mesh = PlaneMesh.new()
+	var mesh := PlaneMesh.new()
 	mesh.size = Vector2(WorldSize.x, WorldSize.y)
 	mesh.orientation = PlaneMesh.FACE_Z
 	#mesh.flip_faces = flip
-	var size_pixel = Vector2i(2048,2048)
-	var l2d = preload("res://move_line2d/move_line_2d.tscn").instantiate().init_with_random(300, 4, 1, size_pixel)
+	var size_pixel := Vector2i(2048,2048)
+	var l2d :MoveLine2D = preload("res://move_line2d/move_line_2d.tscn").instantiate().init_with_random(300, 4, 1, size_pixel)
 	l2d.start()
-	var sv = SubViewport.new()
+	var sv := SubViewport.new()
 	sv.size = size_pixel
 	sv.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	sv.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
 	sv.transparent_bg = true
 	sv.add_child(l2d)
 	add_child(sv)
-	var sp = MeshInstance3D.new()
+	var sp := MeshInstance3D.new()
 	sp.mesh = mesh
 	sp.position = WorldSize/2 + Vector3(0,0,-1.0)
 	sp.material_override = StandardMaterial3D.new()
@@ -153,21 +153,21 @@ func line2d_demo() -> void:
 	$DemoContainer.add_child(sp)
 
 func orbit_demo() -> void:
-	var diagonal_length = WorldSize.length()/2
-	var a120 = PI*2/3
-	var a30 = PI/6
-	var axis1 = Vector3.UP.rotated(Vector3.RIGHT, a30)
-	var os = preload("res://orbit_sphere/orbit_sphere.tscn").instantiate()
-	var mat1 = StandardMaterial3D.new()
+	var diagonal_length := WorldSize.length()/2
+	var a120 := PI*2/3
+	var a30 := PI/6
+	var axis1 := Vector3.UP.rotated(Vector3.RIGHT, a30)
+	var os :OrbitSphere = preload("res://orbit_sphere/orbit_sphere.tscn").instantiate()
+	var mat1 := StandardMaterial3D.new()
 	mat1.albedo_color = random_color()
-	var mat2 = StandardMaterial3D.new()
+	var mat2 := StandardMaterial3D.new()
 	mat2.albedo_color = random_color()
 	os.궤도설정(diagonal_length*1.1, 1.0/3, axis1, a120*2).구설정(2, 1, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
 	os.position = WorldSize/2
 	$DemoContainer.add_child(os)
 
 func calendar_demo() -> void:
-	var ca = preload("res://calendar3d/calendar_3d.tscn").instantiate(
+	var ca :Calendar3D = preload("res://calendar3d/calendar_3d.tscn").instantiate(
 		).init(WorldSize.x/2, WorldSize.y, 2, WorldSize.y/2.0 , false )
 	ca.rotate_y(PI/2)
 	ca.rotate_x(PI/2)
@@ -175,7 +175,7 @@ func calendar_demo() -> void:
 	$DemoContainer.add_child(ca)
 
 func clock_demo() -> void:
-	var ca = preload("res://analogclock3d/analog_clock_3d.tscn").instantiate(
+	var ca :AnalogClock3D = preload("res://analogclock3d/analog_clock_3d.tscn").instantiate(
 		).init(WorldSize.x/4, 2, WorldSize.y/2.0 ,9.0, false )
 	ca.rotate_y(PI/2)
 	ca.rotate_x(PI/2)
@@ -183,22 +183,22 @@ func clock_demo() -> void:
 	$DemoContainer.add_child(ca)
 
 func wirenet_demo() -> void:
-	var wn = preload("res://wire_net/wire_net.tscn").instantiate()
+	var wn :WireNet = preload("res://wire_net/wire_net.tscn").instantiate()
 	wn.init_with_color(Vector2(40,22), Vector2(41,23), 0.1, random_color())
 	wn.position.z = -WorldSize.z/2 +1
 	$DemoContainer.add_child(wn)
 
 func bartree_demo() -> void:
-	var bt = make_tree(WorldSize.x/3, WorldSize.y/3)
+	var bt := make_tree(WorldSize.x/3, WorldSize.y/3)
 	bt.rotate_x(PI/2)
 	bt.position = WorldSize/2 + Vector3(0,0,-WorldSize.z+2)
 	$DemoContainer.add_child(bt)
 func make_tree(tree_width :float, tree_height :float)->BarTree2:
-	var bar_width = tree_width * randf_range(0.5 , 2.0)/10
+	var bar_width := tree_width * randf_range(0.5 , 2.0)/10
 	var bar_count := randf_range(5,200)
 	var bar_rotation := 0.1
 	var bar_rotation_begin := randf_range(0,2*PI)
-	var t :BarTree2= preload("res://bar_tree_2/bar_tree_2.tscn").instantiate().init_common_params(
+	var t :BarTree2 = preload("res://bar_tree_2/bar_tree_2.tscn").instantiate().init_common_params(
 		tree_width, tree_height, bar_width, bar_count, bar_rotation, bar_rotation_begin, 0, true
 		).init_with_color(random_color(), random_color() )
 	return t
@@ -254,7 +254,7 @@ var key2fn = {
 }
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed:
-		var fn = key2fn.get(event.keycode)
+		var fn :Callable = key2fn.get(event.keycode)
 		if fn != null:
 			fn.call()
 	elif event is InputEventMouseButton and event.is_pressed():

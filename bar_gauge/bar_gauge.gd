@@ -11,7 +11,7 @@ func init(count :int, sz :Vector3, co1 :Color, co2 :Color) -> BarGauge:
 	max_value = count
 	current_value = max_value
 
-	var mesh = BoxMesh.new()
+	var mesh := BoxMesh.new()
 	mesh.size = Vector3(sz.x, sz.y / count /1.1 , sz.z)
 
 	$MultiMeshShape.init(mesh, Color(Color.WHITE, 1.0), count, Vector3.ZERO)
