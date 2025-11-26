@@ -16,9 +16,6 @@ func start_all_animation() -> void:
 		AnimationDuration)
 	start_rotate_animation($ValveHandle, Vector3.Axis.AXIS_Y, AnimationDuration)
 
-var gauge_list :Array
-
-
 func _ready() -> void:
 	get_viewport().size_changed.connect(on_viewport_size_changed)
 	var vp_size = get_viewport().get_visible_rect().size
@@ -44,11 +41,7 @@ func _ready() -> void:
 	$TimedMessage.show_message("",0)
 
 	$AxisArrow3D.set_size(10)
-	for i in WorldSize.x:
-		var bg = preload("res://bar_gauge/bar_gauge.tscn").instantiate().init(WorldSize.y, Vector3(1, WorldSize.y, 1), Color.GREEN, Color.RED)
-		bg.position = Vector3(0.5+i, 0.5, 0.5 -WorldSize.z/2)
-		gauge_list.append(bg)
-		add_child(bg)
+	bargauge_demo()
 	wallbox_demo()
 	maze3d_demo()
 	orbit_demo()
@@ -63,6 +56,20 @@ func _ready() -> void:
 
 	main_animation.animation_ended.connect(main_animation_ended)
 	start_all_animation()
+
+var gauge_list :Array
+func bargauge_demo() -> void:
+	for i in WorldSize.x:
+		var irate = float(i) / WorldSize.x
+		var bg = preload("res://bar_gauge/bar_gauge.tscn").instantiate().init(
+			WorldSize.y,
+			Vector3(1, WorldSize.y, 1),
+			lerp(Color.GREEN, Color.BLUE, irate),
+			lerp(Color.RED, Color.YELLOW, irate),
+			)
+		bg.position = Vector3(0.5+i, 0.5, 0.5 -WorldSize.z/2)
+		gauge_list.append(bg)
+		add_child(bg)
 
 func wallbox_demo() -> void:
 	$WallBox.mesh.size = WorldSize #+ Vector3(1,1,5)
