@@ -5,7 +5,9 @@ var m_mesh :MultiMesh
 
 func init(mesh :Mesh, co :Color, count :int, pos :Vector3) -> MultiMeshShape:
 	var mat = StandardMaterial3D.new()
-	mat.albedo_color = Color.WHITE
+	mat.albedo_color = co
+	if co.a != 1.0:
+		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	mat.vertex_color_use_as_albedo = true
 	mesh.material = mat
 	m_mesh = MultiMesh.new()
@@ -17,7 +19,7 @@ func init(mesh :Mesh, co :Color, count :int, pos :Vector3) -> MultiMeshShape:
 	m_mesh.visible_instance_count = count
 	$".".multimesh = m_mesh
 	for i in m_mesh.visible_instance_count:
-		m_mesh.set_instance_color(i,co)
+		#m_mesh.set_instance_color(i,Color.WHITE)
 		var t = Transform3D(Basis(), pos)
 		m_mesh.set_instance_transform(i,t)
 	return self
