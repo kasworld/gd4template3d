@@ -78,10 +78,9 @@ func wallbox_demo() -> void:
 
 func maze3d_demo() -> void:
 	var ms := Maze3DSetting.new_default()
-	ms.MazeSize = Vector2i(8,5)
-	ms.MazeSize += Vector2i(randi_range(-1,1), randi_range(-1,1) )
-	ms.StoryH = WorldSize.y /4
+	ms.MazeSize = Vector2i(16,9)
 	ms.LaneW = WorldSize.x/ms.MazeSize.x
+	ms.StoryH = ms.LaneW
 	$Maze3D.init_with_color(
 		ms,
 		Callable(),
