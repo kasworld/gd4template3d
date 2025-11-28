@@ -168,7 +168,7 @@ func orbit_demo() -> void:
 
 func calendar_demo() -> void:
 	var ca :Calendar3D = preload("res://calendar3d/calendar_3d.tscn").instantiate(
-		).init(WorldSize.x/2, WorldSize.y, 2, WorldSize.y/2.0 , false )
+		).init(WorldSize.x/2, WorldSize.y, 2, WorldSize.y/2.0/6 , false )
 	ca.rotate_y(PI/2)
 	ca.rotate_x(PI/2)
 	ca.position = Vector3(WorldSize.x/4,WorldSize.y/2,0)
@@ -176,7 +176,7 @@ func calendar_demo() -> void:
 
 func clock_demo() -> void:
 	var ca :AnalogClock3D = preload("res://analogclock3d/analog_clock_3d.tscn").instantiate(
-		).init(WorldSize.x/4, 2, WorldSize.y/2.0 ,9.0, false )
+		).init(WorldSize.x/4, 2, WorldSize.y/2.0/7 ,9.0, false )
 	ca.rotate_y(PI/2)
 	ca.rotate_x(PI/2)
 	ca.position = Vector3(WorldSize.x/4*3,WorldSize.y/2,0)
