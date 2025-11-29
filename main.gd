@@ -68,9 +68,20 @@ func bargauge_demo() -> void:
 			lerp(Color.RED, Color.YELLOW, irate),
 			)
 		bg.position = Vector3(0.5+i, 0.5, 0.5 -WorldSize.z/2)
-		bg.set_current_value(bg.max_value/2)
+		#bg.set_current_value(bg.max_value/2)
 		gauge_list.append(bg)
 		add_child(bg)
+
+func animate_gauge_rand() -> void:
+	for i in gauge_list.size()/10:
+		var bg = gauge_list.pick_random()
+		bg.inc_current_value( [-1,1].pick_random() )
+
+func animate_gauge_wave() -> void:
+	var now := Time.get_unix_time_from_system()
+	for i in WorldSize.x:
+		var bg = gauge_list[i]
+		bg.set_current_rate( (sin( now*3 + i/WorldSize.x*2*PI ) + 1) / 2.0 )
 
 func wallbox_demo() -> void:
 	$WallBox.mesh.size = WorldSize #+ Vector3(1,1,5)
@@ -229,8 +240,7 @@ func message_hidden(_s :String) -> void:
 
 func _process(_delta: float) -> void:
 	label_demo()
-	for i in gauge_list.size()/4:
-		gauge_list.pick_random().inc_current_value([-1,1].pick_random())
+	animate_gauge_wave()
 	main_animation.handle_animation()
 	if $MovingCameraLightHober.is_current_camera():
 		$MovingCameraLightHober.move_hober_around_z(WorldSize/2, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
