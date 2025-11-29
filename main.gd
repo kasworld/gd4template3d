@@ -59,13 +59,16 @@ func _ready() -> void:
 
 var gauge_list :Array
 func bargauge_demo() -> void:
+	var gaprate := 0.1
+	var alpha := 0.9
 	for i in WorldSize.x:
 		var irate := float(i) / WorldSize.x
 		var bg :BarGauge = preload("res://bar_gauge/bar_gauge.tscn").instantiate().init(
 			WorldSize.y,
-			Vector3(0.9, WorldSize.y, 0.9),
+			Vector3(1-gaprate, WorldSize.y, 1-gaprate),
 			lerp(Color.GREEN, Color.BLUE, irate),
 			lerp(Color.RED, Color.YELLOW, irate),
+			alpha, gaprate,
 			)
 		bg.position = Vector3(0.5+i, 0.5, 0.5 -WorldSize.z/2)
 		#bg.set_current_value(bg.max_value/2)
@@ -81,7 +84,9 @@ func animate_gauge_wave() -> void:
 	var now := Time.get_unix_time_from_system()
 	for i in WorldSize.x:
 		var bg = gauge_list[i]
-		bg.set_current_rate( (sin( now*3 + i/WorldSize.x*2*PI ) + 1) / 2.0 )
+		var r := (sin( now*3 + i/WorldSize.x*2*PI ) + 1) / 2.0
+		bg.set_current_rate( r )
+		#print_debug(r)
 
 func wallbox_demo() -> void:
 	$WallBox.mesh.size = WorldSize #+ Vector3(1,1,5)
