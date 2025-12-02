@@ -1,0 +1,72 @@
+[gd_scene load_steps=10 format=3 uid="uid://dqc03uxia85uv"]
+
+[ext_resource type="Script" uid="uid://nl8f2irb6sdu" path="res://roulette_wheel/roulette_cell/roulette_cell.gd" id="1_0xk0q"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6gkdu"]
+resource_local_to_scene = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_x2luv"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_6gkdu")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x2luv"]
+resource_local_to_scene = true
+
+[sub_resource type="TextMesh" id="TextMesh_g6io7"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_x2luv")
+
+[sub_resource type="Animation" id="Animation_qotkk"]
+length = 0.001
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("글씨")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 1, 1, 1)
+
+[sub_resource type="Animation" id="Animation_npk2h"]
+resource_name = "글씨강조"
+length = 0.5
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("글씨")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 1, 1, 1, 0.5, 1, 2, 2, 2)
+
+[sub_resource type="Animation" id="Animation_hqw3w"]
+resource_name = "글씨강조끄기"
+length = 0.5
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("글씨")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 2, 2, 2, 0.5, 1, 1, 1, 1)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pa73h"]
+_data = {
+&"RESET": SubResource("Animation_qotkk"),
+&"글씨강조": SubResource("Animation_npk2h"),
+&"글씨강조끄기": SubResource("Animation_hqw3w")
+}
+
+[node name="RouletteCell" type="Node3D"]
+script = ExtResource("1_0xk0q")
+
+[node name="시작선" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_x2luv")
+
+[node name="글씨" type="MeshInstance3D" parent="."]
+mesh = SubResource("TextMesh_g6io7")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_pa73h")
+}
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

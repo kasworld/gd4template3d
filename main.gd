@@ -45,12 +45,44 @@ func _ready() -> void:
 	valvehandle_demo()
 	meshtrail_demo()
 	reel_demo()
+	wheel_demo()
 
 	main_animation.animation_ended.connect(main_animation_ended)
 	start_all_animation()
 
 var colorlist :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
 var cardlist :Array = PlayingCard.make_deck_with_joker()
+
+var wheel :RouletteWheel
+func wheel_demo() -> void:
+	wheel = preload("res://roulette_wheel/roulette_wheel.tscn").instantiate().init(
+		0, WorldSize.y/2, 0.1,
+		make_random_color(),
+		make_random_color(), randi_range(2,8),
+		make_random_color(),
+		)
+	for i in 54:
+		wheel.cell추가하기( colorlist[i%colorlist.size()] , cardlist[i] )
+	wheel.cell위치정리하기()
+	wheel.rotation_stopped.connect(wheel결과가결정됨)
+	add_child(wheel)
+	wheel.position = Vector3(WorldSize.x/2 + 2, 0,0)
+	wheel.rotation.y = PI/2
+	#wheel.선택rad바꾸기(rot)
+	wheel돌리기()
+
+func make_random_color() -> Color:
+	return NamedColorList.color_list.pick_random()[0]
+
+func wheel돌리기() -> void:
+	var rot = randfn(2*PI, PI/2)
+	if randi_range(0,1) == 0:
+		rot = -rot
+	wheel.돌리기시작.call_deferred(rot)
+
+func wheel결과가결정됨(_id :int) -> void:
+	wheel돌리기()
+
 var symbol크기 := Vector2(3,1.5)
 var reel :Reel
 func reel_demo() -> void:
@@ -250,9 +282,12 @@ Currently rendering: occlusion culling:%s
 	if $"오른쪽패널/LabelInfo".visible:
 		$"오른쪽패널/LabelInfo".text = "%s" % [ MovingCameraLight.GetCurrentCamera() ]
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	label_demo()
 	$WaveGauge.animate_wave()
+	wheel.돌리기(delta)
+	wheel.선택된cell강조상태켜기()
+
 	main_animation.handle_animation()
 	if $MovingCameraLightHober.is_current_camera():
 		$MovingCameraLightHober.move_hober_around_z(Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
