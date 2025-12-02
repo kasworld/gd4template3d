@@ -70,7 +70,6 @@ func timed_message_demo() -> void:
 func message_hidden(_s :String) -> void:
 	pass
 
-
 func wavegauge_demo() -> void:
 	var wavegauge_size := WorldSize
 	wavegauge_size.z = 1
@@ -176,7 +175,7 @@ func calendar_demo() -> void:
 		).init(WorldSize.x/2, WorldSize.y, 2, WorldSize.y/2.0/6 , false )
 	ca.rotate_y(PI/2)
 	ca.rotate_x(PI/2)
-	ca.position = Vector3(WorldSize.x/4,WorldSize.y/2,0)
+	ca.position = Vector3(WorldSize.x/4,WorldSize.y/2,WorldSize.z/4 -1)
 	$DemoContainer.add_child(ca)
 
 func clock_demo() -> void:
@@ -184,7 +183,7 @@ func clock_demo() -> void:
 		).init(WorldSize.x/4, 2, WorldSize.y/2.0/7 ,9.0, false )
 	ca.rotate_y(PI/2)
 	ca.rotate_x(PI/2)
-	ca.position = Vector3(WorldSize.x/4*3,WorldSize.y/2,0)
+	ca.position = Vector3(WorldSize.x/4*3,WorldSize.y/2,WorldSize.z/4 +1)
 	$DemoContainer.add_child(ca)
 
 func wirenet_demo() -> void:
@@ -196,7 +195,7 @@ func wirenet_demo() -> void:
 func bartree_demo() -> void:
 	var bt := make_tree(WorldSize.x/3, WorldSize.y/3)
 	bt.rotate_x(PI/2)
-	bt.position = WorldSize/2 + Vector3(0,0,-WorldSize.z+2)
+	bt.position = WorldSize/2 + Vector3(0,0,-WorldSize.z+3)
 	$DemoContainer.add_child(bt)
 func make_tree(tree_width :float, tree_height :float)->BarTree2:
 	var bar_width := tree_width * randf_range(0.5 , 2.0)/10
