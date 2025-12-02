@@ -125,11 +125,11 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 
 func arrow3d_demo() -> void:
 	$Arrow3D.set_color(random_color()).set_size(5,0.2,0.6)
-	$Arrow3D.position = Vector3(-WorldSize.x/4, 0, 0)
+	$Arrow3D.position = Vector3(-WorldSize.x/4, -WorldSize.y/4, 0)
 
 func valvehandle_demo() -> void:
 	$ValveHandle.init(2,2,4, random_color())
-	$ValveHandle.position = Vector3(WorldSize.x/4, 0, 0)
+	$ValveHandle.position = Vector3(WorldSize.x/4, -WorldSize.y/4, 0)
 
 func line2d_demo() -> void:
 	var mesh := PlaneMesh.new()
@@ -192,8 +192,8 @@ func wirenet_demo() -> void:
 
 func bartree_demo() -> void:
 	var bt := make_tree(WorldSize.x/3, WorldSize.y/3)
-	bt.rotate_x(PI/2)
-	bt.position = Vector3(0,0,-WorldSize.z/2 + 3)
+	#bt.rotate_x(PI/2)
+	bt.position = Vector3(0, -WorldSize.y/2, 0 )
 	$DemoContainer.add_child(bt)
 func make_tree(tree_width :float, tree_height :float)->BarTree2:
 	var bar_width := tree_width * randf_range(0.5 , 2.0)/10
