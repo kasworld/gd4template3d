@@ -44,9 +44,36 @@ func _ready() -> void:
 	arrow3d_demo()
 	valvehandle_demo()
 	meshtrail_demo()
+	reel_demo()
 
 	main_animation.animation_ended.connect(main_animation_ended)
 	start_all_animation()
+
+var colorlist :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
+var cardlist :Array = PlayingCard.make_deck_with_joker()
+var symbol크기 := Vector2(3,1.5)
+var reel :Reel
+func reel_demo() -> void:
+	var symbol칸정보목록 := []
+	for i in cardlist.size():
+		symbol칸정보목록.append( [cardlist[i], colorlist[i%colorlist.size()]] )
+	symbol칸정보목록.shuffle()
+	var kilist := symbol칸정보목록.duplicate()
+	kilist.shuffle()
+	reel = preload("res://reel/reel.tscn").instantiate().init(0, symbol크기, kilist)
+	reel.rotation_stopped.connect(reel결과가결정됨)
+	reel.position = Vector3( -WorldSize.x/2 - symbol크기.x , 0, 0)
+	add_child(reel)
+	reel돌리기()
+
+func reel돌리기() -> void:
+	var rot = randfn(2*PI, PI/2)
+	if randi_range(0,1) == 0:
+		rot = -rot
+	reel.돌리기시작(rot)
+
+func reel결과가결정됨( _rl :Reel) -> void:
+	reel돌리기()
 
 func ui_panel_demo() -> void:
 	var vp_size := get_viewport().get_visible_rect().size
@@ -223,7 +250,6 @@ Currently rendering: occlusion culling:%s
 	if $"오른쪽패널/LabelInfo".visible:
 		$"오른쪽패널/LabelInfo".text = "%s" % [ MovingCameraLight.GetCurrentCamera() ]
 
-
 func _process(_delta: float) -> void:
 	label_demo()
 	$WaveGauge.animate_wave()
@@ -250,7 +276,7 @@ var key2fn = {
 }
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed:
-		var fn :Callable = key2fn.get(event.keycode)
+		var fn = key2fn.get(event.keycode)
 		if fn != null:
 			fn.call()
 	elif event is InputEventMouseButton and event.is_pressed():
