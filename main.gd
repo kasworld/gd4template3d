@@ -125,11 +125,11 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 
 func arrow3d_demo() -> void:
 	$Arrow3D.set_color(random_color()).set_size(5,0.2,0.6)
-	$Arrow3D.position = Vector3(-WorldSize.x/4, 0, WorldSize.z/4)
+	$Arrow3D.position = Vector3(-WorldSize.x/4, 0, 0)
 
 func valvehandle_demo() -> void:
 	$ValveHandle.init(2,2,4, random_color())
-	$ValveHandle.position = Vector3(WorldSize.x/4, 0, WorldSize.z/4)
+	$ValveHandle.position = Vector3(WorldSize.x/4, 0, 0)
 
 func line2d_demo() -> void:
 	var mesh := PlaneMesh.new()
