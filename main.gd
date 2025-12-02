@@ -16,13 +16,12 @@ func start_all_animation() -> void:
 		AnimationDuration)
 	start_rotate_animation($ValveHandle, Vector3.Axis.AXIS_Y, AnimationDuration)
 
+func on_viewport_size_changed():
+	pass
+
 func _ready() -> void:
 	get_viewport().size_changed.connect(on_viewport_size_changed)
-	var vp_size := get_viewport().get_visible_rect().size
-	var 짧은길이 :float = min(vp_size.x, vp_size.y)
-	$"왼쪽패널".size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
-	$오른쪽패널.size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
-	$오른쪽패널.position = Vector2(vp_size.x/2 + 짧은길이/2, 0)
+
 	$OmniLight3D.position = WorldSize/2 + Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
 	$FixedCameraLight.set_center_pos_far(
@@ -30,19 +29,11 @@ func _ready() -> void:
 		Vector3(WorldSize.x/2, WorldSize.y/2, WorldSize.x),
 		WorldSize.length()*2)
 
-	var msgrect := Rect2( vp_size.x * 0.1 ,vp_size.y * 0.4 , vp_size.x * 0.8 , vp_size.y * 0.25 )
-	$TimedMessage.init(80, msgrect,
-		"%s %s" % [
-			ProjectSettings.get_setting("application/config/name"),
-			ProjectSettings.get_setting("application/config/version")
-			] )
-
-	$TimedMessage.panel_hidden.connect(message_hidden)
-	$TimedMessage.show_message("",0)
-
+	ui_panel_demo()
+	timed_message_demo()
 	$AxisArrow3D.set_size(10)
-	bargauge_demo()
 	wallbox_demo()
+	wavegauge_demo()
 	maze3d_demo()
 	orbit_demo()
 	wirenet_demo()
@@ -57,36 +48,34 @@ func _ready() -> void:
 	main_animation.animation_ended.connect(main_animation_ended)
 	start_all_animation()
 
-var gauge_list :Array
-func bargauge_demo() -> void:
-	var gaprate := 0.1
-	var alpha := 0.9
-	for i in WorldSize.x:
-		var irate := float(i) / WorldSize.x
-		var bg :BarGauge = preload("res://bar_gauge/bar_gauge.tscn").instantiate().init(
-			WorldSize.y,
-			Vector3(1-gaprate, WorldSize.y, 1-gaprate),
-			lerp(Color.GREEN, Color.BLUE, irate),
-			lerp(Color.RED, Color.YELLOW, irate),
-			alpha, gaprate,
-			)
-		bg.position = Vector3(0.5+i, 0.5, 0.5 -WorldSize.z/2)
-		#bg.set_current_value(bg.max_value/2)
-		gauge_list.append(bg)
-		add_child(bg)
+func ui_panel_demo() -> void:
+	var vp_size := get_viewport().get_visible_rect().size
+	var 짧은길이 :float = min(vp_size.x, vp_size.y)
+	$"왼쪽패널".size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
+	$오른쪽패널.size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
+	$오른쪽패널.position = Vector2(vp_size.x/2 + 짧은길이/2, 0)
 
-func animate_gauge_rand() -> void:
-	for i in gauge_list.size()/10:
-		var bg = gauge_list.pick_random()
-		bg.inc_current_value( [-1,1].pick_random() )
+func timed_message_demo() -> void:
+	var vp_size := get_viewport().get_visible_rect().size
+	var msgrect := Rect2( vp_size.x * 0.1 ,vp_size.y * 0.4 , vp_size.x * 0.8 , vp_size.y * 0.25 )
+	$TimedMessage.init(80, msgrect,
+		"%s %s" % [
+			ProjectSettings.get_setting("application/config/name"),
+			ProjectSettings.get_setting("application/config/version")
+			] )
 
-func animate_gauge_wave() -> void:
-	var now := Time.get_unix_time_from_system()
-	for i in WorldSize.x:
-		var bg = gauge_list[i]
-		var r := (sin( now*3 + i/WorldSize.x*2*PI ) + 1) / 2.0
-		bg.set_current_rate( r )
-		#print_debug(r)
+	$TimedMessage.panel_hidden.connect(message_hidden)
+	$TimedMessage.show_message("",0)
+
+func message_hidden(_s :String) -> void:
+	pass
+
+
+func wavegauge_demo() -> void:
+	var wavegauge_size := WorldSize
+	wavegauge_size.z = 1
+	$WaveGauge.init(wavegauge_size, Vector3i(wavegauge_size), WaveGauge.color_list, 0.1, 1.0 )
+	$WaveGauge.position = Vector3(WorldSize.x/2, WorldSize.y/2 , -WorldSize.z/2)
 
 func wallbox_demo() -> void:
 	$WallBox.mesh.size = WorldSize #+ Vector3(1,1,5)
@@ -237,15 +226,10 @@ Currently rendering: occlusion culling:%s
 	if $"오른쪽패널/LabelInfo".visible:
 		$"오른쪽패널/LabelInfo".text = "%s" % [ MovingCameraLight.GetCurrentCamera() ]
 
-func on_viewport_size_changed():
-	pass
-
-func message_hidden(_s :String) -> void:
-	pass
 
 func _process(_delta: float) -> void:
 	label_demo()
-	animate_gauge_wave()
+	$WaveGauge.animate_wave()
 	main_animation.handle_animation()
 	if $MovingCameraLightHober.is_current_camera():
 		$MovingCameraLightHober.move_hober_around_z(WorldSize/2, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
