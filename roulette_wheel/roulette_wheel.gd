@@ -3,7 +3,7 @@ class_name RouletteWheel
 
 signal rotation_stopped(n :int)
 
-var 선택rad :float = 0.0
+var 선택rad :float
 var id :int
 var 반지름 :float
 var 깊이 :float
@@ -49,12 +49,13 @@ func init(ida :int, 반지름a :float, 깊이a :float,
 	$"돌림/BarTree3".rotation.x = PI/2
 
 	$화살표.set_size(반지름/5,깊이/2, 깊이*1.5,0.5).set_color(화살표색)
-	선택rad바꾸기(선택rad)
+	선택rad바꾸기(PI/2)
 	return self
 
 func 선택rad바꾸기(rad :float) -> void:
-	$화살표.rotation = Vector3(0, 0, PI-rad)
-	$화살표.position = Vector3(sin(rad) *반지름*1.1, cos(rad) *반지름*1.1, 0 )
+	선택rad = rad
+	$화살표.rotation = Vector3(0, 0, rad)
+	$화살표.position = Vector3(sin(PI-rad) *반지름*1.1, cos(PI-rad) *반지름*1.1, 0 )
 
 func 색바꾸기(원판색 :Color, 장식색 :Color, 화살표색 :Color) -> void:
 	$"돌림/원판".mesh.material.albedo_color = 원판색
@@ -128,7 +129,7 @@ func cell위치정리하기() -> void:
 func 선택된cell얻기() -> RouletteCell:
 	if cell_list.size() == 0 :
 		return null
-	var rad = $"돌림".rotation.z - 선택rad - PI/2
+	var rad = $"돌림".rotation.z - 선택rad
 	rad = fposmod(rad, 2*PI)
 	var 칸rad = 2*PI / cell_list.size()
 	for 현재칸번호 in cell_list.size():

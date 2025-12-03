@@ -67,8 +67,8 @@ func wheel_demo() -> void:
 	wheel.rotation_stopped.connect(wheel결과가결정됨)
 	add_child(wheel)
 	wheel.position = Vector3(WorldSize.x/2 + 2, 0,0)
-	wheel.rotation.y = PI/2
-	#wheel.선택rad바꾸기(rot)
+	#wheel.rotation.y = PI/2
+	#wheel.선택rad바꾸기(PI/2)
 	wheel돌리기()
 
 func make_random_color() -> Color:

@@ -20,6 +20,7 @@ script = ExtResource("1_7pkjq")
 [node name="돌림" type="Node3D" parent="."]
 
 [node name="원판" type="MeshInstance3D" parent="돌림"]
+visible = false
 mesh = SubResource("CylinderMesh_ed2fd")
 skeleton = NodePath("../..")
 
