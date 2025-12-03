@@ -136,7 +136,7 @@ func 선택된cell얻기() -> RouletteCell:
 			return cell_list[현재칸번호]
 	return cell_list[0]
 
-func 칸강조하기(i :int)->void:
+func cell강조하기(i :int)->void:
 	cell_list[i].강조상태켜기()
 
 func cell강조끄기(i :int)->void:
