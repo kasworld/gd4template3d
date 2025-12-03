@@ -5,7 +5,7 @@ signal rotation_stopped(rl :Reel)
 var 번호 :int
 var symbol크기 :Vector2
 var symbol정보목록 :Array # [ text, color ]
-var symbol_list :Array[reel_symbol]
+var symbol_list :Array[ReelSymbol]
 var symbol각도 :float
 
 func calc_radius() -> float:
@@ -20,7 +20,7 @@ func init(n :int, symbol크기a :Vector2, symbol정보목록a :Array) -> Reel:
 
 	var r := count * symbol크기.y / (2*PI)
 	for i in count:
-		var k :reel_symbol = preload("res://reel/reel_symbol/reel_symbol.tscn").instantiate().init(i, symbol크기,r,symbol정보목록[i][0], symbol정보목록[i][1])
+		var k :ReelSymbol = preload("res://reel/reel_symbol/reel_symbol.tscn").instantiate().init(i, symbol크기,r,symbol정보목록[i][0], symbol정보목록[i][1])
 		k.rotation.x = 2*PI/count *i
 		add_child(k)
 		symbol_list.append(k)
@@ -46,7 +46,7 @@ func 돌리기(dur_sec :float = 1.0) -> void:
 	if acceleration > 0:
 		rotation_per_second *= pow( acceleration , dur_sec)
 	#if 회전중인가 and abs(rotation_per_second) <= 0.01:
-	if 회전중인가 and (abs(rotation_per_second) <= 0.1 and 칸중심근처인가()) or (abs(rotation_per_second) <= 0.01):
+	if 회전중인가 and (abs(rotation_per_second) <= 0.1 and symbol중심근처인가()) or (abs(rotation_per_second) <= 0.01):
 		회전중인가 = false
 		rotation_per_second = 0.0
 		rotation_stopped.emit(self)
@@ -63,7 +63,7 @@ func 멈추기시작(accel :float=0.5) -> void:
 func symbol중심각도(n :int) -> float:
 	return symbol각도 * n
 
-func 칸중심근처인가() -> bool:
+func symbol중심근처인가() -> bool:
 	var 현재각도 = fposmod(-rotation.x, 2*PI)
 	var 중심각도 = symbol중심각도(선택된symbol번호())
 	return abs(현재각도 - 중심각도) <= symbol각도/100
@@ -72,5 +72,5 @@ func 선택된symbol번호() -> int:
 	var 현재각도 = fposmod(-rotation.x, 2*PI)
 	return ceili( (현재각도-symbol각도/2) / symbol각도 ) % symbol_list.size()
 
-func 선택된칸얻기() -> reel_symbol:
+func 선택된symbol얻기() -> ReelSymbol:
 	return symbol_list[선택된symbol번호()]

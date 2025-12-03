@@ -1,10 +1,10 @@
 extends Node3D
-class_name reel_symbol
+class_name ReelSymbol
 
 var 글내용 :String
 var 번호 :int
 
-func init(n :int, sz :Vector2, r :float, t :String, co :Color) -> reel_symbol:
+func init(n :int, sz :Vector2, r :float, t :String, co :Color) -> ReelSymbol:
 	번호 = n
 	글내용 = t
 	$"글".mesh.text = 글내용

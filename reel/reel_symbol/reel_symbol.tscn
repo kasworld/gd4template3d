@@ -13,7 +13,7 @@ text = "test"
 font = ExtResource("2_wkmah")
 pixel_size = 0.1
 
-[node name="reel_symbol" type="Node3D"]
+[node name="ReelSymbol" type="Node3D"]
 script = ExtResource("1_0b0sy")
 
 [node name="글" type="MeshInstance3D" parent="."]
