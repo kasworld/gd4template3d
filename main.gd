@@ -24,10 +24,9 @@ func _ready() -> void:
 
 	$OmniLight3D.position = Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
-	$FixedCameraLight.set_center_pos_far(
-		Vector3.ZERO,
-		Vector3(0, 0, WorldSize.z*2),
-		WorldSize.length()*2)
+	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, 	Vector3(0, 0, WorldSize.z*2), WorldSize.length()*2)
+	$MovingCameraLightHober.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
+	$MovingCameraLightAround.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
 
 	ui_panel_demo()
 	timed_message_demo()
