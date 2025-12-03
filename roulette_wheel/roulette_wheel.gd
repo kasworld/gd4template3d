@@ -38,12 +38,12 @@ func init(ida :int, 반지름a :float, 깊이a :float,
 	$"돌림/ValveHandle".rotation.x = PI/2
 
 	var rot = 0
-	$"돌림/BarTree2".init_common_params(반지름*0.5, 깊이, 반지름*0.05, 256, rot, 선택rad, 1.0, false
+	$"돌림/BarTree2".init_common_params(반지름*0.5, 깊이, 반지름*0.05, 256, rot, 0, 1.0, false
 		).init_with_color(장식색, 원판색)
 	$"돌림/BarTree2".position.z = 깊이/2
 	$"돌림/BarTree2".rotation.x = PI/2
 
-	$"돌림/BarTree3".init_common_params(반지름*0.5, 깊이, 반지름*0.05, 256, rot, 선택rad +PI, 1.0, false
+	$"돌림/BarTree3".init_common_params(반지름*0.5, 깊이, 반지름*0.05, 256, rot, PI, 1.0, false
 		).init_with_color(장식색.inverted(), 원판색.inverted())
 	$"돌림/BarTree3".position.z = 깊이/2
 	$"돌림/BarTree3".rotation.x = PI/2
@@ -148,3 +148,16 @@ func cell_count얻기() -> int:
 
 func cell얻기(i :int) -> RouletteCell:
 	return cell_list[i]
+
+func 원판보이기(b :bool) -> void:
+	$"돌림/원판".visible = b
+
+func 장식보이기(b :bool) -> void:
+	$"돌림/ValveHandle".visible = b
+
+func bartree보이기(b :bool) -> void:
+	$"돌림/BarTree2".visible = b
+	$"돌림/BarTree3".visible = b
+
+func id보이기(b :bool) -> void:
+	$IDLabel.visible = b

@@ -37,5 +37,3 @@ visible = false
 visible = false
 billboard = 1
 no_depth_test = true
-modulate = Color(0, 0, 0, 1)
-outline_modulate = Color(1, 1, 1, 1)
