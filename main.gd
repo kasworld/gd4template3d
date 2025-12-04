@@ -16,11 +16,35 @@ func start_all_animation() -> void:
 		AnimationDuration)
 	start_rotate_animation($ValveHandle, Vector3.Axis.AXIS_Y, AnimationDuration)
 
+func ui_panel_init() -> void:
+	var vp_size := get_viewport().get_visible_rect().size
+	var 짧은길이 :float = min(vp_size.x, vp_size.y)
+	$"왼쪽패널".size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
+	$오른쪽패널.size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
+	$오른쪽패널.position = Vector2(vp_size.x/2 + 짧은길이/2, 0)
+
+func timed_message_init() -> void:
+	var vp_size := get_viewport().get_visible_rect().size
+	var msgrect := Rect2( vp_size.x * 0.1 ,vp_size.y * 0.4 , vp_size.x * 0.8 , vp_size.y * 0.25 )
+	$TimedMessage.init(80, msgrect,
+		"%s %s" % [
+			ProjectSettings.get_setting("application/config/name"),
+			ProjectSettings.get_setting("application/config/version")
+			] )
+
+	$TimedMessage.panel_hidden.connect(message_hidden)
+	$TimedMessage.show_message("",0)
+
+func message_hidden(_s :String) -> void:
+	pass
+
 func on_viewport_size_changed():
-	ui_panel_demo()
+	ui_panel_init()
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(on_viewport_size_changed)
+	ui_panel_init()
+	timed_message_init()
 
 	$OmniLight3D.position = Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
@@ -28,8 +52,6 @@ func _ready() -> void:
 	$MovingCameraLightHober.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
 	$MovingCameraLightAround.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
 
-	ui_panel_demo()
-	timed_message_demo()
 	$AxisArrow3D.set_size(10)
 	wallbox_demo()
 	wavegauge_demo()
@@ -106,27 +128,6 @@ func reel돌리기() -> void:
 func reel결과가결정됨( _rl :Reel) -> void:
 	reel돌리기()
 
-func ui_panel_demo() -> void:
-	var vp_size := get_viewport().get_visible_rect().size
-	var 짧은길이 :float = min(vp_size.x, vp_size.y)
-	$"왼쪽패널".size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
-	$오른쪽패널.size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
-	$오른쪽패널.position = Vector2(vp_size.x/2 + 짧은길이/2, 0)
-
-func timed_message_demo() -> void:
-	var vp_size := get_viewport().get_visible_rect().size
-	var msgrect := Rect2( vp_size.x * 0.1 ,vp_size.y * 0.4 , vp_size.x * 0.8 , vp_size.y * 0.25 )
-	$TimedMessage.init(80, msgrect,
-		"%s %s" % [
-			ProjectSettings.get_setting("application/config/name"),
-			ProjectSettings.get_setting("application/config/version")
-			] )
-
-	$TimedMessage.panel_hidden.connect(message_hidden)
-	$TimedMessage.show_message("",0)
-
-func message_hidden(_s :String) -> void:
-	pass
 
 func wavegauge_demo() -> void:
 	var wavegauge_size := WorldSize
