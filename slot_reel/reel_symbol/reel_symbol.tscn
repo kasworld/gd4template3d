@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://o02enb5nefpx"]
 
-[ext_resource type="Script" uid="uid://by7055v5bfc5w" path="res://reel/reel_symbol/reel_symbol.gd" id="1_0b0sy"]
+[ext_resource type="Script" uid="uid://by7055v5bfc5w" path="res://slot_reel/reel_symbol/reel_symbol.gd" id="1_0b0sy"]
 [ext_resource type="FontFile" uid="uid://gdh6qls28unk" path="res://font/HakgyoansimBareondotumR.ttf" id="2_wkmah"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_47w7n"]

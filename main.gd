@@ -105,11 +105,11 @@ func wheel결과가결정됨(_rl :Roulette) -> void:
 	wheel돌리기()
 
 var symbol크기 := Vector2(3,1.5)
-var reel :Reel
+var reel :SlotReel
 func reel_demo() -> void:
 	var color_text_into_list := make_color_text_info_list().duplicate()
 	color_text_into_list.shuffle()
-	reel = preload("res://reel/reel.tscn").instantiate().init(0, symbol크기, color_text_into_list)
+	reel = preload("res://slot_reel/slot_reel.tscn").instantiate().init(0, symbol크기, color_text_into_list)
 	reel.rotation_stopped.connect(reel결과가결정됨)
 	reel.position = Vector3( WorldSize.x/2 + symbol크기.x , 0, 0)
 	add_child(reel)
@@ -121,9 +121,8 @@ func reel돌리기() -> void:
 		rot = -rot
 	reel.돌리기시작(rot)
 
-func reel결과가결정됨( _rl :Reel) -> void:
+func reel결과가결정됨( _rl :SlotReel) -> void:
 	reel돌리기()
-
 
 func wavegauge_demo() -> void:
 	var wavegauge_size := WorldSize

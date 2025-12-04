@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bgvg5u80d01y8"]
 
-[ext_resource type="Script" uid="uid://stv38su1d42y" path="res://reel/reel.gd" id="1_nwxwk"]
+[ext_resource type="Script" uid="uid://stv38su1d42y" path="res://slot_reel/slot_reel.gd" id="1_nwxwk"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nwxwk"]
 resource_local_to_scene = true
@@ -11,7 +11,7 @@ material = SubResource("StandardMaterial3D_nwxwk")
 cap_top = false
 cap_bottom = false
 
-[node name="Reel" type="Node3D"]
+[node name="SlotReel" type="Node3D"]
 script = ExtResource("1_nwxwk")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]

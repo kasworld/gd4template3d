@@ -1,7 +1,7 @@
 extends Node3D
-class_name Reel
+class_name SlotReel
 
-signal rotation_stopped(rl :Reel)
+signal rotation_stopped(rl :SlotReel)
 var 번호 :int
 var symbol크기 :Vector2
 var color_text_info_list :Array # [ color , text ]
@@ -11,7 +11,7 @@ var symbol각도 :float
 func calc_radius() -> float:
 	return color_text_info_list.size() * symbol크기.y / (2*PI)
 
-func init(n :int, symbol크기a :Vector2, color_text_info_lista :Array) -> Reel:
+func init(n :int, symbol크기a :Vector2, color_text_info_lista :Array) -> SlotReel:
 	번호 = n
 	symbol크기 = symbol크기a
 	color_text_info_list = color_text_info_lista
@@ -20,7 +20,7 @@ func init(n :int, symbol크기a :Vector2, color_text_info_lista :Array) -> Reel:
 
 	var r := count * symbol크기.y / (2*PI)
 	for i in count:
-		var k :ReelSymbol = preload("res://reel/reel_symbol/reel_symbol.tscn").instantiate().init(i, symbol크기,r,color_text_info_list[i])
+		var k :ReelSymbol = preload("res://slot_reel/reel_symbol/reel_symbol.tscn").instantiate().init(i, symbol크기,r,color_text_info_list[i])
 		k.rotation.x = 2*PI/count *i
 		add_child(k)
 		symbol_list.append(k)
