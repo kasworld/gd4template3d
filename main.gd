@@ -97,7 +97,7 @@ func wheel돌리기() -> void:
 		rot = -rot
 	wheel.돌리기시작.call_deferred(rot)
 
-func wheel결과가결정됨(_id :int) -> void:
+func wheel결과가결정됨(_rl :Roulette) -> void:
 	wheel돌리기()
 
 var symbol크기 := Vector2(3,1.5)

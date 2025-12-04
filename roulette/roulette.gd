@@ -1,13 +1,12 @@
 extends Node3D
 class_name Roulette
 
-signal rotation_stopped(n :int)
+signal rotation_stopped(rl :Roulette)
 
 var 선택rad :float
 var id :int
 var 반지름 :float
 var 깊이 :float
-var 회전중인가 :bool # need emit
 
 func init(ida :int, 반지름a :float, 깊이a :float, cell정보목록 :Array ) -> Roulette:
 	id = ida
@@ -15,6 +14,7 @@ func init(ida :int, 반지름a :float, 깊이a :float, cell정보목록 :Array )
 	깊이 = 깊이a
 
 	$Wheel.init(반지름, 깊이, cell정보목록)
+	$Wheel.rotation_stopped.connect(결과가결정됨)
 
 	# for debug
 	$IDLabel.text = "%s" % id
@@ -44,7 +44,14 @@ func init(ida :int, 반지름a :float, 깊이a :float, cell정보목록 :Array )
 	$"Wheel/원판".mesh.radial_segments = n
 
 	선택rad바꾸기(PI/2)
+
 	return self
+
+func 결과가결정됨(_rl :RouletteWheel) -> void:
+	rotation_stopped.emit(self)
+
+func 회전중인가() -> bool:
+	return $Wheel.회전중인가
 
 func 선택rad바꾸기(rad :float) -> void:
 	선택rad = rad
@@ -61,32 +68,21 @@ func 색설정하기(원판색 :Color, 장식색 :Color, 화살표색 :Color) ->
 	$"Wheel/BarTree2".set_visible_bar_count(n)
 	$"Wheel/BarTree3".set_visible_bar_count(n)
 
-var rotation_per_second :float
-var acceleration := 0.3 # per second
 func 돌리기(dur_sec :float = 1.0) -> void:
-	$"Wheel".rotation.z += rotation_per_second * 2 * PI * dur_sec
-	if acceleration > 0:
-		rotation_per_second *= pow( acceleration , dur_sec)
-	if 회전중인가 and abs(rotation_per_second) <= 0.001:
-		회전중인가 = false
-		rotation_per_second = 0.0
-		rotation_stopped.emit(id)
-	$"Wheel/BarTree2".bar_rotation = -rotation_per_second/10
-	$"Wheel/BarTree3".bar_rotation = -rotation_per_second/10
-
+	#$"Wheel".돌리기(dur_sec)
+	$"Wheel/BarTree2".bar_rotation = -$"Wheel".rotation_per_second/10
+	$"Wheel/BarTree3".bar_rotation = -$"Wheel".rotation_per_second/10
 
 # spd : 초당 회전수
 func 돌리기시작(spd :float) -> void:
-	rotation_per_second = spd
-	회전중인가 = true
+	$"Wheel".돌리기시작(spd)
 	$"Wheel/BarTree2".auto_rotate_bar = true
 	$"Wheel/BarTree2".bar_rotation = -spd/10
 	$"Wheel/BarTree3".auto_rotate_bar = true
 	$"Wheel/BarTree3".bar_rotation = -spd/10
 
 func 멈추기시작(accel :float=0.5) -> void:
-	assert(accel < 1.0)
-	acceleration = accel
+	$"Wheel".멈추기시작(accel)
 
 func 선택된cell강조상태켜기() -> void:
 	var 선택칸 = 선택된cell얻기()
