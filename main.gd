@@ -17,7 +17,7 @@ func start_all_animation() -> void:
 	start_rotate_animation($ValveHandle, Vector3.Axis.AXIS_Y, AnimationDuration)
 
 func on_viewport_size_changed():
-	pass
+	ui_panel_demo()
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(on_viewport_size_changed)
