@@ -89,7 +89,7 @@ func wheel_demo() -> void:
 	wheel.색설정하기(make_random_color(), make_random_color(), make_random_color() )
 	wheel.rotation_stopped.connect(wheel결과가결정됨)
 	add_child(wheel)
-	wheel.position = Vector3(WorldSize.x/2 + 2, 0,0)
+	wheel.position = Vector3( -WorldSize.x/2 - 2, 0,0)
 	wheel돌리기()
 
 func make_random_color() -> Color:
@@ -111,7 +111,7 @@ func reel_demo() -> void:
 	color_text_into_list.shuffle()
 	reel = preload("res://reel/reel.tscn").instantiate().init(0, symbol크기, color_text_into_list)
 	reel.rotation_stopped.connect(reel결과가결정됨)
-	reel.position = Vector3( -WorldSize.x/2 - symbol크기.x , 0, 0)
+	reel.position = Vector3( WorldSize.x/2 + symbol크기.x , 0, 0)
 	add_child(reel)
 	reel돌리기()
 
