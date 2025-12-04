@@ -8,12 +8,12 @@ var id :int
 var 반지름 :float
 var 깊이 :float
 
-func init(ida :int, 반지름a :float, 깊이a :float, cell정보목록 :Array ) -> Roulette:
+func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Array ) -> Roulette:
 	id = ida
 	반지름 = 반지름a
 	깊이 = 깊이a
 
-	$Wheel.init(반지름, 깊이, cell정보목록)
+	$Wheel.init(반지름, 깊이, color_text_info_list)
 	$Wheel.rotation_stopped.connect(결과가결정됨)
 
 	# for debug

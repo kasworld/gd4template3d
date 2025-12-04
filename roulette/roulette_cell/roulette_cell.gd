@@ -11,14 +11,14 @@ var 깊이 :float
 var 색깔 :Color
 var 글내용 :String
 var 강조중 :bool
-
+var color_text_info_list :Array
 func _to_string() -> String:
 	return "roulette_cell %s" % [글내용]
 
-func init(각도a :float, 반지름a :float, 깊이a :float, 색깔a :Color, 글내용a :String) -> RouletteCell:
+func init(각도a :float, 반지름a :float, 깊이a :float, color_text_info_lista :Array) -> RouletteCell:
 	반지름 = 반지름a
 	깊이 = 깊이a
-	색깔 = 색깔a
+	color_text_info_list = color_text_info_lista
 
 	$"시작선".mesh.size = Vector3(반지름*(선끝비 - 선시작비), 깊이, 깊이 /10)
 	#$"글씨".mesh.font = Global3d.font
@@ -26,8 +26,8 @@ func init(각도a :float, 반지름a :float, 깊이a :float, 색깔a :Color, 글
 	$"글씨".mesh.horizontal_alignment = HorizontalAlignment.HORIZONTAL_ALIGNMENT_RIGHT
 	$"글씨".rotation = Vector3(-PI/2,0,-PI/2)
 	$"글씨".position = Vector3(0, 깊이/2, 반지름)
-	색깔바꾸기(색깔a)
-	글내용바꾸기(글내용a)
+	색깔바꾸기(color_text_info_list[0])
+	글내용바꾸기(color_text_info_list[1])
 	칸rad바꾸기(각도a)
 	글씨크기바꾸기()
 	return self

@@ -4,23 +4,23 @@ class_name Reel
 signal rotation_stopped(rl :Reel)
 var 번호 :int
 var symbol크기 :Vector2
-var symbol정보목록 :Array # [ text, color ]
+var color_text_info_list :Array # [ color , text ]
 var symbol_list :Array[ReelSymbol]
 var symbol각도 :float
 
 func calc_radius() -> float:
-	return symbol정보목록.size() * symbol크기.y / (2*PI)
+	return color_text_info_list.size() * symbol크기.y / (2*PI)
 
-func init(n :int, symbol크기a :Vector2, symbol정보목록a :Array) -> Reel:
+func init(n :int, symbol크기a :Vector2, color_text_info_lista :Array) -> Reel:
 	번호 = n
 	symbol크기 = symbol크기a
-	symbol정보목록 = symbol정보목록a
-	var count := symbol정보목록.size()
+	color_text_info_list = color_text_info_lista
+	var count := color_text_info_list.size()
 	symbol각도 = 2*PI / count
 
 	var r := count * symbol크기.y / (2*PI)
 	for i in count:
-		var k :ReelSymbol = preload("res://reel/reel_symbol/reel_symbol.tscn").instantiate().init(i, symbol크기,r,symbol정보목록[i][0], symbol정보목록[i][1])
+		var k :ReelSymbol = preload("res://reel/reel_symbol/reel_symbol.tscn").instantiate().init(i, symbol크기,r,color_text_info_list[i])
 		k.rotation.x = 2*PI/count *i
 		add_child(k)
 		symbol_list.append(k)
@@ -29,7 +29,7 @@ func init(n :int, symbol크기a :Vector2, symbol정보목록a :Array) -> Reel:
 	$MeshInstance3D.mesh.top_radius = calc_radius()
 	$MeshInstance3D.mesh.bottom_radius = $MeshInstance3D.mesh.top_radius
 	$MeshInstance3D.mesh.height = symbol크기.x
-	$MeshInstance3D.mesh.radial_segments = symbol정보목록.size()
+	$MeshInstance3D.mesh.radial_segments = color_text_info_list.size()
 	$MeshInstance3D.rotation.x = symbol각도/2
 
 	return self

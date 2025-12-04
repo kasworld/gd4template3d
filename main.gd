@@ -74,14 +74,18 @@ func _ready() -> void:
 var colorlist :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
 var cardlist :Array = PlayingCard.make_deck_with_joker()
 
+func make_color_text_info_list() -> Array:
+	var rtn := []
+	for i in cardlist.size():
+		rtn.append( [ colorlist[i%colorlist.size()], cardlist[i] ] )
+	return rtn
+
 var wheel :Roulette
 func wheel_demo() -> void:
-	var cell칸정보목록 := []
-	for i in cardlist.size():
-		cell칸정보목록.append( [ colorlist[i%colorlist.size()], cardlist[i] ] )
-	cell칸정보목록.shuffle()
+	var color_text_into_list := make_color_text_info_list().duplicate()
+	color_text_into_list.shuffle()
 	wheel = preload("res://roulette/roulette.tscn").instantiate().init(
-		0, WorldSize.y/2, 0.1, cell칸정보목록 )
+		0, WorldSize.y/2, 0.1, color_text_into_list )
 	wheel.색설정하기(make_random_color(), make_random_color(), make_random_color() )
 	wheel.rotation_stopped.connect(wheel결과가결정됨)
 	add_child(wheel)
@@ -103,13 +107,9 @@ func wheel결과가결정됨(_rl :Roulette) -> void:
 var symbol크기 := Vector2(3,1.5)
 var reel :Reel
 func reel_demo() -> void:
-	var symbol칸정보목록 := []
-	for i in cardlist.size():
-		symbol칸정보목록.append( [cardlist[i], colorlist[i%colorlist.size()]] )
-	symbol칸정보목록.shuffle()
-	var kilist := symbol칸정보목록.duplicate()
-	kilist.shuffle()
-	reel = preload("res://reel/reel.tscn").instantiate().init(0, symbol크기, kilist)
+	var color_text_into_list := make_color_text_info_list().duplicate()
+	color_text_into_list.shuffle()
+	reel = preload("res://reel/reel.tscn").instantiate().init(0, symbol크기, color_text_into_list)
 	reel.rotation_stopped.connect(reel결과가결정됨)
 	reel.position = Vector3( -WorldSize.x/2 - symbol크기.x , 0, 0)
 	add_child(reel)
