@@ -74,22 +74,18 @@ func _ready() -> void:
 var colorlist :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
 var cardlist :Array = PlayingCard.make_deck_with_joker()
 
-var wheel :RouletteWheel
+var wheel :Roulette
 func wheel_demo() -> void:
-	wheel = preload("res://roulette_wheel/roulette_wheel.tscn").instantiate().init(
-		0, WorldSize.y/2, 0.1,
-		make_random_color(),
-		make_random_color(), randi_range(2,8),
-		make_random_color(),
-		)
-	for i in 54:
-		wheel.cell추가하기( colorlist[i%colorlist.size()] , cardlist[i] )
-	wheel.cell위치정리하기()
+	var cell칸정보목록 := []
+	for i in cardlist.size():
+		cell칸정보목록.append( [ colorlist[i%colorlist.size()], cardlist[i] ] )
+	cell칸정보목록.shuffle()
+	wheel = preload("res://roulette/roulette.tscn").instantiate().init(
+		0, WorldSize.y/2, 0.1, cell칸정보목록 )
+	wheel.색설정하기(make_random_color(), make_random_color(), make_random_color() )
 	wheel.rotation_stopped.connect(wheel결과가결정됨)
 	add_child(wheel)
 	wheel.position = Vector3(WorldSize.x/2 + 2, 0,0)
-	#wheel.rotation.y = PI/2
-	#wheel.선택rad바꾸기(PI/2)
 	wheel돌리기()
 
 func make_random_color() -> Color:

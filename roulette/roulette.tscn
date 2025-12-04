@@ -1,0 +1,39 @@
+[gd_scene load_steps=8 format=3 uid="uid://sjnpttkqk1qs"]
+
+[ext_resource type="Script" uid="uid://dwpxaxvkorfar" path="res://roulette/roulette.gd" id="1_7pkjq"]
+[ext_resource type="PackedScene" uid="uid://d4kkhfcvaexg1" path="res://valve_handle/valve_handle.tscn" id="2_14kvd"]
+[ext_resource type="PackedScene" uid="uid://c8npqlgeyy3xa" path="res://arrow3d/arrow_3d.tscn" id="2_ed2fd"]
+[ext_resource type="PackedScene" uid="uid://btkkwpk54jqc" path="res://bar_tree_2/bar_tree_2.tscn" id="3_phm1c"]
+[ext_resource type="PackedScene" uid="uid://c8ulltoe1t7qg" path="res://roulette/roulette_wheel/roulette_wheel.tscn" id="5_wjn2p"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wjn2p"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_cdnmj"]
+material = SubResource("StandardMaterial3D_wjn2p")
+
+[node name="Roulette" type="Node3D"]
+script = ExtResource("1_7pkjq")
+
+[node name="화살표" parent="." instance=ExtResource("2_ed2fd")]
+
+[node name="IDLabel" type="Label3D" parent="."]
+visible = false
+billboard = 1
+no_depth_test = true
+modulate = Color(0, 0, 0, 1)
+outline_modulate = Color(1, 1, 1, 1)
+
+[node name="Wheel" parent="." instance=ExtResource("5_wjn2p")]
+
+[node name="원판" type="MeshInstance3D" parent="Wheel"]
+visible = false
+mesh = SubResource("CylinderMesh_cdnmj")
+
+[node name="ValveHandle" parent="Wheel" instance=ExtResource("2_14kvd")]
+visible = false
+
+[node name="BarTree2" parent="Wheel" instance=ExtResource("3_phm1c")]
+visible = false
+
+[node name="BarTree3" parent="Wheel" instance=ExtResource("3_phm1c")]
+visible = false

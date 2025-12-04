@@ -51,11 +51,15 @@ func 글씨크기바꾸기() -> void:
 	$"글씨".mesh.pixel_size = 반지름 *sin(칸rad) *0.05
 
 func 강조상태켜기() -> void:
+	if 강조중:
+		return
 	강조중 = true
+	#$"글씨".scale.x = 2.0
 	$AnimationPlayer.play("글씨강조")
 
 func 강조상태끄기() -> void:
 	강조중 = false
+	#$"글씨".scale.x = 1.0
 	$AnimationPlayer.play("글씨강조끄기")
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
