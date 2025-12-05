@@ -25,7 +25,6 @@ func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Arr
 	$"Wheel/원판".mesh.bottom_radius = 반지름
 	$"Wheel/원판".mesh.top_radius = 반지름
 	$"Wheel/원판".position.z = -깊이
-	$"Wheel/원판".rotation.x = PI/2
 
 	$"Wheel/ValveHandle".init(반지름*0.1, 반지름*0.1, 4, Color.WHITE)
 	$"Wheel/ValveHandle".rotation.x = PI/2
@@ -42,9 +41,10 @@ func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Arr
 
 	var n :int = $Wheel.cell_count얻기()
 	$"Wheel/원판".mesh.radial_segments = n
+	$"Wheel/원판".rotation.x = PI/2
+	$"Wheel/원판".rotate(Vector3.FORWARD, PI/n)
 
 	선택rad바꾸기(PI/2)
-
 	return self
 
 func 결과가결정됨(_rl :RouletteWheel) -> void:

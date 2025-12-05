@@ -77,4 +77,4 @@ func cell중심근처인가(rad :float) -> bool:
 	var 현재cell번호 := 각도로cell번호얻기(rad)
 	var 현재각도 = fposmod(-rad, 2*PI)
 	var 중심각도 = cell중심각도(현재cell번호)
-	return abs(현재각도 - 중심각도 - cell각도/2) <= cell각도/100
+	return abs(현재각도 - 중심각도 ) <= cell각도/100
