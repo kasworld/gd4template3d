@@ -3,12 +3,12 @@
 [ext_resource type="Script" uid="uid://by7055v5bfc5w" path="res://slot_reel/reel_symbol/reel_symbol.gd" id="1_0b0sy"]
 [ext_resource type="FontFile" uid="uid://gdh6qls28unk" path="res://font/HakgyoansimBareondotumR.ttf" id="2_wkmah"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_47w7n"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wk650"]
 resource_local_to_scene = true
 
 [sub_resource type="TextMesh" id="TextMesh_siyr3"]
 resource_local_to_scene = true
-material = SubResource("StandardMaterial3D_47w7n")
+material = SubResource("StandardMaterial3D_wk650")
 text = "test"
 font = ExtResource("2_wkmah")
 pixel_size = 0.1

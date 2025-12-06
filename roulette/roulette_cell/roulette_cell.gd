@@ -15,12 +15,12 @@ func init(각도 :float, 반지름 :float, 깊이 :float, color_text_info :Array
 	$"시작선".mesh.material.albedo_color = color_text_info[0]
 
 	$"글씨".mesh.depth = 깊이
+	$"글씨".mesh.pixel_size = 반지름 *sin(각도) *0.05
 	$"글씨".mesh.horizontal_alignment = HorizontalAlignment.HORIZONTAL_ALIGNMENT_RIGHT
 	$"글씨".rotation = Vector3(-PI/2,0,-PI/2)
 	$"글씨".position = Vector3(0, 깊이/2, 반지름)
 	$"글씨".mesh.text = color_text_info[1]
 	$"글씨".mesh.material.albedo_color = color_text_info[0]
-	$"글씨".mesh.pixel_size = 반지름 *sin(각도) *0.05
 	return self
 
 func 글내용얻기() -> String:
