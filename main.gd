@@ -101,7 +101,8 @@ func wheel돌리기() -> void:
 		rot = -rot
 	wheel.돌리기시작.call_deferred(rot)
 
-func wheel결과가결정됨(_rl :Roulette) -> void:
+func wheel결과가결정됨(rl :Roulette) -> void:
+	$"왼쪽패널/LabelWheel".text = rl.선택된cell얻기().글내용얻기()
 	wheel돌리기()
 
 var symbol크기 := Vector2(3,1.5)
@@ -121,7 +122,8 @@ func reel돌리기() -> void:
 		rot = -rot
 	reel.돌리기시작(rot)
 
-func reel결과가결정됨( _rl :SlotReel) -> void:
+func reel결과가결정됨( rl :SlotReel) -> void:
+	$"왼쪽패널/LabelReel".text = rl.선택된symbol얻기().글내용
 	reel돌리기()
 
 func wavegauge_demo() -> void:
