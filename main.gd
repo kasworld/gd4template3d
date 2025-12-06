@@ -85,7 +85,8 @@ func wheel_demo() -> void:
 	var color_text_into_list := make_color_text_info_list().duplicate()
 	color_text_into_list.shuffle()
 	wheel = preload("res://roulette/roulette.tscn").instantiate().init(
-		0, WorldSize.y/2, 0.1, color_text_into_list )
+		0, WorldSize.y/2, 0.5, color_text_into_list )
+	wheel.rotation.z = PI/2
 	wheel.색설정하기(make_random_color(), make_random_color(), make_random_color() )
 	wheel.rotation_stopped.connect(wheel결과가결정됨)
 	add_child(wheel)
@@ -103,7 +104,11 @@ func wheel돌리기() -> void:
 
 func wheel결과가결정됨(rl :Roulette) -> void:
 	$"왼쪽패널/LabelWheel".text = rl.선택된cell얻기().글내용얻기()
+	$TimerWheel.start()
+
+func _on_timer_wheel_timeout() -> void:
 	wheel돌리기()
+
 
 var symbol크기 := Vector2(3,1.5)
 var reel :SlotReel
@@ -124,7 +129,11 @@ func reel돌리기() -> void:
 
 func reel결과가결정됨( rl :SlotReel) -> void:
 	$"왼쪽패널/LabelReel".text = rl.선택된symbol얻기().글내용얻기()
+	$TimerReel.start()
+
+func _on_timer_reel_timeout() -> void:
 	reel돌리기()
+
 
 func wavegauge_demo() -> void:
 	var wavegauge_size := WorldSize

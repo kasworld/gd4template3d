@@ -107,3 +107,12 @@ environment = ExtResource("3_h2yge")
 [node name="MovingCameraLightAround" parent="." instance=ExtResource("8_5vw27")]
 
 [node name="WaveGauge" parent="." instance=ExtResource("9_kek77")]
+
+[node name="TimerWheel" type="Timer" parent="."]
+one_shot = true
+
+[node name="TimerReel" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="timeout" from="TimerWheel" to="." method="_on_timer_wheel_timeout"]
+[connection signal="timeout" from="TimerReel" to="." method="_on_timer_reel_timeout"]
