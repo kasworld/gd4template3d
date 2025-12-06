@@ -123,7 +123,7 @@ func reel돌리기() -> void:
 	reel.돌리기시작(rot)
 
 func reel결과가결정됨( rl :SlotReel) -> void:
-	$"왼쪽패널/LabelReel".text = rl.선택된symbol얻기().글내용
+	$"왼쪽패널/LabelReel".text = rl.선택된symbol얻기().글내용얻기()
 	reel돌리기()
 
 func wavegauge_demo() -> void:

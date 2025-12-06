@@ -45,8 +45,7 @@ func 돌리기(dur_sec :float = 1.0) -> void:
 	rotation.x += rotation_per_second * 2 * PI * dur_sec
 	if acceleration > 0:
 		rotation_per_second *= pow( acceleration , dur_sec)
-	#if 회전중인가 and abs(rotation_per_second) <= 0.01:
-	if 회전중인가 and (abs(rotation_per_second) <= 0.1 and symbol중심근처인가()) or (abs(rotation_per_second) <= 0.01):
+	if 회전중인가 and (abs(rotation_per_second) <= 0.1 and 중심각차이율(rotation.x) < 0.1 ) or (abs(rotation_per_second) <= 0.01):
 		회전중인가 = false
 		rotation_per_second = 0.0
 		rotation_stopped.emit(self)
@@ -63,10 +62,10 @@ func 멈추기시작(accel :float=0.5) -> void:
 func symbol중심각도(n :int) -> float:
 	return symbol각도 * n
 
-func symbol중심근처인가() -> bool:
-	var 현재각도 = fposmod(-rotation.x, 2*PI)
-	var 중심각도 = symbol중심각도(선택된symbol번호())
-	return abs(현재각도 - 중심각도) <= symbol각도/100
+# 0 - 1
+func 중심각차이율(rad :float) -> float:
+	var 각도차이 := fposmod(rad, symbol각도)
+	return 1- abs(각도차이 / symbol각도 - 0.5) *2
 
 func 선택된symbol번호() -> int:
 	var 현재각도 = fposmod(-rotation.x, 2*PI)
@@ -74,3 +73,6 @@ func 선택된symbol번호() -> int:
 
 func 선택된symbol얻기() -> ReelSymbol:
 	return symbol_list[선택된symbol번호()]
+
+func debug_str() -> String:
+	return "%f %f %f" % [ rad_to_deg(rotation.x), rad_to_deg(symbol각도), 중심각차이율(rotation.x) ]
