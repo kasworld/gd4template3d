@@ -32,10 +32,13 @@ func 돌리기(dur_sec :float = 1.0) -> void:
 	rotation.z += rotation_per_second * 2 * PI * dur_sec
 	if acceleration > 0:
 		rotation_per_second *= pow( acceleration , dur_sec)
-	if 회전중인가 and (abs(rotation_per_second) <= 0.1 and cell중심근처인가(rotation.z)) or (abs(rotation_per_second) <= 0.01):
+	if 회전중인가 and (abs(rotation_per_second) <= 0.1 and 중심각차이율(rotation.z) < 0.1  ) or (abs(rotation_per_second) <= 0.01):
 		회전중인가 = false
 		rotation_per_second = 0.0
 		rotation_stopped.emit(self)
+
+func debug_str() -> String:
+	return "%f %f %f" % [ rad_to_deg(rotation.z), rad_to_deg(cell각도), 중심각차이율(rotation.z) ]
 
 # spd : 초당 회전수
 func 돌리기시작(spd :float) -> void:
@@ -73,8 +76,7 @@ func 각도로cell번호얻기(rad :float) -> int:
 func cell중심각도(cell번호 :int) -> float:
 	return cell각도 * cell번호
 
-func cell중심근처인가(rad :float) -> bool:
-	var 현재cell번호 := 각도로cell번호얻기(rad)
-	var 현재각도 = fposmod(-rad, 2*PI)
-	var 중심각도 = cell중심각도(현재cell번호)
-	return abs(현재각도 - 중심각도 ) <= cell각도/100
+# 0 - 1
+func 중심각차이율(rad :float) -> float:
+	var 각도차이 := fposmod(rad, cell각도)
+	return 1- abs(각도차이 / cell각도 - 0.5) *2

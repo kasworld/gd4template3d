@@ -3,10 +3,12 @@ class_name Roulette
 
 signal rotation_stopped(rl :Roulette)
 
-var 선택rad :float
 var id :int
 var 반지름 :float
 var 깊이 :float
+
+func get_wheel() -> RouletteWheel:
+	return $Wheel
 
 func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Array ) -> Roulette:
 	id = ida
@@ -44,7 +46,8 @@ func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Arr
 	$"Wheel/원판".rotation.x = PI/2
 	$"Wheel/원판".rotate(Vector3.FORWARD, PI/n)
 
-	선택rad바꾸기(PI/2)
+	#$화살표.rotation = Vector3(0, 0, rad)
+	$화살표.position = Vector3(sin(PI) *반지름*1.1, cos(PI) *반지름*1.1, 0 )
 	return self
 
 func 결과가결정됨(_rl :RouletteWheel) -> void:
@@ -52,11 +55,6 @@ func 결과가결정됨(_rl :RouletteWheel) -> void:
 
 func 회전중인가() -> bool:
 	return $Wheel.회전중인가
-
-func 선택rad바꾸기(rad :float) -> void:
-	선택rad = rad
-	$화살표.rotation = Vector3(0, 0, rad)
-	$화살표.position = Vector3(sin(PI-rad) *반지름*1.1, cos(PI-rad) *반지름*1.1, 0 )
 
 func 색설정하기(원판색 :Color, 장식색 :Color, 화살표색 :Color) -> void:
 	$"Wheel/원판".mesh.material.albedo_color = 원판색
@@ -90,4 +88,4 @@ func 선택된cell강조상태켜기() -> void:
 		선택칸.강조상태켜기()
 
 func 선택된cell얻기() -> RouletteCell:
-	return $Wheel.각도로cell얻기($"Wheel".rotation.z - 선택rad)
+	return $Wheel.각도로cell얻기($"Wheel".rotation.z)
