@@ -320,42 +320,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		var fn = key2fn.get(event.keycode)
 		if fn != null:
 			fn.call()
-		var fi = key4fly.get(event.keycode)
+		var fi = FlyNode3D.Key2Info.get(event.keycode)
 		if fi != null:
-			fly_node3d($FixedCameraLight, fi)
+			FlyNode3D.fly_node3d($FixedCameraLight, fi)
 
 	elif event is InputEventMouseButton and event.is_pressed():
 		pass
 
 func _on_button_esc_pressed() -> void:
 	get_tree().quit()
-
-# for free fly camera
-var key4fly = {
-	KEY_UP: ["rotation", "x", PI/10],
-	KEY_DOWN: ["rotation", "x", -PI/10],
-	KEY_LEFT: ["rotation", "y", PI/10],
-	KEY_RIGHT: ["rotation", "y", -PI/10],
-	KEY_A: ["position", "x", -1],
-	KEY_D: ["position", "x", 1],
-	KEY_W: ["position", "z", -1],
-	KEY_S: ["position", "z", 1],
-	KEY_Q: ["position", "y", -1],
-	KEY_E: ["position", "y", 1],
-}
-
-# flyinfo : [node3d field, axis, amount]
-func fly_node3d(nd :Node3D, flyinfo :Array) -> void:
-	var field :String = flyinfo[0]
-	var axis :int = {
-		"x" :0,
-		"y" :1,
-		"z" :2,
-	} [flyinfo[1]]
-	match field:
-		"position":
-			nd.position[axis] += flyinfo[2]
-		"rotation":
-			nd.rotation[axis] += flyinfo[2]
-		"scale":
-			nd.scale[axis] += flyinfo[2]
