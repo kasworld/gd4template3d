@@ -66,8 +66,7 @@ func 색설정하기(원판색 :Color, 장식색 :Color, 화살표색 :Color) ->
 	$"Wheel/BarTree2".set_visible_bar_count(n)
 	$"Wheel/BarTree3".set_visible_bar_count(n)
 
-func 돌리기(dur_sec :float = 1.0) -> void:
-	#$"Wheel".돌리기(dur_sec)
+func 장식돌리기() -> void:
 	$"Wheel/BarTree2".bar_rotation = -$"Wheel".rotation_per_second/10
 	$"Wheel/BarTree3".bar_rotation = -$"Wheel".rotation_per_second/10
 

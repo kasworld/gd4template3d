@@ -293,17 +293,17 @@ Currently rendering: occlusion culling:%s
 	if $"오른쪽패널/LabelInfo".visible:
 		$"오른쪽패널/LabelInfo".text = "%s" % [ MovingCameraLight.GetCurrentCamera() ]
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	label_demo()
 	$WaveGauge.animate_wave()
-	wheel.돌리기(delta)
+	wheel.장식돌리기()
 	wheel.선택된cell강조상태켜기()
 
 	main_animation.handle_animation()
 	if $MovingCameraLightHober.is_current_camera():
-		$MovingCameraLightHober.move_hober_around_z(Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
+		$MovingCameraLightHober.move_hober_around_z(Time.get_unix_time_from_system() /2.3, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
 	elif $MovingCameraLightAround.is_current_camera():
-		$MovingCameraLightAround.move_around_y(Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
+		$MovingCameraLightAround.move_wave_around_y(Time.get_unix_time_from_system() /2.3, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
 
 func _on_카메라변경_pressed() -> void:
 	MovingCameraLight.NextCamera()
