@@ -71,18 +71,21 @@ func _ready() -> void:
 	main_animation.animation_ended.connect(main_animation_ended)
 	start_all_animation()
 
-var colorlist :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
+var colorlist_dark :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
+var colorlist_light :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_light_color_list())
 var cardlist :Array = PlayingCard.make_deck_with_joker()
 
-func make_color_text_info_list() -> Array:
+func make_color_text_info_list(colist :Array, cdlist :Array) -> Array:
 	var rtn := []
-	for i in cardlist.size():
-		rtn.append( [ colorlist[i%colorlist.size()], cardlist[i] ] )
+	for i in cdlist.size():
+		rtn.append( [ colist[i%colist.size()], cdlist[i] ] )
 	return rtn
 
 var wheel :Roulette
 func wheel_demo() -> void:
-	var color_text_into_list := make_color_text_info_list().duplicate()
+	var color_text_into_list := make_color_text_info_list(
+		colorlist_light, cardlist,
+	).duplicate()
 	color_text_into_list.shuffle()
 	wheel = preload("res://roulette/roulette.tscn").instantiate().init(
 		0, WorldSize.y/2, 0.5, color_text_into_list )
@@ -113,7 +116,9 @@ func _on_timer_wheel_timeout() -> void:
 var symbol크기 := Vector2(3,1.5)
 var reel :SlotReel
 func reel_demo() -> void:
-	var color_text_into_list := make_color_text_info_list().duplicate()
+	var color_text_into_list := make_color_text_info_list(
+		colorlist_dark, cardlist,
+	).duplicate()
 	color_text_into_list.shuffle()
 	reel = preload("res://slot_reel/slot_reel.tscn").instantiate().init(0, symbol크기, color_text_into_list)
 	reel.rotation_stopped.connect(reel결과가결정됨)
@@ -320,9 +325,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		var fn = key2fn.get(event.keycode)
 		if fn != null:
 			fn.call()
-		var fi = FlyNode3D.Key2Info.get(event.keycode)
-		if fi != null:
-			FlyNode3D.fly_node3d($FixedCameraLight, fi)
+		if $FixedCameraLight.is_current_camera():
+			var fi = FlyNode3D.Key2Info.get(event.keycode)
+			if fi != null:
+				FlyNode3D.fly_node3d($FixedCameraLight, fi)
 
 	elif event is InputEventMouseButton and event.is_pressed():
 		pass
