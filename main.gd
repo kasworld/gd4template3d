@@ -317,8 +317,8 @@ func _on_button_fov_down_pressed() -> void:
 var key2fn = {
 	KEY_ESCAPE:_on_button_esc_pressed,
 	KEY_ENTER:_on_카메라변경_pressed,
-	KEY_INSERT:_on_button_fov_up_pressed,
-	KEY_DELETE:_on_button_fov_down_pressed,
+	KEY_PAGEUP:_on_button_fov_up_pressed,
+	KEY_PAGEDOWN:_on_button_fov_down_pressed,
 }
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed:
