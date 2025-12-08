@@ -300,10 +300,11 @@ func _process(_delta: float) -> void:
 	wheel.선택된cell강조상태켜기()
 
 	main_animation.handle_animation()
+	var t := Time.get_unix_time_from_system() /2.3
 	if $MovingCameraLightHober.is_current_camera():
-		$MovingCameraLightHober.move_hober_around_z(Time.get_unix_time_from_system() /2.3, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
+		$MovingCameraLightHober.move_hober_around_z(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
 	elif $MovingCameraLightAround.is_current_camera():
-		$MovingCameraLightAround.move_wave_around_y(Time.get_unix_time_from_system() /2.3, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
+		$MovingCameraLightAround.move_wave_around_y(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
 
 func _on_카메라변경_pressed() -> void:
 	MovingCameraLight.NextCamera()
