@@ -1,13 +1,6 @@
-[gd_scene load_steps=10 format=3 uid="uid://dqc03uxia85uv"]
+[gd_scene load_steps=8 format=3 uid="uid://dqc03uxia85uv"]
 
 [ext_resource type="Script" uid="uid://nl8f2irb6sdu" path="res://roulette/roulette_cell/roulette_cell.gd" id="1_0xk0q"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6gkdu"]
-resource_local_to_scene = true
-
-[sub_resource type="BoxMesh" id="BoxMesh_x2luv"]
-resource_local_to_scene = true
-material = SubResource("StandardMaterial3D_6gkdu")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_x2luv"]
 resource_local_to_scene = true
@@ -15,6 +8,7 @@ resource_local_to_scene = true
 [sub_resource type="TextMesh" id="TextMesh_g6io7"]
 resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_x2luv")
+text = "test"
 
 [sub_resource type="Animation" id="Animation_qotkk"]
 length = 0.001
@@ -57,9 +51,6 @@ _data = {
 
 [node name="RouletteCell" type="Node3D"]
 script = ExtResource("1_0xk0q")
-
-[node name="시작선" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_x2luv")
 
 [node name="글씨" type="MeshInstance3D" parent="."]
 mesh = SubResource("TextMesh_g6io7")

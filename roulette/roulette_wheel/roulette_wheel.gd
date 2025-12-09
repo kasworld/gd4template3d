@@ -10,13 +10,12 @@ var cell각도 :float
 func init(r :float, d: float, color_text_info_list :Array) -> RouletteWheel:
 	반지름 = r
 	깊이 = d
-	$"칸통".rotation.x = PI/2
+	#$"칸통".rotation.x = PI/2
 	var count := color_text_info_list.size()
 	cell각도 = 2*PI / count
 	for i in count:
 		var k :RouletteCell = preload("res://roulette/roulette_cell/roulette_cell.tscn").instantiate().init(cell각도, 반지름, 깊이, color_text_info_list[i])
-		k.position.z = 깊이/2
-		k.rotation.y = cell각도 *i
+		k.rotation.z = cell각도 *i
 		$"칸통".add_child(k)
 		cell_list.append(k)
 	return self

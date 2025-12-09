@@ -89,7 +89,6 @@ func wheel_demo() -> void:
 	color_text_into_list.shuffle()
 	wheel = preload("res://roulette/roulette.tscn").instantiate().init(
 		0, WorldSize.y/2, 0.5, color_text_into_list )
-	wheel.rotation.z = PI/2
 	wheel.색설정하기(make_random_color(), make_random_color(), make_random_color() )
 	wheel.rotation_stopped.connect(wheel결과가결정됨)
 	add_child(wheel)
