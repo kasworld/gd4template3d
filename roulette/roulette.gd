@@ -25,14 +25,13 @@ func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Arr
 	구분선.size = Vector3(길이, 깊이a/10, 깊이a )
 	var count := color_text_info_list.size()
 	var cell각도 := 2.0*PI / count
-
+	var radius := 반지름-길이/2
 	$"Wheel/구분선들".init(구분선, Color.WHITE, count ,Vector3.ZERO )
 	for i in count:
-		$"Wheel/구분선들".set_inst_rotation(i, Vector3.BACK, cell각도 *i + cell각도/2)
-		$"Wheel/구분선들".set_inst_pos(i, Vector3(
-			cos(cell각도 *i + cell각도/2) *(반지름-길이/2),
-			sin(cell각도 *i + cell각도/2) *(반지름-길이/2),
-			0) )
+		var rad := cell각도 *i + cell각도/2
+		$"Wheel/구분선들".set_inst_rotation(i, Vector3.BACK, rad)
+		$"Wheel/구분선들".set_inst_pos(i, Vector3(cos(rad) *radius,sin(rad) *radius,	0) )
+		$"Wheel/구분선들".set_inst_color(i, color_text_info_list[i][0])
 
 	# for debug
 	$IDLabel.text = "%s" % id
@@ -81,8 +80,6 @@ func 색설정하기(원판색 :Color, 장식색 :Color, 화살표색 :Color) ->
 	var count :int = $Wheel.cell_count얻기()
 	$"Wheel/BarTree2".set_visible_bar_count(count)
 	$"Wheel/BarTree3".set_visible_bar_count(count)
-	for i in count:
-		$"Wheel/구분선들".set_inst_color(i, 원판색.inverted())
 
 func 장식돌리기() -> void:
 	$"Wheel/BarTree2".bar_rotation = -$"Wheel".rotation_per_second/10
