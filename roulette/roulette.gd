@@ -6,9 +6,8 @@ signal rotation_stopped(rl :Roulette)
 var id :int
 var 반지름 :float
 var 깊이 :float
-const 선시작비 := 0.1
+const 선시작비 := 0.5
 const 선끝비 := 1.0
-const 선중심비 := (선끝비 + 선시작비)/2
 
 func get_wheel() -> RouletteWheel:
 	return $Wheel

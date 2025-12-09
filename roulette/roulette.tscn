@@ -27,6 +27,7 @@ outline_modulate = Color(1, 1, 1, 1)
 [node name="Wheel" parent="." instance=ExtResource("5_wjn2p")]
 
 [node name="원판" type="MeshInstance3D" parent="Wheel"]
+visible = false
 mesh = SubResource("CylinderMesh_cdnmj")
 
 [node name="ValveHandle" parent="Wheel" instance=ExtResource("2_14kvd")]
