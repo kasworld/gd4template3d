@@ -12,6 +12,21 @@ const 선끝비 := 1.0
 func get_wheel() -> RouletteWheel:
 	return $Wheel
 
+func 집중선만들기(r :float, start:float, end:float, depth :float, count :int, co :Color ) -> MultiMeshShape:
+	var 구분선 := BoxMesh.new()
+	var 길이 := r*(end-start)
+	구분선.size = Vector3(길이, depth/10, depth )
+	var cell각도 := 2.0*PI / count
+	var radius := r-길이/2
+	var mms :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate().init(
+		구분선, Color.WHITE, count ,Vector3.ZERO )
+	for i in count:
+		var rad := cell각도 *i + cell각도/2
+		mms.set_inst_rotation(i, Vector3.BACK, rad)
+		mms.set_inst_pos(i, Vector3(cos(rad) *radius,sin(rad) *radius, 0) )
+		mms.set_inst_color(i, co)
+	return mms
+
 func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Array ) -> Roulette:
 	id = ida
 	반지름 = 반지름a
@@ -20,18 +35,7 @@ func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Arr
 	$Wheel.init(반지름, 깊이, color_text_info_list)
 	$Wheel.rotation_stopped.connect(결과가결정됨)
 
-	var 구분선 := BoxMesh.new()
-	var 길이 := 반지름a*(선끝비-선시작비)
-	구분선.size = Vector3(길이, 깊이a/10, 깊이a )
-	var count := color_text_info_list.size()
-	var cell각도 := 2.0*PI / count
-	var radius := 반지름-길이/2
-	$"Wheel/구분선들".init(구분선, Color.WHITE, count ,Vector3.ZERO )
-	for i in count:
-		var rad := cell각도 *i + cell각도/2
-		$"Wheel/구분선들".set_inst_rotation(i, Vector3.BACK, rad)
-		$"Wheel/구분선들".set_inst_pos(i, Vector3(cos(rad) *radius,sin(rad) *radius,	0) )
-		$"Wheel/구분선들".set_inst_color(i, color_text_info_list[i][0])
+	$Wheel.add_child(집중선만들기(반지름, 선시작비, 선끝비, 깊이, color_text_info_list.size(), Color.GOLD))
 
 	# for debug
 	$IDLabel.text = "%s" % id
