@@ -25,6 +25,10 @@ func init(n :int, symbol크기a :Vector2, color_text_info_lista :Array) -> SlotR
 		add_child(k)
 		symbol_list.append(k)
 
+	var spoke := MultiMeshShape.집중선만들기(r*0.99, 0.0, 1.0, symbol크기.x*0.2, 8, Color.WHITE)
+	spoke.rotate_y(PI/2)
+	add_child( spoke )
+
 	$MeshInstance3D.mesh.material.albedo_color = Color.WHITE
 	$MeshInstance3D.mesh.top_radius = calc_radius()
 	$MeshInstance3D.mesh.bottom_radius = $MeshInstance3D.mesh.top_radius
