@@ -1,14 +1,14 @@
 extends MultiMeshInstance3D
 class_name MultiMeshShape
 
-static func 집중선만들기(r :float, start:float, end:float, depth :float, count :int, co :Color ) -> MultiMeshShape:
+static func 집중선만들기(r :float, start:float, end:float, depth :float, count :int, co :Color , pos :Vector3) -> MultiMeshShape:
 	var 구분선 := BoxMesh.new()
 	var 길이 := r*(end-start)
 	구분선.size = Vector3(길이, depth/10, depth )
 	var cell각도 := 2.0*PI / count
 	var radius := r-길이/2
-	var mms :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate().init(
-		구분선, Color.WHITE, count ,Vector3.ZERO )
+	var mms :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate().init_with_color(
+		구분선, Color.WHITE, count , pos)
 	for i in count:
 		var rad := cell각도 *i + cell각도/2
 		mms.set_inst_rotation(i, Vector3.BACK, rad)
@@ -19,7 +19,17 @@ static func 집중선만들기(r :float, start:float, end:float, depth :float, c
 
 var m_mesh :MultiMesh
 
-func init(mesh :Mesh, co :Color, count :int, pos :Vector3) -> MultiMeshShape:
+func _init_m_mesh(mesh :Mesh, mat :Material) -> void:
+	mesh.material = mat
+	m_mesh = MultiMesh.new()
+	m_mesh.mesh = mesh
+	m_mesh.transform_format = MultiMesh.TRANSFORM_3D
+
+func _set_count(count :int) -> void:
+	m_mesh.instance_count = count
+	m_mesh.visible_instance_count = count
+
+func make_color_material(co :Color) -> StandardMaterial3D:
 	var mat := StandardMaterial3D.new()
 	# draw call 이 TRANSPARENCY_ALPHA 인 경우만 줄어든다. 버그인가?
 	if co.a >= 1.0:
@@ -28,20 +38,31 @@ func init(mesh :Mesh, co :Color, count :int, pos :Vector3) -> MultiMeshShape:
 		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	mat.albedo_color = co
 	mat.vertex_color_use_as_albedo = true
-	mesh.material = mat
-	m_mesh = MultiMesh.new()
-	m_mesh.mesh = mesh
-	m_mesh.transform_format = MultiMesh.TRANSFORM_3D
-	m_mesh.use_colors = true # before set instance_count
-	# Then resize (otherwise, changing the format is not allowed).
-	m_mesh.instance_count = count
-	m_mesh.visible_instance_count = count
-	$".".multimesh = m_mesh
+	return mat
+
+func _set_position_all(pos :Vector3) -> void:
 	for i in m_mesh.visible_instance_count:
 		#m_mesh.set_instance_color(i,Color.WHITE)
 		var t := Transform3D(Basis(), pos)
 		m_mesh.set_instance_transform(i,t)
+
+func init_with_color(mesh :Mesh, co :Color, count :int, pos :Vector3) -> MultiMeshShape:
+	_init_m_mesh(mesh, make_color_material(co))
+	m_mesh.use_colors = true # before set instance_count
+	# Then resize (otherwise, changing the format is not allowed).
+	_set_count(count)
+	multimesh = m_mesh
+	_set_position_all(pos)
 	return self
+
+func init_with_material(mesh :Mesh, mat :Material, count :int, pos :Vector3) -> MultiMeshShape:
+	_init_m_mesh(mesh, mat)
+	# Then resize (otherwise, changing the format is not allowed).
+	_set_count(count)
+	multimesh = m_mesh
+	_set_position_all(pos)
+	return self
+
 
 func set_visible_count(i :int) -> void:
 	m_mesh.visible_instance_count = i
