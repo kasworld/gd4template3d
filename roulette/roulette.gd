@@ -35,14 +35,15 @@ func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Arr
 	$"Wheel/ValveHandle".init(반지름*0.1, 반지름*0.1, 4, Color.WHITE)
 	$"Wheel/ValveHandle".rotation.x = PI/2
 
-	$"Wheel/BarTree2".init_bar_with_color(Color.BLACK, Color.WHITE, 256).init_bar_transform(반지름*0.5, 깊이, 반지름*0.05, 0)
+	var count := color_text_info_list.size()
+	$"Wheel/BarTree2".init_bar_with_color(Color.BLACK, Color.WHITE, count).init_bar_transform(반지름, 깊이, 반지름*0.05, 0)
 	$"Wheel/BarTree2".position.z = 깊이/2
 	$"Wheel/BarTree2".rotation.x = PI/2
 
-	$"Wheel/BarTree3".init_bar_with_color(Color.BLACK, Color.WHITE, 256).init_bar_transform(반지름*0.5, 깊이, 반지름*0.05, 0)
+	$"Wheel/BarTree3".init_bar_with_color(Color.BLACK, Color.WHITE, count).init_bar_transform(반지름, 깊이, 반지름*0.05, 0)
 	$"Wheel/BarTree3".position.z = 깊이/2
 	$"Wheel/BarTree3".rotation.x = PI/2
-	$"Wheel/BarTree3".rotation.z = PI/2
+	$"Wheel/BarTree3".rotate(Vector3.FORWARD, PI/2)
 
 	$화살표.set_size(반지름/5,깊이/2, 깊이*1.5,0.5)
 
