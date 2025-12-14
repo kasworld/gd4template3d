@@ -20,7 +20,7 @@ func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Arr
 	$Wheel.init(반지름, 깊이, color_text_info_list)
 	$Wheel.rotation_stopped.connect(결과가결정됨)
 
-	$Wheel.add_child( MultiMeshShape.집중선만들기(반지름, 선시작비, 선끝비, 깊이, color_text_info_list.size(), Color.WHITE, Vector3.ZERO ))
+	$Wheel.add_child( MultiMeshShape.집중선만들기(반지름, 선시작비, 선끝비, 깊이, color_text_info_list.size(), Color.WHITE ))
 
 	# for debug
 	$IDLabel.text = "%s" % id
@@ -35,13 +35,14 @@ func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Arr
 	$"Wheel/ValveHandle".init(반지름*0.1, 반지름*0.1, 4, Color.WHITE)
 	$"Wheel/ValveHandle".rotation.x = PI/2
 
-	$"Wheel/BarTree2".init_common_params(반지름*0.5, 깊이, 반지름*0.05, 256, 0, 0, 1.0, false)
+	$"Wheel/BarTree2".init_bar_with_color(Color.BLACK, Color.WHITE, 256).init_bar_transform(반지름*0.5, 깊이, 반지름*0.05, 0)
 	$"Wheel/BarTree2".position.z = 깊이/2
 	$"Wheel/BarTree2".rotation.x = PI/2
 
-	$"Wheel/BarTree3".init_common_params(반지름*0.5, 깊이, 반지름*0.05, 256, 0, PI, 1.0, false)
+	$"Wheel/BarTree3".init_bar_with_color(Color.BLACK, Color.WHITE, 256).init_bar_transform(반지름*0.5, 깊이, 반지름*0.05, 0)
 	$"Wheel/BarTree3".position.z = 깊이/2
 	$"Wheel/BarTree3".rotation.x = PI/2
+	$"Wheel/BarTree3".rotation.z = PI/2
 
 	$화살표.set_size(반지름/5,깊이/2, 깊이*1.5,0.5)
 
@@ -64,23 +65,24 @@ func 색설정하기(원판색 :Color, 장식색 :Color, 화살표색 :Color) ->
 	$"Wheel/원판".mesh.material.albedo_color = 원판색
 	$"Wheel/ValveHandle".색바꾸기(장식색)
 	$"화살표".set_color(화살표색)
-	$"Wheel/BarTree2".init_with_color(장식색, 원판색)
-	$"Wheel/BarTree3".init_with_color(장식색.inverted(), 원판색.inverted())
+	$"Wheel/BarTree2".set_gradient_color(장식색, 원판색)
+	$"Wheel/BarTree3".set_gradient_color(장식색.inverted(), 원판색.inverted())
 	var count :int = $Wheel.cell_count얻기()
-	$"Wheel/BarTree2".set_visible_bar_count(count)
-	$"Wheel/BarTree3".set_visible_bar_count(count)
+	$"Wheel/BarTree2".set_visible_count(count)
+	$"Wheel/BarTree3".set_visible_count(count)
 
 func 장식돌리기() -> void:
-	$"Wheel/BarTree2".bar_rotation = -$"Wheel".rotation_per_second/10
-	$"Wheel/BarTree3".bar_rotation = -$"Wheel".rotation_per_second/10
+	bar_rot = -$"Wheel".rotation_per_second/10
 
 # spd : 초당 회전수
 func 돌리기시작(spd :float) -> void:
 	$"Wheel".돌리기시작(spd)
-	$"Wheel/BarTree2".auto_rotate_bar = true
-	$"Wheel/BarTree2".bar_rotation = -spd/10
-	$"Wheel/BarTree3".auto_rotate_bar = true
-	$"Wheel/BarTree3".bar_rotation = -spd/10
+	bar_rot = -spd/10
+
+var bar_rot := 0.1
+func _process(_delta: float) -> void:
+	$"Wheel/BarTree2".rotate_bar_y(bar_rot)
+	$"Wheel/BarTree3".rotate_bar_y(bar_rot)
 
 func 멈추기시작(accel :float=0.5) -> void:
 	$"Wheel".멈추기시작(accel)

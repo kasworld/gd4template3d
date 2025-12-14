@@ -259,19 +259,18 @@ func wirenet_demo() -> void:
 	wn.position = Vector3(-WorldSize.x/2, -WorldSize.y/2, -WorldSize.z/2 +1)
 	$DemoContainer.add_child(wn)
 
+var bartree :BarTree2
 func bartree_demo() -> void:
-	var bt := make_tree(WorldSize.x/3, WorldSize.y/3)
-	#bt.rotate_x(PI/2)
-	bt.position = Vector3(0, -WorldSize.y/2, 0 )
-	$DemoContainer.add_child(bt)
+	bartree = make_tree(WorldSize.x/3, WorldSize.y/3)
+	bartree.position = Vector3(0, -WorldSize.y/2, 0 )
+	$DemoContainer.add_child(bartree)
 func make_tree(tree_width :float, tree_height :float)->BarTree2:
 	var bar_width := tree_width * randf_range(0.5 , 2.0)/10
 	var bar_count := randf_range(5,200)
-	var bar_rotation := 0.1
-	var bar_rotation_begin := randf_range(0,2*PI)
-	var t :BarTree2 = preload("res://bar_tree_2/bar_tree_2.tscn").instantiate().init_common_params(
-		tree_width, tree_height, bar_width, bar_count, bar_rotation, bar_rotation_begin, 0, true
-		).init_with_color(random_color(), random_color() )
+	var t :BarTree2 = preload("res://bar_tree_2/bar_tree_2.tscn").instantiate(
+		).init_bar_with_color(random_color(), random_color(),bar_count
+		).init_bar_transform(tree_width, tree_height, bar_width, 0
+		)
 	return t
 func random_color()->Color:
 	return NamedColorList.color_list.pick_random()[0]
@@ -297,6 +296,7 @@ func _process(_delta: float) -> void:
 	$WaveGauge.animate_wave()
 	wheel.장식돌리기()
 	wheel.선택된cell강조상태켜기()
+	bartree.rotate_bar_y(0.1)
 
 	main_animation.handle_animation()
 	var t := Time.get_unix_time_from_system() /2.3
