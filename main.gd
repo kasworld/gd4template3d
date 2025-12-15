@@ -254,8 +254,8 @@ func clock_demo() -> void:
 	$DemoContainer.add_child(ca)
 
 func wirenet_demo() -> void:
-	var wn :WireNet = preload("res://wire_net/wire_net.tscn").instantiate()
-	wn.init_with_color(Vector2(40,22), Vector2(41,23), 0.1, random_color())
+	var wn :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
+		).init_wire_net(Vector2(40,22), Vector2(41,23), 0.1, random_color())
 	wn.position = Vector3(-WorldSize.x/2, -WorldSize.y/2, -WorldSize.z/2 +1)
 	$DemoContainer.add_child(wn)
 
