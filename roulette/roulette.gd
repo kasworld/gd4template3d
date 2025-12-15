@@ -20,7 +20,8 @@ func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Arr
 	$Wheel.init(반지름, 깊이, color_text_info_list)
 	$Wheel.rotation_stopped.connect(결과가결정됨)
 
-	$Wheel.add_child( MultiMeshShape.집중선만들기(반지름, 선시작비, 선끝비, 깊이, color_text_info_list.size(), Color.WHITE ))
+	$Wheel.add_child( preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
+		).init_집중선(반지름, 선시작비, 선끝비, 깊이, color_text_info_list.size(), Color.WHITE ))
 
 	# for debug
 	$IDLabel.text = "%s" % id

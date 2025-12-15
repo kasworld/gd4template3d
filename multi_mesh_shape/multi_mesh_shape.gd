@@ -1,20 +1,19 @@
 extends MultiMeshInstance3D
 class_name MultiMeshShape
 
-static func 집중선만들기(r :float, start:float, end:float, depth :float, count :int, co :Color) -> MultiMeshShape:
+func init_집중선(r :float, start:float, end:float, depth :float, count :int, co :Color) -> MultiMeshShape:
 	var 구분선 := BoxMesh.new()
 	var 길이 := r*(end-start)
 	구분선.size = Vector3(길이, depth/10, depth )
 	var cell각도 := 2.0*PI / count
 	var radius := r-길이/2
-	var mms :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate().init_with_color(
-		구분선, Color.WHITE, count)
+	init_with_color(구분선, Color.WHITE, count)
 	for i in count:
 		var rad := cell각도 *i + cell각도/2
-		mms.set_inst_rotation(i, Vector3.BACK, rad)
-		mms.set_inst_pos(i, Vector3(cos(rad) *radius,sin(rad) *radius, 0) )
-		mms.set_inst_color(i, co)
-	return mms
+		set_inst_rotation(i, Vector3.BACK, rad)
+		set_inst_pos(i, Vector3(cos(rad) *radius,sin(rad) *radius, 0) )
+		set_inst_color(i, co)
+	return self
 
 func init_wire_net(net_size :Vector2, wire_count :Vector2i, wire_radius :float, co :Color) -> MultiMeshShape:
 	var 선 := BoxMesh.new()
