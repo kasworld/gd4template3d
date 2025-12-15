@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://jmb1btvtwi1m"]
+[gd_scene load_steps=10 format=3 uid="uid://jmb1btvtwi1m"]
 
 [ext_resource type="Script" uid="uid://cownvyqjgybgj" path="res://analogclock3d/analog_clock_3d.gd" id="1_7heg4"]
+[ext_resource type="PackedScene" uid="uid://cfnbpemvoy1i6" path="res://multi_mesh_shape/multi_mesh_shape.tscn" id="2_rgemn"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rgemn"]
 resource_local_to_scene = true
@@ -23,6 +24,9 @@ resource_local_to_scene = true
 resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_lfosk")
 
+[sub_resource type="MultiMesh" id="MultiMesh_lfosk"]
+resource_local_to_scene = true
+
 [node name="AnalogClock3d" type="Node3D"]
 script = ExtResource("1_7heg4")
 
@@ -41,3 +45,6 @@ mesh = SubResource("TorusMesh_oupwd")
 [node name="MinuteBase" type="Node3D" parent="."]
 
 [node name="SecondBase" type="Node3D" parent="."]
+
+[node name="DialBars" parent="." instance=ExtResource("2_rgemn")]
+multimesh = SubResource("MultiMesh_lfosk")

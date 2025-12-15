@@ -101,15 +101,14 @@ func make_hand(co :Color, hand_size: Vector3)->Node3D:
 	hand_base.add_child(hand)
 	return hand_base
 
-var multi_bar :MultiMeshShape
+#var multi_bar :MultiMeshShape
 func make_dial_bar_multi(r :float, d:float, align :BarAlign):
-	multi_bar = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_with_color(BoxMesh.new(), Color.WHITE, 360)
-	multi_bar.set_gradient_color(colors.dial_1,colors.dial_1)
+	$DialBars.init_with_color(BoxMesh.new(), Color.WHITE, 360)
+	$DialBars.set_gradient_color(colors.dial_1,colors.dial_1)
 	# Set the transform of the instances.
 	var bar_height := d*0.2
 	var bar_size :Vector3
-	for i in multi_bar.get_visible_count():
+	for i in $DialBars.get_visible_count():
 		var rad := deg_to_rad(-i+90)
 		var bar_center := Vector3(sin(rad)*r,bar_height/2, cos(rad)*r)
 		var bar_rotation := Vector3.ZERO
@@ -134,9 +133,7 @@ func make_dial_bar_multi(r :float, d:float, align :BarAlign):
 		var t := Transform3D(Basis(), bar_position)
 		t = t.rotated_local(Vector3.UP, bar_rot)
 		t = t.scaled_local( bar_size )
-		multi_bar.multimesh.set_instance_transform(i,t)
-
-	add_child(multi_bar)
+		$DialBars.multimesh.set_instance_transform(i,t)
 
 func make_dial_num(r :float, d:float, fsize :float, nt :NumberType)->void:
 	var mat := get_color_mat(colors.dial_num)
