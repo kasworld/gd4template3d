@@ -265,11 +265,11 @@ func bartree_demo() -> void:
 	bartree.position = Vector3(0, -WorldSize.y/2, 0 )
 	$DemoContainer.add_child(bartree)
 func make_tree(tree_width :float, tree_height :float)->BarTree2:
-	var bar_width := tree_width * randf_range(0.5 , 2.0)/10
+	var tree_size := Vector3(tree_width, tree_height, tree_width * randf_range(0.5 , 2.0)/10)
 	var bar_count := randf_range(5,200)
 	var t :BarTree2 = preload("res://bar_tree_2/bar_tree_2.tscn").instantiate(
-		).init_bar_with_color(random_color(), random_color(),bar_count
-		).init_bar_transform(tree_width, tree_height, bar_width, 0
+		).init_bartree_with_color(random_color(), random_color(),bar_count
+		).init_bartree_transform(tree_size, 0
 		)
 	return t
 func random_color()->Color:
@@ -296,7 +296,7 @@ func _process(_delta: float) -> void:
 	$WaveGauge.animate_wave()
 	wheel.장식돌리기()
 	wheel.선택된cell강조상태켜기()
-	bartree.rotate_bar_y(0.1)
+	bartree.rotate_tree_bar_y(0.1)
 
 	main_animation.handle_animation()
 	var t := Time.get_unix_time_from_system() /2.3
