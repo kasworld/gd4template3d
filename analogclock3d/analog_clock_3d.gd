@@ -20,36 +20,7 @@ var colors := {
 }
 
 var tz_shift :float
-var hour_hand_base :Node3D
-var minute_hand_base :Node3D
-var second_hand_base :Node3D
 
-func get_color_mat(co: Color)->Material:
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = co
-	#mat.metallic = 1
-	#mat.clearcoat = true
-	return mat
-
-func new_box(bsize :Vector3, mat :Material) -> MeshInstance3D:
-	var mesh := BoxMesh.new()
-	mesh.size = bsize
-	mesh.material = mat
-	var sp := MeshInstance3D.new()
-	sp.mesh = mesh
-	return sp
-
-func new_text(fsize :float, fdepth :float, mat :Material, text :String) -> MeshInstance3D:
-	var mesh := TextMesh.new()
-	mesh.font = font
-	mesh.depth = fdepth
-	mesh.pixel_size = fsize / 16
-	#mesh.font_size = fsize as int
-	mesh.text = text
-	mesh.material = mat
-	var sp := MeshInstance3D.new()
-	sp.mesh = mesh
-	return sp
 
 func init(r :float, d :float, fsize :float, tzs :float = 9.0, backplane:bool=true) -> AnalogClock3D:
 	tz_shift = tzs
@@ -79,27 +50,22 @@ func init(r :float, d :float, fsize :float, tzs :float = 9.0, backplane:bool=tru
 
 	return self
 
-func _process(_delta: float) -> void:
-	update_clock()
-
 func make_hands(r :float, d:float)->void:
+	$HourBase/HourHand.mesh.material.albedo_color = colors.hour
+	$MinuteBase/MinuteHand.mesh.material.albedo_color = colors.minute
+	$SecondBase/SecondHand.mesh.material.albedo_color = colors.second
+
 	var hand_height := d*0.1
-	hour_hand_base = make_hand(colors.hour ,Vector3(r*0.75,hand_height,r/36))
-	hour_hand_base.position.y = hand_height*1
+	$HourBase/HourHand.mesh.size = Vector3(r*0.75,hand_height,r/36)
+	$MinuteBase/MinuteHand.mesh.size = Vector3(r*0.88,hand_height,r/54)
+	$SecondBase/SecondHand.mesh.size = Vector3(r*1.0,hand_height,r/72)
+	$HourBase/HourHand.position.x = r*0.75 /2
+	$MinuteBase/MinuteHand.position.x = r*0.88 /2
+	$SecondBase/SecondHand.position.x = r*1.0 /2
 
-	minute_hand_base = make_hand(colors.minute, Vector3(r*0.88,hand_height,r/54))
-	minute_hand_base.position.y = hand_height*2
-
-	second_hand_base = make_hand(colors.second, Vector3(r*1.0,hand_height,r/72))
-	second_hand_base.position.y = hand_height*3
-
-func make_hand(co :Color, hand_size: Vector3)->Node3D:
-	var hand_base := Node3D.new()
-	add_child(hand_base)
-	var hand := new_box(hand_size, get_color_mat(co))
-	hand.position.x = hand_size.x / 2
-	hand_base.add_child(hand)
-	return hand_base
+	$HourBase.position.y = hand_height*1
+	$MinuteBase.position.y = hand_height*2
+	$SecondBase.position.y = hand_height*3
 
 #var multi_bar :MultiMeshShape
 func make_dial_bar_multi(r :float, d:float, align :BarAlign):
@@ -136,7 +102,8 @@ func make_dial_bar_multi(r :float, d:float, align :BarAlign):
 		$DialBars.multimesh.set_instance_transform(i,t)
 
 func make_dial_num(r :float, d:float, fsize :float, nt :NumberType)->void:
-	var mat := get_color_mat(colors.dial_num)
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = colors.dial_num
 	var bar_height := d*0.2
 	match nt:
 		NumberType.Hour:
@@ -164,6 +131,21 @@ func make_dial_num(r :float, d:float, fsize :float, nt :NumberType)->void:
 				t.position = bar_center
 				add_child(t)
 
+func new_text(fsize :float, fdepth :float, mat :Material, text :String) -> MeshInstance3D:
+	var mesh := TextMesh.new()
+	mesh.font = font
+	mesh.depth = fdepth
+	mesh.pixel_size = fsize / 16
+	mesh.text = text
+	mesh.material = mat
+	var sp := MeshInstance3D.new()
+	sp.mesh = mesh
+	return sp
+
+
+func _process(_delta: float) -> void:
+	update_clock()
+
 func update_clock():
 	var ms := Time.get_unix_time_from_system()
 	var second := ms - int(ms/60)*60
@@ -171,9 +153,9 @@ func update_clock():
 	var minute := ms - int(ms/60)*60
 	ms = ms / 60
 	var hour := ms - int(ms/24)*24 + tz_shift
-	second_hand_base.rotation.y = -second2rad(second)
-	minute_hand_base.rotation.y = -minute2rad(minute)
-	hour_hand_base.rotation.y = -hour2rad(hour)
+	$SecondBase.rotation.y = -second2rad(second)
+	$MinuteBase.rotation.y = -minute2rad(minute)
+	$HourBase.rotation.y = -hour2rad(hour)
 
 func second2rad(sec :float) -> float:
 	return 2.0*PI/60.0*sec
