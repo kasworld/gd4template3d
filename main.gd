@@ -1,8 +1,8 @@
 extends Node3D
 
 const WorldSize := Vector3(40,22,20)
-const AnimationDuration := 1.0
 
+const AnimationDuration := 1.0
 var main_animation := Animation3D.new()
 func main_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
 	if main_animation.is_empty():
@@ -16,12 +16,6 @@ func start_all_animation() -> void:
 		AnimationDuration)
 	start_rotate_animation($ValveHandle, Vector3.Axis.AXIS_Y, AnimationDuration)
 
-func ui_panel_init() -> void:
-	var vp_size := get_viewport().get_visible_rect().size
-	var 짧은길이 :float = min(vp_size.x, vp_size.y)
-	$"왼쪽패널".size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
-	$오른쪽패널.size = Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
-	$오른쪽패널.position = Vector2(vp_size.x/2 + 짧은길이/2, 0)
 
 func timed_message_init() -> void:
 	var vp_size := get_viewport().get_visible_rect().size
@@ -31,15 +25,40 @@ func timed_message_init() -> void:
 			ProjectSettings.get_setting("application/config/name"),
 			ProjectSettings.get_setting("application/config/version")
 			] )
-
 	$TimedMessage.panel_hidden.connect(message_hidden)
 	$TimedMessage.show_message("",0)
-
 func message_hidden(_s :String) -> void:
 	pass
 
+
+func ui_panel_init() -> void:
+	var vp_size := get_viewport().get_visible_rect().size
+	var 짧은길이 :float = min(vp_size.x, vp_size.y)
+	var panel_size := Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
+	$"왼쪽패널".size = panel_size
+	$"왼쪽패널".custom_minimum_size = panel_size
+	$오른쪽패널.size = panel_size
+	$"오른쪽패널".custom_minimum_size = panel_size
+	$오른쪽패널.position = Vector2(vp_size.x/2 + 짧은길이/2, 0)
 func on_viewport_size_changed():
 	ui_panel_init()
+
+func label_demo() -> void:
+	if $"오른쪽패널/LabelPerformance".visible:
+		$"오른쪽패널/LabelPerformance".text = """%d FPS (%.2f mspf)
+Currently rendering: occlusion culling:%s
+%d objects
+%dK primitive indices
+%d draw calls""" % [
+		Engine.get_frames_per_second(),1000.0 / Engine.get_frames_per_second(),
+		get_tree().root.use_occlusion_culling,
+		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME),
+		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME) * 0.001,
+		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME),
+		]
+	if $"오른쪽패널/LabelInfo".visible:
+		$"오른쪽패널/LabelInfo".text = "%s" % [ MovingCameraLight.GetCurrentCamera() ]
+
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(on_viewport_size_changed)
@@ -80,6 +99,7 @@ func make_color_text_info_list(colist :Array, cdlist :Array) -> Array:
 	for i in cdlist.size():
 		rtn.append( [ colist[i%colist.size()], cdlist[i] ] )
 	return rtn
+
 
 var wheel :Roulette
 func wheel_demo() -> void:
@@ -155,14 +175,9 @@ func maze3d_demo() -> void:
 	ms.MazeSize = Vector2i(16,9)
 	ms.LaneW = WorldSize.x/ms.MazeSize.x
 	ms.StoryH = ms.LaneW
-	$Maze3D.init_with_color(
-		ms,
-		Callable(),
-		random_color(),
-		random_color(),
-		random_color(),
-		)
+	$Maze3D.init_with_color( ms, Callable(), random_color(), random_color(), random_color() )
 	$Maze3D.position.y = -WorldSize.y/2 -ms.StoryH
+
 
 var b_box :AABB
 func meshtrail_demo() -> void:
@@ -191,6 +206,7 @@ func get_color_ByPosition(pos :Vector3) -> Color:
 	return co
 func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	return Bounce.v3f(pos, b_box, radius)
+
 
 func arrow3d_demo() -> void:
 	$Arrow3D.set_color(random_color()).set_size(5,0.2,0.6)
@@ -259,6 +275,7 @@ func wirenet_demo() -> void:
 	wn.position = Vector3(-WorldSize.x/2, -WorldSize.y/2, -WorldSize.z/2 +1)
 	$DemoContainer.add_child(wn)
 
+
 var bartree :BarTree2
 func bartree_demo() -> void:
 	bartree = make_tree(WorldSize.x/3, WorldSize.y/3)
@@ -275,21 +292,6 @@ func make_tree(tree_width :float, tree_height :float)->BarTree2:
 func random_color()->Color:
 	return NamedColorList.color_list.pick_random()[0]
 
-func label_demo() -> void:
-	if $"오른쪽패널/LabelPerformance".visible:
-		$"오른쪽패널/LabelPerformance".text = """%d FPS (%.2f mspf)
-Currently rendering: occlusion culling:%s
-%d objects
-%dK primitive indices
-%d draw calls""" % [
-		Engine.get_frames_per_second(),1000.0 / Engine.get_frames_per_second(),
-		get_tree().root.use_occlusion_culling,
-		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME),
-		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME) * 0.001,
-		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME),
-		]
-	if $"오른쪽패널/LabelInfo".visible:
-		$"오른쪽패널/LabelInfo".text = "%s" % [ MovingCameraLight.GetCurrentCamera() ]
 
 func _process(_delta: float) -> void:
 	label_demo()
