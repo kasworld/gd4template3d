@@ -1,6 +1,43 @@
-[gd_scene load_steps=2 format=3 uid="uid://jmb1btvtwi1m"]
+[gd_scene load_steps=8 format=3 uid="uid://jmb1btvtwi1m"]
 
 [ext_resource type="Script" uid="uid://cownvyqjgybgj" path="res://analogclock3d/analog_clock_3d.gd" id="1_7heg4"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rgemn"]
+resource_local_to_scene = true
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_lfosk"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_rgemn")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sas7y"]
+resource_local_to_scene = true
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rgemn"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_sas7y")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lfosk"]
+resource_local_to_scene = true
+
+[sub_resource type="TorusMesh" id="TorusMesh_oupwd"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_lfosk")
+
 [node name="AnalogClock3d" type="Node3D"]
 script = ExtResource("1_7heg4")
+
+[node name="BackPlane" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("CylinderMesh_lfosk")
+
+[node name="Center" type="MeshInstance3D" parent="."]
+mesh = SubResource("CylinderMesh_rgemn")
+
+[node name="Donut" type="MeshInstance3D" parent="."]
+mesh = SubResource("TorusMesh_oupwd")
+
+[node name="HourBase" type="Node3D" parent="."]
+
+[node name="MinuteBase" type="Node3D" parent="."]
+
+[node name="SecondBase" type="Node3D" parent="."]

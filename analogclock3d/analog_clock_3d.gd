@@ -31,26 +31,6 @@ func get_color_mat(co: Color)->Material:
 	#mat.clearcoat = true
 	return mat
 
-func new_cylinder(h :float, r1 :float, r2 :float, mat :Material) -> MeshInstance3D:
-	var mesh := CylinderMesh.new()
-	mesh.height = h
-	mesh.top_radius = r1
-	mesh.bottom_radius = r2
-	mesh.radial_segments = clampi( (r1+r2)*2 as int , 64, 360)
-	mesh.material = mat
-	var sp := MeshInstance3D.new()
-	sp.mesh = mesh
-	return sp
-
-func new_torus(r1 :float,r2 :float, mat :Material) -> MeshInstance3D:
-	var mesh := TorusMesh.new()
-	mesh.outer_radius = r1
-	mesh.inner_radius = r2
-	mesh.material = mat
-	var sp := MeshInstance3D.new()
-	sp.mesh = mesh
-	return sp
-
 func new_box(bsize :Vector3, mat :Material) -> MeshInstance3D:
 	var mesh := BoxMesh.new()
 	mesh.size = bsize
@@ -74,23 +54,29 @@ func new_text(fsize :float, fdepth :float, mat :Material, text :String) -> MeshI
 func init(r :float, d :float, fsize :float, tzs :float = 9.0, backplane:bool=true) -> AnalogClock3D:
 	tz_shift = tzs
 
+	$BackPlane.mesh.height = d*0.5
+	$BackPlane.mesh.top_radius = r
+	$BackPlane.mesh.bottom_radius = r
+	$BackPlane.mesh.material.albedo_color = colors.clockbg
+	$BackPlane.position.y = -d*0.25
+	$Center.mesh.height = d*0.5
+	$Center.mesh.top_radius = r/50
+	$Center.mesh.bottom_radius = r/50
+	$Center.mesh.material.albedo_color = colors.center_circle1
+	$Center.position.y = d*0.5/2
+	$Donut.mesh.inner_radius = r/40
+	$Donut.mesh.outer_radius = r/20
+	$Donut.mesh.material.albedo_color = colors.center_circle2
+	$Donut.position.y = d*0.5/2
+
 	if backplane:
-		var plane := new_cylinder(d*0.5, r,r, get_color_mat(colors.clockbg ) )
-		plane.position.y = -d*0.25
-		add_child(plane)
+		$BackPlane.visible = true
 
 	make_hands(r, d)
 	make_dial_bar_multi(r*0.88, d, BarAlign.Mid)
-	#make_dial_bar(r*0.88, d, BarAlign.Mid)
 	make_dial_num(r*0.95, d, fsize*0.8, NumberType.Minute)
 	make_dial_num(r*0.8, d, fsize, NumberType.Hour)
 
-	var cc := new_cylinder(d*0.5,r/50,r/50, get_color_mat(colors.center_circle1))
-	cc.position.y = d*0.5/2
-	add_child(cc)
-	var cc2 := new_torus(r/20, r/40, get_color_mat(colors.center_circle2))
-	cc2.position.y = d*0.5/2
-	add_child( cc2 )
 	return self
 
 func _process(_delta: float) -> void:
