@@ -68,8 +68,8 @@ func 색설정하기(원판색 :Color, 장식색 :Color, 화살표색 :Color) ->
 	$"Wheel/원판".mesh.material.albedo_color = 원판색
 	$"Wheel/ValveHandle".색바꾸기(장식색)
 	$"화살표".set_color(화살표색)
-	$"Wheel/BarTree2".set_gradient_color(장식색, 원판색)
-	$"Wheel/BarTree3".set_gradient_color(장식색.inverted(), 원판색.inverted())
+	$"Wheel/BarTree2".set_gradient_color_all(장식색, 원판색)
+	$"Wheel/BarTree3".set_gradient_color_all(장식색.inverted(), 원판색.inverted())
 	var count :int = $Wheel.cell_count얻기()
 	$"Wheel/BarTree2".set_visible_count(count)
 	$"Wheel/BarTree3".set_visible_count(count)
