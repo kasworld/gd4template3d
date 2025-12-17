@@ -239,19 +239,20 @@ func line2d_demo() -> void:
 	sp.material_override.albedo_texture = sv.get_texture()
 	$DemoContainer.add_child(sp)
 
+var orbit_sphere :OrbitSphere
 func orbit_demo() -> void:
 	var diagonal_length := WorldSize.length()/2
 	var a120 := PI*2/3
 	var a30 := PI/6
 	var axis1 := Vector3.UP.rotated(Vector3.RIGHT, a30)
-	var os :OrbitSphere = preload("res://orbit_sphere/orbit_sphere.tscn").instantiate()
+	orbit_sphere = preload("res://orbit_sphere/orbit_sphere.tscn").instantiate()
 	var mat1 := StandardMaterial3D.new()
 	mat1.albedo_color = random_color()
 	var mat2 := StandardMaterial3D.new()
 	mat2.albedo_color = random_color()
-	os.궤도설정(diagonal_length*1.1, 1.0/3, axis1, a120*2).구설정(2, 1, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
+	orbit_sphere.궤도설정(diagonal_length*1.1, 1.0/3, axis1, a120*2).구설정(2, 1, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
 	#os.position = WorldSize/2
-	$DemoContainer.add_child(os)
+	$DemoContainer.add_child(orbit_sphere)
 
 func calendar_demo() -> void:
 	var ca :Calendar3D = preload("res://calendar3d/calendar_3d.tscn").instantiate(
@@ -293,15 +294,17 @@ func random_color()->Color:
 	return NamedColorList.color_list.pick_random()[0]
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	var now := Time.get_unix_time_from_system()
 	label_demo()
-	$WaveGauge.animate_wave()
+	$WaveGauge.animate_wave(now)
 	wheel.장식돌리기()
 	wheel.선택된cell강조상태켜기()
-	bartree.rotate_tree_bar_y(0.1)
+	bartree.rotate_tree_bar_y(delta*10)
+	orbit_sphere.animate_rotate(now, delta)
 
 	main_animation.handle_animation()
-	var t := Time.get_unix_time_from_system() /2.3
+	var t := now /2.3
 	if $MovingCameraLightHober.is_current_camera():
 		$MovingCameraLightHober.move_hober_around_z(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
 	elif $MovingCameraLightAround.is_current_camera():
