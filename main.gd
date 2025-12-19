@@ -180,24 +180,25 @@ func maze3d_demo() -> void:
 
 
 var b_box :AABB
+var mesh_trail :MeshTrail
 func meshtrail_demo() -> void:
 	var mt :String = ["♠","♣","♥","♦" ,"★","☆","♩","♪","♬"].pick_random()
 	b_box = AABB( -WorldSize/2, WorldSize)
-	var ball :MeshTrail = preload("res://mesh_trail/mesh_trail.tscn").instantiate()
+	mesh_trail = preload("res://mesh_trail/mesh_trail.tscn").instantiate()
 	var radius := 1.0
 	var count := randi_range(10,20)
 	var startpos := b_box.get_center()
 	match randi_range(0,3):
 		0:
-			ball.init_OnBounce().set_get_random_color_fn(random_color)
+			mesh_trail.set_ColorChange_OnBounce().set_get_random_color_fn(random_color)
 		1:
-			ball.init_MeshGradient().set_get_random_color_fn(random_color)
+			mesh_trail.set_ColorChange_MeshGradient().set_get_random_color_fn(random_color)
 		2:
-			ball.init_ByPosition(b_box)
+			mesh_trail.set_ColorChange_ByPosition(b_box)
 		3:
-			ball.init_ByPositionFn(get_color_ByPosition)
-	ball.init( bounce_fn, radius, count, mt, startpos).set_speed(5,10,0.05)
-	$DemoContainer.add_child(ball)
+			mesh_trail.set_ColorChange_ByPositionFn(get_color_ByPosition)
+	mesh_trail.init( bounce_fn, radius, count, mt, startpos).set_speed(5,10)
+	$DemoContainer.add_child(mesh_trail)
 func get_color_ByPosition(pos :Vector3) -> Color:
 	var co :Color
 	for i in 3:
@@ -302,6 +303,7 @@ func _process(delta: float) -> void:
 	wheel.선택된cell강조상태켜기()
 	bartree.rotate_tree_bar_y(delta*10)
 	orbit_sphere.animate_rotate(now, delta)
+	mesh_trail.move(delta)
 
 	main_animation.handle_animation()
 	var t := now /2.3
