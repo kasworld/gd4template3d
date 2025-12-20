@@ -179,34 +179,47 @@ func maze3d_demo() -> void:
 	$Maze3D.position.y = -WorldSize.y/2 -ms.StoryH
 
 
-var b_box :AABB
-var mesh_trail :MeshTrail
+var meshtrail_scene = preload("res://mesh_trail/mesh_trail.tscn")
+var bound_aabb :AABB
+var mesh_trail_list :Array
+var trailmesh_radius := 1.0
 func meshtrail_demo() -> void:
-	var mt :String = ["♠","♣","♥","♦" ,"★","☆","♩","♪","♬"].pick_random()
-	b_box = AABB( -WorldSize/2, WorldSize)
-	mesh_trail = preload("res://mesh_trail/mesh_trail.tscn").instantiate()
-	var radius := 1.0
-	var count := randi_range(10,20)
-	var startpos := b_box.get_center()
-	match randi_range(0,3):
-		0:
-			mesh_trail.set_ColorChange_OnBounce().set_get_random_color_fn(random_color)
-		1:
-			mesh_trail.set_ColorChange_MeshGradient().set_get_random_color_fn(random_color)
-		2:
-			mesh_trail.set_ColorChange_ByPosition(b_box)
-		3:
-			mesh_trail.set_ColorChange_ByPositionFn(get_color_ByPosition)
-	mesh_trail.init( bounce_fn, radius, count, mt, startpos).set_speed(5,10)
-	$DemoContainer.add_child(mesh_trail)
+	bound_aabb = AABB( -WorldSize/2, WorldSize)
+	var count := 20
+	var startpos := bound_aabb.get_center()
+	var mesh := BoxMesh.new()
+	mesh.size = Vector3(trailmesh_radius*2, trailmesh_radius*2, 0.1)
+	mesh_trail_list.append( meshtrail_scene.instantiate(
+		).set_ColorChange_OnBounce(
+		).init_with_alpha(mesh, count,  1.0 , startpos,
+		).set_speed(20,40)
+	)
+	mesh_trail_list.append( meshtrail_scene.instantiate(
+		).set_ColorChange_MeshGradient(
+		).init_with_alpha(mesh, count,  1.0 , startpos,
+		).set_speed(20,40)
+	)
+	mesh_trail_list.append( meshtrail_scene.instantiate(
+		).set_ColorChange_ByPosition(bound_aabb
+		).init_with_alpha(mesh, count,  1.0 , startpos,
+		).set_speed(20,40)
+	)
+	mesh_trail_list.append( meshtrail_scene.instantiate(
+		).set_ColorChange_ByPositionFn(get_color_ByPosition
+		).init_with_alpha(mesh, count,  1.0 , startpos,
+		).set_speed(20,40)
+	)
+	for mt in mesh_trail_list:
+		$DemoContainer.add_child(mt)
+
 func get_color_ByPosition(pos :Vector3) -> Color:
 	var co :Color
 	for i in 3:
-		co[i] = (pos[i] - b_box.position[i]) / b_box.size[i]
+		co[i] = (pos[i] - bound_aabb.position[i]) / bound_aabb.size[i]
 	co = co.inverted()
 	return co
 func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
-	return Bounce.v3f(pos, b_box, radius)
+	return Bounce.v3f(pos, bound_aabb, radius)
 
 
 func arrow3d_demo() -> void:
@@ -303,7 +316,8 @@ func _process(delta: float) -> void:
 	wheel.선택된cell강조상태켜기()
 	bartree.rotate_tree_bar_y(delta*10)
 	orbit_sphere.animate_rotate(now, delta)
-	mesh_trail.move(delta)
+	for mt in mesh_trail_list:
+		mt.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
 
 	main_animation.handle_animation()
 	var t := now /2.3
