@@ -189,28 +189,20 @@ func meshtrail_demo() -> void:
 	var startpos := bound_aabb.get_center()
 	var mesh := BoxMesh.new()
 	mesh.size = Vector3(trailmesh_radius*2, trailmesh_radius*2, 0.1)
-	mesh_trail_list.append( meshtrail_scene.instantiate(
-		).set_ColorChange_OnBounce(
+	var mt :MeshTrail = meshtrail_scene.instantiate(
 		).init_with_alpha(mesh, count,  1.0 , startpos,
 		).set_speed(20,40)
-	)
-	mesh_trail_list.append( meshtrail_scene.instantiate(
-		).set_ColorChange_MeshGradient(
-		).init_with_alpha(mesh, count,  1.0 , startpos,
-		).set_speed(20,40)
-	)
-	mesh_trail_list.append( meshtrail_scene.instantiate(
-		).set_ColorChange_ByPosition(bound_aabb
-		).init_with_alpha(mesh, count,  1.0 , startpos,
-		).set_speed(20,40)
-	)
-	mesh_trail_list.append( meshtrail_scene.instantiate(
-		).set_ColorChange_ByPositionFn(get_color_ByPosition
-		).init_with_alpha(mesh, count,  1.0 , startpos,
-		).set_speed(20,40)
-	)
-	for mt in mesh_trail_list:
-		$DemoContainer.add_child(mt)
+	match randi_range(0,3):
+		0:
+			mt.set_ColorChange_OnBounce()
+		1:
+			mt.set_ColorChange_MeshGradient()
+		2:
+			mt.set_ColorChange_ByPosition(bound_aabb)
+		3:
+			mt.set_ColorChange_ByPositionFn(get_color_ByPosition)
+	mesh_trail_list.append(mt)
+	$DemoContainer.add_child(mt)
 
 func get_color_ByPosition(pos :Vector3) -> Color:
 	var co :Color
