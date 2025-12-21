@@ -1,6 +1,6 @@
 extends Node3D
 
-const WorldSize := Vector3(40,22,20)
+const WorldSize := Vector3(160,90,80)
 
 const AnimationDuration := 1.0
 var main_animation := Animation3D.new()
@@ -124,7 +124,7 @@ func _on_timer_wheel_timeout() -> void:
 
 
 func reel_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	var symbol크기 := Vector2(3,1.5)
+	var symbol크기 := Vector2(WorldSize.x/15 ,WorldSize.y/15)
 	var color_text_into_list := make_color_text_info_list(
 		colorlist_dark, cardlist,
 	).duplicate()
@@ -195,11 +195,11 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 
 
 func arrow3d_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	$Arrow3D.set_color(random_color()).set_size(5,0.2,0.6)
+	$Arrow3D.set_color(random_color()).set_size( WorldSize.x/10, WorldSize.x/100, WorldSize.x/50)
 	$Arrow3D.position = base_pos
 
 func valvehandle_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	$ValveHandle.init(2,2,4, random_color())
+	$ValveHandle.init(WorldSize.x/20,WorldSize.x/20,4, random_color())
 	$ValveHandle.position = base_pos
 
 func line2d_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
@@ -227,7 +227,7 @@ func orbit_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	mat1.albedo_color = random_color()
 	var mat2 := StandardMaterial3D.new()
 	mat2.albedo_color = random_color()
-	$OrbitSphere.궤도설정(diagonal_length*1.1, 1.0/3, axis1, a120*2).구설정(2, 1, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
+	$OrbitSphere.궤도설정(diagonal_length*1.1, 1.0/3, axis1, a120*2).구설정(WorldSize.x/40, WorldSize.x/50, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
 	$OrbitSphere.position = base_pos
 
 func calendar_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
@@ -243,7 +243,7 @@ func clock_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	$AnalogClock3d.position = base_pos
 
 func wirenet_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	$WireNet.init_wire_net(Vector2(40,22), Vector2(41,23), 0.1, random_color())
+	$WireNet.init_wire_net(Vector2(WorldSize.x,WorldSize.y), Vector2i(WorldSize.x-1,WorldSize.y-1), 0.1, random_color())
 	$WireNet.position = base_pos
 
 func bartree_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
