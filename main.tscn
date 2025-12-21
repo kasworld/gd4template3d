@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://c6maulcewyhy5"]
+[gd_scene load_steps=26 format=3 uid="uid://c6maulcewyhy5"]
 
 [ext_resource type="Script" uid="uid://bgj25qi5j8dgh" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Environment" uid="uid://dq6rkclkoup3n" path="res://skymap/skymap.tres" id="3_h2yge"]
@@ -12,6 +12,11 @@
 [ext_resource type="PackedScene" uid="uid://sjnpttkqk1qs" path="res://roulette/roulette.tscn" id="10_4c57u"]
 [ext_resource type="PackedScene" uid="uid://bgvg5u80d01y8" path="res://slot_reel/slot_reel.tscn" id="11_efxa6"]
 [ext_resource type="PackedScene" uid="uid://cy34xu36jq84y" path="res://mesh_trail/mesh_trail.tscn" id="12_dg77c"]
+[ext_resource type="PackedScene" uid="uid://c5ifq7nknxri4" path="res://orbit_sphere/orbit_sphere.tscn" id="13_ycdy4"]
+[ext_resource type="PackedScene" uid="uid://b7xxw75asvp0w" path="res://calendar3d/calendar_3d.tscn" id="14_w48qg"]
+[ext_resource type="PackedScene" uid="uid://jmb1btvtwi1m" path="res://analogclock3d/analog_clock_3d.tscn" id="15_vivmo"]
+[ext_resource type="PackedScene" uid="uid://cfnbpemvoy1i6" path="res://multi_mesh_shape/multi_mesh_shape.tscn" id="16_2cqfq"]
+[ext_resource type="PackedScene" uid="uid://btkkwpk54jqc" path="res://bar_tree_2/bar_tree_2.tscn" id="17_yaehf"]
 
 [sub_resource type="Theme" id="Theme_h2yge"]
 default_font_size = 48
@@ -30,6 +35,12 @@ resource_local_to_scene = true
 default_font = SubResource("SystemFont_bejao")
 
 [sub_resource type="MultiMesh" id="MultiMesh_ycdy4"]
+resource_local_to_scene = true
+
+[sub_resource type="MultiMesh" id="MultiMesh_yaehf"]
+resource_local_to_scene = true
+
+[sub_resource type="MultiMesh" id="MultiMesh_074og"]
 resource_local_to_scene = true
 
 [node name="Main" type="Node3D"]
@@ -126,6 +137,18 @@ one_shot = true
 
 [node name="MeshTrail" parent="." instance=ExtResource("12_dg77c")]
 multimesh = SubResource("MultiMesh_ycdy4")
+
+[node name="OrbitSphere" parent="." instance=ExtResource("13_ycdy4")]
+
+[node name="Calendar3d" parent="." instance=ExtResource("14_w48qg")]
+
+[node name="AnalogClock3d" parent="." instance=ExtResource("15_vivmo")]
+
+[node name="WireNet" parent="." instance=ExtResource("16_2cqfq")]
+multimesh = SubResource("MultiMesh_yaehf")
+
+[node name="BarTree2" parent="." instance=ExtResource("17_yaehf")]
+multimesh = SubResource("MultiMesh_074og")
 
 [connection signal="timeout" from="TimerWheel" to="." method="_on_timer_wheel_timeout"]
 [connection signal="timeout" from="TimerReel" to="." method="_on_timer_reel_timeout"]

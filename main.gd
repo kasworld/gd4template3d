@@ -236,57 +236,40 @@ func line2d_demo() -> void:
 	sp.material_override.albedo_texture = sv.get_texture()
 	$DemoContainer.add_child(sp)
 
-var orbit_sphere :OrbitSphere
 func orbit_demo() -> void:
 	var diagonal_length := WorldSize.length()/2
 	var a120 := PI*2/3
 	var a30 := PI/6
 	var axis1 := Vector3.UP.rotated(Vector3.RIGHT, a30)
-	orbit_sphere = preload("res://orbit_sphere/orbit_sphere.tscn").instantiate()
 	var mat1 := StandardMaterial3D.new()
 	mat1.albedo_color = random_color()
 	var mat2 := StandardMaterial3D.new()
 	mat2.albedo_color = random_color()
-	orbit_sphere.궤도설정(diagonal_length*1.1, 1.0/3, axis1, a120*2).구설정(2, 1, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
-	#os.position = WorldSize/2
-	$DemoContainer.add_child(orbit_sphere)
+	$OrbitSphere.궤도설정(diagonal_length*1.1, 1.0/3, axis1, a120*2).구설정(2, 1, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
 
 func calendar_demo() -> void:
-	var ca :Calendar3D = preload("res://calendar3d/calendar_3d.tscn").instantiate(
-		).init(WorldSize.x/2, WorldSize.y, 2, WorldSize.y/2.0/6 , false )
-	ca.rotate_y(PI/2)
-	ca.rotate_x(PI/2)
-	ca.position = Vector3(-WorldSize.x/4,0,WorldSize.z/4 -1)
-	$DemoContainer.add_child(ca)
+	$Calendar3d.init(WorldSize.x/2, WorldSize.y, 2, WorldSize.y/2.0/6 , false )
+	$Calendar3d.rotate_y(PI/2)
+	$Calendar3d.rotate_x(PI/2)
+	$Calendar3d.position = Vector3(-WorldSize.x/4,0,WorldSize.z/4 -1)
 
 func clock_demo() -> void:
-	var ca :AnalogClock3D = preload("res://analogclock3d/analog_clock_3d.tscn").instantiate(
-		).init(WorldSize.x/4, 2, WorldSize.y/2.0/7 ,9.0, false )
-	ca.rotate_y(PI/2)
-	ca.rotate_x(PI/2)
-	ca.position = Vector3(WorldSize.x/4,0,WorldSize.z/4 +1)
-	$DemoContainer.add_child(ca)
+	$AnalogClock3d.init(WorldSize.x/4, 2, WorldSize.y/2.0/7 ,9.0, false )
+	$AnalogClock3d.rotate_y(PI/2)
+	$AnalogClock3d.rotate_x(PI/2)
+	$AnalogClock3d.position = Vector3(WorldSize.x/4,0,WorldSize.z/4 +1)
 
 func wirenet_demo() -> void:
-	var wn :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_wire_net(Vector2(40,22), Vector2(41,23), 0.1, random_color())
-	wn.position = Vector3(-WorldSize.x/2, -WorldSize.y/2, -WorldSize.z/2 +1)
-	$DemoContainer.add_child(wn)
+	$WireNet.init_wire_net(Vector2(40,22), Vector2(41,23), 0.1, random_color())
+	$WireNet.position = Vector3(-WorldSize.x/2, -WorldSize.y/2, -WorldSize.z/2 +1)
 
 
-var bartree :BarTree2
 func bartree_demo() -> void:
-	bartree = make_tree(WorldSize.x/3, WorldSize.y/3)
-	bartree.position = Vector3(0, -WorldSize.y/2, 0 )
-	$DemoContainer.add_child(bartree)
-func make_tree(tree_width :float, tree_height :float)->BarTree2:
-	var tree_size := Vector3(tree_width, tree_height, tree_width * randf_range(0.5 , 2.0)/10)
+	var tree_size := Vector3(WorldSize.x/3, WorldSize.y/3, WorldSize.x/3 * randf_range(0.5 , 2.0)/10)
 	var bar_count := randf_range(5,200)
-	var t :BarTree2 = preload("res://bar_tree_2/bar_tree_2.tscn").instantiate(
-		).init_bartree_with_color(random_color(), random_color(),bar_count
-		).init_bartree_transform(tree_size, 0
-		)
-	return t
+	$BarTree2.init_bartree_with_color(random_color(), random_color(),bar_count
+		).init_bartree_transform(tree_size, 0)
+	$BarTree2.position = Vector3(0, -WorldSize.y/2, 0 )
 func random_color()->Color:
 	return NamedColorList.color_list.pick_random()[0]
 
@@ -297,8 +280,8 @@ func _process(delta: float) -> void:
 	$WaveGauge.animate_wave(now)
 	$Roulette.장식돌리기()
 	$Roulette.선택된cell강조상태켜기()
-	bartree.rotate_tree_bar_y(delta*10)
-	orbit_sphere.animate_rotate(now, delta)
+	$BarTree2.rotate_tree_bar_y(delta*10)
+	$OrbitSphere.animate_rotate(now, delta)
 	$MeshTrail.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
 
 	main_animation.handle_animation()
