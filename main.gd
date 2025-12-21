@@ -93,7 +93,6 @@ func _ready() -> void:
 var colorlist_dark :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
 var colorlist_light :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_light_color_list())
 var cardlist :Array = PlayingCard.make_deck_with_joker()
-
 func make_color_text_info_list(colist :Array, cdlist :Array) -> Array:
 	var rtn := []
 	for i in cdlist.size():
@@ -101,7 +100,7 @@ func make_color_text_info_list(colist :Array, cdlist :Array) -> Array:
 	return rtn
 
 
-func wheel_demo() -> void:
+func wheel_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	var color_text_into_list := make_color_text_info_list(
 		colorlist_light, cardlist,
 	).duplicate()
@@ -111,26 +110,22 @@ func wheel_demo() -> void:
 	$Roulette.rotation_stopped.connect(wheel결과가결정됨)
 	$Roulette.position = Vector3( -WorldSize.x/2 - 2, 0,0)
 	wheel돌리기()
-
 func make_random_color() -> Color:
 	return NamedColorList.color_list.pick_random()[0]
-
 func wheel돌리기() -> void:
 	var rot = randfn(2*PI, PI/2)
 	if randi_range(0,1) == 0:
 		rot = -rot
 	$Roulette.돌리기시작.call_deferred(rot)
-
 func wheel결과가결정됨(rl :Roulette) -> void:
 	$"왼쪽패널/LabelWheel".text = rl.선택된cell얻기().글내용얻기()
 	$TimerWheel.start()
-
 func _on_timer_wheel_timeout() -> void:
 	wheel돌리기()
 
 
-var symbol크기 := Vector2(3,1.5)
-func reel_demo() -> void:
+func reel_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
+	var symbol크기 := Vector2(3,1.5)
 	var color_text_into_list := make_color_text_info_list(
 		colorlist_dark, cardlist,
 	).duplicate()
@@ -139,22 +134,19 @@ func reel_demo() -> void:
 	$SlotReel.rotation_stopped.connect(reel결과가결정됨)
 	$SlotReel.position = Vector3( WorldSize.x/2 + symbol크기.x , 0, 0)
 	reel돌리기()
-
 func reel돌리기() -> void:
 	var rot = randfn(2*PI, PI/2)
 	if randi_range(0,1) == 0:
 		rot = -rot
 	$SlotReel.돌리기시작(rot)
-
 func reel결과가결정됨( rl :SlotReel) -> void:
 	$"왼쪽패널/LabelReel".text = rl.선택된symbol얻기().글내용얻기()
 	$TimerReel.start()
-
 func _on_timer_reel_timeout() -> void:
 	reel돌리기()
 
 
-func wavegauge_demo() -> void:
+func wavegauge_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	var wavegauge_size := WorldSize
 	wavegauge_size.z = 1
 	$WaveGauge.init(wavegauge_size, Vector3i(wavegauge_size), WaveGauge.color_list, 0.1, 1.0 )
@@ -165,7 +157,7 @@ func wallbox_demo() -> void:
 	#$WallBox.position = Vector3(0,0,-WorldSize.z/2)
 	$WallBox.mesh.material.albedo_color = Color(random_color(), 0.5)
 
-func maze3d_demo() -> void:
+func maze3d_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	var ms := Maze3DSetting.new_default()
 	ms.MazeSize = Vector2i(16,9)
 	ms.LaneW = WorldSize.x/ms.MazeSize.x
@@ -174,10 +166,9 @@ func maze3d_demo() -> void:
 	$Maze3D.position.y = -WorldSize.y/2 -ms.StoryH
 
 
-var meshtrail_scene = preload("res://mesh_trail/mesh_trail.tscn")
 var bound_aabb :AABB
 var trailmesh_radius := 1.0
-func meshtrail_demo() -> void:
+func meshtrail_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	bound_aabb = AABB( -WorldSize/2, WorldSize)
 	var count := 20
 	var startpos := bound_aabb.get_center()
@@ -194,7 +185,6 @@ func meshtrail_demo() -> void:
 			$MeshTrail.set_ColorChange_ByPosition(bound_aabb)
 		3:
 			$MeshTrail.set_ColorChange_ByPositionFn(get_color_ByPosition)
-
 func get_color_ByPosition(pos :Vector3) -> Color:
 	var co :Color
 	for i in 3:
@@ -205,15 +195,15 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	return Bounce.v3f(pos, bound_aabb, radius)
 
 
-func arrow3d_demo() -> void:
+func arrow3d_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	$Arrow3D.set_color(random_color()).set_size(5,0.2,0.6)
 	$Arrow3D.position = Vector3(-WorldSize.x/4, -WorldSize.y/4, 0)
 
-func valvehandle_demo() -> void:
+func valvehandle_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	$ValveHandle.init(2,2,4, random_color())
 	$ValveHandle.position = Vector3(WorldSize.x/4, -WorldSize.y/4, 0)
 
-func line2d_demo() -> void:
+func line2d_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	var size_pixel := Vector2i(2048,2048)
 	$MoveLine2DSubViewport/MoveLine2D.init_with_random(300, 4, 1, size_pixel)
 	$MoveLine2DSubViewport/MoveLine2D.start()
@@ -229,7 +219,7 @@ func line2d_demo() -> void:
 	$MoveLine2DMeshInstance3D.material_override.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
 	$MoveLine2DMeshInstance3D.material_override.albedo_texture = $MoveLine2DSubViewport.get_texture()
 
-func orbit_demo() -> void:
+func orbit_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	var diagonal_length := WorldSize.length()/2
 	var a120 := PI*2/3
 	var a30 := PI/6
@@ -240,24 +230,23 @@ func orbit_demo() -> void:
 	mat2.albedo_color = random_color()
 	$OrbitSphere.궤도설정(diagonal_length*1.1, 1.0/3, axis1, a120*2).구설정(2, 1, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
 
-func calendar_demo() -> void:
+func calendar_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	$Calendar3d.init(WorldSize.x/2, WorldSize.y, 2, WorldSize.y/2.0/6 , false )
 	$Calendar3d.rotate_y(PI/2)
 	$Calendar3d.rotate_x(PI/2)
 	$Calendar3d.position = Vector3(-WorldSize.x/4,0,WorldSize.z/4 -1)
 
-func clock_demo() -> void:
+func clock_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	$AnalogClock3d.init(WorldSize.x/4, 2, WorldSize.y/2.0/7 ,9.0, false )
 	$AnalogClock3d.rotate_y(PI/2)
 	$AnalogClock3d.rotate_x(PI/2)
 	$AnalogClock3d.position = Vector3(WorldSize.x/4,0,WorldSize.z/4 +1)
 
-func wirenet_demo() -> void:
+func wirenet_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	$WireNet.init_wire_net(Vector2(40,22), Vector2(41,23), 0.1, random_color())
 	$WireNet.position = Vector3(-WorldSize.x/2, -WorldSize.y/2, -WorldSize.z/2 +1)
 
-
-func bartree_demo() -> void:
+func bartree_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	var tree_size := Vector3(WorldSize.x/3, WorldSize.y/3, WorldSize.x/3 * randf_range(0.5 , 2.0)/10)
 	var bar_count := randf_range(5,200)
 	$BarTree2.init_bartree_with_color(random_color(), random_color(),bar_count
