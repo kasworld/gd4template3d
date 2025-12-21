@@ -64,28 +64,27 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(on_viewport_size_changed)
 	ui_panel_init()
 	timed_message_init()
-
 	$OmniLight3D.position = Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
 	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, 	Vector3(0, 0, WorldSize.z*2), WorldSize.length()*2)
 	$MovingCameraLightHober.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
 	$MovingCameraLightAround.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
-
 	$AxisArrow3D.set_size(10)
-	wallbox_demo()
-	wavegauge_demo()
-	maze3d_demo()
-	orbit_demo()
-	wirenet_demo()
-	bartree_demo()
-	calendar_demo()
-	clock_demo()
-	line2d_demo()
-	arrow3d_demo()
-	valvehandle_demo()
-	meshtrail_demo()
-	reel_demo()
-	wheel_demo()
+
+	wallbox_demo(Vector3.ZERO)
+	bartree_demo(Vector3(0, -WorldSize.y/2, 0 ))
+	wirenet_demo(Vector3(-WorldSize.x/2, -WorldSize.y/2, -WorldSize.z/2 +1))
+	clock_demo(Vector3(WorldSize.x/4,0,WorldSize.z/4 +1))
+	calendar_demo(Vector3(-WorldSize.x/4,0,WorldSize.z/4 -1))
+	orbit_demo(Vector3.ZERO)
+	line2d_demo(Vector3(0,0,WorldSize.z/2-1.0))
+	valvehandle_demo(Vector3(WorldSize.x/4, -WorldSize.y/4, 0))
+	arrow3d_demo(Vector3(-WorldSize.x/4, -WorldSize.y/4, 0))
+	meshtrail_demo(Vector3.ZERO)
+	maze3d_demo( Vector3(0, -WorldSize.y/2 ,0) )
+	wavegauge_demo(Vector3(0, 0 , -WorldSize.z/2))
+	reel_demo(Vector3( WorldSize.x/2 , 0, 0))
+	wheel_demo(Vector3( -WorldSize.x/2 - 2, 0,0))
 
 	main_animation.animation_ended.connect(main_animation_ended)
 	start_all_animation()
@@ -108,7 +107,7 @@ func wheel_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	$Roulette.init(0, WorldSize.y/2, 0.5, color_text_into_list )
 	$Roulette.색설정하기(make_random_color(), make_random_color(), make_random_color() )
 	$Roulette.rotation_stopped.connect(wheel결과가결정됨)
-	$Roulette.position = Vector3( -WorldSize.x/2 - 2, 0,0)
+	$Roulette.position = base_pos
 	wheel돌리기()
 func make_random_color() -> Color:
 	return NamedColorList.color_list.pick_random()[0]
@@ -132,7 +131,7 @@ func reel_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	color_text_into_list.shuffle()
 	$SlotReel.init(0, symbol크기, color_text_into_list)
 	$SlotReel.rotation_stopped.connect(reel결과가결정됨)
-	$SlotReel.position = Vector3( WorldSize.x/2 + symbol크기.x , 0, 0)
+	$SlotReel.position = base_pos + Vector3(symbol크기.x,0,0)
 	reel돌리기()
 func reel돌리기() -> void:
 	var rot = randfn(2*PI, PI/2)
@@ -150,11 +149,11 @@ func wavegauge_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	var wavegauge_size := WorldSize
 	wavegauge_size.z = 1
 	$WaveGauge.init(wavegauge_size, Vector3i(wavegauge_size), WaveGauge.color_list, 0.1, 1.0 )
-	$WaveGauge.position = Vector3(0, 0 , -WorldSize.z/2)
+	$WaveGauge.position = base_pos
 
-func wallbox_demo() -> void:
+func wallbox_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	$WallBox.mesh.size = WorldSize
-	#$WallBox.position = Vector3(0,0,-WorldSize.z/2)
+	$WallBox.position = base_pos
 	$WallBox.mesh.material.albedo_color = Color(random_color(), 0.5)
 
 func maze3d_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
@@ -163,13 +162,13 @@ func maze3d_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	ms.LaneW = WorldSize.x/ms.MazeSize.x
 	ms.StoryH = ms.LaneW
 	$Maze3D.init_with_color( ms, Callable(), random_color(), random_color(), random_color() )
-	$Maze3D.position.y = -WorldSize.y/2 -ms.StoryH
+	$Maze3D.position = base_pos + Vector3(0, -ms.StoryH,0)
 
 
 var bound_aabb :AABB
 var trailmesh_radius := 1.0
 func meshtrail_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	bound_aabb = AABB( -WorldSize/2, WorldSize)
+	bound_aabb = AABB( base_pos -WorldSize/2, WorldSize)
 	var count := 20
 	var startpos := bound_aabb.get_center()
 	var mesh := BoxMesh.new()
@@ -197,11 +196,11 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 
 func arrow3d_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	$Arrow3D.set_color(random_color()).set_size(5,0.2,0.6)
-	$Arrow3D.position = Vector3(-WorldSize.x/4, -WorldSize.y/4, 0)
+	$Arrow3D.position = base_pos
 
 func valvehandle_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	$ValveHandle.init(2,2,4, random_color())
-	$ValveHandle.position = Vector3(WorldSize.x/4, -WorldSize.y/4, 0)
+	$ValveHandle.position = base_pos
 
 func line2d_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	var size_pixel := Vector2i(2048,2048)
@@ -214,7 +213,7 @@ func line2d_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	$MoveLine2DMeshInstance3D.mesh = PlaneMesh.new()
 	$MoveLine2DMeshInstance3D.mesh.size = Vector2(WorldSize.x, WorldSize.y)
 	$MoveLine2DMeshInstance3D.mesh.orientation = PlaneMesh.FACE_Z
-	$MoveLine2DMeshInstance3D.position = Vector3(0,0,WorldSize.z/2-1.0)
+	$MoveLine2DMeshInstance3D.position = base_pos
 	$MoveLine2DMeshInstance3D.material_override = StandardMaterial3D.new()
 	$MoveLine2DMeshInstance3D.material_override.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
 	$MoveLine2DMeshInstance3D.material_override.albedo_texture = $MoveLine2DSubViewport.get_texture()
@@ -229,29 +228,30 @@ func orbit_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	var mat2 := StandardMaterial3D.new()
 	mat2.albedo_color = random_color()
 	$OrbitSphere.궤도설정(diagonal_length*1.1, 1.0/3, axis1, a120*2).구설정(2, 1, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
+	$OrbitSphere.position = base_pos
 
 func calendar_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	$Calendar3d.init(WorldSize.x/2, WorldSize.y, 2, WorldSize.y/2.0/6 , false )
 	$Calendar3d.rotate_y(PI/2)
 	$Calendar3d.rotate_x(PI/2)
-	$Calendar3d.position = Vector3(-WorldSize.x/4,0,WorldSize.z/4 -1)
+	$Calendar3d.position = base_pos
 
 func clock_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	$AnalogClock3d.init(WorldSize.x/4, 2, WorldSize.y/2.0/7 ,9.0, false )
 	$AnalogClock3d.rotate_y(PI/2)
 	$AnalogClock3d.rotate_x(PI/2)
-	$AnalogClock3d.position = Vector3(WorldSize.x/4,0,WorldSize.z/4 +1)
+	$AnalogClock3d.position = base_pos
 
 func wirenet_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	$WireNet.init_wire_net(Vector2(40,22), Vector2(41,23), 0.1, random_color())
-	$WireNet.position = Vector3(-WorldSize.x/2, -WorldSize.y/2, -WorldSize.z/2 +1)
+	$WireNet.position = base_pos
 
 func bartree_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	var tree_size := Vector3(WorldSize.x/3, WorldSize.y/3, WorldSize.x/3 * randf_range(0.5 , 2.0)/10)
 	var bar_count := randf_range(5,200)
 	$BarTree2.init_bartree_with_color(random_color(), random_color(),bar_count
 		).init_bartree_transform(tree_size, 0)
-	$BarTree2.position = Vector3(0, -WorldSize.y/2, 0 )
+	$BarTree2.position = base_pos
 func random_color()->Color:
 	return NamedColorList.color_list.pick_random()[0]
 
