@@ -146,15 +146,18 @@ func _on_timer_reel_timeout() -> void:
 
 
 func wavegauge_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	var wavegauge_size := WorldSize
-	wavegauge_size.z = 1
-	$WaveGauge.init(wavegauge_size, Vector3i(wavegauge_size), WaveGauge.color_list, 0.1, 1.0 )
+	$WaveGauge.init(Vector3(WorldSize.x,WorldSize.y,WorldSize.z/10), Vector3i(16,9,1), WaveGauge.color_list, 0.1, 1.0 )
 	$WaveGauge.position = base_pos
+
+func wirenet_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
+	$WireNet.init_wire_net(Vector2(WorldSize.x,WorldSize.y), Vector2i(17,10), WorldSize.x/160, random_color())
+	$WireNet.position = base_pos
+
 
 func wallbox_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	$WallBox.mesh.size = WorldSize
 	$WallBox.position = base_pos
-	$WallBox.mesh.material.albedo_color = Color(random_color(), 0.5)
+	$WallBox.mesh.material.albedo_color = Color(Color.WHITE, 0.5)
 
 func maze3d_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	var ms := Maze3DSetting.new_default()
@@ -166,7 +169,7 @@ func maze3d_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 
 
 var bound_aabb :AABB
-var trailmesh_radius := 1.0
+var trailmesh_radius := WorldSize.length()/100
 func meshtrail_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	bound_aabb = AABB( base_pos -WorldSize/2, WorldSize)
 	var count := 20
@@ -227,24 +230,21 @@ func orbit_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	mat1.albedo_color = random_color()
 	var mat2 := StandardMaterial3D.new()
 	mat2.albedo_color = random_color()
-	$OrbitSphere.궤도설정(diagonal_length*1.1, 1.0/3, axis1, a120*2).구설정(WorldSize.x/40, WorldSize.x/50, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
+	$OrbitSphere.궤도설정(diagonal_length*1.3, diagonal_length/200, axis1, a120*2).구설정(WorldSize.x/40, WorldSize.x/50, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
 	$OrbitSphere.position = base_pos
 
 func calendar_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	$Calendar3d.init(WorldSize.x/2, WorldSize.y, 2, WorldSize.y/2.0/6 , false )
+	$Calendar3d.init(WorldSize.x/2, WorldSize.y, WorldSize.z/10, WorldSize.y/2.0/6 , false )
 	$Calendar3d.rotate_y(PI/2)
 	$Calendar3d.rotate_x(PI/2)
 	$Calendar3d.position = base_pos
 
 func clock_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	$AnalogClock3d.init(WorldSize.x/4, 2, WorldSize.y/2.0/7 ,9.0, false )
+	$AnalogClock3d.init(WorldSize.x/4, WorldSize.z/10, WorldSize.y/2.0/7 ,9.0, false )
 	$AnalogClock3d.rotate_y(PI/2)
 	$AnalogClock3d.rotate_x(PI/2)
 	$AnalogClock3d.position = base_pos
 
-func wirenet_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	$WireNet.init_wire_net(Vector2(WorldSize.x,WorldSize.y), Vector2i(WorldSize.x-1,WorldSize.y-1), 0.1, random_color())
-	$WireNet.position = base_pos
 
 func bartree_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	var tree_size := Vector3(WorldSize.x/3, WorldSize.y/3, WorldSize.x/3 * randf_range(0.5 , 2.0)/10)
