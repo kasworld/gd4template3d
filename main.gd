@@ -73,7 +73,8 @@ func _ready() -> void:
 
 	wallbox_demo(Vector3.ZERO)
 	bartree_demo(Vector3(0, -WorldSize.y/2, 0 ))
-	wirenet_demo(Vector3(-WorldSize.x/2, -WorldSize.y/2, -WorldSize.z/2 +1))
+	wirenet_demo(Vector3(-WorldSize.x/2, -WorldSize.y/2, -WorldSize.z/2))
+	wavegauge_demo(Vector3(0, 0 , -WorldSize.z/2))
 	clock_demo(Vector3(WorldSize.x/4,0,WorldSize.z/4 +1))
 	calendar_demo(Vector3(-WorldSize.x/4,0,WorldSize.z/4 -1))
 	orbit_demo(Vector3.ZERO)
@@ -82,7 +83,6 @@ func _ready() -> void:
 	arrow3d_demo(Vector3(-WorldSize.x/4, -WorldSize.y/4, 0))
 	meshtrail_demo(Vector3.ZERO)
 	maze3d_demo( Vector3(0, -WorldSize.y/2 ,0) )
-	wavegauge_demo(Vector3(0, 0 , -WorldSize.z/2))
 	reel_demo(Vector3( WorldSize.x/2 , 0, 0))
 	wheel_demo(Vector3( -WorldSize.x/2 - 2, 0,0))
 
@@ -124,10 +124,8 @@ func _on_timer_wheel_timeout() -> void:
 
 
 func reel_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	var symbol크기 := Vector2(WorldSize.x/15 ,WorldSize.y/15)
-	var color_text_into_list := make_color_text_info_list(
-		colorlist_dark, cardlist,
-	).duplicate()
+	var symbol크기 := Vector2(WorldSize.x/20 ,WorldSize.y/15)
+	var color_text_into_list := make_color_text_info_list(colorlist_dark, cardlist).duplicate()
 	color_text_into_list.shuffle()
 	$SlotReel.init(0, symbol크기, color_text_into_list)
 	$SlotReel.rotation_stopped.connect(reel결과가결정됨)
@@ -145,12 +143,13 @@ func _on_timer_reel_timeout() -> void:
 	reel돌리기()
 
 
+var grid_size := Vector2i(16,9)*2
 func wavegauge_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	$WaveGauge.init(Vector3(WorldSize.x,WorldSize.y,WorldSize.z/10), Vector3i(16,9,1), WaveGauge.color_list, 0.1, 1.0 )
+	$WaveGauge.init(Vector3(WorldSize.x,WorldSize.y,WorldSize.z/20), Vector3i(grid_size.x,grid_size.y,1), WaveGauge.color_list, 0.1, 1.0 )
 	$WaveGauge.position = base_pos
 
 func wirenet_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	$WireNet.init_wire_net(Vector2(WorldSize.x,WorldSize.y), Vector2i(17,10), WorldSize.x/160, random_color())
+	$WireNet.init_wire_net(Vector2(WorldSize.x,WorldSize.y), Vector2i(grid_size.x+1,grid_size.y+1), WorldSize.x/grid_size.x/10, random_color())
 	$WireNet.position = base_pos
 
 
