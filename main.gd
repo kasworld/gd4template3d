@@ -214,27 +214,20 @@ func valvehandle_demo() -> void:
 	$ValveHandle.position = Vector3(WorldSize.x/4, -WorldSize.y/4, 0)
 
 func line2d_demo() -> void:
-	var mesh := PlaneMesh.new()
-	mesh.size = Vector2(WorldSize.x, WorldSize.y)
-	mesh.orientation = PlaneMesh.FACE_Z
-	#mesh.flip_faces = flip
 	var size_pixel := Vector2i(2048,2048)
-	var l2d :MoveLine2D = preload("res://move_line2d/move_line_2d.tscn").instantiate().init_with_random(300, 4, 1, size_pixel)
-	l2d.start()
-	var sv := SubViewport.new()
-	sv.size = size_pixel
-	sv.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-	sv.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
-	sv.transparent_bg = true
-	sv.add_child(l2d)
-	add_child(sv)
-	var sp := MeshInstance3D.new()
-	sp.mesh = mesh
-	sp.position = Vector3(0,0,WorldSize.z/2-1.0)
-	sp.material_override = StandardMaterial3D.new()
-	sp.material_override.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
-	sp.material_override.albedo_texture = sv.get_texture()
-	$DemoContainer.add_child(sp)
+	$MoveLine2DSubViewport/MoveLine2D.init_with_random(300, 4, 1, size_pixel)
+	$MoveLine2DSubViewport/MoveLine2D.start()
+	$MoveLine2DSubViewport.size = size_pixel
+	$MoveLine2DSubViewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	$MoveLine2DSubViewport.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
+	$MoveLine2DSubViewport.transparent_bg = true
+	$MoveLine2DMeshInstance3D.mesh = PlaneMesh.new()
+	$MoveLine2DMeshInstance3D.mesh.size = Vector2(WorldSize.x, WorldSize.y)
+	$MoveLine2DMeshInstance3D.mesh.orientation = PlaneMesh.FACE_Z
+	$MoveLine2DMeshInstance3D.position = Vector3(0,0,WorldSize.z/2-1.0)
+	$MoveLine2DMeshInstance3D.material_override = StandardMaterial3D.new()
+	$MoveLine2DMeshInstance3D.material_override.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
+	$MoveLine2DMeshInstance3D.material_override.albedo_texture = $MoveLine2DSubViewport.get_texture()
 
 func orbit_demo() -> void:
 	var diagonal_length := WorldSize.length()/2

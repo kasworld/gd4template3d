@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://c6maulcewyhy5"]
+[gd_scene load_steps=27 format=3 uid="uid://c6maulcewyhy5"]
 
 [ext_resource type="Script" uid="uid://bgj25qi5j8dgh" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Environment" uid="uid://dq6rkclkoup3n" path="res://skymap/skymap.tres" id="3_h2yge"]
@@ -17,6 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://jmb1btvtwi1m" path="res://analogclock3d/analog_clock_3d.tscn" id="15_vivmo"]
 [ext_resource type="PackedScene" uid="uid://cfnbpemvoy1i6" path="res://multi_mesh_shape/multi_mesh_shape.tscn" id="16_2cqfq"]
 [ext_resource type="PackedScene" uid="uid://btkkwpk54jqc" path="res://bar_tree_2/bar_tree_2.tscn" id="17_yaehf"]
+[ext_resource type="PackedScene" uid="uid://da370dapcfjwm" path="res://move_line2d/move_line_2d.tscn" id="18_074og"]
 
 [sub_resource type="Theme" id="Theme_h2yge"]
 default_font_size = 48
@@ -149,6 +150,12 @@ multimesh = SubResource("MultiMesh_yaehf")
 
 [node name="BarTree2" parent="." instance=ExtResource("17_yaehf")]
 multimesh = SubResource("MultiMesh_074og")
+
+[node name="MoveLine2DSubViewport" type="SubViewport" parent="."]
+
+[node name="MoveLine2D" parent="MoveLine2DSubViewport" instance=ExtResource("18_074og")]
+
+[node name="MoveLine2DMeshInstance3D" type="MeshInstance3D" parent="."]
 
 [connection signal="timeout" from="TimerWheel" to="." method="_on_timer_wheel_timeout"]
 [connection signal="timeout" from="TimerReel" to="." method="_on_timer_reel_timeout"]
