@@ -22,18 +22,18 @@
 [sub_resource type="Theme" id="Theme_h2yge"]
 default_font_size = 48
 
+[sub_resource type="SystemFont" id="SystemFont_bejao"]
+
+[sub_resource type="Theme" id="Theme_7mycd"]
+resource_local_to_scene = true
+default_font = SubResource("SystemFont_bejao")
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ig7tw"]
 transparency = 1
 
 [sub_resource type="BoxMesh" id="BoxMesh_ig7tw"]
 material = SubResource("StandardMaterial3D_ig7tw")
 flip_faces = true
-
-[sub_resource type="SystemFont" id="SystemFont_bejao"]
-
-[sub_resource type="Theme" id="Theme_7mycd"]
-resource_local_to_scene = true
-default_font = SubResource("SystemFont_bejao")
 
 [sub_resource type="MultiMesh" id="MultiMesh_ycdy4"]
 resource_local_to_scene = true
@@ -46,6 +46,35 @@ resource_local_to_scene = true
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_ig7tw")
+
+[node name="왼쪽패널" type="VBoxContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 138.0
+theme = SubResource("Theme_h2yge")
+
+[node name="LabelReel" type="Label" parent="왼쪽패널"]
+layout_mode = 2
+
+[node name="LabelWheel" type="Label" parent="왼쪽패널"]
+layout_mode = 2
+
+[node name="오른쪽패널" type="VBoxContainer" parent="."]
+modulate = Color(1, 1, 1, 0.501961)
+offset_right = 344.0
+offset_bottom = 371.0
+theme = SubResource("Theme_h2yge")
+
+[node name="LabelPerformance" type="Label" parent="오른쪽패널"]
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="LabelInfo" type="Label" parent="오른쪽패널"]
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="TimedMessage" parent="." instance=ExtResource("5_lquwl")]
+self_modulate = Color(1, 1, 1, 0.498039)
+theme = SubResource("Theme_7mycd")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
@@ -73,42 +102,11 @@ shadow_enabled = true
 shadow_opacity = 0.5
 sky_mode = 1
 
-[node name="왼쪽패널" type="VBoxContainer" parent="."]
-offset_right = 40.0
-offset_bottom = 40.0
-theme = SubResource("Theme_h2yge")
-
-[node name="LabelReel" type="Label" parent="왼쪽패널"]
-layout_mode = 2
-
-[node name="LabelWheel" type="Label" parent="왼쪽패널"]
-layout_mode = 2
-
-[node name="오른쪽패널" type="VBoxContainer" parent="."]
-modulate = Color(1, 1, 1, 0.501961)
-offset_right = 344.0
-offset_bottom = 371.0
-theme = SubResource("Theme_h2yge")
-
-[node name="LabelPerformance" type="Label" parent="오른쪽패널"]
-layout_mode = 2
-autowrap_mode = 3
-
-[node name="LabelInfo" type="Label" parent="오른쪽패널"]
-layout_mode = 2
-autowrap_mode = 3
-
-[node name="WallBox" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_ig7tw")
-
-[node name="TimedMessage" parent="." instance=ExtResource("5_lquwl")]
-self_modulate = Color(1, 1, 1, 0.498039)
-theme = SubResource("Theme_7mycd")
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("3_h2yge")
 
-[node name="DemoContainer" type="Node3D" parent="."]
+[node name="WallBox" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_ig7tw")
 
 [node name="AxisArrow3D" parent="." instance=ExtResource("4_1bvp3")]
 
@@ -126,15 +124,15 @@ environment = ExtResource("3_h2yge")
 
 [node name="WaveGauge" parent="." instance=ExtResource("9_kek77")]
 
+[node name="Roulette" parent="." instance=ExtResource("10_4c57u")]
+
 [node name="TimerWheel" type="Timer" parent="."]
 one_shot = true
 
+[node name="SlotReel" parent="." instance=ExtResource("11_efxa6")]
+
 [node name="TimerReel" type="Timer" parent="."]
 one_shot = true
-
-[node name="Roulette" parent="." instance=ExtResource("10_4c57u")]
-
-[node name="SlotReel" parent="." instance=ExtResource("11_efxa6")]
 
 [node name="MeshTrail" parent="." instance=ExtResource("12_dg77c")]
 multimesh = SubResource("MultiMesh_ycdy4")
