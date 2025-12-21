@@ -101,18 +101,15 @@ func make_color_text_info_list(colist :Array, cdlist :Array) -> Array:
 	return rtn
 
 
-var wheel :Roulette
 func wheel_demo() -> void:
 	var color_text_into_list := make_color_text_info_list(
 		colorlist_light, cardlist,
 	).duplicate()
 	color_text_into_list.shuffle()
-	wheel = preload("res://roulette/roulette.tscn").instantiate().init(
-		0, WorldSize.y/2, 0.5, color_text_into_list )
-	wheel.색설정하기(make_random_color(), make_random_color(), make_random_color() )
-	wheel.rotation_stopped.connect(wheel결과가결정됨)
-	add_child(wheel)
-	wheel.position = Vector3( -WorldSize.x/2 - 2, 0,0)
+	$Roulette.init(0, WorldSize.y/2, 0.5, color_text_into_list )
+	$Roulette.색설정하기(make_random_color(), make_random_color(), make_random_color() )
+	$Roulette.rotation_stopped.connect(wheel결과가결정됨)
+	$Roulette.position = Vector3( -WorldSize.x/2 - 2, 0,0)
 	wheel돌리기()
 
 func make_random_color() -> Color:
@@ -122,7 +119,7 @@ func wheel돌리기() -> void:
 	var rot = randfn(2*PI, PI/2)
 	if randi_range(0,1) == 0:
 		rot = -rot
-	wheel.돌리기시작.call_deferred(rot)
+	$Roulette.돌리기시작.call_deferred(rot)
 
 func wheel결과가결정됨(rl :Roulette) -> void:
 	$"왼쪽패널/LabelWheel".text = rl.선택된cell얻기().글내용얻기()
@@ -133,23 +130,21 @@ func _on_timer_wheel_timeout() -> void:
 
 
 var symbol크기 := Vector2(3,1.5)
-var reel :SlotReel
 func reel_demo() -> void:
 	var color_text_into_list := make_color_text_info_list(
 		colorlist_dark, cardlist,
 	).duplicate()
 	color_text_into_list.shuffle()
-	reel = preload("res://slot_reel/slot_reel.tscn").instantiate().init(0, symbol크기, color_text_into_list)
-	reel.rotation_stopped.connect(reel결과가결정됨)
-	reel.position = Vector3( WorldSize.x/2 + symbol크기.x , 0, 0)
-	add_child(reel)
+	$SlotReel.init(0, symbol크기, color_text_into_list)
+	$SlotReel.rotation_stopped.connect(reel결과가결정됨)
+	$SlotReel.position = Vector3( WorldSize.x/2 + symbol크기.x , 0, 0)
 	reel돌리기()
 
 func reel돌리기() -> void:
 	var rot = randfn(2*PI, PI/2)
 	if randi_range(0,1) == 0:
 		rot = -rot
-	reel.돌리기시작(rot)
+	$SlotReel.돌리기시작(rot)
 
 func reel결과가결정됨( rl :SlotReel) -> void:
 	$"왼쪽패널/LabelReel".text = rl.선택된symbol얻기().글내용얻기()
@@ -181,7 +176,6 @@ func maze3d_demo() -> void:
 
 var meshtrail_scene = preload("res://mesh_trail/mesh_trail.tscn")
 var bound_aabb :AABB
-var mesh_trail_list :Array
 var trailmesh_radius := 1.0
 func meshtrail_demo() -> void:
 	bound_aabb = AABB( -WorldSize/2, WorldSize)
@@ -189,20 +183,17 @@ func meshtrail_demo() -> void:
 	var startpos := bound_aabb.get_center()
 	var mesh := BoxMesh.new()
 	mesh.size = Vector3(trailmesh_radius*2, trailmesh_radius*2, 0.1)
-	var mt :MeshTrail = meshtrail_scene.instantiate(
-		).init_with_alpha(mesh, count,  1.0 , startpos,
+	$MeshTrail.init_with_alpha(mesh, count,  1.0 , startpos,
 		).set_speed(20,40)
 	match randi_range(0,3):
 		0:
-			mt.set_ColorChange_OnBounce()
+			$MeshTrail.set_ColorChange_OnBounce()
 		1:
-			mt.set_ColorChange_MeshGradient()
+			$MeshTrail.set_ColorChange_MeshGradient()
 		2:
-			mt.set_ColorChange_ByPosition(bound_aabb)
+			$MeshTrail.set_ColorChange_ByPosition(bound_aabb)
 		3:
-			mt.set_ColorChange_ByPositionFn(get_color_ByPosition)
-	mesh_trail_list.append(mt)
-	$DemoContainer.add_child(mt)
+			$MeshTrail.set_ColorChange_ByPositionFn(get_color_ByPosition)
 
 func get_color_ByPosition(pos :Vector3) -> Color:
 	var co :Color
@@ -304,12 +295,11 @@ func _process(delta: float) -> void:
 	var now := Time.get_unix_time_from_system()
 	label_demo()
 	$WaveGauge.animate_wave(now)
-	wheel.장식돌리기()
-	wheel.선택된cell강조상태켜기()
+	$Roulette.장식돌리기()
+	$Roulette.선택된cell강조상태켜기()
 	bartree.rotate_tree_bar_y(delta*10)
 	orbit_sphere.animate_rotate(now, delta)
-	for mt in mesh_trail_list:
-		mt.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
+	$MeshTrail.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
 
 	main_animation.handle_animation()
 	var t := now /2.3

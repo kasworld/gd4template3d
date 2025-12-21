@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c6maulcewyhy5"]
+[gd_scene load_steps=19 format=3 uid="uid://c6maulcewyhy5"]
 
 [ext_resource type="Script" uid="uid://bgj25qi5j8dgh" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Environment" uid="uid://dq6rkclkoup3n" path="res://skymap/skymap.tres" id="3_h2yge"]
@@ -9,6 +9,9 @@
 [ext_resource type="PackedScene" uid="uid://d4kkhfcvaexg1" path="res://valve_handle/valve_handle.tscn" id="7_272bh"]
 [ext_resource type="PackedScene" uid="uid://ces3a6yv0c5fi" path="res://moving_carmera_light/moving_camera_light.tscn" id="8_5vw27"]
 [ext_resource type="PackedScene" uid="uid://dr21303f5q2mm" path="res://wave_gauge/wave_gauge.tscn" id="9_kek77"]
+[ext_resource type="PackedScene" uid="uid://sjnpttkqk1qs" path="res://roulette/roulette.tscn" id="10_4c57u"]
+[ext_resource type="PackedScene" uid="uid://bgvg5u80d01y8" path="res://slot_reel/slot_reel.tscn" id="11_efxa6"]
+[ext_resource type="PackedScene" uid="uid://cy34xu36jq84y" path="res://mesh_trail/mesh_trail.tscn" id="12_dg77c"]
 
 [sub_resource type="Theme" id="Theme_h2yge"]
 default_font_size = 48
@@ -25,6 +28,9 @@ flip_faces = true
 [sub_resource type="Theme" id="Theme_7mycd"]
 resource_local_to_scene = true
 default_font = SubResource("SystemFont_bejao")
+
+[sub_resource type="MultiMesh" id="MultiMesh_ycdy4"]
+resource_local_to_scene = true
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_ig7tw")
@@ -81,7 +87,6 @@ layout_mode = 2
 autowrap_mode = 3
 
 [node name="WallBox" type="MeshInstance3D" parent="."]
-visible = false
 mesh = SubResource("BoxMesh_ig7tw")
 
 [node name="TimedMessage" parent="." instance=ExtResource("5_lquwl")]
@@ -114,6 +119,13 @@ one_shot = true
 
 [node name="TimerReel" type="Timer" parent="."]
 one_shot = true
+
+[node name="Roulette" parent="." instance=ExtResource("10_4c57u")]
+
+[node name="SlotReel" parent="." instance=ExtResource("11_efxa6")]
+
+[node name="MeshTrail" parent="." instance=ExtResource("12_dg77c")]
+multimesh = SubResource("MultiMesh_ycdy4")
 
 [connection signal="timeout" from="TimerWheel" to="." method="_on_timer_wheel_timeout"]
 [connection signal="timeout" from="TimerReel" to="." method="_on_timer_reel_timeout"]
