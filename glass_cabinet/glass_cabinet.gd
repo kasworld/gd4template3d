@@ -10,3 +10,10 @@ func init(box_size :Vector3) -> GlassCabinet:
 func set_box_color(co :Color) -> GlassCabinet:
 	$WallBox.mesh.material.albedo_color = co
 	return self
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed:
+		if $FixedCameraLight.is_current_camera():
+			var fi = FlyNode3D.Key2Info.get(event.keycode)
+			if fi != null:
+				FlyNode3D.fly_node3d($FixedCameraLight, fi)
