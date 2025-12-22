@@ -75,16 +75,16 @@ func _ready() -> void:
 	bartree_demo(Vector3(0, -WorldSize.y/2, 0 ))
 	wirenet_demo(Vector3(-WorldSize.x/2, -WorldSize.y/2, -WorldSize.z/2))
 	wavegauge_demo(Vector3(0, 0 , -WorldSize.z/2))
-	clock_demo(Vector3(WorldSize.x/4,0,WorldSize.z/4 +1))
-	calendar_demo(Vector3(-WorldSize.x/4,0,WorldSize.z/4 -1))
+	clock_demo(Vector3(WorldSize.x/4,0,WorldSize.z/4 ))
+	calendar_demo(Vector3(-WorldSize.x/4,0,WorldSize.z/4 ))
 	orbit_demo(Vector3.ZERO)
-	line2d_demo(Vector3(0,0,WorldSize.z/2-1.0))
+	line2d_demo(Vector3(0,WorldSize.y,0))
 	valvehandle_demo(Vector3(WorldSize.x/4, -WorldSize.y/4, 0))
 	arrow3d_demo(Vector3(-WorldSize.x/4, -WorldSize.y/4, 0))
 	meshtrail_demo(Vector3.ZERO)
-	maze3d_demo( Vector3(0, -WorldSize.y/2 ,0) )
-	reel_demo(Vector3( WorldSize.x/2 , 0, 0))
-	wheel_demo(Vector3( -WorldSize.x/2 - 2, 0,0))
+	maze3d_demo( Vector3(0, -WorldSize.y ,0) )
+	reel_demo(Vector3( -WorldSize.x/2*1.1 , 0, 0))
+	wheel_demo(Vector3( WorldSize.x/2+WorldSize.y/2 , 0,0))
 
 	main_animation.animation_ended.connect(main_animation_ended)
 	start_all_animation()
@@ -129,7 +129,7 @@ func reel_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	color_text_into_list.shuffle()
 	$SlotReel.init(0, symbol크기, color_text_into_list)
 	$SlotReel.rotation_stopped.connect(reel결과가결정됨)
-	$SlotReel.position = base_pos + Vector3(symbol크기.x,0,0)
+	$SlotReel.position = base_pos
 	reel돌리기()
 func reel돌리기() -> void:
 	var rot = randfn(2*PI, PI/2)
@@ -163,8 +163,11 @@ func maze3d_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	ms.MazeSize = Vector2i(16,9)
 	ms.LaneW = WorldSize.x/ms.MazeSize.x
 	ms.StoryH = ms.LaneW
+	ms.WallThick = ms.LaneW *0.1
+	ms.MakeSubWallRate = 0.1
 	$Maze3D.init_with_color( ms, Callable(), random_color(), random_color(), random_color() )
-	$Maze3D.position = base_pos + Vector3(0, -ms.StoryH,0)
+	$Maze3D.position = base_pos + Vector3(0,-ms.LaneW,0)
+	$Maze3D.rotation.x = PI/2
 
 
 var bound_aabb :AABB
