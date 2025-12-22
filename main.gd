@@ -104,7 +104,7 @@ func wheel_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 		colorlist_light, cardlist,
 	).duplicate()
 	color_text_into_list.shuffle()
-	$Roulette.init(0, WorldSize.y/2, 0.5, color_text_into_list )
+	$Roulette.init(0, WorldSize.y/2, WorldSize.z/20, color_text_into_list )
 	$Roulette.색설정하기(make_random_color(), make_random_color(), make_random_color() )
 	$Roulette.rotation_stopped.connect(wheel결과가결정됨)
 	$Roulette.position = base_pos
@@ -124,7 +124,7 @@ func _on_timer_wheel_timeout() -> void:
 
 
 func reel_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	var symbol크기 := Vector2(WorldSize.x/20 ,WorldSize.y/15)
+	var symbol크기 := Vector2(WorldSize.x/15 ,WorldSize.y/15)
 	var color_text_into_list := make_color_text_info_list(colorlist_dark, cardlist).duplicate()
 	color_text_into_list.shuffle()
 	$SlotReel.init(0, symbol크기, color_text_into_list)
@@ -174,12 +174,12 @@ var bound_aabb :AABB
 var trailmesh_radius := WorldSize.length()/100
 func meshtrail_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	bound_aabb = AABB( base_pos -WorldSize/2, WorldSize)
-	var count := 20
+	var count := 100
 	var startpos := bound_aabb.get_center()
 	var mesh := BoxMesh.new()
-	mesh.size = Vector3(trailmesh_radius*2, trailmesh_radius*2, 0.1)
+	mesh.size = Vector3(trailmesh_radius*3, trailmesh_radius /5, trailmesh_radius/5)
 	$MeshTrail.init_with_alpha(mesh, count,  1.0 , startpos,
-		).set_speed(20,40)
+		).set_speed(trailmesh_radius*20,trailmesh_radius*40)
 	match randi_range(0,3):
 		0:
 			$MeshTrail.set_ColorChange_OnBounce()
