@@ -11,10 +11,10 @@ func start_rotate_animation(nd :Node3D, axis :int, ani_dur :float) -> void:
 	var diff :float = [PI/2,-PI/2].pick_random()
 	main_animation.start_rotate_subfield("ani_rot", nd, axis , nd.rotation[axis], nd.rotation[axis] + diff, ani_dur)
 func start_all_animation() -> void:
-	start_rotate_animation($Arrow3D,
+	start_rotate_animation(arrow3d,
 		[Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random(),
 		AnimationDuration)
-	start_rotate_animation($ValveHandle, Vector3.Axis.AXIS_Y, AnimationDuration)
+	start_rotate_animation(valvehandle, Vector3.Axis.AXIS_Y, AnimationDuration)
 
 
 func timed_message_init() -> void:
@@ -68,26 +68,38 @@ func _ready() -> void:
 	$OmniLight3D.omni_range = WorldSize.length()*2
 	$MovingCameraLightHober.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*3)
 	$MovingCameraLightAround.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*3)
-	$GlassCabinet.init(WorldSize)
+	$AxisArrow3D.set_colors().set_size(WorldSize.length()/10)
 
 	glass_cabinet_demo()
-	bartree_demo(Vector3(0, -WorldSize.y/2, 0 ))
-	wirenet_demo(Vector3(-WorldSize.x/2, -WorldSize.y/2, -WorldSize.z/2))
-	wavegauge_demo(Vector3(0, 0 , -WorldSize.z/2))
-	clock_demo(Vector3(WorldSize.x/4,0,WorldSize.z/4 ))
-	calendar_demo(Vector3(-WorldSize.x/4,0,WorldSize.z/4 ))
-	orbit_demo(Vector3.ZERO)
-	line2d_demo(Vector3(0,WorldSize.y,0))
-	valvehandle_demo(Vector3(WorldSize.x/4, -WorldSize.y/4, 0))
-	arrow3d_demo(Vector3(-WorldSize.x/4, -WorldSize.y/4, 0))
-	meshtrail_demo(Vector3.ZERO)
-	maze3d_demo( Vector3(0, -WorldSize.y ,0) )
-	reel_demo(Vector3( -WorldSize.x/2*1.1 , 0, 0))
-	wheel_demo(Vector3( WorldSize.x/2+WorldSize.y/2 , 0,0))
+	bartree_demo($GlassCabinetContainer.get_child(0))
+	wirenet_demo($GlassCabinetContainer.get_child(1))
+	wavegauge_demo($GlassCabinetContainer.get_child(2))
+	clock_demo($GlassCabinetContainer.get_child(3))
+	calendar_demo($GlassCabinetContainer.get_child(4))
+	orbit_demo($GlassCabinetContainer.get_child(5))
+	line2d_demo($GlassCabinetContainer.get_child(6))
+	valvehandle_demo($GlassCabinetContainer.get_child(7))
+	arrow3d_demo($GlassCabinetContainer.get_child(7))
+	meshtrail_demo($GlassCabinetContainer.get_child(8))
+	maze3d_demo($GlassCabinetContainer.get_child(9))
+	reel_demo($GlassCabinetContainer.get_child(10))
+	wheel_demo($GlassCabinetContainer.get_child(11))
 
-	$GlassCabinet.get_camera_light().make_current()
+	$MovingCameraLightAround.make_current()
 	main_animation.animation_ended.connect(main_animation_ended)
 	start_all_animation()
+
+func glass_cabinet_demo() -> void:
+	for deg :float in range(0,360,30):
+		var rad := deg_to_rad(deg)
+		var radius := WorldSize.length()*1.6
+		var pos := Vector3(sin(rad)*radius, 0, cos(rad)*radius)
+		var gc :GlassCabinet = preload("res://glass_cabinet/glass_cabinet.tscn").instantiate(
+			).init(WorldSize - Vector3(1,1,1) )
+		$GlassCabinetContainer.add_child(gc)
+		gc.position = pos
+		gc.look_at(Vector3.ZERO, Vector3.UP, true)
+
 
 var colorlist_dark :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
 var colorlist_light :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_light_color_list())
@@ -98,16 +110,17 @@ func make_color_text_info_list(colist :Array, cdlist :Array) -> Array:
 		rtn.append( [ colist[i%colist.size()], cdlist[i] ] )
 	return rtn
 
-
-func wheel_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
+var roulette :Roulette
+func wheel_demo(glasscabinet :GlassCabinet) -> void:
 	var color_text_into_list := make_color_text_info_list(
 		colorlist_light, cardlist,
 	).duplicate()
 	color_text_into_list.shuffle()
-	$Roulette.init(0, WorldSize.y/2, WorldSize.z/20, color_text_into_list )
-	$Roulette.색설정하기(make_random_color(), make_random_color(), make_random_color() )
-	$Roulette.rotation_stopped.connect(wheel결과가결정됨)
-	$Roulette.position = base_pos
+	roulette = preload("res://roulette/roulette.tscn").instantiate(
+		).init(0, WorldSize.y/2, WorldSize.z/20, color_text_into_list )
+	roulette.색설정하기(make_random_color(), make_random_color(), make_random_color() )
+	roulette.rotation_stopped.connect(wheel결과가결정됨)
+	glasscabinet.add_child(roulette)
 	wheel돌리기()
 func make_random_color() -> Color:
 	return NamedColorList.color_list.pick_random()[0]
@@ -115,92 +128,83 @@ func wheel돌리기() -> void:
 	var rot = randfn(2*PI, PI/2)
 	if randi_range(0,1) == 0:
 		rot = -rot
-	$Roulette.돌리기시작.call_deferred(rot)
+	roulette.돌리기시작.call_deferred(rot)
 func wheel결과가결정됨(rl :Roulette) -> void:
 	$"왼쪽패널/LabelWheel".text = rl.선택된cell얻기().글내용얻기()
 	$TimerWheel.start()
 func _on_timer_wheel_timeout() -> void:
 	wheel돌리기()
 
-
-func reel_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
+var slotreel :SlotReel
+func reel_demo(glasscabinet :GlassCabinet) -> void:
 	var symbol크기 := Vector2(WorldSize.x/15 ,WorldSize.y/15)
 	var color_text_into_list := make_color_text_info_list(colorlist_dark, cardlist).duplicate()
 	color_text_into_list.shuffle()
-	$SlotReel.init(0, symbol크기, color_text_into_list)
-	$SlotReel.rotation_stopped.connect(reel결과가결정됨)
-	$SlotReel.position = base_pos
+	slotreel = preload("res://slot_reel/slot_reel.tscn").instantiate(
+		).init(0, symbol크기, color_text_into_list)
+	slotreel.rotation_stopped.connect(reel결과가결정됨)
+	glasscabinet.add_child(slotreel)
 	reel돌리기()
 func reel돌리기() -> void:
 	var rot = randfn(2*PI, PI/2)
 	if randi_range(0,1) == 0:
 		rot = -rot
-	$SlotReel.돌리기시작(rot)
+	slotreel.돌리기시작(rot)
 func reel결과가결정됨( rl :SlotReel) -> void:
 	$"왼쪽패널/LabelReel".text = rl.선택된symbol얻기().글내용얻기()
 	$TimerReel.start()
 func _on_timer_reel_timeout() -> void:
 	reel돌리기()
 
-
+var wavegauge :WaveGauge
 var grid_size := Vector2i(16,9)*2
-func wavegauge_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	$WaveGauge.init(Vector3(WorldSize.x,WorldSize.y,WorldSize.z/20), Vector3i(grid_size.x,grid_size.y,1), WaveGauge.color_list, 0.1, 1.0 )
-	$WaveGauge.position = base_pos
+func wavegauge_demo(glasscabinet :GlassCabinet) -> void:
+	wavegauge = preload("res://wave_gauge/wave_gauge.tscn").instantiate(
+		).init(Vector3(WorldSize.x,WorldSize.y,WorldSize.z/20), Vector3i(grid_size.x,grid_size.y,1), WaveGauge.color_list, 0.1, 1.0 )
+	glasscabinet.add_child(wavegauge)
 
-func wirenet_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	$WireNet.init_wire_net(Vector2(WorldSize.x,WorldSize.y), Vector2i(grid_size.x+1,grid_size.y+1), WorldSize.x/grid_size.x/10, random_color())
-	$WireNet.position = base_pos
+var wirenet :MultiMeshShape
+func wirenet_demo(glasscabinet :GlassCabinet) -> void:
+	wirenet = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
+		).init_wire_net(Vector2(WorldSize.x,WorldSize.y), Vector2i(grid_size.x+1,grid_size.y+1), WorldSize.x/grid_size.x/10, random_color())
+	#$WireNet.position = base_pos
+	glasscabinet.add_child(wirenet)
 
-func glass_cabinet_demo() -> void:
-	#for x in range(-1,2):
-		#for y in range(-1,2):
-			#var gc :GlassCabinet = preload("res://glass_cabinet/glass_cabinet.tscn").instantiate(
-				#).init(WorldSize - Vector3(1,1,1) )
-			#add_child(gc)
-			#gc.position = Vector3(WorldSize.x*x , WorldSize.y*y, 0)
-	for deg :float in range(0,360,30):
-		var rad := deg_to_rad(deg)
-		var radius := WorldSize.length()*1.6
-		var pos := Vector3(sin(rad)*radius, 0, cos(rad)*radius)
-		var gc :GlassCabinet = preload("res://glass_cabinet/glass_cabinet.tscn").instantiate(
-			).init(WorldSize - Vector3(1,1,1) )
-		add_child(gc)
-		gc.position = pos
-		gc.look_at(Vector3.ZERO, Vector3.UP, true)
-
-
-func maze3d_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
+var maze3d :Maze3D
+func maze3d_demo(glasscabinet :GlassCabinet) -> void:
 	var ms := Maze3DSetting.new_default()
 	ms.MazeSize = Vector2i(16,9)
 	ms.LaneW = WorldSize.x/ms.MazeSize.x
 	ms.StoryH = ms.LaneW
 	ms.WallThick = ms.LaneW *0.1
 	ms.MakeSubWallRate = 0.1
-	$Maze3D.init_with_color( ms, Callable(), random_color(), random_color(), random_color() )
-	$Maze3D.position = base_pos + Vector3(0,-ms.LaneW,0)
-	$Maze3D.rotation.x = PI/2
+	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
+		).init_with_color( ms, Callable(), random_color(), random_color(), random_color() )
+	maze3d.rotation.x = PI/2
+	glasscabinet.add_child(maze3d)
 
-
+var meshtrail :MeshTrail
 var bound_aabb :AABB
 var trailmesh_radius := WorldSize.length()/100
-func meshtrail_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	bound_aabb = AABB( base_pos -WorldSize/2, WorldSize)
+func meshtrail_demo(glasscabinet :GlassCabinet) -> void:
+	bound_aabb = AABB( -WorldSize/2, WorldSize)
 	var count := 100
 	var startpos := bound_aabb.get_center()
 	var mesh := BoxMesh.new()
 	mesh.size = Vector3(trailmesh_radius*3, trailmesh_radius /5, trailmesh_radius/5)
-	$MeshTrail.init_with_alpha(mesh, count,  1.0 , startpos,
+	meshtrail = preload("res://mesh_trail/mesh_trail.tscn").instantiate(
+		).init_with_alpha(mesh, count,  1.0 , startpos,
 		).set_speed(trailmesh_radius*20,trailmesh_radius*40)
+	glasscabinet.add_child(meshtrail)
 	match randi_range(0,3):
 		0:
-			$MeshTrail.set_ColorChange_OnBounce()
+			meshtrail.set_ColorChange_OnBounce()
 		1:
-			$MeshTrail.set_ColorChange_MeshGradient()
+			meshtrail.set_ColorChange_MeshGradient()
 		2:
-			$MeshTrail.set_ColorChange_ByPosition(bound_aabb)
+			meshtrail.set_ColorChange_ByPosition(bound_aabb)
 		3:
-			$MeshTrail.set_ColorChange_ByPositionFn(get_color_ByPosition)
+			meshtrail.set_ColorChange_ByPositionFn(get_color_ByPosition)
 func get_color_ByPosition(pos :Vector3) -> Color:
 	var co :Color
 	for i in 3:
@@ -210,32 +214,43 @@ func get_color_ByPosition(pos :Vector3) -> Color:
 func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	return Bounce.v3f(pos, bound_aabb, radius)
 
+var arrow3d :Arrow3D
+func arrow3d_demo(glasscabinet :GlassCabinet) -> void:
+	arrow3d = preload("res://arrow3d/arrow_3d.tscn").instantiate(
+		).set_color(random_color()).set_size( WorldSize.x/10, WorldSize.x/100, WorldSize.x/50)
+	#$Arrow3D.position = base_pos
+	glasscabinet.add_child(arrow3d)
 
-func arrow3d_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	$Arrow3D.set_color(random_color()).set_size( WorldSize.x/10, WorldSize.x/100, WorldSize.x/50)
-	$Arrow3D.position = base_pos
+var valvehandle :ValveHandle
+func valvehandle_demo(glasscabinet :GlassCabinet) -> void:
+	valvehandle = preload("res://valve_handle/valve_handle.tscn").instantiate(
+		).init(WorldSize.x/20,WorldSize.x/20,4, random_color())
+	#valvehandle.position = base_pos
+	glasscabinet.add_child(valvehandle)
 
-func valvehandle_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	$ValveHandle.init(WorldSize.x/20,WorldSize.x/20,4, random_color())
-	$ValveHandle.position = base_pos
-
-func line2d_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
+func line2d_demo(glasscabinet :GlassCabinet) -> void:
 	var size_pixel := Vector2i(2048,2048)
-	$MoveLine2DSubViewport/MoveLine2D.init_with_random(300, 4, 1, size_pixel)
-	$MoveLine2DSubViewport/MoveLine2D.start()
-	$MoveLine2DSubViewport.size = size_pixel
-	$MoveLine2DSubViewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-	$MoveLine2DSubViewport.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
-	$MoveLine2DSubViewport.transparent_bg = true
-	$MoveLine2DMeshInstance3D.mesh = PlaneMesh.new()
-	$MoveLine2DMeshInstance3D.mesh.size = Vector2(WorldSize.x, WorldSize.y)
-	$MoveLine2DMeshInstance3D.mesh.orientation = PlaneMesh.FACE_Z
-	$MoveLine2DMeshInstance3D.position = base_pos
-	$MoveLine2DMeshInstance3D.material_override = StandardMaterial3D.new()
-	$MoveLine2DMeshInstance3D.material_override.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
-	$MoveLine2DMeshInstance3D.material_override.albedo_texture = $MoveLine2DSubViewport.get_texture()
+	var ml2d = preload("res://move_line2d/move_line_2d.tscn").instantiate()
+	ml2d.init_with_random(300, 4, 1, size_pixel)
+	ml2d.start()
+	var svp = SubViewport.new()
+	svp.add_child(ml2d)
+	svp.size = size_pixel
+	svp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	svp.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
+	svp.transparent_bg = true
+	var ml2dmi = MeshInstance3D.new()
+	ml2dmi.mesh = PlaneMesh.new()
+	ml2dmi.mesh.size = Vector2(WorldSize.x, WorldSize.y)
+	ml2dmi.mesh.orientation = PlaneMesh.FACE_Z
+	ml2dmi.material_override = StandardMaterial3D.new()
+	ml2dmi.material_override.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
+	ml2dmi.material_override.albedo_texture = svp.get_texture()
+	glasscabinet.add_child(svp)
+	glasscabinet.add_child(ml2dmi)
 
-func orbit_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
+var orbitsphere :OrbitSphere
+func orbit_demo(glasscabinet :GlassCabinet) -> void:
 	var diagonal_length := WorldSize.length()/2
 	var a120 := PI*2/3
 	var a30 := PI/6
@@ -244,28 +259,34 @@ func orbit_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	mat1.albedo_color = random_color()
 	var mat2 := StandardMaterial3D.new()
 	mat2.albedo_color = random_color()
-	$OrbitSphere.궤도설정(diagonal_length*1.3, diagonal_length/200, axis1, a120*2).구설정(WorldSize.x/40, WorldSize.x/50, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
-	$OrbitSphere.position = base_pos
+	orbitsphere = preload("res://orbit_sphere/orbit_sphere.tscn").instantiate(
+		).궤도설정(diagonal_length, diagonal_length/200, axis1, a120*2).구설정(WorldSize.x/40, WorldSize.x/50, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
+	glasscabinet.add_child(orbitsphere)
 
-func calendar_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	$Calendar3d.init(WorldSize.x/2, WorldSize.y, WorldSize.z/10, WorldSize.y/2.0/6 , false )
-	$Calendar3d.rotate_y(PI/2)
-	$Calendar3d.rotate_x(PI/2)
-	$Calendar3d.position = base_pos
+var calendar :Calendar3D
+func calendar_demo(glasscabinet :GlassCabinet) -> void:
+	calendar = preload("res://calendar3d/calendar_3d.tscn").instantiate(
+		).init(WorldSize.x/2, WorldSize.y, WorldSize.z/10, WorldSize.y/2.0/6 , false )
+	calendar.rotate_y(PI/2)
+	calendar.rotate_x(PI/2)
+	glasscabinet.add_child(calendar)
 
-func clock_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	$AnalogClock3d.init(WorldSize.x/4, WorldSize.z/10, WorldSize.y/2.0/7 ,9.0, false )
-	$AnalogClock3d.rotate_y(PI/2)
-	$AnalogClock3d.rotate_x(PI/2)
-	$AnalogClock3d.position = base_pos
+var clock :AnalogClock3D
+func clock_demo(glasscabinet :GlassCabinet) -> void:
+	clock = preload("res://analogclock3d/analog_clock_3d.tscn").instantiate(
+		).init(WorldSize.x/4, WorldSize.z/10, WorldSize.y/2.0/7 ,9.0, false )
+	clock.rotate_y(PI/2)
+	clock.rotate_x(PI/2)
+	glasscabinet.add_child(clock)
 
-
-func bartree_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
+var bartree :BarTree2
+func bartree_demo(glasscabinet :GlassCabinet) -> void:
 	var tree_size := Vector3(WorldSize.x/3, WorldSize.y/3, WorldSize.x/3 * randf_range(0.5 , 2.0)/10)
 	var bar_count := randf_range(5,200)
-	$BarTree2.init_bartree_with_color(random_color(), random_color(),bar_count
+	bartree = preload("res://bar_tree_2/bar_tree_2.tscn").instantiate(
+		).init_bartree_with_color(random_color(), random_color(),bar_count
 		).init_bartree_transform(tree_size, 0)
-	$BarTree2.position = base_pos
+	glasscabinet.add_child(bartree)
 func random_color()->Color:
 	return NamedColorList.color_list.pick_random()[0]
 
@@ -273,12 +294,12 @@ func random_color()->Color:
 func _process(delta: float) -> void:
 	var now := Time.get_unix_time_from_system()
 	label_demo()
-	$WaveGauge.animate_wave(now)
-	$Roulette.장식돌리기()
-	$Roulette.선택된cell강조상태켜기()
-	$BarTree2.rotate_tree_bar_y(delta*10)
-	$OrbitSphere.animate_rotate(now, delta)
-	$MeshTrail.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
+	wavegauge.animate_wave(now)
+	roulette.장식돌리기()
+	roulette.선택된cell강조상태켜기()
+	bartree.rotate_tree_bar_y(delta*10)
+	orbitsphere.animate_rotate(now, delta)
+	meshtrail.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
 
 	main_animation.handle_animation()
 	var t := now /2.3

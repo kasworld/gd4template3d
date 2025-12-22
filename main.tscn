@@ -1,23 +1,10 @@
-[gd_scene load_steps=25 format=3 uid="uid://c6maulcewyhy5"]
+[gd_scene load_steps=9 format=3 uid="uid://c6maulcewyhy5"]
 
 [ext_resource type="Script" uid="uid://bgj25qi5j8dgh" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Environment" uid="uid://dq6rkclkoup3n" path="res://skymap/skymap.tres" id="3_h2yge"]
-[ext_resource type="PackedScene" uid="uid://bdycgvb1g25w" path="res://maze_3d/maze_3d.tscn" id="5_7mycd"]
+[ext_resource type="PackedScene" uid="uid://dl14flc0fkeyt" path="res://axis_arrow3d/axis_arrow_3d.tscn" id="5_7mycd"]
 [ext_resource type="PackedScene" uid="uid://c6cct2gj2a3im" path="res://timed_message/timed_message.tscn" id="5_lquwl"]
-[ext_resource type="PackedScene" uid="uid://c8npqlgeyy3xa" path="res://arrow3d/arrow_3d.tscn" id="6_7mycd"]
-[ext_resource type="PackedScene" uid="uid://d4kkhfcvaexg1" path="res://valve_handle/valve_handle.tscn" id="7_272bh"]
 [ext_resource type="PackedScene" uid="uid://ces3a6yv0c5fi" path="res://moving_carmera_light/moving_camera_light.tscn" id="8_5vw27"]
-[ext_resource type="PackedScene" uid="uid://dr21303f5q2mm" path="res://wave_gauge/wave_gauge.tscn" id="9_kek77"]
-[ext_resource type="PackedScene" uid="uid://sjnpttkqk1qs" path="res://roulette/roulette.tscn" id="10_4c57u"]
-[ext_resource type="PackedScene" uid="uid://bgvg5u80d01y8" path="res://slot_reel/slot_reel.tscn" id="11_efxa6"]
-[ext_resource type="PackedScene" uid="uid://cy34xu36jq84y" path="res://mesh_trail/mesh_trail.tscn" id="12_dg77c"]
-[ext_resource type="PackedScene" uid="uid://c5ifq7nknxri4" path="res://orbit_sphere/orbit_sphere.tscn" id="13_ycdy4"]
-[ext_resource type="PackedScene" uid="uid://b7xxw75asvp0w" path="res://calendar3d/calendar_3d.tscn" id="14_w48qg"]
-[ext_resource type="PackedScene" uid="uid://jmb1btvtwi1m" path="res://analogclock3d/analog_clock_3d.tscn" id="15_vivmo"]
-[ext_resource type="PackedScene" uid="uid://cfnbpemvoy1i6" path="res://multi_mesh_shape/multi_mesh_shape.tscn" id="16_2cqfq"]
-[ext_resource type="PackedScene" uid="uid://btkkwpk54jqc" path="res://bar_tree_2/bar_tree_2.tscn" id="17_yaehf"]
-[ext_resource type="PackedScene" uid="uid://da370dapcfjwm" path="res://move_line2d/move_line_2d.tscn" id="18_074og"]
-[ext_resource type="PackedScene" uid="uid://clnf86bglf40d" path="res://glass_cabinet/glass_cabinet.tscn" id="18_cegan"]
 
 [sub_resource type="Theme" id="Theme_h2yge"]
 default_font_size = 48
@@ -27,15 +14,6 @@ default_font_size = 48
 [sub_resource type="Theme" id="Theme_7mycd"]
 resource_local_to_scene = true
 default_font = SubResource("SystemFont_bejao")
-
-[sub_resource type="MultiMesh" id="MultiMesh_ycdy4"]
-resource_local_to_scene = true
-
-[sub_resource type="MultiMesh" id="MultiMesh_yaehf"]
-resource_local_to_scene = true
-
-[sub_resource type="MultiMesh" id="MultiMesh_074og"]
-resource_local_to_scene = true
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_ig7tw")
@@ -92,50 +70,19 @@ sky_mode = 1
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("3_h2yge")
 
-[node name="Maze3D" parent="." instance=ExtResource("5_7mycd")]
-
-[node name="Arrow3D" parent="." instance=ExtResource("6_7mycd")]
-
-[node name="ValveHandle" parent="." instance=ExtResource("7_272bh")]
-
-[node name="GlassCabinet" parent="." instance=ExtResource("18_cegan")]
-
 [node name="MovingCameraLightHober" parent="." instance=ExtResource("8_5vw27")]
 
 [node name="MovingCameraLightAround" parent="." instance=ExtResource("8_5vw27")]
 
-[node name="WaveGauge" parent="." instance=ExtResource("9_kek77")]
-
-[node name="Roulette" parent="." instance=ExtResource("10_4c57u")]
-
 [node name="TimerWheel" type="Timer" parent="."]
 one_shot = true
-
-[node name="SlotReel" parent="." instance=ExtResource("11_efxa6")]
 
 [node name="TimerReel" type="Timer" parent="."]
 one_shot = true
 
-[node name="MeshTrail" parent="." instance=ExtResource("12_dg77c")]
-multimesh = SubResource("MultiMesh_ycdy4")
+[node name="GlassCabinetContainer" type="Node3D" parent="."]
 
-[node name="OrbitSphere" parent="." instance=ExtResource("13_ycdy4")]
-
-[node name="Calendar3d" parent="." instance=ExtResource("14_w48qg")]
-
-[node name="AnalogClock3d" parent="." instance=ExtResource("15_vivmo")]
-
-[node name="WireNet" parent="." instance=ExtResource("16_2cqfq")]
-multimesh = SubResource("MultiMesh_yaehf")
-
-[node name="BarTree2" parent="." instance=ExtResource("17_yaehf")]
-multimesh = SubResource("MultiMesh_074og")
-
-[node name="MoveLine2DSubViewport" type="SubViewport" parent="."]
-
-[node name="MoveLine2D" parent="MoveLine2DSubViewport" instance=ExtResource("18_074og")]
-
-[node name="MoveLine2DMeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="AxisArrow3D" parent="." instance=ExtResource("5_7mycd")]
 
 [connection signal="timeout" from="TimerWheel" to="." method="_on_timer_wheel_timeout"]
 [connection signal="timeout" from="TimerReel" to="." method="_on_timer_reel_timeout"]
