@@ -1,0 +1,25 @@
+[gd_scene load_steps=6 format=3 uid="uid://clnf86bglf40d"]
+
+[ext_resource type="Script" uid="uid://dgtp6vsyrysk1" path="res://glass_cabinet/glass_cabinet.gd" id="1_2v0m0"]
+[ext_resource type="PackedScene" uid="uid://ces3a6yv0c5fi" path="res://moving_carmera_light/moving_camera_light.tscn" id="2_71gvw"]
+[ext_resource type="PackedScene" uid="uid://dl14flc0fkeyt" path="res://axis_arrow3d/axis_arrow_3d.tscn" id="3_nkhty"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ig7tw"]
+resource_local_to_scene = true
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.5019608)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nkhty"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_ig7tw")
+flip_faces = true
+
+[node name="GlassCabinet" type="Node3D"]
+script = ExtResource("1_2v0m0")
+
+[node name="WallBox" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_nkhty")
+
+[node name="FixedCameraLight" parent="." instance=ExtResource("2_71gvw")]
+
+[node name="AxisArrow3D" parent="." instance=ExtResource("3_nkhty")]
