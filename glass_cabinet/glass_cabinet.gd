@@ -19,6 +19,9 @@ func set_box_color(co :Color) -> GlassCabinet:
 	$WallBox.mesh.material.albedo_color = co
 	return self
 
+func get_camera_light() -> MovingCameraLight:
+	return $FixedCameraLight
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed:
 		if $FixedCameraLight.is_current_camera():

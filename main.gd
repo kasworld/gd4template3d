@@ -66,9 +66,9 @@ func _ready() -> void:
 	timed_message_init()
 	$OmniLight3D.position = Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
-	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, 	Vector3(0, 0, WorldSize.z*2), WorldSize.length()*2)
 	$MovingCameraLightHober.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
 	$MovingCameraLightAround.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
+	$GlassCabinet.init(WorldSize)
 
 	glass_cabinet_demo()
 	bartree_demo(Vector3(0, -WorldSize.y/2, 0 ))
@@ -84,8 +84,8 @@ func _ready() -> void:
 	maze3d_demo( Vector3(0, -WorldSize.y ,0) )
 	reel_demo(Vector3( -WorldSize.x/2*1.1 , 0, 0))
 	wheel_demo(Vector3( WorldSize.x/2+WorldSize.y/2 , 0,0))
-	$FixedCameraLight.make_current()
 
+	$GlassCabinet.get_camera_light().make_current()
 	main_animation.animation_ended.connect(main_animation_ended)
 	start_all_animation()
 
@@ -153,12 +153,21 @@ func wirenet_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	$WireNet.position = base_pos
 
 func glass_cabinet_demo() -> void:
-	for x in range(-1,2):
-		for y in range(-1,2):
-			var gc :GlassCabinet = preload("res://glass_cabinet/glass_cabinet.tscn").instantiate(
-				).init(WorldSize - Vector3(1,1,1) )
-			add_child(gc)
-			gc.position = Vector3(WorldSize.x*x , WorldSize.y*y, 0)
+	#for x in range(-1,2):
+		#for y in range(-1,2):
+			#var gc :GlassCabinet = preload("res://glass_cabinet/glass_cabinet.tscn").instantiate(
+				#).init(WorldSize - Vector3(1,1,1) )
+			#add_child(gc)
+			#gc.position = Vector3(WorldSize.x*x , WorldSize.y*y, 0)
+	for deg :float in range(0,360,30):
+		var rad := deg_to_rad(deg)
+		var radius := WorldSize.length()*1.6
+		var pos := Vector3(sin(rad)*radius, 0, cos(rad)*radius)
+		var gc :GlassCabinet = preload("res://glass_cabinet/glass_cabinet.tscn").instantiate(
+			).init(WorldSize - Vector3(1,1,1) )
+		add_child(gc)
+		gc.position = pos
+		gc.look_at(Vector3.ZERO, Vector3.UP, true)
 
 
 func maze3d_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
@@ -298,11 +307,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		var fn = key2fn.get(event.keycode)
 		if fn != null:
 			fn.call()
-		if $FixedCameraLight.is_current_camera():
-			var fi = FlyNode3D.Key2Info.get(event.keycode)
-			if fi != null:
-				FlyNode3D.fly_node3d($FixedCameraLight, fi)
-
 	elif event is InputEventMouseButton and event.is_pressed():
 		pass
 

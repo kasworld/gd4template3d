@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://c6maulcewyhy5"]
+[gd_scene load_steps=25 format=3 uid="uid://c6maulcewyhy5"]
 
 [ext_resource type="Script" uid="uid://bgj25qi5j8dgh" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Environment" uid="uid://dq6rkclkoup3n" path="res://skymap/skymap.tres" id="3_h2yge"]
@@ -17,6 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://cfnbpemvoy1i6" path="res://multi_mesh_shape/multi_mesh_shape.tscn" id="16_2cqfq"]
 [ext_resource type="PackedScene" uid="uid://btkkwpk54jqc" path="res://bar_tree_2/bar_tree_2.tscn" id="17_yaehf"]
 [ext_resource type="PackedScene" uid="uid://da370dapcfjwm" path="res://move_line2d/move_line_2d.tscn" id="18_074og"]
+[ext_resource type="PackedScene" uid="uid://clnf86bglf40d" path="res://glass_cabinet/glass_cabinet.tscn" id="18_cegan"]
 
 [sub_resource type="Theme" id="Theme_h2yge"]
 default_font_size = 48
@@ -97,7 +98,7 @@ environment = ExtResource("3_h2yge")
 
 [node name="ValveHandle" parent="." instance=ExtResource("7_272bh")]
 
-[node name="FixedCameraLight" parent="." instance=ExtResource("8_5vw27")]
+[node name="GlassCabinet" parent="." instance=ExtResource("18_cegan")]
 
 [node name="MovingCameraLightHober" parent="." instance=ExtResource("8_5vw27")]
 
