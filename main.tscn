@@ -1,8 +1,7 @@
-[gd_scene load_steps=27 format=3 uid="uid://c6maulcewyhy5"]
+[gd_scene load_steps=24 format=3 uid="uid://c6maulcewyhy5"]
 
 [ext_resource type="Script" uid="uid://bgj25qi5j8dgh" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Environment" uid="uid://dq6rkclkoup3n" path="res://skymap/skymap.tres" id="3_h2yge"]
-[ext_resource type="PackedScene" uid="uid://dl14flc0fkeyt" path="res://axis_arrow3d/axis_arrow_3d.tscn" id="4_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://bdycgvb1g25w" path="res://maze_3d/maze_3d.tscn" id="5_7mycd"]
 [ext_resource type="PackedScene" uid="uid://c6cct2gj2a3im" path="res://timed_message/timed_message.tscn" id="5_lquwl"]
 [ext_resource type="PackedScene" uid="uid://c8npqlgeyy3xa" path="res://arrow3d/arrow_3d.tscn" id="6_7mycd"]
@@ -27,13 +26,6 @@ default_font_size = 48
 [sub_resource type="Theme" id="Theme_7mycd"]
 resource_local_to_scene = true
 default_font = SubResource("SystemFont_bejao")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ig7tw"]
-transparency = 1
-
-[sub_resource type="BoxMesh" id="BoxMesh_ig7tw"]
-material = SubResource("StandardMaterial3D_ig7tw")
-flip_faces = true
 
 [sub_resource type="MultiMesh" id="MultiMesh_ycdy4"]
 resource_local_to_scene = true
@@ -76,12 +68,6 @@ autowrap_mode = 3
 self_modulate = Color(1, 1, 1, 0.498039)
 theme = SubResource("Theme_7mycd")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
-visible = false
-keep_aspect = 0
-fov = 90.0
-
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 5, 15)
 shadow_enabled = true
@@ -104,11 +90,6 @@ sky_mode = 1
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("3_h2yge")
-
-[node name="WallBox" type="MeshInstance3D" parent="."]
-mesh = SubResource("BoxMesh_ig7tw")
-
-[node name="AxisArrow3D" parent="." instance=ExtResource("4_1bvp3")]
 
 [node name="Maze3D" parent="." instance=ExtResource("5_7mycd")]
 

@@ -7,6 +7,14 @@ func init(box_size :Vector3) -> GlassCabinet:
 	$AxisArrow3D.set_size(box_size.length()/10).set_colors()
 	return self
 
+func show_axis_arrow(b :bool) -> GlassCabinet:
+	$AxisArrow3D.visible = b
+	return self
+
+func show_wall_box(b :bool) -> GlassCabinet:
+	$WallBox.visible = b
+	return self
+
 func set_box_color(co :Color) -> GlassCabinet:
 	$WallBox.mesh.material.albedo_color = co
 	return self

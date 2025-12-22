@@ -69,9 +69,8 @@ func _ready() -> void:
 	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, 	Vector3(0, 0, WorldSize.z*2), WorldSize.length()*2)
 	$MovingCameraLightHober.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
 	$MovingCameraLightAround.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*2)
-	$AxisArrow3D.set_size(10).set_colors()
 
-	wallbox_demo(Vector3.ZERO)
+	glass_cabinet_demo()
 	bartree_demo(Vector3(0, -WorldSize.y/2, 0 ))
 	wirenet_demo(Vector3(-WorldSize.x/2, -WorldSize.y/2, -WorldSize.z/2))
 	wavegauge_demo(Vector3(0, 0 , -WorldSize.z/2))
@@ -85,14 +84,7 @@ func _ready() -> void:
 	maze3d_demo( Vector3(0, -WorldSize.y ,0) )
 	reel_demo(Vector3( -WorldSize.x/2*1.1 , 0, 0))
 	wheel_demo(Vector3( WorldSize.x/2+WorldSize.y/2 , 0,0))
-
-	for x in range(-2,3):
-		for y in range(-1,2):
-			var gc :GlassCabinet = preload("res://glass_cabinet/glass_cabinet.tscn").instantiate(
-				).init(WorldSize)
-			add_child(gc)
-			gc.position = Vector3(WorldSize.x*x , WorldSize.y*y, 0)
-
+	$FixedCameraLight.make_current()
 
 	main_animation.animation_ended.connect(main_animation_ended)
 	start_all_animation()
@@ -160,11 +152,14 @@ func wirenet_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	$WireNet.init_wire_net(Vector2(WorldSize.x,WorldSize.y), Vector2i(grid_size.x+1,grid_size.y+1), WorldSize.x/grid_size.x/10, random_color())
 	$WireNet.position = base_pos
 
+func glass_cabinet_demo() -> void:
+	for x in range(-1,2):
+		for y in range(-1,2):
+			var gc :GlassCabinet = preload("res://glass_cabinet/glass_cabinet.tscn").instantiate(
+				).init(WorldSize - Vector3(1,1,1) )
+			add_child(gc)
+			gc.position = Vector3(WorldSize.x*x , WorldSize.y*y, 0)
 
-func wallbox_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
-	$WallBox.mesh.size = WorldSize
-	$WallBox.position = base_pos
-	$WallBox.mesh.material.albedo_color = Color(Color.WHITE, 0.5)
 
 func maze3d_demo(base_pos :Vector3 = Vector3.ZERO) -> void:
 	var ms := Maze3DSetting.new_default()
