@@ -66,7 +66,6 @@ func _ready() -> void:
 	timed_message_init()
 	$OmniLight3D.position = Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
-	$MovingCameraLightHober.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*3)
 	$MovingCameraLightAround.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*3)
 	$AxisArrow3D.set_colors().set_size(WorldSize.length()/10)
 
@@ -303,10 +302,8 @@ func _process(delta: float) -> void:
 
 	main_animation.handle_animation()
 	var t := now /2.3
-	if $MovingCameraLightHober.is_current_camera():
-		$MovingCameraLightHober.move_hober_around_z(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
-	elif $MovingCameraLightAround.is_current_camera():
-		$MovingCameraLightAround.move_wave_around_y(t, Vector3.ZERO, (WorldSize.x+WorldSize.y)/2, WorldSize.length()*0.6 )
+	if $MovingCameraLightAround.is_current_camera():
+		$MovingCameraLightAround.move_wave_around_y(t, Vector3.ZERO, WorldSize.length()/4, WorldSize.length()/10 )
 
 func _on_카메라변경_pressed() -> void:
 	MovingCameraLight.NextCamera()
