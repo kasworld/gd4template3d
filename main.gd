@@ -82,6 +82,7 @@ func _ready() -> void:
 	valvehandle_arrow3d_demo($GlassCabinetContainer.get_child(9), "valvehandle,arrow3d")
 	wirenet_wavegauge_demo($GlassCabinetContainer.get_child(10), "wirenet,wavegauge")
 	wavegauge_demo($GlassCabinetContainer.get_child(11), "wavegauge")
+	turbine_demo($GlassCabinetContainer.get_child(12), "turbine")
 
 	$MovingCameraLightAround.make_current()
 	main_animation.animation_ended.connect(main_animation_ended)
@@ -102,6 +103,25 @@ func glass_cabinet_demo() -> void:
 			gc.position = Vector3(sin(rad)*radius, -WorldSize.y/2 *1.0, cos(rad)*radius)
 		gc.look_at( Vector3(0,gc.position.y,0), Vector3.UP, true)
 		gc.set_label_text("%d" % i).show_label(true)
+
+var turbine_list :Array
+func turbine_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
+	if labeltext != "":
+		glasscabinet.set_label_text(labeltext)
+	var r:= WorldSize.z / 3
+	for i in range(-20,21):
+		var co := Color( Color.RED.lerp(Color.BLUE, float(i+20)/40.0) , 0.5)
+		var rr := r*(sin(float(i)/30.0*PI)/4 +1.0)
+		var tb :Turbine = preload("res://turbine/turbine.tscn").instantiate().init(rr,1,4,co)
+		tb.position = Vector3(i *2.2,0,0)
+		tb.rotation.y = PI/2
+		glasscabinet.add_child(tb)
+		turbine_list.append(tb)
+func turbine_rotate() -> void:
+	var t := Time.get_unix_time_from_system()
+	var rad := fposmod(t , PI*2)
+	for i in turbine_list.size():
+		turbine_list[i].rotation.z = (rad+float(i)/10) / 1
 
 
 var colorlist_dark :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
@@ -360,6 +380,7 @@ func _process(delta: float) -> void:
 		os.animate_rotate(now, delta)
 	for mt in meshtrail_list:
 		mt.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
+	turbine_rotate()
 
 	main_animation.handle_animation()
 	var t := now /2.3
