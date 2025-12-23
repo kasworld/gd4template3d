@@ -70,19 +70,19 @@ func _ready() -> void:
 	$AxisArrow3D.set_colors().set_size(WorldSize.length()/10)
 
 	glass_cabinet_demo()
-	bartree_demo($GlassCabinetContainer.get_child(0))
-	clock_demo($GlassCabinetContainer.get_child(1))
-	calendar_demo($GlassCabinetContainer.get_child(2))
-	orbit_demo($GlassCabinetContainer.get_child(3))
-	line2d_demo($GlassCabinetContainer.get_child(4))
-	meshtrail_demo($GlassCabinetContainer.get_child(5))
-	maze3d_demo($GlassCabinetContainer.get_child(6))
-	reel_demo($GlassCabinetContainer.get_child(7))
-	wheel_demo($GlassCabinetContainer.get_child(8))
+	bartree_demo($GlassCabinetContainer.get_child(0), "bar-tree")
+	clock_demo($GlassCabinetContainer.get_child(1), "clock3d")
+	calendar_demo($GlassCabinetContainer.get_child(2), "calender3d")
+	orbit_demo($GlassCabinetContainer.get_child(3), "orbit")
+	line2d_demo($GlassCabinetContainer.get_child(4), "move line2d")
+	meshtrail_demo($GlassCabinetContainer.get_child(5), "mesh trail")
+	maze3d_demo($GlassCabinetContainer.get_child(6), "maze3d")
+	reel_demo($GlassCabinetContainer.get_child(7), "slot reel")
+	wheel_demo($GlassCabinetContainer.get_child(8), "roulette wheel" )
 	valvehandle_demo($GlassCabinetContainer.get_child(10))
-	arrow3d_demo($GlassCabinetContainer.get_child(10))
-	wirenet_demo($GlassCabinetContainer.get_child(11))
-	wavegauge_demo($GlassCabinetContainer.get_child(11))
+	arrow3d_demo($GlassCabinetContainer.get_child(10), "balvehandle, arrow")
+	wirenet_demo($GlassCabinetContainer.get_child(11), "wire-net")
+	wavegauge_demo($GlassCabinetContainer.get_child(11), "wave gauge")
 
 	$MovingCameraLightAround.make_current()
 	main_animation.animation_ended.connect(main_animation_ended)
@@ -115,7 +115,7 @@ func make_color_text_info_list(colist :Array, cdlist :Array) -> Array:
 	return rtn
 
 var roulette :Roulette
-func wheel_demo(glasscabinet :GlassCabinet) -> void:
+func wheel_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	var color_text_into_list := make_color_text_info_list(
 		colorlist_light, cardlist,
 	).duplicate()
@@ -125,6 +125,8 @@ func wheel_demo(glasscabinet :GlassCabinet) -> void:
 	roulette.색설정하기(make_random_color(), make_random_color(), make_random_color() )
 	roulette.rotation_stopped.connect(wheel결과가결정됨)
 	glasscabinet.add_child(roulette)
+	if labeltext != "":
+		glasscabinet.set_label_text(labeltext)
 	wheel돌리기()
 func make_random_color() -> Color:
 	return NamedColorList.color_list.pick_random()[0]
@@ -140,7 +142,7 @@ func _on_timer_wheel_timeout() -> void:
 	wheel돌리기()
 
 var slotreel :SlotReel
-func reel_demo(glasscabinet :GlassCabinet) -> void:
+func reel_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	var symbol크기 := Vector2(WorldSize.x/15 ,WorldSize.y/15)
 	var color_text_into_list := make_color_text_info_list(colorlist_dark, cardlist).duplicate()
 	color_text_into_list.shuffle()
@@ -148,6 +150,8 @@ func reel_demo(glasscabinet :GlassCabinet) -> void:
 		).init(0, symbol크기, color_text_into_list)
 	slotreel.rotation_stopped.connect(reel결과가결정됨)
 	glasscabinet.add_child(slotreel)
+	if labeltext != "":
+		glasscabinet.set_label_text(labeltext)
 	reel돌리기()
 func reel돌리기() -> void:
 	var rot = randfn(2*PI, PI/2)
@@ -162,20 +166,24 @@ func _on_timer_reel_timeout() -> void:
 
 var wavegauge :WaveGauge
 var grid_size := Vector2i(16,9)*2
-func wavegauge_demo(glasscabinet :GlassCabinet) -> void:
+func wavegauge_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	wavegauge = preload("res://wave_gauge/wave_gauge.tscn").instantiate(
 		).init(Vector3(WorldSize.x,WorldSize.y,WorldSize.z/20), Vector3i(grid_size.x,grid_size.y,1), WaveGauge.color_list, 0.1, 1.0 )
 	glasscabinet.add_child(wavegauge)
+	if labeltext != "":
+		glasscabinet.set_label_text(labeltext)
 
 var wirenet :MultiMeshShape
-func wirenet_demo(glasscabinet :GlassCabinet) -> void:
+func wirenet_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	wirenet = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).init_wire_net(Vector2(WorldSize.x,WorldSize.y), Vector2i(grid_size.x+1,grid_size.y+1), WorldSize.x/grid_size.x/10, random_color())
 	#$WireNet.position = base_pos
 	glasscabinet.add_child(wirenet)
+	if labeltext != "":
+		glasscabinet.set_label_text(labeltext)
 
 var maze3d :Maze3D
-func maze3d_demo(glasscabinet :GlassCabinet) -> void:
+func maze3d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	var ms := Maze3DSetting.new_default()
 	ms.MazeSize = Vector2i(16,9)
 	ms.LaneW = WorldSize.x/ms.MazeSize.x
@@ -186,11 +194,13 @@ func maze3d_demo(glasscabinet :GlassCabinet) -> void:
 		).init_with_color( ms, Callable(), random_color(), random_color(), random_color() )
 	maze3d.rotation.x = PI/2
 	glasscabinet.add_child(maze3d)
+	if labeltext != "":
+		glasscabinet.set_label_text(labeltext)
 
 var meshtrail :MeshTrail
 var bound_aabb :AABB
 var trailmesh_radius := WorldSize.length()/100
-func meshtrail_demo(glasscabinet :GlassCabinet) -> void:
+func meshtrail_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	bound_aabb = AABB( -WorldSize/2, WorldSize)
 	var count := 100
 	var startpos := bound_aabb.get_center()
@@ -200,6 +210,8 @@ func meshtrail_demo(glasscabinet :GlassCabinet) -> void:
 		).init_with_alpha(mesh, count,  1.0 , startpos,
 		).set_speed(trailmesh_radius*20,trailmesh_radius*40)
 	glasscabinet.add_child(meshtrail)
+	if labeltext != "":
+		glasscabinet.set_label_text(labeltext)
 	match randi_range(0,3):
 		0:
 			meshtrail.set_ColorChange_OnBounce()
@@ -219,20 +231,24 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	return Bounce.v3f(pos, bound_aabb, radius)
 
 var arrow3d :Arrow3D
-func arrow3d_demo(glasscabinet :GlassCabinet) -> void:
+func arrow3d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	arrow3d = preload("res://arrow3d/arrow_3d.tscn").instantiate(
 		).set_color(random_color()).set_size( WorldSize.x/10, WorldSize.x/100, WorldSize.x/50)
 	#$Arrow3D.position = base_pos
 	glasscabinet.add_child(arrow3d)
+	if labeltext != "":
+		glasscabinet.set_label_text(labeltext)
 
 var valvehandle :ValveHandle
-func valvehandle_demo(glasscabinet :GlassCabinet) -> void:
+func valvehandle_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	valvehandle = preload("res://valve_handle/valve_handle.tscn").instantiate(
 		).init(WorldSize.x/20,WorldSize.x/20,4, random_color())
 	#valvehandle.position = base_pos
 	glasscabinet.add_child(valvehandle)
+	if labeltext != "":
+		glasscabinet.set_label_text(labeltext)
 
-func line2d_demo(glasscabinet :GlassCabinet) -> void:
+func line2d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	var size_pixel := Vector2i(2048,2048)
 	var ml2d = preload("res://move_line2d/move_line_2d.tscn").instantiate()
 	ml2d.init_with_random(300, 4, 1, size_pixel)
@@ -252,9 +268,11 @@ func line2d_demo(glasscabinet :GlassCabinet) -> void:
 	ml2dmi.material_override.albedo_texture = svp.get_texture()
 	glasscabinet.add_child(svp)
 	glasscabinet.add_child(ml2dmi)
+	if labeltext != "":
+		glasscabinet.set_label_text(labeltext)
 
 var orbitsphere :OrbitSphere
-func orbit_demo(glasscabinet :GlassCabinet) -> void:
+func orbit_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	var diagonal_length := WorldSize.length()/2
 	var a120 := PI*2/3
 	var a30 := PI/6
@@ -266,31 +284,39 @@ func orbit_demo(glasscabinet :GlassCabinet) -> void:
 	orbitsphere = preload("res://orbit_sphere/orbit_sphere.tscn").instantiate(
 		).궤도설정(diagonal_length, diagonal_length/200, axis1, a120*2).구설정(WorldSize.x/40, WorldSize.x/50, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
 	glasscabinet.add_child(orbitsphere)
+	if labeltext != "":
+		glasscabinet.set_label_text(labeltext)
 
 var calendar :Calendar3D
-func calendar_demo(glasscabinet :GlassCabinet) -> void:
+func calendar_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	calendar = preload("res://calendar3d/calendar_3d.tscn").instantiate(
 		).init(WorldSize.x/2, WorldSize.y, WorldSize.z/10, WorldSize.y/2.0/6 , false )
 	calendar.rotate_y(PI/2)
 	calendar.rotate_x(PI/2)
 	glasscabinet.add_child(calendar)
+	if labeltext != "":
+		glasscabinet.set_label_text(labeltext)
 
 var clock :AnalogClock3D
-func clock_demo(glasscabinet :GlassCabinet) -> void:
+func clock_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	clock = preload("res://analogclock3d/analog_clock_3d.tscn").instantiate(
 		).init(WorldSize.x/4, WorldSize.z/10, WorldSize.y/2.0/7 ,9.0, false )
 	clock.rotate_y(PI/2)
 	clock.rotate_x(PI/2)
 	glasscabinet.add_child(clock)
+	if labeltext != "":
+		glasscabinet.set_label_text(labeltext)
 
 var bartree :BarTree2
-func bartree_demo(glasscabinet :GlassCabinet) -> void:
+func bartree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	var tree_size := Vector3(WorldSize.x/3, WorldSize.y/3, WorldSize.x/3 * randf_range(0.5 , 2.0)/10)
 	var bar_count := randf_range(5,200)
 	bartree = preload("res://bar_tree_2/bar_tree_2.tscn").instantiate(
 		).init_bartree_with_color(random_color(), random_color(),bar_count
 		).init_bartree_transform(tree_size, 0)
 	glasscabinet.add_child(bartree)
+	if labeltext != "":
+		glasscabinet.set_label_text(labeltext)
 func random_color()->Color:
 	return NamedColorList.color_list.pick_random()[0]
 

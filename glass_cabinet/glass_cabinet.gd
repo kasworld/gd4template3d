@@ -5,8 +5,8 @@ func init(box_size :Vector3) -> GlassCabinet:
 	$WallBox.mesh.size = box_size
 	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, 	Vector3(0, 0, box_size.z*2), box_size.length()*2)
 	$AxisArrow3D.set_size(box_size.length()/10).set_colors()
-	$Label3D.pixel_size = box_size.y/100
-	$Label3D.position.z = -box_size.z/2
+	$Label3D.pixel_size = box_size.y/200
+	$Label3D.position = Vector3(0,-box_size.y/2,box_size.z/2)
 	return self
 
 func show_axis_arrow(b :bool = true) -> GlassCabinet:

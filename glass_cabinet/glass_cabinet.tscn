@@ -27,3 +27,4 @@ visible = false
 
 [node name="Label3D" type="Label3D" parent="."]
 visible = false
+vertical_alignment = 2
