@@ -26,6 +26,9 @@ func show_label(b :bool = true) -> GlassCabinet:
 func set_label_text(t :String) -> GlassCabinet:
 	$Label3D.text = t
 	return self
+func set_label_pixel_size(sz :float) -> GlassCabinet:
+	$Label3D.pixel_size = sz
+	return self
 
 func get_camera_light() -> MovingCameraLight:
 	return $FixedCameraLight
