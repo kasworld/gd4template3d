@@ -77,7 +77,7 @@ func _ready() -> void:
 	line2d_demo($GlassCabinetContainer.get_child(4), "moveline2d")
 	meshtrail_demo($GlassCabinetContainer.get_child(5), "meshtrail")
 	maze3d_demo($GlassCabinetContainer.get_child(6), "maze3d")
-	reel_demo($GlassCabinetContainer.get_child(7), "slotreel")
+	slotreel_demo($GlassCabinetContainer.get_child(7), "slotreel")
 	wheel_demo($GlassCabinetContainer.get_child(8), "roulettewheel" )
 	valvehandle_arrow3d_demo($GlassCabinetContainer.get_child(9), "valvehandle,arrow3d")
 	wirenet_wavegauge_demo($GlassCabinetContainer.get_child(10), "wirenet,wavegauge")
@@ -140,28 +140,26 @@ func wheel결과가결정됨(rl :Roulette) -> void:
 func _on_timer_wheel_timeout() -> void:
 	wheel돌리기()
 
-var slotreel :SlotReel
-func reel_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	var symbol크기 := Vector2(WorldSize.x/20 ,WorldSize.y/20)
-	var color_text_into_list := make_color_text_info_list(colorlist_dark, cardlist).duplicate()
-	color_text_into_list.shuffle()
-	slotreel = preload("res://slot_reel/slot_reel.tscn").instantiate(
-		).init(0, symbol크기, color_text_into_list)
-	slotreel.rotation_stopped.connect(reel결과가결정됨)
-	glasscabinet.add_child(slotreel)
+var slot :Slots
+func slotreel_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
-	reel돌리기()
-func reel돌리기() -> void:
-	var rot = randfn(2*PI, PI/2)
-	if randi_range(0,1) == 0:
-		rot = -rot
-	slotreel.돌리기시작(rot)
-func reel결과가결정됨( rl :SlotReel) -> void:
-	$"왼쪽패널/LabelReel".text = rl.선택된symbol얻기().글내용얻기()
+	var symbol크기 := Vector2(WorldSize.x/20 ,WorldSize.y/20)
+	var color_text_into_list := make_color_text_info_list(colorlist_dark, cardlist).duplicate()
+	slot = preload("res://slots/slots.tscn").instantiate().init(5, symbol크기,color_text_into_list)
+	glasscabinet.add_child(slot)
+	slot.rotation_stopped.connect(슬롯멈춤)
+	slot.돌리기시작()
+func 슬롯멈춤(sl :Slots) -> void:
+	var symbol들 := sl.선택된symbol들얻기()
+	var 결과 := ""
+	for k in symbol들:
+		결과 += k.글내용얻기() + " "
+	$"왼쪽패널/LabelReel".text = 결과
 	$TimerReel.start()
 func _on_timer_reel_timeout() -> void:
-	reel돌리기()
+	slot.돌리기시작()
+
 
 var wavegauge_box :WaveGauge
 func wavegauge_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
