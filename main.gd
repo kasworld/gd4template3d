@@ -250,6 +250,7 @@ func valvehandle_arrow3d_demo(glasscabinet :GlassCabinet, labeltext :String = ""
 func line2d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
+	glasscabinet.set_box_color(Color(Color.WHITE,0.2))
 	var size_pixel := Vector2i(2048,2048)
 	var ml2d = preload("res://move_line2d/move_line_2d.tscn").instantiate()
 	ml2d.init_with_random(300, 4, 1, size_pixel)
@@ -271,21 +272,30 @@ func line2d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	glasscabinet.add_child(svp)
 	glasscabinet.add_child(ml2dmi)
 
-var orbitsphere :OrbitSphere
+var orbitsphere_list :Array
 func orbit_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
-	var diagonal_length := WorldSize.length()/2
+	glasscabinet.set_box_color(Color(Color.WHITE,0.2))
+	for i in 3:
+		add_orbitsphere(glasscabinet)
+func add_orbitsphere(glasscabinet :GlassCabinet) -> void:
+	var diagonal_length := WorldSize.length()/4
 	var a120 := PI*2/3
 	var a30 := PI/6
-	var axis1 := Vector3.UP.rotated(Vector3.RIGHT, a30)
+	var axis1 := Vector3.UP.rotated(
+		[Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK].pick_random(),
+		a30)
 	var mat1 := StandardMaterial3D.new()
 	mat1.albedo_color = random_color()
 	var mat2 := StandardMaterial3D.new()
 	mat2.albedo_color = random_color()
-	orbitsphere = preload("res://orbit_sphere/orbit_sphere.tscn").instantiate(
-		).궤도설정(diagonal_length, diagonal_length/200, axis1, a120*2).구설정(WorldSize.x/40, WorldSize.x/50, Vector3.UP).구재질설정(mat2).궤도재질설정(mat1)
-	glasscabinet.add_child(orbitsphere)
+	var os = preload("res://orbit_sphere/orbit_sphere.tscn").instantiate(
+		).궤도설정(diagonal_length, diagonal_length/200, axis1, a120*[0,1,2].pick_random()
+		).구설정(WorldSize.x/40, WorldSize.x/50, Vector3.UP
+		).구재질설정(mat2).궤도재질설정(mat1)
+	glasscabinet.add_child(os)
+	orbitsphere_list.append(os)
 
 var calendar :Calendar3D
 func calendar_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
@@ -346,7 +356,8 @@ func _process(delta: float) -> void:
 	roulette.선택된cell강조상태켜기()
 	for bt in bartree_list:
 		bt.rotate_tree_bar_y(delta*10)
-	orbitsphere.animate_rotate(now, delta)
+	for os in orbitsphere_list:
+		os.animate_rotate(now, delta)
 	for mt in meshtrail_list:
 		mt.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
 
