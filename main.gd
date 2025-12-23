@@ -89,15 +89,20 @@ func _ready() -> void:
 	start_all_animation()
 
 func glass_cabinet_demo() -> void:
-	for deg :float in range(0,360,30):
-		var rad := deg_to_rad(deg)
-		var radius := WorldSize.length()*1.6
-		var pos := Vector3(sin(rad)*radius, 0, cos(rad)*radius)
+	var count := 24
+	var unit_rad := 2*PI/ count
+	for i in count:
+		var radius := WorldSize.length() *1.7
 		var gc :GlassCabinet = preload("res://glass_cabinet/glass_cabinet.tscn").instantiate(
 			).init(WorldSize - Vector3(1,1,1) )
 		$GlassCabinetContainer.add_child(gc)
-		gc.position = pos
-		gc.look_at(Vector3.ZERO, Vector3.UP, true)
+		var rad := i * unit_rad
+		if i % 2 == 0:
+			gc.position = Vector3(sin(rad)*radius, WorldSize.y/2 *1.0, cos(rad)*radius)
+		else:
+			gc.position = Vector3(sin(rad)*radius, -WorldSize.y/2 *1.0, cos(rad)*radius)
+		gc.look_at( Vector3(0,gc.position.y,0), Vector3.UP, true)
+		gc.set_label_text("%d" % i).show_label(true)
 
 
 var colorlist_dark :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
