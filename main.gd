@@ -142,7 +142,7 @@ func _on_timer_wheel_timeout() -> void:
 
 var slotreel :SlotReel
 func reel_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	var symbol크기 := Vector2(WorldSize.x/15 ,WorldSize.y/15)
+	var symbol크기 := Vector2(WorldSize.x/20 ,WorldSize.y/20)
 	var color_text_into_list := make_color_text_info_list(colorlist_dark, cardlist).duplicate()
 	color_text_into_list.shuffle()
 	slotreel = preload("res://slot_reel/slot_reel.tscn").instantiate(
@@ -310,22 +310,22 @@ func clock_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 var tree2_scene = preload("res://bar_tree_2/bar_tree_2.tscn")
 var bartree_list :Array
 func bartree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	var bar_count := randi_range(10,100)
+	if labeltext != "":
+		glasscabinet.set_label_text(labeltext)
 	var tree_size := Vector3(WorldSize.z/3, WorldSize.y, WorldSize.z / 30)
-	var bar_pos := Vector3(0,-WorldSize.y/2,0)
-	var make_flag := randi_range(1,7)
+	make_tree3(randi_range(1,7), glasscabinet, tree_size, randi_range(10,100), Vector3(-WorldSize.x/4,-WorldSize.y/2,0))
+	make_tree3(randi_range(1,7), glasscabinet, tree_size, randi_range(10,100), Vector3(WorldSize.x/4,-WorldSize.y/2,0))
+func make_tree3(make_flag:int, glasscabinet :GlassCabinet, tree_size :Vector3, bar_count :int, pos :Vector3) -> void:
 	if make_flag & (1<<0) != 0: # add left side
-		make_tree(glasscabinet, tree_size, bar_count, 2.0, bar_pos)
+		make_tree(glasscabinet, tree_size, bar_count, 2.0, pos)
 	if make_flag & (1<<1) != 0: # add right side
-		make_tree(glasscabinet, tree_size, bar_count, -2.0, bar_pos)
+		make_tree(glasscabinet, tree_size, bar_count, -2.0, pos)
 	if make_flag & (1<<2) != 0: # add center
 		if make_flag == (1<<2): # side not exist
 			tree_size.x *= 3
 		else:
 			tree_size.x *= 0.9
-		make_tree(glasscabinet, tree_size, bar_count, 0, bar_pos)
-	if labeltext != "":
-		glasscabinet.set_label_text(labeltext)
+		make_tree(glasscabinet, tree_size, bar_count, 0, pos)
 func make_tree(glasscabinet :GlassCabinet, tree_size :Vector3, bar_count :int, shift :float, pos :Vector3) -> void:
 	var t = tree2_scene.instantiate()
 	glasscabinet.add_child(t)
