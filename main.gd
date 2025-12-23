@@ -307,17 +307,32 @@ func clock_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 
-var bartree :BarTree2
+var tree2_scene = preload("res://bar_tree_2/bar_tree_2.tscn")
+var bartree_list :Array
 func bartree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	var tree_size := Vector3(WorldSize.z, WorldSize.y, WorldSize.z/2 * randf_range(0.5 , 2.0)/10)
-	var bar_count := randf_range(5,200)
-	bartree = preload("res://bar_tree_2/bar_tree_2.tscn").instantiate(
-		).init_bartree_with_color(random_color(), random_color(),bar_count
-		).init_bartree_transform(tree_size, 0)
-	bartree.position.y = - WorldSize.y/2
-	glasscabinet.add_child(bartree)
+	var bar_count := randi_range(10,100)
+	var tree_size := Vector3(WorldSize.z/3, WorldSize.y, WorldSize.z / 30)
+	var bar_pos := Vector3(0,-WorldSize.y/2,0)
+	var make_flag := randi_range(1,7)
+	if make_flag & (1<<0) != 0: # add left side
+		make_tree(glasscabinet, tree_size, bar_count, 2.0, bar_pos)
+	if make_flag & (1<<1) != 0: # add right side
+		make_tree(glasscabinet, tree_size, bar_count, -2.0, bar_pos)
+	if make_flag & (1<<2) != 0: # add center
+		if make_flag == (1<<2): # side not exist
+			tree_size.x *= 3
+		else:
+			tree_size.x *= 0.9
+		make_tree(glasscabinet, tree_size, bar_count, 0, bar_pos)
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
+func make_tree(glasscabinet :GlassCabinet, tree_size :Vector3, bar_count :int, shift :float, pos :Vector3) -> void:
+	var t = tree2_scene.instantiate()
+	glasscabinet.add_child(t)
+	t.position = pos
+	t.init_bartree_with_color(random_color(), random_color(), bar_count)
+	t.init_bartree_transform(tree_size, shift)
+	bartree_list.append(t)
 func random_color()->Color:
 	return NamedColorList.color_list.pick_random()[0]
 
@@ -329,7 +344,8 @@ func _process(delta: float) -> void:
 	wavegauge_plane.animate_wave(now)
 	roulette.장식돌리기()
 	roulette.선택된cell강조상태켜기()
-	bartree.rotate_tree_bar_y(delta*10)
+	for bt in bartree_list:
+		bt.rotate_tree_bar_y(delta*10)
 	orbitsphere.animate_rotate(now, delta)
 	meshtrail.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
 
