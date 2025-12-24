@@ -256,7 +256,7 @@ var valvehandle :ValveHandle
 func valvehandle_arrow3d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
-	arrow3d = preload("res://arrow3d/arrow_3d.tscn").instantiate(
+	arrow3d = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
 		).set_color(random_color()).set_size( WorldSize.x/5, WorldSize.x/50, WorldSize.x/25)
 	arrow3d.position = Vector3(WorldSize.x/4, 0,0)
 	glasscabinet.add_child(arrow3d)
@@ -271,7 +271,7 @@ func line2d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 		glasscabinet.set_label_text(labeltext)
 	glasscabinet.show_wall_box(false)
 	var size_pixel := Vector2i(2048,2048)
-	var ml2d = preload("res://move_line2d/move_line_2d.tscn").instantiate()
+	var ml2d = preload("res://move_line_2d/move_line_2d.tscn").instantiate()
 	ml2d.init_with_random(300, 4, 1, size_pixel)
 	ml2d.start()
 	var svp = SubViewport.new()
@@ -320,7 +320,7 @@ var calendar :Calendar3D
 func calendar_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
-	calendar = preload("res://calendar3d/calendar_3d.tscn").instantiate(
+	calendar = preload("res://calendar_3d/calendar_3d.tscn").instantiate(
 		).init(WorldSize.x/2, WorldSize.y, WorldSize.z/10, WorldSize.y/2.0/6 , false )
 	calendar.rotate_y(PI/2)
 	calendar.rotate_x(PI/2)
@@ -330,13 +330,13 @@ var clock :AnalogClock3D
 func clock_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
-	clock = preload("res://analogclock3d/analog_clock_3d.tscn").instantiate(
+	clock = preload("res://analog_clock_3d/analog_clock_3d.tscn").instantiate(
 		).init(WorldSize.x/4, WorldSize.z/10, WorldSize.y/2.0/7 ,9.0, false )
 	clock.rotate_y(PI/2)
 	clock.rotate_x(PI/2)
 	glasscabinet.add_child(clock)
 
-var tree2_scene = preload("res://bar_tree_2/bar_tree_2.tscn")
+var tree2_scene = preload("res://bar_tree/bar_tree.tscn")
 var bartree_list :Array
 func bartree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
@@ -346,16 +346,16 @@ func bartree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	make_tree3(randi_range(1,7), glasscabinet, tree_size, randi_range(20,100), Vector3(WorldSize.x/4,-WorldSize.y/2,0))
 func make_tree3(make_flag:int, glasscabinet :GlassCabinet, tree_size :Vector3, bar_count :int, pos :Vector3) -> void:
 	if make_flag & (1<<0) != 0: # add left side
-		make_tree(glasscabinet, tree_size, bar_count, 2.0, pos)
+		make_sub_tree(glasscabinet, tree_size, bar_count, 2.0, pos)
 	if make_flag & (1<<1) != 0: # add right side
-		make_tree(glasscabinet, tree_size, bar_count, -2.0, pos)
+		make_sub_tree(glasscabinet, tree_size, bar_count, -2.0, pos)
 	if make_flag & (1<<2) != 0: # add center
 		if make_flag == (1<<2): # side not exist
 			tree_size.x *= 3
 		else:
 			tree_size.x *= 0.9
-		make_tree(glasscabinet, tree_size, bar_count, 0, pos)
-func make_tree(glasscabinet :GlassCabinet, tree_size :Vector3, bar_count :int, shift :float, pos :Vector3) -> void:
+		make_sub_tree(glasscabinet, tree_size, bar_count, 0, pos)
+func make_sub_tree(glasscabinet :GlassCabinet, tree_size :Vector3, bar_count :int, shift :float, pos :Vector3) -> void:
 	var t = tree2_scene.instantiate()
 	glasscabinet.add_child(t)
 	t.position = pos
