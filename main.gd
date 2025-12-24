@@ -113,16 +113,9 @@ func turbine_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 		glasscabinet.set_label_text(labeltext)
 	turbine = preload("res://turbine/turbine.tscn").instantiate(
 		).init(40,WorldSize.z / 3, 2, 4, Color.BLUE, Color.RED)
+	turbine.rotation.y = PI/4
 	glasscabinet.add_child(turbine)
-	#var r:= WorldSize.z / 3
-	#for i in range(-20,21):
-		#var co := Color( Color.RED.lerp(Color.BLUE, float(i+20)/40.0) , 0.5)
-		#var rr := r*(sin(float(i)/30.0*PI)/4 +1.0)
-		#var tb :Turbine = preload("res://turbine/turbine.tscn").instantiate().init(rr,1,4,co)
-		#tb.position = Vector3(i *2.2,0,0)
-		#tb.rotation.y = PI/2
-		#glasscabinet.add_child(tb)
-		#turbine_list.append(tb)
+	glasscabinet.show_wall_box(false)
 func turbine_rotate() -> void:
 	var t := Time.get_unix_time_from_system()
 	var rad := fposmod(t , PI*2)
@@ -276,7 +269,7 @@ func valvehandle_arrow3d_demo(glasscabinet :GlassCabinet, labeltext :String = ""
 func line2d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
-	glasscabinet.set_box_color(Color(Color.WHITE,0.2))
+	glasscabinet.show_wall_box(false)
 	var size_pixel := Vector2i(2048,2048)
 	var ml2d = preload("res://move_line2d/move_line_2d.tscn").instantiate()
 	ml2d.init_with_random(300, 4, 1, size_pixel)

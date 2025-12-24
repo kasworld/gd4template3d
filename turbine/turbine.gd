@@ -3,7 +3,6 @@ class_name Turbine
 
 func init(count :int, radius :float, ring_width :float, arm_count :int, co1 :Color, co2 :Color) -> Turbine:
 	var blades :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate()
-
 	var rings_out:= make_rings(count,radius,ring_width, false)
 	var rings_in:= make_rings(count,radius,ring_width, true)
 	var blade_mesh := BoxMesh.new()
@@ -22,14 +21,14 @@ func init(count :int, radius :float, ring_width :float, arm_count :int, co1 :Col
 		rings_in.set_inst_rotation(i, Vector3.RIGHT, PI/2)
 
 		var cell각도 := 2.0*PI / arm_count
+		var base_int := i*arm_count
+		var blade_rot_rad := rate * PI
 		for j in arm_count:
-			var rad := cell각도 *j + cell각도/2
-			blades.set_inst_rotation(i*arm_count+j, Vector3.BACK, rad)
-			blades.set_inst_rotation(i*arm_count+j, Vector3.LEFT, PI/10)
-			blades.set_inst_position(i*arm_count+j, Vector3(cos(rad) *radius/2,sin(rad) *radius/2, ring_pos.z) )
-			blades.set_inst_color(i*arm_count+j, co)
-
-
+			var rad := cell각도 *j + blade_rot_rad
+			blades.set_inst_rotation(base_int+j, Vector3.BACK, rad)
+			blades.set_inst_rotation(base_int+j, Vector3.LEFT, PI/10)
+			blades.set_inst_position(base_int+j, Vector3(cos(rad) *radius/2,sin(rad) *radius/2, ring_pos.z) )
+			blades.set_inst_color(base_int+j, co)
 	return self
 
 func make_rings(count :int, radius :float, ring_width :float, flip_faces :bool) -> MultiMeshShape:
@@ -44,18 +43,3 @@ func make_rings(count :int, radius :float, ring_width :float, flip_faces :bool) 
 	rings.init_with_alpha(ring_mesh, count,0.9)
 	add_child(rings)
 	return rings
-
-
-func 날개만들기(r :float, start:float, end:float, depth :float, count :int, co :Color ) -> void:
-	var 구분선 := BoxMesh.new()
-	var 길이 := r*(end-start)
-	구분선.size = Vector3(길이, depth/10, depth )
-	var cell각도 := 2.0*PI / count
-	var radius := r-길이/2
-	$"날개들".init_with_alpha(구분선, count, 1.0)
-	for i in count:
-		var rad := cell각도 *i + cell각도/2
-		$"날개들".set_inst_rotation(i, Vector3.BACK, rad)
-		$"날개들".set_inst_rotation(i, Vector3.LEFT, PI/10)
-		$"날개들".set_inst_position(i, Vector3(cos(rad) *radius,sin(rad) *radius, 0) )
-		$"날개들".set_inst_color(i, co)
