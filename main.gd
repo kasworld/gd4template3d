@@ -66,7 +66,7 @@ func _ready() -> void:
 	timed_message_init()
 	$OmniLight3D.position = Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
-	$FixedCameraLight.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*3)
+	$FixedCameraLight.set_center_pos_far( Vector3(0, 0, -WorldSize.z), Vector3.ZERO, WorldSize.length()*3)
 	$AxisArrow3D.set_colors().set_size(WorldSize.length()/20)
 
 	glass_cabinet_demo()
