@@ -66,7 +66,7 @@ func _ready() -> void:
 	timed_message_init()
 	$OmniLight3D.position = Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
-	$MovingCameraLightAround.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*3)
+	$FixedCameraLight.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*3)
 	$AxisArrow3D.set_colors().set_size(WorldSize.length()/20)
 
 	glass_cabinet_demo()
@@ -84,7 +84,7 @@ func _ready() -> void:
 	wavegauge_demo(glass_cabinet_list[11], "wavegauge")
 	turbine_demo(glass_cabinet_list[12], "turbine")
 
-	$MovingCameraLightAround.make_current()
+	$FixedCameraLight.make_current()
 	main_animation.animation_ended.connect(main_animation_ended)
 	start_all_animation()
 
@@ -385,9 +385,10 @@ func _process(delta: float) -> void:
 
 	main_animation.handle_animation()
 	#var t := now /2.3
-	#if $MovingCameraLightAround.is_current_camera():
-		#$MovingCameraLightAround.move_hober_around_z(t, Vector3.ZERO, WorldSize.length(), WorldSize.length() )
-		#$MovingCameraLightAround.move_wave_around_y(t, Vector3.ZERO, WorldSize.length()/4, WorldSize.length()/10 )
+	#if $FixedCameraLight.is_current_camera():
+		#$FixedCameraLight.move_hober_around_z(t, Vector3.ZERO, WorldSize.length(), WorldSize.length() )
+	#elif
+		#$FixedCameraLight.move_wave_around_y(t, Vector3.ZERO, WorldSize.length()/4, WorldSize.length()/10 )
 
 func _on_카메라변경_pressed() -> void:
 	MovingCameraLight.NextCamera()
@@ -409,6 +410,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		var fn = key2fn.get(event.keycode)
 		if fn != null:
 			fn.call()
+		if $FixedCameraLight.is_current_camera():
+			var fi = FlyNode3D.Key2Info.get(event.keycode)
+			if fi != null:
+				FlyNode3D.fly_node3d($FixedCameraLight, fi)
 	elif event is InputEventMouseButton and event.is_pressed():
 		pass
 

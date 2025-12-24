@@ -70,7 +70,7 @@ sky_mode = 1
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("3_h2yge")
 
-[node name="MovingCameraLightAround" parent="." instance=ExtResource("8_5vw27")]
+[node name="FixedCameraLight" parent="." instance=ExtResource("8_5vw27")]
 
 [node name="TimerWheel" type="Timer" parent="."]
 one_shot = true
