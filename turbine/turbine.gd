@@ -1,20 +1,50 @@
 extends Node3D
 class_name Turbine
 
-func init(r :float, w :float, arm :int, co :Color) -> Turbine:
-	날개만들기(r, 0.01, 0.99, w, arm, co)
-	#spoke.rotate_y(PI/2)
+func init(count :int, radius :float, ring_width :float, arm_count :int, co1 :Color, co2 :Color) -> Turbine:
+	var blades :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate()
 
-	$Reel.mesh.material.albedo_color = co
-	$Reel.mesh.inner_radius = r*0.99
-	$Reel.mesh.outer_radius = r
-	$Reel.scale = Vector3(1,8,1)
-	#$Reel.mesh.top_radius = r
-	#$Reel.mesh.bottom_radius = $Reel.mesh.top_radius
-	#$Reel.mesh.height = w
-	#$Reel.mesh.radial_segments = 64
-	$Reel.rotate_x(PI/2)
+	var rings_out:= make_rings(count,radius,ring_width, false)
+	var rings_in:= make_rings(count,radius,ring_width, true)
+	var blade_mesh := BoxMesh.new()
+	blade_mesh.size = Vector3(radius, ring_width/10, ring_width )
+	blades.init_with_alpha(blade_mesh, count*arm_count)
+	add_child(blades)
+	for i in count:
+		var rate := float(i)/float(count-1)
+		var co := co1.lerp(co2, rate)
+		rings_out.set_inst_color(i,co)
+		rings_in.set_inst_color(i,co)
+		var ring_pos := Vector3(0,0,-count*ring_width/2 + i*ring_width)
+		rings_out.set_inst_position(i,ring_pos)
+		rings_out.set_inst_rotation(i, Vector3.RIGHT, PI/2)
+		rings_in.set_inst_position(i,ring_pos)
+		rings_in.set_inst_rotation(i, Vector3.RIGHT, PI/2)
+
+		var cell각도 := 2.0*PI / arm_count
+		for j in arm_count:
+			var rad := cell각도 *j + cell각도/2
+			blades.set_inst_rotation(i*arm_count+j, Vector3.BACK, rad)
+			blades.set_inst_rotation(i*arm_count+j, Vector3.LEFT, PI/10)
+			blades.set_inst_position(i*arm_count+j, Vector3(cos(rad) *radius/2,sin(rad) *radius/2, ring_pos.z) )
+			blades.set_inst_color(i*arm_count+j, co)
+
+
 	return self
+
+func make_rings(count :int, radius :float, ring_width :float, flip_faces :bool) -> MultiMeshShape:
+	var rings :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate()
+	var ring_mesh := CylinderMesh.new()
+	ring_mesh.cap_bottom = false
+	ring_mesh.cap_top = false
+	ring_mesh.top_radius = radius
+	ring_mesh.bottom_radius = radius
+	ring_mesh.height = ring_width
+	ring_mesh.flip_faces = flip_faces
+	rings.init_with_alpha(ring_mesh, count,0.9)
+	add_child(rings)
+	return rings
+
 
 func 날개만들기(r :float, start:float, end:float, depth :float, count :int, co :Color ) -> void:
 	var 구분선 := BoxMesh.new()

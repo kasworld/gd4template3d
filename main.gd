@@ -67,7 +67,7 @@ func _ready() -> void:
 	$OmniLight3D.position = Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
 	$MovingCameraLightAround.set_center_pos_far( Vector3.ZERO, Vector3(0, 0, WorldSize.z), WorldSize.length()*3)
-	$AxisArrow3D.set_colors().set_size(WorldSize.length()/10)
+	$AxisArrow3D.set_colors().set_size(WorldSize.length()/20)
 
 	glass_cabinet_demo()
 	bartree_demo(glass_cabinet_list[0], "bartree")
@@ -107,24 +107,26 @@ func glass_cabinet_demo() -> void:
 		gc.set_label_text("%d" % i).show_label(true)
 		glass_cabinet_list.append(gc)
 
-var turbine_list :Array
+var turbine :Turbine
 func turbine_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
-	var r:= WorldSize.z / 3
-	for i in range(-20,21):
-		var co := Color( Color.RED.lerp(Color.BLUE, float(i+20)/40.0) , 0.5)
-		var rr := r*(sin(float(i)/30.0*PI)/4 +1.0)
-		var tb :Turbine = preload("res://turbine/turbine.tscn").instantiate().init(rr,1,4,co)
-		tb.position = Vector3(i *2.2,0,0)
-		tb.rotation.y = PI/2
-		glasscabinet.add_child(tb)
-		turbine_list.append(tb)
+	turbine = preload("res://turbine/turbine.tscn").instantiate(
+		).init(40,WorldSize.z / 3, 2, 4, Color.BLUE, Color.RED)
+	glasscabinet.add_child(turbine)
+	#var r:= WorldSize.z / 3
+	#for i in range(-20,21):
+		#var co := Color( Color.RED.lerp(Color.BLUE, float(i+20)/40.0) , 0.5)
+		#var rr := r*(sin(float(i)/30.0*PI)/4 +1.0)
+		#var tb :Turbine = preload("res://turbine/turbine.tscn").instantiate().init(rr,1,4,co)
+		#tb.position = Vector3(i *2.2,0,0)
+		#tb.rotation.y = PI/2
+		#glasscabinet.add_child(tb)
+		#turbine_list.append(tb)
 func turbine_rotate() -> void:
 	var t := Time.get_unix_time_from_system()
 	var rad := fposmod(t , PI*2)
-	for i in turbine_list.size():
-		turbine_list[i].rotation.z = (rad+float(i)/10) / 1
+	turbine.rotation.z = rad
 
 
 var colorlist_dark :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
@@ -347,8 +349,8 @@ func bartree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 	var tree_size := Vector3(WorldSize.z/3, WorldSize.y, WorldSize.z / 30)
-	make_tree3(randi_range(1,7), glasscabinet, tree_size, randi_range(10,100), Vector3(-WorldSize.x/4,-WorldSize.y/2,0))
-	make_tree3(randi_range(1,7), glasscabinet, tree_size, randi_range(10,100), Vector3(WorldSize.x/4,-WorldSize.y/2,0))
+	make_tree3(randi_range(1,7), glasscabinet, tree_size, randi_range(20,100), Vector3(-WorldSize.x/4,-WorldSize.y/2,0))
+	make_tree3(randi_range(1,7), glasscabinet, tree_size, randi_range(20,100), Vector3(WorldSize.x/4,-WorldSize.y/2,0))
 func make_tree3(make_flag:int, glasscabinet :GlassCabinet, tree_size :Vector3, bar_count :int, pos :Vector3) -> void:
 	if make_flag & (1<<0) != 0: # add left side
 		make_tree(glasscabinet, tree_size, bar_count, 2.0, pos)

@@ -79,6 +79,7 @@ one_shot = true
 one_shot = true
 
 [node name="AxisArrow3D" parent="." instance=ExtResource("5_7mycd")]
+visible = false
 
 [node name="GlassCabinetContainer1" type="Node3D" parent="."]
 

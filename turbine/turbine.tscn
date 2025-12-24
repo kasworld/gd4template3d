@@ -1,24 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://dkx5y3mqpfeh8"]
+[gd_scene load_steps=2 format=3 uid="uid://dkx5y3mqpfeh8"]
 
 [ext_resource type="Script" uid="uid://cks7j0itum0fw" path="res://turbine/turbine.gd" id="1_4ihrl"]
-[ext_resource type="PackedScene" uid="uid://cfnbpemvoy1i6" path="res://multi_mesh_shape/multi_mesh_shape.tscn" id="2_te6su"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ihrl"]
-resource_local_to_scene = true
-transparency = 1
-
-[sub_resource type="TorusMesh" id="TorusMesh_te6su"]
-resource_local_to_scene = true
-material = SubResource("StandardMaterial3D_4ihrl")
-
-[sub_resource type="MultiMesh" id="MultiMesh_myt8e"]
-resource_local_to_scene = true
 
 [node name="Turbine" type="Node3D"]
 script = ExtResource("1_4ihrl")
-
-[node name="Reel" type="MeshInstance3D" parent="."]
-mesh = SubResource("TorusMesh_te6su")
-
-[node name="날개들" parent="." instance=ExtResource("2_te6su")]
-multimesh = SubResource("MultiMesh_myt8e")
