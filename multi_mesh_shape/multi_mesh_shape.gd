@@ -17,7 +17,8 @@ func init_집중선(r :float, start:float, end:float, depth :float, count :int, 
 		set_inst_color(i, co)
 	return self
 
-func init_wire_net(net_size :Vector2, wire_count :Vector2i, wire_radius :float, co :Color, alpha :float = 1.0) -> MultiMeshShape:
+func init_wire_net(net_size :Vector2, grid_count :Vector2i, wire_radius :float, co :Color, alpha :float = 1.0) -> MultiMeshShape:
+	var wire_count := Vector2i(grid_count.x +1, grid_count.y +1)
 	var pos_shift := -Vector3(net_size.x, net_size.y, 0)/2
 	var 선 := BoxMesh.new()
 	var count := wire_count.x + wire_count.y

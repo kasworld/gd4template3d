@@ -194,7 +194,7 @@ func wirenet_wavegauge_demo(glasscabinet :GlassCabinet, labeltext :String = "") 
 		glasscabinet.set_label_text(labeltext)
 	var grid_size := Vector2i(16,9)*2
 	wirenet = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_wire_net(Vector2(WorldSize.x,WorldSize.y), Vector2i(grid_size.x+1,grid_size.y+1), WorldSize.x/grid_size.x/10, random_color())
+		).init_wire_net(Vector2(WorldSize.x,WorldSize.y), Vector2i(grid_size.x,grid_size.y), WorldSize.x/grid_size.x/10, random_color())
 	glasscabinet.add_child(wirenet)
 	wavegauge_plane = preload("res://wave_gauge/wave_gauge.tscn").instantiate(
 		).init(Vector3(WorldSize.x,WorldSize.y,WorldSize.z/20), Vector3i(grid_size.x,grid_size.y,1), WaveGauge.color_list, 0.1, 1.0 )
