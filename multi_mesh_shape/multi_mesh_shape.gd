@@ -158,12 +158,17 @@ func calc_visible_rate() -> float:
 func set_inst_rotation(i :int, axis :Vector3, rot :float) -> void:
 	var t := multimesh.get_instance_transform(i)
 	t = t.rotated_local(axis, rot)
-	multimesh.set_instance_transform(i,t )
+	multimesh.set_instance_transform(i, t)
+
+func set_inst_scale(i :int, scale_a :Vector3) -> void:
+	var t := multimesh.get_instance_transform(i)
+	t = t.scaled_local(scale_a)
+	multimesh.set_instance_transform(i, t)
 
 func set_inst_position(i :int, pos :Vector3) -> void:
 	var t := multimesh.get_instance_transform(i)
 	t.origin = pos
-	multimesh.set_instance_transform(i,t )
+	multimesh.set_instance_transform(i, t)
 
 func set_inst_color(i, co :Color) -> void:
 	multimesh.set_instance_color(i,co)
@@ -171,4 +176,4 @@ func set_inst_color(i, co :Color) -> void:
 func set_inst_position_rotation(i :int, pos :Vector3, axis :Vector3, rot :float) -> void:
 	var t := Transform3D(Basis(), pos)
 	t = t.rotated_local(axis, rot)
-	multimesh.set_instance_transform(i,t )
+	multimesh.set_instance_transform(i, t)

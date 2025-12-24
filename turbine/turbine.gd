@@ -11,14 +11,18 @@ func init(count :int, radius :float, ring_width :float, arm_count :int, co1 :Col
 	add_child(blades)
 	for i in count:
 		var rate := float(i)/float(count-1)
+		var r_scale := (sin(rate*PI*2)+3)/4
+		var scaled_size := Vector3(r_scale,r_scale,1)
 		var co := co1.lerp(co2, rate)
-		rings_out.set_inst_color(i,co)
-		rings_in.set_inst_color(i,co)
 		var ring_pos := Vector3(0,0,-count*ring_width/2 + i*ring_width)
+		rings_out.set_inst_scale(i, scaled_size)
 		rings_out.set_inst_position(i,ring_pos)
 		rings_out.set_inst_rotation(i, Vector3.RIGHT, PI/2)
+		rings_out.set_inst_color(i,co)
+		rings_in.set_inst_scale(i, scaled_size)
 		rings_in.set_inst_position(i,ring_pos)
 		rings_in.set_inst_rotation(i, Vector3.RIGHT, PI/2)
+		rings_in.set_inst_color(i,co)
 
 		var cell각도 := 2.0*PI / arm_count
 		var base_int := i*arm_count
@@ -27,8 +31,9 @@ func init(count :int, radius :float, ring_width :float, arm_count :int, co1 :Col
 			var rad := cell각도 *j + blade_rot_rad
 			blades.set_inst_rotation(base_int+j, Vector3.BACK, rad)
 			blades.set_inst_rotation(base_int+j, Vector3.LEFT, PI/10)
-			blades.set_inst_position(base_int+j, Vector3(cos(rad) *radius/2,sin(rad) *radius/2, ring_pos.z) )
+			blades.set_inst_position(base_int+j, Vector3(cos(rad) *radius*r_scale/2,sin(rad) *radius*r_scale/2, ring_pos.z) )
 			blades.set_inst_color(base_int+j, co)
+			blades.set_inst_scale(base_int+j, scaled_size)
 	return self
 
 func make_rings(count :int, radius :float, ring_width :float, flip_faces :bool) -> MultiMeshShape:
