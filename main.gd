@@ -70,24 +70,25 @@ func _ready() -> void:
 	$AxisArrow3D.set_colors().set_size(WorldSize.length()/10)
 
 	glass_cabinet_demo()
-	bartree_demo($GlassCabinetContainer.get_child(0), "bartree")
-	clock_demo($GlassCabinetContainer.get_child(1), "clock3d")
-	calendar_demo($GlassCabinetContainer.get_child(2), "calender3d")
-	orbit_demo($GlassCabinetContainer.get_child(3), "orbit")
-	line2d_demo($GlassCabinetContainer.get_child(4), "moveline2d")
-	meshtrail_demo($GlassCabinetContainer.get_child(5), "meshtrail")
-	maze3d_demo($GlassCabinetContainer.get_child(6), "maze3d")
-	slotreel_demo($GlassCabinetContainer.get_child(7), "slotreel")
-	wheel_demo($GlassCabinetContainer.get_child(8), "roulettewheel" )
-	valvehandle_arrow3d_demo($GlassCabinetContainer.get_child(9), "valvehandle,arrow3d")
-	wirenet_wavegauge_demo($GlassCabinetContainer.get_child(10), "wirenet,wavegauge")
-	wavegauge_demo($GlassCabinetContainer.get_child(11), "wavegauge")
-	turbine_demo($GlassCabinetContainer.get_child(12), "turbine")
+	bartree_demo(glass_cabinet_list[0], "bartree")
+	clock_demo(glass_cabinet_list[1], "clock3d")
+	calendar_demo(glass_cabinet_list[2], "calender3d")
+	orbit_demo(glass_cabinet_list[3], "orbit")
+	line2d_demo(glass_cabinet_list[4], "moveline2d")
+	meshtrail_demo(glass_cabinet_list[5], "meshtrail")
+	maze3d_demo(glass_cabinet_list[6], "maze3d")
+	slotreel_demo(glass_cabinet_list[7], "slotreel")
+	wheel_demo(glass_cabinet_list[8], "roulettewheel" )
+	valvehandle_arrow3d_demo(glass_cabinet_list[9], "valvehandle,arrow3d")
+	wirenet_wavegauge_demo(glass_cabinet_list[10], "wirenet,wavegauge")
+	wavegauge_demo(glass_cabinet_list[11], "wavegauge")
+	turbine_demo(glass_cabinet_list[12], "turbine")
 
 	$MovingCameraLightAround.make_current()
 	main_animation.animation_ended.connect(main_animation_ended)
 	start_all_animation()
 
+var glass_cabinet_list :Array
 func glass_cabinet_demo() -> void:
 	var count := 24
 	var unit_rad := 2*PI/ count
@@ -95,14 +96,16 @@ func glass_cabinet_demo() -> void:
 		var radius := WorldSize.length() *1.7
 		var gc :GlassCabinet = preload("res://glass_cabinet/glass_cabinet.tscn").instantiate(
 			).init(WorldSize - Vector3(1,1,1) )
-		$GlassCabinetContainer.add_child(gc)
 		var rad := i * unit_rad
 		if i % 2 == 0:
 			gc.position = Vector3(sin(rad)*radius, WorldSize.y/2 *1.0, cos(rad)*radius)
+			$GlassCabinetContainer1.add_child(gc)
 		else:
 			gc.position = Vector3(sin(rad)*radius, -WorldSize.y/2 *1.0, cos(rad)*radius)
+			$GlassCabinetContainer2.add_child(gc)
 		gc.look_at( Vector3(0,gc.position.y,0), Vector3.UP, true)
 		gc.set_label_text("%d" % i).show_label(true)
+		glass_cabinet_list.append(gc)
 
 var turbine_list :Array
 func turbine_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
@@ -215,6 +218,7 @@ func maze3d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_with_color( ms, Callable(), random_color(), random_color(), random_color() )
 	maze3d.rotation.x = PI/4
+	maze3d.view_floor_ceiling(false,false)
 	glasscabinet.add_child(maze3d)
 
 var meshtrail_list :Array
@@ -297,10 +301,10 @@ func orbit_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 	glasscabinet.set_box_color(Color(Color.WHITE,0.2))
-	for i in 3:
-		add_orbitsphere(glasscabinet)
-func add_orbitsphere(glasscabinet :GlassCabinet) -> void:
-	var diagonal_length := WorldSize.length()/4
+	for i in 9:
+		add_orbitsphere(glasscabinet, i)
+func add_orbitsphere(glasscabinet :GlassCabinet, i :int) -> void:
+	var diagonal_length := WorldSize.length()/19 *i +10
 	var a120 := PI*2/3
 	var a30 := PI/6
 	var axis1 := Vector3.UP.rotated(
@@ -312,7 +316,7 @@ func add_orbitsphere(glasscabinet :GlassCabinet) -> void:
 	mat2.albedo_color = random_color()
 	var os = preload("res://orbit_sphere/orbit_sphere.tscn").instantiate(
 		).궤도설정(diagonal_length, diagonal_length/200, axis1, a120*[0,1,2].pick_random()
-		).구설정(WorldSize.x/40, WorldSize.x/50, Vector3.UP
+		).구설정(WorldSize.x/400*i+1, WorldSize.x/50, Vector3.UP
 		).구재질설정(mat2).궤도재질설정(mat1)
 	glasscabinet.add_child(os)
 	orbitsphere_list.append(os)
@@ -381,11 +385,14 @@ func _process(delta: float) -> void:
 	for mt in meshtrail_list:
 		mt.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
 	turbine_rotate()
+	$GlassCabinetContainer1.rotate_y(delta/10)
+	$GlassCabinetContainer2.rotate_y(-delta/10)
 
 	main_animation.handle_animation()
-	var t := now /2.3
-	if $MovingCameraLightAround.is_current_camera():
-		$MovingCameraLightAround.move_wave_around_y(t, Vector3.ZERO, WorldSize.length()/4, WorldSize.length()/10 )
+	#var t := now /2.3
+	#if $MovingCameraLightAround.is_current_camera():
+		#$MovingCameraLightAround.move_hober_around_z(t, Vector3.ZERO, WorldSize.length(), WorldSize.length() )
+		#$MovingCameraLightAround.move_wave_around_y(t, Vector3.ZERO, WorldSize.length()/4, WorldSize.length()/10 )
 
 func _on_카메라변경_pressed() -> void:
 	MovingCameraLight.NextCamera()
