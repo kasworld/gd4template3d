@@ -11,7 +11,7 @@ func init(count :int, radius :float, ring_width :float, arm_count :int, co1 :Col
 	add_child(blades)
 	for i in count:
 		var rate := float(i)/float(count-1)
-		var r_scale := (sin(rate*PI*2)+3)/4
+		var r_scale := (cos(rate*PI*2)+3)/4
 		var scaled_size := Vector3(r_scale,r_scale,1)
 		var co := co1.lerp(co2, rate)
 		var ring_pos := Vector3(0,0,-count*ring_width/2 + i*ring_width)
