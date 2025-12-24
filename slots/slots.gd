@@ -3,20 +3,8 @@ class_name Slots
 
 signal rotation_stopped(s :Slots)
 
-var colorlist :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
-var cardlist :Array = PlayingCard.make_deck_with_joker()
-func make_color_text_info_list() -> Array:
-	var rtn := []
-	for i in cardlist.size():
-		rtn.append( [ colorlist[i%colorlist.size()], cardlist[i] ] )
-	return rtn
-
-#var symbol크기 :Vector2
-#var reelcount :int
 var reel_list := []
-
 func init(reelcount :int, symbol크기 :Vector2, color_text_info_list: Array) -> Slots:
-	#var color_text_info_list := make_color_text_info_list()
 	var total_width := reelcount*(symbol크기.x+1)
 	for i in reelcount:
 		var kilist := color_text_info_list.duplicate()#.slice(0,7)
@@ -37,15 +25,6 @@ func init(reelcount :int, symbol크기 :Vector2, color_text_info_list: Array) ->
 
 func calc_radius() -> float:
 	return reel_list[0].calc_radius()
-
-#func calc_width() -> float:
-	#return reelcount*(symbol크기.x+1)
-#
-#func calc_size() -> Vector3:
-	#return Vector3(calc_width(),calc_radius()*2,calc_radius()*2)
-#
-#func calc_center() -> Vector3:
-	#return Vector3(0,0,0)
 
 func 결과가결정됨( _rl :SlotReel) -> void:
 	var 모두멈추었나 = true
