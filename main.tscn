@@ -1,7 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://c6maulcewyhy5"]
+[gd_scene load_steps=11 format=3 uid="uid://c6maulcewyhy5"]
 
 [ext_resource type="Script" uid="uid://bgj25qi5j8dgh" path="res://main.gd" id="1_ig7tw"]
-[ext_resource type="Environment" uid="uid://dq6rkclkoup3n" path="res://skymap/skymap.tres" id="3_h2yge"]
 [ext_resource type="PackedScene" uid="uid://dl14flc0fkeyt" path="res://axis_arrow_3d/axis_arrow_3d.tscn" id="5_7mycd"]
 [ext_resource type="PackedScene" uid="uid://c6cct2gj2a3im" path="res://timed_message/timed_message.tscn" id="5_lquwl"]
 [ext_resource type="PackedScene" uid="uid://ces3a6yv0c5fi" path="res://moving_carmera_light/moving_camera_light.tscn" id="8_5vw27"]
@@ -14,6 +13,15 @@ default_font_size = 48
 [sub_resource type="Theme" id="Theme_7mycd"]
 resource_local_to_scene = true
 default_font = SubResource("SystemFont_bejao")
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
+
+[sub_resource type="Sky" id="Sky_lquwl"]
+sky_material = SubResource("ProceduralSkyMaterial_1bvp3")
+
+[sub_resource type="Environment" id="Environment_7mycd"]
+background_mode = 2
+sky = SubResource("Sky_lquwl")
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_ig7tw")
@@ -68,7 +76,7 @@ shadow_opacity = 0.5
 sky_mode = 1
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = ExtResource("3_h2yge")
+environment = SubResource("Environment_7mycd")
 
 [node name="FixedCameraLight" parent="." instance=ExtResource("8_5vw27")]
 
