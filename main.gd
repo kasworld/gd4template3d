@@ -70,19 +70,20 @@ func _ready() -> void:
 	$AxisArrow3D.set_colors().set_size(WorldSize.length()/20)
 
 	glass_cabinet_demo()
-	bartree_demo(glass_cabinet_list[0], "bartree")
-	clock_demo(glass_cabinet_list[1], "clock3d")
-	calendar_demo(glass_cabinet_list[2], "calender3d")
-	orbit_demo(glass_cabinet_list[3], "orbit")
-	line2d_demo(glass_cabinet_list[4], "moveline2d")
-	meshtrail_demo(glass_cabinet_list[5], "meshtrail")
-	maze3d_demo(glass_cabinet_list[6], "maze3d")
-	slotreel_demo(glass_cabinet_list[7], "slotreel")
-	wheel_demo(glass_cabinet_list[8], "roulettewheel" )
-	valvehandle_arrow3d_demo(glass_cabinet_list[9], "valvehandle,arrow3d")
-	wirenet_wavegauge_demo(glass_cabinet_list[10], "wirenet,wavegauge")
-	wavegauge_demo(glass_cabinet_list[11], "wavegauge")
-	turbine_demo(glass_cabinet_list[12], "turbine")
+	bartree_demo(glass_cabinet_list.pop_front(), "bartree")
+	clock_demo(glass_cabinet_list.pop_front(), "clock3d")
+	calendar_demo(glass_cabinet_list.pop_front(), "calender3d")
+	orbit_demo(glass_cabinet_list.pop_front(), "orbit")
+	line2d_demo(glass_cabinet_list.pop_front(), "moveline2d")
+	meshtrail_demo(glass_cabinet_list.pop_front(), "meshtrail")
+	maze3d_demo(glass_cabinet_list.pop_front(), "maze3d")
+	slotreel_demo(glass_cabinet_list.pop_front(), "slotreel")
+	wheel_demo(glass_cabinet_list.pop_front(), "roulettewheel" )
+	valvehandle_arrow3d_demo(glass_cabinet_list.pop_front(), "valvehandle,arrow3d")
+	wirenet_wavegauge_demo(glass_cabinet_list.pop_front(), "wirenet,wavegauge")
+	wavegauge_demo(glass_cabinet_list.pop_front(), "wavegauge")
+	turbine_demo(glass_cabinet_list.pop_front(), "turbine")
+	print_debug("remain glass cabinet %d" % glass_cabinet_list.size())
 
 	$FixedCameraLight.make_current()
 	main_animation.animation_ended.connect(main_animation_ended)
@@ -112,7 +113,7 @@ func turbine_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 	turbine = preload("res://turbine/turbine.tscn").instantiate(
-		).init_basic(WorldSize.x, WorldSize.z/4, 1, 4).set_color_all(random_color(),random_color(),
+		).init_basic(WorldSize.x*0.7, WorldSize.z*0.2, 1, 4).set_color_all(random_color(),random_color(),
 		).set_transform_all(scale_cos)
 	turbine.rotation.y = PI/4
 	glasscabinet.add_child(turbine)
