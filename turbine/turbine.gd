@@ -34,12 +34,14 @@ func set_transform_all(scale_fn:Callable) -> Turbine:
 	var arm_count :int = $Blades.multimesh.visible_instance_count / count
 	var mesh_size :Vector3 = $Blades.multimesh.mesh.size
 	var ring_width := mesh_size.z
-	var radius := mesh_size.x
+	var ring_radius := mesh_size.x
+	var arm_to_arm_radian_in_ring := 2.0*PI / arm_count
+	var start_pos_z := -count*ring_width/2
 	for i in count:
 		var rate := float(i)/float(count-1)
-		var r_scale :float = scale_fn.call(rate)
-		var scaled_size := Vector3(r_scale,r_scale,1)
-		var ring_pos := Vector3(0,0,-count*ring_width/2 + i*ring_width)
+		var scale_by_rate :float = scale_fn.call(rate)
+		var scaled_size := Vector3(scale_by_rate, scale_by_rate, 1)
+		var ring_pos := Vector3(0,0, start_pos_z + i*ring_width)
 
 		var t = Transform3D(Basis(), ring_pos)
 		t = t.scaled_local(scaled_size)
@@ -47,13 +49,12 @@ func set_transform_all(scale_fn:Callable) -> Turbine:
 		$RingsOut.multimesh.set_instance_transform(i, t)
 		$RingsIn.multimesh.set_instance_transform(i, t)
 
-		var cell각도 := 2.0*PI / arm_count
 		var base_int := i*arm_count
-		var blade_rot_rad := rate * PI
-		var blade_radius := radius*r_scale/2
+		var blade_rotation_radian := rate * PI
+		var blade_center_radius := ring_radius * scale_by_rate/2
 		for j in arm_count:
-			var rad := cell각도 *j + blade_rot_rad
-			t = Transform3D(Basis(), Vector3(cos(rad) *blade_radius,sin(rad) *blade_radius, ring_pos.z))
+			var rad := arm_to_arm_radian_in_ring *j + blade_rotation_radian
+			t = Transform3D(Basis(), Vector3(cos(rad) *blade_center_radius,sin(rad) *blade_center_radius, ring_pos.z))
 			t = t.scaled_local(scaled_size)
 			t = t.rotated_local(Vector3.BACK, rad)
 			t = t.rotated_local(Vector3.LEFT, PI/10)
