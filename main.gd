@@ -229,7 +229,7 @@ func meshtrail_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 		make_meshtrail(glasscabinet, randi_range(0,4), mesh, 100, bound_aabb.get_center())
 func make_meshtrail(glasscabinet :GlassCabinet, mt_type:int, mesh :Mesh, count :int, pos :Vector3 ) -> void:
 	var mt = preload("res://mesh_trail/mesh_trail.tscn").instantiate(
-		).init_with_alpha(mesh, count,  1.0 , pos,
+		).init_with_alpha(mesh, count,  1.0 ,true, pos,
 		).set_speed(trailmesh_radius*20,trailmesh_radius*40)
 	glasscabinet.add_child(mt)
 	meshtrail_list.append(mt)

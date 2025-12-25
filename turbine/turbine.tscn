@@ -1,6 +1,25 @@
-[gd_scene load_steps=2 format=3 uid="uid://dkx5y3mqpfeh8"]
+[gd_scene load_steps=6 format=3 uid="uid://dkx5y3mqpfeh8"]
 
 [ext_resource type="Script" uid="uid://cks7j0itum0fw" path="res://turbine/turbine.gd" id="1_4ihrl"]
+[ext_resource type="PackedScene" uid="uid://cfnbpemvoy1i6" path="res://multi_mesh_shape/multi_mesh_shape.tscn" id="2_te6su"]
+
+[sub_resource type="MultiMesh" id="MultiMesh_myt8e"]
+resource_local_to_scene = true
+
+[sub_resource type="MultiMesh" id="MultiMesh_b2hnm"]
+resource_local_to_scene = true
+
+[sub_resource type="MultiMesh" id="MultiMesh_qolen"]
+resource_local_to_scene = true
 
 [node name="Turbine" type="Node3D"]
 script = ExtResource("1_4ihrl")
+
+[node name="RingsOut" parent="." instance=ExtResource("2_te6su")]
+multimesh = SubResource("MultiMesh_myt8e")
+
+[node name="RingsIn" parent="." instance=ExtResource("2_te6su")]
+multimesh = SubResource("MultiMesh_b2hnm")
+
+[node name="Blades" parent="." instance=ExtResource("2_te6su")]
+multimesh = SubResource("MultiMesh_qolen")
