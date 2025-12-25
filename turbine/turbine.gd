@@ -1,19 +1,33 @@
 extends Node3D
 class_name Turbine
 
-func init(count :int, radius :float, ring_width :float, arm_count :int, co1 :Color, co2 :Color) -> Turbine:
-	make_rings($RingsOut, count, radius, ring_width, false)
-	make_rings($RingsIn, count, radius, ring_width, true)
-	var blade_mesh := BoxMesh.new()
-	blade_mesh.size = Vector3(radius, ring_width/10, ring_width )
-	$Blades.init_with_alpha(blade_mesh, count*arm_count)
+static func scale_cos(rate :float) -> float:
+	return (cos(rate*PI*2)+3)/4
 
+func init_sample(count :int, radius :float, ring_width :float, arm_count :int, co1 :Color, co2 :Color) -> Turbine:
+	init_basic(count, radius, ring_width, arm_count)
 	set_transform_all(scale_cos)
 	set_color_all(co1,co2)
 	return self
 
-func scale_cos(rate :float) -> float:
-	return (cos(rate*PI*2)+3)/4
+func init_basic(count :int, radius :float, ring_width :float, arm_count :int) -> Turbine:
+	_init_rings($RingsOut, count, radius, ring_width, false)
+	_init_rings($RingsIn, count, radius, ring_width, true)
+	var blade_mesh := BoxMesh.new()
+	blade_mesh.size = Vector3(radius, ring_width/10, ring_width )
+	$Blades.init_with_alpha(blade_mesh, count*arm_count, 1.0 ,false)
+	return self
+
+func _init_rings(rings :MultiMeshShape, count :int, radius :float, ring_width :float, flip_faces :bool) -> void:
+	var ring_mesh := CylinderMesh.new()
+	ring_mesh.cap_bottom = false
+	ring_mesh.cap_top = false
+	ring_mesh.top_radius = radius
+	ring_mesh.bottom_radius = radius
+	ring_mesh.height = ring_width
+	ring_mesh.flip_faces = flip_faces
+	rings.init_with_alpha(ring_mesh, count, 0.9, false)
+
 
 func set_transform_all(scale_fn:Callable) -> Turbine:
 	var count :int = $RingsOut.multimesh.visible_instance_count
@@ -67,14 +81,3 @@ func set_inst_color(i:int, co :Color) -> void:
 	var base_int := i*arm_count
 	for j in arm_count:
 		$Blades.multimesh.set_instance_color(base_int+j, co)
-
-func make_rings(rings :MultiMeshShape, count :int, radius :float, ring_width :float, flip_faces :bool) -> MultiMeshShape:
-	var ring_mesh := CylinderMesh.new()
-	ring_mesh.cap_bottom = false
-	ring_mesh.cap_top = false
-	ring_mesh.top_radius = radius
-	ring_mesh.bottom_radius = radius
-	ring_mesh.height = ring_width
-	ring_mesh.flip_faces = flip_faces
-	rings.init_with_alpha(ring_mesh, count,0.9)
-	return rings

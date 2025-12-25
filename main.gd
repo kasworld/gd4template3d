@@ -112,10 +112,13 @@ func turbine_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 	turbine = preload("res://turbine/turbine.tscn").instantiate(
-		).init(40,WorldSize.z / 3, 2, 4, Color.BLUE, Color.RED)
+		).init_basic(40,WorldSize.z / 3, 2, 4).set_color_all(random_color(),random_color(),
+		).set_transform_all(scale_cos)
 	turbine.rotation.y = PI/4
 	glasscabinet.add_child(turbine)
 	glasscabinet.show_wall_box(false)
+func scale_cos(rate :float) -> float:
+	return (cos(rate*PI*2)+2) * (rate/4+0.25)
 func turbine_rotate() -> void:
 	var t := Time.get_unix_time_from_system()
 	var rad := fposmod(t , PI*2)
