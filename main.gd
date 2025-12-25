@@ -112,7 +112,7 @@ func turbine_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 	turbine = preload("res://turbine/turbine.tscn").instantiate(
-		).init_basic(40,WorldSize.z / 3, 2, 4).set_color_all(random_color(),random_color(),
+		).init_basic(WorldSize.x, WorldSize.z/4, 1, 4).set_color_all(random_color(),random_color(),
 		).set_transform_all(scale_cos)
 	turbine.rotation.y = PI/4
 	glasscabinet.add_child(turbine)
