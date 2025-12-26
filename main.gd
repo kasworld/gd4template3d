@@ -108,26 +108,57 @@ func glass_cabinet_demo() -> void:
 		gc.set_label_text("%d" % i).show_label(true)
 		glass_cabinet_list.append(gc)
 
-var turbine :Turbine
+
+var turbine_list :Array
 func turbine_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
-	turbine = preload("res://turbine/turbine.tscn").instantiate(
-		).init_basic(WorldSize.x*0.7, WorldSize.z*0.2, 1, 4).set_color_all(random_color(),random_color(),
-		).set_transform_all(scale_cos)
-	turbine.rotation.y = PI/4
-	glasscabinet.add_child(turbine)
-	glasscabinet.show_wall_box(false)
-func scale_cos(rate :float) -> float:
-	return (cos(rate*PI*2)+2) * (rate/4+0.25)
+	for pos in [ Vector3(WorldSize.x/4, WorldSize.y/4,0), Vector3(-WorldSize.x/4, WorldSize.y/4,0),
+				 Vector3(WorldSize.x/4,-WorldSize.y/4,0), Vector3(-WorldSize.x/4,-WorldSize.y/4,0),]:
+		var tb = preload("res://turbine/turbine.tscn").instantiate(
+			).init_sample(WorldSize.x *0.5,WorldSize.z *0.2, 1, 4, random_color(),random_color())
+		turbine_list.append(tb)
+		tb.position = pos
+		#tb.rotation.y = PI/4
+		glasscabinet.add_child(tb)
+	for i in 4:
+		turbine_color_list.append(random_color())
 func scale_lambda(period :float) -> Callable:
 	return func(rate):
-		return (cos(rate*PI*2 + period)+2) * (rate/4+0.25)
-func turbine_rotate() -> void:
+		var x = (cos(rate*PI*2 + period)+2) * (rate/4+0.25)
+		var y = (sin(rate*PI*2 + period)+2) * (rate/4+0.25)
+		return Vector3(x,y,1)
+func shift_lambda(rad :float) -> Callable:
+	return func(rate):
+		return Vector3(cos(rad), sin(rad), 0) * rate * WorldSize.x/10
+func rotate_lambda(rad :float) -> Callable:
+	return func(rate):
+		return PI*rate*rad
+
+var turbine_color_list :Array
+var turbine_color_rate :float
+func turbine_animate() -> void:
+	if turbine_color_rate >= 1:
+		turbine_color_rate = 0
+		turbine_color_list[0] = turbine_color_list[1]
+		turbine_color_list[1] = random_color()
+		turbine_color_list[2] = turbine_color_list[3]
+		turbine_color_list[3] = random_color()
+	else:
+		turbine_color_rate += 1.0/60.0
 	var t := Time.get_unix_time_from_system()
 	var rad := fposmod(t , PI*2)
-	turbine.rotation.z = rad
-	turbine.set_transform_all(scale_lambda(rad))
+	turbine_list[0].set_color_all(
+		lerp(turbine_color_list[0], turbine_color_list[1],turbine_color_rate),
+		lerp(turbine_color_list[2], turbine_color_list[3],turbine_color_rate),
+	)
+	turbine_list[1].set_transform_all(scale_lambda(rad), Turbine.shift_zero, Turbine.rotate_zero)
+	turbine_list[2].set_transform_all(Turbine.scale_1, shift_lambda(rad), Turbine.rotate_zero)
+	turbine_list[3].set_transform_all(Turbine.scale_1, Turbine.shift_zero, rotate_lambda(rad))
+func random_color() -> Color:
+	return NamedColorList.color_list.pick_random()[0]
+
+
 
 
 var colorlist_dark :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
@@ -370,8 +401,6 @@ func make_sub_tree(glasscabinet :GlassCabinet, tree_size :Vector3, bar_count :in
 	t.init_bartree_with_color(random_color(), random_color(), bar_count)
 	t.init_bartree_transform(tree_size, shift)
 	bartree_list.append(t)
-func random_color()->Color:
-	return NamedColorList.color_list.pick_random()[0]
 
 
 func _process(delta: float) -> void:
@@ -387,7 +416,7 @@ func _process(delta: float) -> void:
 		os.animate_rotate(now, delta)
 	for mt in meshtrail_list:
 		mt.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
-	turbine_rotate()
+	turbine_animate()
 	$GlassCabinetContainer1.rotate_y(delta/10)
 	$GlassCabinetContainer2.rotate_y(-delta/10)
 

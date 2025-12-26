@@ -1,12 +1,25 @@
 extends Node3D
 class_name Turbine
 
-static func scale_cos(rate :float) -> float:
-	return (cos(rate*PI*2)+3)/4
+static func scale_1(_rate :float) -> Vector3:
+	return Vector3(1,1,1)
+
+static func shift_zero(_rate :float) -> Vector3:
+	return Vector3.ZERO
+
+static func rotate_zero(_rate :float) -> float:
+	return 0
+
+static func scale_cos(rate :float) -> Vector3:
+	var s := (cos(rate*PI*2)+3)/4
+	return Vector3(s,s,1)
+
+static func rotate_PI(rate :float) -> float:
+	return PI*rate
 
 func init_sample(count :int, radius :float, ring_width :float, arm_count :int, co1 :Color, co2 :Color) -> Turbine:
 	init_basic(count, radius, ring_width, arm_count)
-	set_transform_all(scale_cos)
+	set_transform_all(scale_1,shift_zero,rotate_zero)
 	set_color_all(co1,co2)
 	return self
 
@@ -29,7 +42,7 @@ func _init_rings(rings :MultiMeshShape, count :int, radius :float, ring_width :f
 	rings.init_with_alpha(ring_mesh, count, 0.9, false)
 
 
-func set_transform_all(scale_fn:Callable) -> Turbine:
+func set_transform_all(scale_fn :Callable, shift_fn :Callable, rotate_fn :Callable) -> Turbine:
 	var count :int = $RingsOut.multimesh.visible_instance_count
 	var arm_count :int = $Blades.multimesh.visible_instance_count / count
 	var mesh_size :Vector3 = $Blades.multimesh.mesh.size
@@ -39,22 +52,27 @@ func set_transform_all(scale_fn:Callable) -> Turbine:
 	var start_pos_z := -count*ring_width/2
 	for i in count:
 		var rate := float(i)/float(count-1)
-		var scale_by_rate :float = scale_fn.call(rate)
-		var scaled_size := Vector3(scale_by_rate, scale_by_rate, 1)
+		#var scale_by_rate :float = scale_fn.call(rate)
+		#var scaled_size := Vector3(scale_by_rate, scale_by_rate, 1)
+		var scaled_size :Vector3 = scale_fn.call(rate)
 		var ring_pos := Vector3(0,0, start_pos_z + i*ring_width)
 
-		var t = Transform3D(Basis(), ring_pos)
+		var t = Transform3D(Basis(), ring_pos + shift_fn.call(rate))
 		t = t.scaled_local(scaled_size)
 		t = t.rotated_local(Vector3.RIGHT, PI/2)
 		$RingsOut.multimesh.set_instance_transform(i, t)
 		$RingsIn.multimesh.set_instance_transform(i, t)
 
 		var base_int := i*arm_count
-		var blade_rotation_radian := rate * PI
-		var blade_center_radius := ring_radius * scale_by_rate/2
+		#var blade_center_radius := ring_radius * scale_by_rate/2
 		for j in arm_count:
-			var rad := arm_to_arm_radian_in_ring *j + blade_rotation_radian
-			t = Transform3D(Basis(), Vector3(cos(rad) *blade_center_radius,sin(rad) *blade_center_radius, ring_pos.z))
+			var rad :float = arm_to_arm_radian_in_ring *j + rotate_fn.call(rate)
+			t = Transform3D(Basis(),
+				Vector3(
+					cos(rad)*ring_radius * scaled_size.x/2,
+					sin(rad)*ring_radius * scaled_size.y/2,
+					ring_pos.z
+					) + shift_fn.call(rate) )
 			t = t.scaled_local(scaled_size)
 			t = t.rotated_local(Vector3.BACK, rad)
 			t = t.rotated_local(Vector3.LEFT, PI/10)
