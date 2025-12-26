@@ -115,7 +115,7 @@ func turbine_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 		glasscabinet.set_label_text(labeltext)
 	glasscabinet.show_wall_box(false)
 	for pos in [ Vector3(WorldSize.x/4, WorldSize.y/4,0), Vector3(-WorldSize.x/4, WorldSize.y/4,0),
-				 Vector3(WorldSize.x/4,-WorldSize.y/4,0), Vector3(-WorldSize.x/4,-WorldSize.y/4,0),]:
+				 Vector3(WorldSize.x/4,-WorldSize.y/4,0), Vector3(-WorldSize.x/4,-WorldSize.y/4,0)]:
 		var tb = preload("res://turbine/turbine.tscn").instantiate(
 			).init_sample(WorldSize.x *0.5,WorldSize.z *0.2, 1, 4, random_color(),random_color())
 		turbine_list.append(tb)
@@ -136,6 +136,9 @@ func shift_lambda(rad :float) -> Callable:
 func rotate_lambda(rad :float) -> Callable:
 	return func(rate):
 		return PI*rate*rad
+func blade_rotate_lambda(rad :float) -> Callable:
+	return func(_rate):
+		return rad/PI/2
 
 var turbine_color_list :Array
 var turbine_color_rate :float
@@ -153,11 +156,9 @@ func turbine_animate() -> void:
 	)
 	turbine_list[1].set_transform_all(scale_lambda(rad), Turbine.shift_zero, Turbine.rotate_zero)
 	turbine_list[2].set_transform_all(Turbine.scale_1, shift_lambda(rad), Turbine.rotate_zero)
-	turbine_list[3].set_transform_all(Turbine.scale_1, Turbine.shift_zero, rotate_lambda(rad))
+	turbine_list[3].set_transform_all(Turbine.scale_1, Turbine.shift_zero, rotate_lambda(rad), blade_rotate_lambda(rad))
 func random_color() -> Color:
 	return NamedColorList.color_list.pick_random()[0]
-
-
 
 
 var colorlist_dark :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())

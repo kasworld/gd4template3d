@@ -17,9 +17,15 @@ static func scale_cos(rate :float) -> Vector3:
 static func rotate_PI(rate :float) -> float:
 	return PI*rate
 
+static func blade_rotate_0deg(_rate :float) -> float:
+	return 0
+
+static func blade_rotate_18deg(_rate :float) -> float:
+	return PI/10
+
 func init_sample(count :int, radius :float, ring_width :float, arm_count :int, co1 :Color, co2 :Color) -> Turbine:
 	init_basic(count, radius, ring_width, arm_count)
-	set_transform_all(scale_1,shift_zero,rotate_zero)
+	set_transform_all(scale_1,shift_zero,rotate_zero,blade_rotate_0deg)
 	set_color_all(co1,co2)
 	return self
 
@@ -41,8 +47,11 @@ func _init_rings(rings :MultiMeshShape, count :int, radius :float, ring_width :f
 	ring_mesh.flip_faces = flip_faces
 	rings.init_with_alpha(ring_mesh, count, 0.9, false)
 
-
-func set_transform_all(scale_fn :Callable, shift_fn :Callable, rotate_fn :Callable) -> Turbine:
+func set_transform_all(
+	scale_fn :Callable,
+	shift_fn :Callable,
+	rotate_fn :Callable,
+	blade_rotate_fn :Callable = blade_rotate_0deg) -> Turbine:
 	var count :int = $RingsOut.multimesh.visible_instance_count
 	var arm_count :int = $Blades.multimesh.visible_instance_count / count
 	var mesh_size :Vector3 = $Blades.multimesh.mesh.size
@@ -50,10 +59,9 @@ func set_transform_all(scale_fn :Callable, shift_fn :Callable, rotate_fn :Callab
 	var ring_radius := mesh_size.x
 	var arm_to_arm_radian_in_ring := 2.0*PI / arm_count
 	var start_pos_z := -count*ring_width/2
+	#var blade_rotate :float= (rotate_fn.call(1.0)-rotate_fn.call(0))/arm_count/PI
 	for i in count:
 		var rate := float(i)/float(count-1)
-		#var scale_by_rate :float = scale_fn.call(rate)
-		#var scaled_size := Vector3(scale_by_rate, scale_by_rate, 1)
 		var scaled_size :Vector3 = scale_fn.call(rate)
 		var ring_pos := Vector3(0,0, start_pos_z + i*ring_width)
 
@@ -64,7 +72,6 @@ func set_transform_all(scale_fn :Callable, shift_fn :Callable, rotate_fn :Callab
 		$RingsIn.multimesh.set_instance_transform(i, t)
 
 		var base_int := i*arm_count
-		#var blade_center_radius := ring_radius * scale_by_rate/2
 		for j in arm_count:
 			var rad :float = arm_to_arm_radian_in_ring *j + rotate_fn.call(rate)
 			t = Transform3D(Basis(),
@@ -75,7 +82,8 @@ func set_transform_all(scale_fn :Callable, shift_fn :Callable, rotate_fn :Callab
 					) + shift_fn.call(rate) )
 			t = t.scaled_local(scaled_size)
 			t = t.rotated_local(Vector3.BACK, rad)
-			t = t.rotated_local(Vector3.LEFT, PI/10)
+			t = t.rotated_local(Vector3.LEFT, blade_rotate_fn.call(rate))
+			#t = t.rotated_local(Vector3.LEFT, blade_rotate)
 			$Blades.multimesh.set_instance_transform(base_int+j, t)
 	return self
 
