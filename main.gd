@@ -292,6 +292,7 @@ var valvehandle :ValveHandle
 func valvehandle_arrow3d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
+	glasscabinet.show_axis_arrow()
 	arrow3d = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
 		).set_color(random_color()).set_size( WorldSize.x/5, WorldSize.x/50, WorldSize.x/25)
 	arrow3d.position = Vector3(WorldSize.x/4, 0,0)
@@ -372,7 +373,7 @@ func clock_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	clock.rotate_x(PI/2)
 	glasscabinet.add_child(clock)
 
-var tree2_scene = preload("res://bar_tree/bar_tree.tscn")
+var bartree_scene = preload("res://bar_tree/bar_tree.tscn")
 var bartree_list :Array
 func bartree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
@@ -392,7 +393,7 @@ func make_tree3(make_flag:int, glasscabinet :GlassCabinet, tree_size :Vector3, b
 			tree_size.x *= 0.9
 		make_sub_tree(glasscabinet, tree_size, bar_count, 0, pos)
 func make_sub_tree(glasscabinet :GlassCabinet, tree_size :Vector3, bar_count :int, shift :float, pos :Vector3) -> void:
-	var t = tree2_scene.instantiate()
+	var t = bartree_scene.instantiate()
 	glasscabinet.add_child(t)
 	t.position = pos
 	t.init_bartree_with_color(random_color(), random_color(), bar_count)
