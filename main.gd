@@ -119,8 +119,9 @@ func turbine_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 			).init_sample(WorldSize.x *0.5,WorldSize.z *0.2, 1, 4, random_color(),random_color())
 		turbine_list.append(tb)
 		tb.position = pos
-		#tb.rotation.y = PI/4
 		glasscabinet.add_child(tb)
+	turbine_list[0].rotation.y = PI/4
+	turbine_list[1].rotation.y = PI/4
 	for i in 4:
 		turbine_color_list.append(random_color())
 func scale_lambda(period :float) -> Callable:
@@ -140,10 +141,7 @@ var turbine_color_rate :float
 func turbine_animate() -> void:
 	if turbine_color_rate >= 1:
 		turbine_color_rate = 0
-		turbine_color_list[0] = turbine_color_list[1]
-		turbine_color_list[1] = random_color()
-		turbine_color_list[2] = turbine_color_list[3]
-		turbine_color_list[3] = random_color()
+		turbine_color_list = [turbine_color_list[1], random_color(), turbine_color_list[3], random_color()]
 	else:
 		turbine_color_rate += 1.0/60.0
 	var t := Time.get_unix_time_from_system()
