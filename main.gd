@@ -113,6 +113,7 @@ var turbine_list :Array
 func turbine_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
+	glasscabinet.show_wall_box(false)
 	for pos in [ Vector3(WorldSize.x/4, WorldSize.y/4,0), Vector3(-WorldSize.x/4, WorldSize.y/4,0),
 				 Vector3(WorldSize.x/4,-WorldSize.y/4,0), Vector3(-WorldSize.x/4,-WorldSize.y/4,0),]:
 		var tb = preload("res://turbine/turbine.tscn").instantiate(
@@ -221,7 +222,7 @@ func wavegauge_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 	wavegauge_box = preload("res://wave_gauge/wave_gauge.tscn").instantiate(
-		).init(Vector3(WorldSize.x,WorldSize.y,WorldSize.z), Vector3i(32,32,32), WaveGauge.color_list, 0.1, 1.0 )
+		).init(Vector3(WorldSize.x-1,WorldSize.y-1,WorldSize.z-1), Vector3i(32,32,32), WaveGauge.color_list, 0.1, 1.0 )
 	glasscabinet.add_child(wavegauge_box)
 
 var wirenet :MultiMeshShape
@@ -243,7 +244,7 @@ func maze3d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 		glasscabinet.set_label_text(labeltext)
 	var ms := Maze3DSetting.new_default()
 	ms.MazeSize = Vector2i(16,9)
-	ms.LaneW = WorldSize.x/ms.MazeSize.x
+	ms.LaneW = WorldSize.x/ms.MazeSize.x-0.1
 	ms.StoryH = ms.LaneW
 	ms.WallThick = ms.LaneW *0.1
 	ms.MakeSubWallRate = 0.1
@@ -324,7 +325,7 @@ func line2d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	ml2dmi.material_override = StandardMaterial3D.new()
 	ml2dmi.material_override.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
 	ml2dmi.material_override.albedo_texture = svp.get_texture()
-	ml2dmi.rotation.x = -PI/4
+	#ml2dmi.rotation.x = -PI/4
 	glasscabinet.add_child(svp)
 	glasscabinet.add_child(ml2dmi)
 
