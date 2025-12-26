@@ -4,28 +4,26 @@ class_name Turbine
 static func scale_1(_rate :float) -> Vector3:
 	return Vector3(1,1,1)
 
+static func scale_cos(rate :float) -> Vector3:
+	var s := (cos(rate*PI*2)+3)/4
+	return Vector3(s,s,1)
+
 static func shift_zero(_rate :float) -> Vector3:
 	return Vector3.ZERO
 
 static func rotate_zero(_rate :float) -> float:
 	return 0
 
-static func scale_cos(rate :float) -> Vector3:
-	var s := (cos(rate*PI*2)+3)/4
-	return Vector3(s,s,1)
-
 static func rotate_PI(rate :float) -> float:
 	return PI*rate
 
-static func blade_rotate_0deg(_rate :float) -> float:
-	return 0
-
-static func blade_rotate_18deg(_rate :float) -> float:
-	return PI/10
+static func blade_rotate_lambda(rad :float) -> Callable:
+	return func(_rate):
+		return rad
 
 func init_sample(count :int, radius :float, ring_width :float, arm_count :int, co1 :Color, co2 :Color) -> Turbine:
 	init_basic(count, radius, ring_width, arm_count)
-	set_transform_all(scale_1,shift_zero,rotate_zero,blade_rotate_0deg)
+	set_transform_all(scale_1, shift_zero, rotate_zero, blade_rotate_lambda(0))
 	set_color_all(co1,co2)
 	return self
 
@@ -51,7 +49,7 @@ func set_transform_all(
 	scale_fn :Callable,
 	shift_fn :Callable,
 	rotate_fn :Callable,
-	blade_rotate_fn :Callable = blade_rotate_0deg) -> Turbine:
+	blade_rotate_fn :Callable = blade_rotate_lambda(0)) -> Turbine:
 	var count :int = $RingsOut.multimesh.visible_instance_count
 	var arm_count :int = $Blades.multimesh.visible_instance_count / count
 	var mesh_size :Vector3 = $Blades.multimesh.mesh.size
