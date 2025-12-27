@@ -82,7 +82,7 @@ func _ready() -> void:
 	valvehandle_arrow3d_demo(glass_cabinet_list.pop_front(), "valvehandle,arrow3d")
 	wirenet_wavegauge_demo(glass_cabinet_list.pop_front(), "wirenet,wavegauge")
 	wavegauge_demo(glass_cabinet_list.pop_front(), "wavegauge")
-	turbine_demo(glass_cabinet_list.pop_front(), "turbine")
+	tornado_demo(glass_cabinet_list.pop_front(), "tornado")
 	print_debug("remain glass cabinet %d" % glass_cabinet_list.size())
 
 	$FixedCameraLight.make_current()
@@ -112,8 +112,8 @@ func glass_cabinet_demo() -> void:
 func random_color() -> Color:
 	return NamedColorList.color_list.pick_random()[0]
 
-var turbine_list :Array # [ turbine , colorinfo ]
-func turbine_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
+var tornado_list :Array # [ turbine , colorinfo ]
+func tornado_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 	glasscabinet.show_wall_box(false)
@@ -122,7 +122,7 @@ func turbine_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 			).init_sample(WorldSize.x/2, WorldSize.y*0.3, 0.5, 4, random_color(),random_color())
 		glasscabinet.add_child(tb)
 		tb.rotation.x = -PI/2
-		turbine_list.append([tb, AnimateGradient.new()])
+		tornado_list.append([tb, AnimateGradient.new()])
 
 func scale_lambda(t :float) -> Callable:
 	return func(rate):
@@ -143,18 +143,18 @@ func shift_tornado_lambda(t :float) -> Callable:
 		var period := 5
 		return Vector3(cos(rate*period), sin(rate*period), 0) * t * WorldSize.x/10
 
-func turbine_animate() -> void:
+func tornado_animate() -> void:
 	var t := Time.get_unix_time_from_system()
 	var rad := fposmod(t, PI*2)
 	var unit_rad := 2*PI/4
 	var radius := WorldSize.z/2
 	for i in 4:
 		var tt := t+ i
-		turbine_list[i][0].set_transform_all(scale_tornado, shift_tornado_lambda( sin(tt) ), rotate_lambda( sin(tt) ),Turbine.blade_rotate_lambda(rad/PI/2))
-		turbine_list[i][0].set_color_all(turbine_list[i][1].get_color1(),turbine_list[i][1].get_color2())
-		turbine_list[i][1].inc_rate()
-		turbine_list[i][0].position = Vector3(cos(i*unit_rad+t)*radius, sin(i*unit_rad+t*1.7)*radius/2, sin(i*unit_rad+t)*radius)
-		turbine_list[i][0].rotation.y = -rad*5
+		tornado_list[i][0].set_transform_all(scale_tornado, shift_tornado_lambda( sin(tt) ), rotate_lambda( sin(tt) ),Turbine.blade_rotate_lambda(rad/PI/2))
+		tornado_list[i][0].set_color_all(tornado_list[i][1].get_color1(),tornado_list[i][1].get_color2())
+		tornado_list[i][1].inc_rate()
+		tornado_list[i][0].position = Vector3(cos(i*unit_rad+t)*radius, sin(i*unit_rad+t*1.7)*radius/2, sin(i*unit_rad+t)*radius)
+		tornado_list[i][0].rotation.y = -rad*5
 
 
 var colorlist_dark :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
@@ -413,7 +413,7 @@ func _process(delta: float) -> void:
 		os.animate_rotate(now, delta)
 	for mt in meshtrail_list:
 		mt.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
-	turbine_animate()
+	tornado_animate()
 	$GlassCabinetContainer1.rotate_y(delta/10)
 	$GlassCabinetContainer2.rotate_y(-delta/10)
 
