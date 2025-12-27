@@ -127,11 +127,16 @@ func turbine_tree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> vo
 		glasscabinet.set_label_text(labeltext)
 		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	turbine_tree = preload("res://turbine/turbine.tscn").instantiate(
-		).init_basic(WorldSize.x, WorldSize.z*0.5, WorldSize.y/WorldSize.x, 4
+		).init_basic(WorldSize.y, WorldSize.z/6, 1, 4
 		).set_transform_all(scale_tree, Turbine.shift_zero, Turbine.rotate_zero,
 		).set_color_all(random_color(),random_color())
 	glasscabinet.add_child(turbine_tree)
 	turbine_tree.rotation.x = PI/2
+	var tree_size := Vector3(WorldSize.z/3, WorldSize.y, WorldSize.z / 30)
+	var bar_count :int = WorldSize.y
+	var pos := Vector3(0.0,-WorldSize.y/2,0.0)
+	make_sub_tree(glasscabinet, tree_size, bar_count, 2.0, pos)
+	make_sub_tree(glasscabinet, tree_size, bar_count, -2.0, pos)
 
 func scale_tree(rate):
 	return Vector3(rate,rate,1)
