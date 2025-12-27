@@ -11,10 +11,12 @@ func start_rotate_animation(nd :Node3D, axis :int, ani_dur :float) -> void:
 	var diff :float = [PI/2,-PI/2].pick_random()
 	main_animation.start_rotate_subfield("ani_rot", nd, axis , nd.rotation[axis], nd.rotation[axis] + diff, ani_dur)
 func start_all_animation() -> void:
-	start_rotate_animation(arrow3d,
-		[Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random(),
-		AnimationDuration)
-	start_rotate_animation(valvehandle, Vector3.Axis.AXIS_Y, AnimationDuration)
+	if arrow3d != null:
+		start_rotate_animation(arrow3d,
+			[Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random(),
+			AnimationDuration)
+	if valvehandle != null:
+		start_rotate_animation(valvehandle, Vector3.Axis.AXIS_Y, AnimationDuration)
 
 
 func timed_message_init() -> void:
@@ -67,9 +69,17 @@ func _ready() -> void:
 	$OmniLight3D.position = Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
 	$FixedCameraLight.set_center_pos_far( Vector3(0, 0, -WorldSize.z), Vector3.ZERO, WorldSize.length()*3)
+	#$FixedCameraLight.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
 	$AxisArrow3D.set_colors().set_size(WorldSize.length()/20)
 
-	glass_cabinet_demo()
+	make_glass_cabinet()
+	setup_demo_to_cabinet()
+	$FixedCameraLight.make_current()
+	main_animation.animation_ended.connect(main_animation_ended)
+	start_all_animation()
+
+var demo_name_to_glass_cabinet := {}
+func setup_demo_to_cabinet() -> void:
 	bartree_demo(glass_cabinet_list.pop_front(), "bartree")
 	clock_demo(glass_cabinet_list.pop_front(), "clock3d")
 	calendar_demo(glass_cabinet_list.pop_front(), "calender3d")
@@ -83,14 +93,13 @@ func _ready() -> void:
 	wirenet_wavegauge_demo(glass_cabinet_list.pop_front(), "wirenet,wavegauge")
 	wavegauge_demo(glass_cabinet_list.pop_front(), "wavegauge")
 	tornado_demo(glass_cabinet_list.pop_front(), "tornado")
-	print_debug("remain glass cabinet %d" % glass_cabinet_list.size())
+	turbine_tree_demo(glass_cabinet_list.pop_front(), "turbinetree")
+	print_debug("remain glass cabinet %d\ndemo size %s" % [
+		glass_cabinet_list.size(),demo_name_to_glass_cabinet.size()])
 
-	$FixedCameraLight.make_current()
-	main_animation.animation_ended.connect(main_animation_ended)
-	start_all_animation()
 
 var glass_cabinet_list :Array
-func glass_cabinet_demo() -> void:
+func make_glass_cabinet() -> void:
 	var count := 24
 	var unit_rad := 2*PI/ count
 	for i in count:
@@ -112,10 +121,27 @@ func glass_cabinet_demo() -> void:
 func random_color() -> Color:
 	return NamedColorList.color_list.pick_random()[0]
 
+var turbine_tree :Turbine
+func turbine_tree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
+	if labeltext != "":
+		glasscabinet.set_label_text(labeltext)
+		demo_name_to_glass_cabinet[labeltext] = glasscabinet
+	turbine_tree = preload("res://turbine/turbine.tscn").instantiate(
+		).init_basic(WorldSize.x, WorldSize.z*0.5, WorldSize.y/WorldSize.x, 4
+		).set_transform_all(scale_tree, Turbine.shift_zero, Turbine.rotate_zero,
+		).set_color_all(random_color(),random_color())
+	glasscabinet.add_child(turbine_tree)
+	turbine_tree.rotation.x = PI/2
+
+func scale_tree(rate):
+	return Vector3(rate,rate,1)
+
+
 var tornado_list :Array # [ turbine , colorinfo ]
 func tornado_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
+		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	glasscabinet.show_wall_box(false)
 	for i in 4:
 		var tb = preload("res://turbine/turbine.tscn").instantiate(
@@ -148,7 +174,7 @@ func tornado_animate() -> void:
 	var rad := fposmod(t, PI*2)
 	var unit_rad := 2*PI/4
 	var radius := WorldSize.z/2
-	for i in 4:
+	for i in tornado_list.size():
 		var tt := t+ i
 		tornado_list[i][0].set_transform_all(scale_tornado, shift_tornado_lambda( sin(tt) ), rotate_lambda( sin(tt) ),Turbine.blade_rotate_lambda(rad/PI/2))
 		tornado_list[i][0].set_color_all(tornado_list[i][1].get_color1(),tornado_list[i][1].get_color2())
@@ -170,6 +196,7 @@ var roulette :Roulette
 func wheel_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
+		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	var color_text_into_list := make_color_text_info_list(
 		colorlist_light, cardlist,
 	).duplicate()
@@ -197,6 +224,7 @@ var slot :Slots
 func slotreel_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
+		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	var symbol크기 := Vector2(WorldSize.x/20 ,WorldSize.y/20)
 	var color_text_into_list := make_color_text_info_list(colorlist_dark, cardlist).duplicate()
 	slot = preload("res://slots/slots.tscn").instantiate().init(5, symbol크기,color_text_into_list)
@@ -218,6 +246,7 @@ var wavegauge_box :WaveGauge
 func wavegauge_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
+		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	wavegauge_box = preload("res://wave_gauge/wave_gauge.tscn").instantiate(
 		).init(Vector3(WorldSize.x-1,WorldSize.y-1,WorldSize.z-1), Vector3i(32,32,32), WaveGauge.color_list, 0.1, 1.0 )
 	glasscabinet.add_child(wavegauge_box)
@@ -227,6 +256,7 @@ var wavegauge_plane :WaveGauge
 func wirenet_wavegauge_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
+		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	var grid_size := Vector2i(16,9)*2
 	wirenet = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).init_wire_net(Vector2(WorldSize.x,WorldSize.y), Vector2i(grid_size.x,grid_size.y), WorldSize.x/grid_size.x/10, random_color())
@@ -239,6 +269,7 @@ var maze3d :Maze3D
 func maze3d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
+		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	var ms := Maze3DSetting.new_default()
 	ms.MazeSize = Vector2i(16,9)
 	ms.LaneW = WorldSize.x/ms.MazeSize.x-0.1
@@ -257,6 +288,7 @@ var trailmesh_radius := WorldSize.length()/100
 func meshtrail_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
+		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	bound_aabb = AABB( -WorldSize/2, WorldSize)
 	var mesh := BoxMesh.new()
 	mesh.size = Vector3(trailmesh_radius*3, trailmesh_radius /5, trailmesh_radius/5)
@@ -291,6 +323,7 @@ var valvehandle :ValveHandle
 func valvehandle_arrow3d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
+		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	glasscabinet.show_axis_arrow()
 	arrow3d = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
 		).set_color(random_color()).set_size( WorldSize.x/5, WorldSize.x/50, WorldSize.x/25)
@@ -305,6 +338,7 @@ func valvehandle_arrow3d_demo(glasscabinet :GlassCabinet, labeltext :String = ""
 func line2d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
+		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	glasscabinet.show_wall_box(false)
 	var size_pixel := Vector2i(2048,2048)
 	var ml2d = preload("res://move_line_2d/move_line_2d.tscn").instantiate()
@@ -331,6 +365,7 @@ var orbitsphere_list :Array
 func orbit_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
+		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	glasscabinet.set_box_color(Color(Color.WHITE,0.2))
 	for i in 9:
 		add_orbitsphere(glasscabinet, i)
@@ -356,6 +391,7 @@ var calendar :Calendar3D
 func calendar_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
+		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	calendar = preload("res://calendar_3d/calendar_3d.tscn").instantiate(
 		).init(WorldSize.x/2, WorldSize.y, WorldSize.z/10, WorldSize.y/2.0/6 , false )
 	calendar.rotate_y(PI/2)
@@ -366,6 +402,7 @@ var clock :AnalogClock3D
 func clock_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
+		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	clock = preload("res://analog_clock_3d/analog_clock_3d.tscn").instantiate(
 		).init(WorldSize.x/4, WorldSize.z/10, WorldSize.y/2.0/7 ,9.0, false )
 	clock.rotate_y(PI/2)
@@ -377,6 +414,7 @@ var bartree_list :Array
 func bartree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
+		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	var tree_size := Vector3(WorldSize.z/3, WorldSize.y, WorldSize.z / 30)
 	make_tree3(randi_range(1,7), glasscabinet, tree_size, randi_range(20,100), Vector3(-WorldSize.x/4,-WorldSize.y/2,0))
 	make_tree3(randi_range(1,7), glasscabinet, tree_size, randi_range(20,100), Vector3(WorldSize.x/4,-WorldSize.y/2,0))
@@ -403,10 +441,13 @@ func make_sub_tree(glasscabinet :GlassCabinet, tree_size :Vector3, bar_count :in
 func _process(delta: float) -> void:
 	var now := Time.get_unix_time_from_system()
 	label_demo()
-	wavegauge_box.animate_wave(now)
-	wavegauge_plane.animate_wave(now)
-	roulette.장식돌리기()
-	roulette.선택된cell강조상태켜기()
+	if wavegauge_box !=null:
+		wavegauge_box.animate_wave(now)
+	if wavegauge_plane !=null:
+		wavegauge_plane.animate_wave(now)
+	if roulette !=null:
+		roulette.장식돌리기()
+		roulette.선택된cell강조상태켜기()
 	for bt in bartree_list:
 		bt.rotate_tree_bar_y(delta*10)
 	for os in orbitsphere_list:
