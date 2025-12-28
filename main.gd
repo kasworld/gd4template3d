@@ -19,21 +19,7 @@ func start_all_animation() -> void:
 		start_rotate_animation(valvehandle, Vector3.Axis.AXIS_Y, AnimationDuration)
 
 
-func timed_message_init() -> void:
-	var vp_size := get_viewport().get_visible_rect().size
-	var msgrect := Rect2( vp_size.x * 0.1 ,vp_size.y * 0.4 , vp_size.x * 0.8 , vp_size.y * 0.25 )
-	$TimedMessage.init(80, msgrect,
-		"%s %s" % [
-			ProjectSettings.get_setting("application/config/name"),
-			ProjectSettings.get_setting("application/config/version")
-			] )
-	$TimedMessage.panel_hidden.connect(message_hidden)
-	$TimedMessage.show_message("",0)
-func message_hidden(_s :String) -> void:
-	pass
-
-
-func ui_panel_init() -> void:
+func on_viewport_size_changed() -> void:
 	var vp_size := get_viewport().get_visible_rect().size
 	var 짧은길이 :float = min(vp_size.x, vp_size.y)
 	var panel_size := Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
@@ -42,8 +28,12 @@ func ui_panel_init() -> void:
 	$오른쪽패널.size = panel_size
 	$"오른쪽패널".custom_minimum_size = panel_size
 	$오른쪽패널.position = Vector2(vp_size.x/2 + 짧은길이/2, 0)
-func on_viewport_size_changed():
-	ui_panel_init()
+	var msgrect := Rect2( vp_size.x * 0.1 ,vp_size.y * 0.4 , vp_size.x * 0.8 , vp_size.y * 0.25 )
+	$TimedMessage.init(vp_size.y*0.05 , msgrect, "%s %s" % [
+			ProjectSettings.get_setting("application/config/name"),
+			ProjectSettings.get_setting("application/config/version") ] )
+func timed_message_hidden(_s :String) -> void:
+	pass
 
 func label_demo() -> void:
 	if $"오른쪽패널/LabelPerformance".visible:
@@ -63,9 +53,10 @@ Currently rendering: occlusion culling:%s
 
 
 func _ready() -> void:
+	on_viewport_size_changed()
 	get_viewport().size_changed.connect(on_viewport_size_changed)
-	ui_panel_init()
-	timed_message_init()
+	$TimedMessage.panel_hidden.connect(timed_message_hidden)
+	$TimedMessage.show_message("",0)
 	$OmniLight3D.position = Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
 	$CenterCameraLight.set_center_pos_far( Vector3(0, 0, -WorldSize.z), Vector3.ZERO, WorldSize.length()*3)
@@ -158,37 +149,23 @@ func animate_turbine_tree(delta :float) -> void:
 	for bt in sidetree_list:
 		bt.rotate_tree_bar_y(delta*10)
 
-var tornado_list :Array # [ turbine , colorinfo ]
+var tornado_list :Array # [ tornado , colorinfo ]
 func tornado_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
-		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	glasscabinet.show_wall_box(false)
 	for i in 4:
-		var tb = preload("res://turbine/turbine.tscn").instantiate(
-			).init_sample(WorldSize.x/2, WorldSize.y*0.3, 0.5, 4, random_color(),random_color())
+		var tb = preload("res://tornado/tornado.tscn").instantiate(
+			).init_sample(WorldSize.x/2, WorldSize.y*0.3, 0.5, random_color(),random_color())
 		glasscabinet.add_child(tb)
-		tb.rotation.x = -PI/2
 		tornado_list.append([tb, AnimateGradient.new()])
 
-func scale_lambda(t :float) -> Callable:
-	return func(rate):
-		var x = (cos(rate*PI*2 + t)+2) * (rate/4+0.25)
-		var y = (sin(rate*PI*2 + t)+2) * (rate/4+0.25)
-		return Vector3(x,y,1)
-func shift_lambda(t :float) -> Callable:
-	return func(rate):
-		return Vector3(cos(t), sin(t), 0) * rate * WorldSize.x/5
-func rotate_lambda(t :float) -> Callable:
-	return func(rate):
-		return 2*PI*rate*t
-
 func scale_tornado(rate):
-	return Vector3(rate,rate,1)*rate
+	return Vector3(rate,1,rate)*rate
 func shift_tornado_lambda(t :float) -> Callable:
 	return func(rate):
 		var period := 5
-		return Vector3(cos(rate*period), sin(rate*period), 0) * t * WorldSize.x/10
+		return Vector3(cos(rate*period),0, sin(rate*period)) * t * WorldSize.x/10
 
 func tornado_animate() -> void:
 	var t := Time.get_unix_time_from_system()
@@ -197,12 +174,11 @@ func tornado_animate() -> void:
 	var radius := WorldSize.z/2
 	for i in tornado_list.size():
 		var tt := t+ i
-		tornado_list[i][0].set_transform_all(scale_tornado, shift_tornado_lambda( sin(tt) ), rotate_lambda( sin(tt) ),Turbine.blade_rotate_lambda(rad/PI/2))
+		tornado_list[i][0].set_transform_all(scale_tornado, shift_tornado_lambda( sin(tt) ))
 		tornado_list[i][0].set_color_all(tornado_list[i][1].get_color1(),tornado_list[i][1].get_color2())
 		tornado_list[i][1].inc_rate()
 		tornado_list[i][0].position = Vector3(cos(i*unit_rad+t)*radius, sin(i*unit_rad+t*1.7)*radius/2, sin(i*unit_rad+t)*radius)
 		tornado_list[i][0].rotation.y = -rad*5
-
 
 var colorlist_dark :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
 var colorlist_light :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_light_color_list())
