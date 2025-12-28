@@ -68,13 +68,15 @@ func _ready() -> void:
 	timed_message_init()
 	$OmniLight3D.position = Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
-	$FixedCameraLight.set_center_pos_far( Vector3(0, 0, -WorldSize.z), Vector3.ZERO, WorldSize.length()*3)
-	#$FixedCameraLight.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
+	$CenterCameraLight.set_center_pos_far( Vector3(0, 0, -WorldSize.z), Vector3.ZERO, WorldSize.length()*3)
+	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
+	$MovingCameraLightHober.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
+	$MovingCameraLightAround.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
 	$AxisArrow3D.set_colors().set_size(WorldSize.length()/20)
 
 	make_glass_cabinet()
 	setup_demo_to_cabinet()
-	$FixedCameraLight.make_current()
+	$CenterCameraLight.make_current()
 	main_animation.animation_ended.connect(main_animation_ended)
 	start_all_animation()
 
@@ -121,26 +123,40 @@ func make_glass_cabinet() -> void:
 func random_color() -> Color:
 	return NamedColorList.color_list.pick_random()[0]
 
-var turbine_tree :Turbine
+var centertree :Turbine
+var sidetree_list :Array
 func turbine_tree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 		demo_name_to_glass_cabinet[labeltext] = glasscabinet
-	turbine_tree = preload("res://turbine/turbine.tscn").instantiate(
-		).init_basic(WorldSize.y, WorldSize.z/6, 1, 4
-		).set_transform_all(scale_tree, Turbine.shift_zero, Turbine.rotate_zero,
-		).set_color_all(random_color(),random_color())
-	glasscabinet.add_child(turbine_tree)
-	turbine_tree.rotation.x = PI/2
-	var tree_size := Vector3(WorldSize.z/3, WorldSize.y, WorldSize.z / 30)
+	#centertree = preload("res://turbine/turbine.tscn").instantiate(
+		#).init_basic(WorldSize.y, WorldSize.z/6, 1, 4
+		#).set_transform_all(scale_tree, Turbine.shift_zero, Turbine.rotate_zero,
+		#).set_color_all(random_color(),random_color())
+	#glasscabinet.add_child(centertree)
+	#centertree.rotation.x = PI/2
+	var tree_size := Vector3(WorldSize.z, WorldSize.y, WorldSize.z / 30)
 	var bar_count :int = WorldSize.y
 	var pos := Vector3(0.0,-WorldSize.y/2,0.0)
-	make_sub_tree(glasscabinet, tree_size, bar_count, 2.0, pos)
-	make_sub_tree(glasscabinet, tree_size, bar_count, -2.0, pos)
+	for i in 12:
+		var t = make_sub_tree_2(glasscabinet, tree_size, bar_count, 0.1 *i , pos)
+		t.rotation.y = PI/4 * i
+		t.rotate_tree_bar_y(PI*7)
 
 func scale_tree(rate):
 	return Vector3(rate,rate,1)
-
+func make_sub_tree_2(glasscabinet :GlassCabinet, tree_size :Vector3, bar_count :int, shift :float, pos :Vector3) -> BarTree:
+	var t = bartree_scene.instantiate()
+	glasscabinet.add_child(t)
+	t.position = pos
+	t.init_bartree_with_color(random_color(), random_color(), bar_count)
+	t.init_bartree_transform(tree_size, shift)
+	sidetree_list.append(t)
+	return t
+func animate_turbine_tree(delta :float) -> void:
+	return
+	for bt in sidetree_list:
+		bt.rotate_tree_bar_y(delta*10)
 
 var tornado_list :Array # [ turbine , colorinfo ]
 func tornado_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
@@ -460,15 +476,15 @@ func _process(delta: float) -> void:
 	for mt in meshtrail_list:
 		mt.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
 	tornado_animate()
+	animate_turbine_tree(delta)
 	$GlassCabinetContainer1.rotate_y(delta/10)
 	$GlassCabinetContainer2.rotate_y(-delta/10)
 
 	main_animation.handle_animation()
-	#var t := now /2.3
-	#if $FixedCameraLight.is_current_camera():
-		#$FixedCameraLight.move_hober_around_z(t, Vector3.ZERO, WorldSize.length(), WorldSize.length() )
-	#elif
-		#$FixedCameraLight.move_wave_around_y(t, Vector3.ZERO, WorldSize.length()/4, WorldSize.length()/10 )
+	if $MovingCameraLightHober.is_current_camera():
+		$MovingCameraLightHober.move_hober_around_z(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
+	elif $MovingCameraLightAround.is_current_camera():
+		$MovingCameraLightAround.move_wave_around_y(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
 
 func _on_카메라변경_pressed() -> void:
 	MovingCameraLight.NextCamera()
@@ -494,6 +510,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			var fi = FlyNode3D.Key2Info.get(event.keycode)
 			if fi != null:
 				FlyNode3D.fly_node3d($FixedCameraLight, fi)
+		elif $CenterCameraLight.is_current_camera():
+			var fi = FlyNode3D.Key2Info.get(event.keycode)
+			if fi != null:
+				FlyNode3D.fly_node3d($CenterCameraLight, fi)
 	elif event is InputEventMouseButton and event.is_pressed():
 		pass
 

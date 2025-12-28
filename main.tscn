@@ -82,8 +82,6 @@ sky_mode = 1
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_7mycd")
 
-[node name="FixedCameraLight" parent="." instance=ExtResource("8_5vw27")]
-
 [node name="TimerWheel" type="Timer" parent="."]
 one_shot = true
 
@@ -95,6 +93,14 @@ one_shot = true
 [node name="GlassCabinetContainer1" type="Node3D" parent="."]
 
 [node name="GlassCabinetContainer2" type="Node3D" parent="."]
+
+[node name="FixedCameraLight" parent="." instance=ExtResource("8_5vw27")]
+
+[node name="CenterCameraLight" parent="." instance=ExtResource("8_5vw27")]
+
+[node name="MovingCameraLightHober" parent="." instance=ExtResource("8_5vw27")]
+
+[node name="MovingCameraLightAround" parent="." instance=ExtResource("8_5vw27")]
 
 [connection signal="timeout" from="TimerWheel" to="." method="_on_timer_wheel_timeout"]
 [connection signal="timeout" from="TimerReel" to="." method="_on_timer_reel_timeout"]
