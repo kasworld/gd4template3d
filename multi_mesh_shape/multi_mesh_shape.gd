@@ -50,6 +50,40 @@ func init_bar_gauge_y(count :int, sz :Vector3, co1 :Color, co2 :Color, alpha :fl
 		set_inst_color(i, lerp(co1, co2, rate) )
 	return self
 
+func init_wire_box(box_size :Vector3, wire_width :float, co :Color, alpha :float = 1.0) -> MultiMeshShape:
+	init_with_alpha(BoxMesh.new(), 12, alpha, false)
+	set_color_all(co)
+	var wire_scale := Vector3(wire_width, wire_width, box_size.z)
+	var i := 0
+	for pos in [
+		Vector3( box_size.x/2,  box_size.y/2,0),
+		Vector3( -box_size.x/2,  box_size.y/2,0),
+		Vector3( box_size.x/2,  -box_size.y/2,0),
+		Vector3( -box_size.x/2,  -box_size.y/2,0),
+		]:
+			multimesh.set_instance_transform(i, Transform3D(Basis(), pos).scaled_local( wire_scale ))
+			i += 1
+	wire_scale = Vector3(box_size.x, wire_width, wire_width)
+	for pos in [
+		Vector3(0, box_size.y/2,  box_size.z/2),
+		Vector3(0, -box_size.y/2,  box_size.z/2),
+		Vector3(0, box_size.y/2,  -box_size.z/2),
+		Vector3(0, -box_size.y/2,  -box_size.z/2),
+		]:
+			multimesh.set_instance_transform(i, Transform3D(Basis(), pos).scaled_local( wire_scale ))
+			i += 1
+	wire_scale = Vector3(wire_width, box_size.y,  wire_width)
+	for pos in [
+		Vector3( box_size.x/2, 0,  box_size.z/2),
+		Vector3( -box_size.x/2, 0,  box_size.z/2),
+		Vector3( box_size.x/2, 0,  -box_size.z/2),
+		Vector3( -box_size.x/2, 0,  -box_size.z/2),
+		]:
+			multimesh.set_instance_transform(i, Transform3D(Basis(), pos).scaled_local( wire_scale ))
+			i += 1
+	return self
+
+
 # end example ##################################################################
 
 static func make_color_material(co :Color) -> StandardMaterial3D:
