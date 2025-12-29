@@ -2,21 +2,6 @@ extends Node3D
 
 const WorldSize := Vector3(160,90,80)
 
-const AnimationDuration := 1.0
-var main_animation := Animation3D.new()
-func main_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
-	if main_animation.is_empty():
-		start_all_animation()
-func start_rotate_animation(nd :Node3D, axis :int, ani_dur :float) -> void:
-	var diff :float = [PI/2,-PI/2].pick_random()
-	main_animation.start_rotate_subfield("ani_rot", nd, axis , nd.rotation[axis], nd.rotation[axis] + diff, ani_dur)
-func start_all_animation() -> void:
-	if arrow3d != null:
-		start_rotate_animation(arrow3d,
-			[Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random(),
-			AnimationDuration)
-	if valvehandle != null:
-		start_rotate_animation(valvehandle, Vector3.Axis.AXIS_Y, AnimationDuration)
 
 
 func on_viewport_size_changed() -> void:
@@ -68,8 +53,6 @@ func _ready() -> void:
 	make_glass_cabinet()
 	setup_demo_to_cabinet()
 	$CenterCameraLight.make_current()
-	main_animation.animation_ended.connect(main_animation_ended)
-	start_all_animation()
 
 var demo_name_to_glass_cabinet := {}
 func setup_demo_to_cabinet() -> void:
@@ -82,11 +65,11 @@ func setup_demo_to_cabinet() -> void:
 	maze3d_demo(glass_cabinet_list.pop_front(), "maze3d")
 	slotreel_demo(glass_cabinet_list.pop_front(), "slotreel")
 	wheel_demo(glass_cabinet_list.pop_front(), "roulettewheel" )
-	valvehandle_arrow3d_demo(glass_cabinet_list.pop_front(), "valvehandle,arrow3d")
+	props_demo(glass_cabinet_list.pop_front(), "props")
 	wirenet_wavegauge_demo(glass_cabinet_list.pop_front(), "wirenet,wavegauge")
 	wavegauge_demo(glass_cabinet_list.pop_front(), "wavegauge")
 	tornado_demo(glass_cabinet_list.pop_front(), "tornado")
-	turbine_tree_demo(glass_cabinet_list.pop_front(), "turbinetree")
+	platonic_solids_demo(glass_cabinet_list.pop_front(), "platonic solids")
 	print_debug("remain glass cabinet %d\ndemo size %s" % [
 		glass_cabinet_list.size(),demo_name_to_glass_cabinet.size()])
 
@@ -114,40 +97,37 @@ func make_glass_cabinet() -> void:
 func random_color() -> Color:
 	return NamedColorList.color_list.pick_random()[0]
 
-var centertree :Turbine
-var sidetree_list :Array
-func turbine_tree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
+var wire_cube :MultiMeshShape
+var wire_tetrahedron :MultiMeshShape
+func platonic_solids_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
-		demo_name_to_glass_cabinet[labeltext] = glasscabinet
-	#centertree = preload("res://turbine/turbine.tscn").instantiate(
-		#).init_basic(WorldSize.y, WorldSize.z/6, 1, 4
-		#).set_transform_all(scale_tree, Turbine.shift_zero, Turbine.rotate_zero,
-		#).set_color_all(random_color(),random_color())
-	#glasscabinet.add_child(centertree)
-	#centertree.rotation.x = PI/2
-	var tree_size := Vector3(WorldSize.z, WorldSize.y, WorldSize.z / 30)
-	var bar_count :int = WorldSize.y
-	var pos := Vector3(0.0,-WorldSize.y/2,0.0)
-	for i in 12:
-		var t = make_sub_tree_2(glasscabinet, tree_size, bar_count, 0.1 *i , pos)
-		t.rotation.y = PI/4 * i
-		t.rotate_tree_bar_y(PI*7)
 
-func scale_tree(rate):
-	return Vector3(rate,rate,1)
-func make_sub_tree_2(glasscabinet :GlassCabinet, tree_size :Vector3, bar_count :int, shift :float, pos :Vector3) -> BarTree:
-	var t = bartree_scene.instantiate()
-	glasscabinet.add_child(t)
-	t.position = pos
-	t.init_bartree_with_color(random_color(), random_color(), bar_count)
-	t.init_bartree_transform(tree_size, shift)
-	sidetree_list.append(t)
-	return t
-func animate_turbine_tree(delta :float) -> void:
-	return
-	for bt in sidetree_list:
-		bt.rotate_tree_bar_y(delta*10)
+	wire_cube = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
+		).init_wire_box( Vector3(20,20,20), 1, random_color())
+	glasscabinet.add_child(wire_cube)
+	wire_cube.position = Vector3(WorldSize.x/4, 0,0)
+	wire_tetrahedron = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
+		).multi_line_by_pos( MultiMeshShape.TetrahedronPoints, 1, random_color())
+	glasscabinet.add_child(wire_tetrahedron)
+	wire_tetrahedron.position = Vector3(-WorldSize.x/4, 0,0)
+	platonic_solids_animation.animation_ended.connect(platonic_solids_animation_ended)
+	start_platonic_solids_animation()
+
+var platonic_solids_animation := Animation3D.new()
+func platonic_solids_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
+	if platonic_solids_animation.is_empty():
+		start_platonic_solids_animation()
+func start_platonic_solids_animation() -> void:
+	var diff :float = [PI/2,-PI/2].pick_random()
+	var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
+	platonic_solids_animation.start_rotate_subfield(
+		"ani_rot", wire_cube, axis , wire_cube.rotation[axis], wire_cube.rotation[axis] + diff, 1.0)
+	diff = [PI/2,-PI/2].pick_random()
+	axis = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
+	platonic_solids_animation.start_rotate_subfield(
+		"ani_rot", wire_tetrahedron, axis , wire_tetrahedron.rotation[axis], wire_tetrahedron.rotation[axis] + diff, 1.0)
+
 
 var tornado_list :Array # [ tornado , colorinfo ]
 func tornado_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
@@ -317,7 +297,7 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 
 var arrow3d :Arrow3D
 var valvehandle :ValveHandle
-func valvehandle_arrow3d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
+func props_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 		demo_name_to_glass_cabinet[labeltext] = glasscabinet
@@ -330,6 +310,20 @@ func valvehandle_arrow3d_demo(glasscabinet :GlassCabinet, labeltext :String = ""
 		).init(WorldSize.x/10,WorldSize.x/10,4, random_color())
 	valvehandle.position = Vector3(-WorldSize.x/4, 0,0)
 	glasscabinet.add_child(valvehandle)
+	props_animation.animation_ended.connect(props_animation_ended)
+	start_props_animation()
+
+var props_animation := Animation3D.new()
+func props_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
+	if props_animation.is_empty():
+		start_props_animation()
+func start_props_animation() -> void:
+	var diff :float = [PI/2,-PI/2].pick_random()
+	var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
+	props_animation.start_rotate_subfield("ani_rot", arrow3d, axis , arrow3d.rotation[axis], arrow3d.rotation[axis] + diff, 1.0)
+	diff = [PI/2,-PI/2].pick_random()
+	axis = Vector3.Axis.AXIS_Y
+	props_animation.start_rotate_subfield("ani_rot", valvehandle, axis , valvehandle.rotation[axis], valvehandle.rotation[axis] + diff, 1.0)
 
 
 func line2d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
@@ -452,11 +446,10 @@ func _process(delta: float) -> void:
 	for mt in meshtrail_list:
 		mt.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
 	tornado_animate()
-	animate_turbine_tree(delta)
 	$GlassCabinetContainer1.rotate_y(delta/10)
 	$GlassCabinetContainer2.rotate_y(-delta/10)
-
-	main_animation.handle_animation()
+	platonic_solids_animation.handle_animation()
+	props_animation.handle_animation()
 	if $MovingCameraLightHober.is_current_camera():
 		$MovingCameraLightHober.move_hober_around_z(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
 	elif $MovingCameraLightAround.is_current_camera():
