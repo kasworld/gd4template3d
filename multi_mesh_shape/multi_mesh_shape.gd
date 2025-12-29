@@ -83,6 +83,29 @@ func init_wire_box(box_size :Vector3, wire_width :float, co :Color, alpha :float
 			i += 1
 	return self
 
+func multi_line_by_pos(pos_list:Array, wire_width :float, co :Color, alpha :float = 1.0) -> MultiMeshShape:
+	init_with_alpha(BoxMesh.new(), pos_list.size(), alpha, false)
+	set_color_all(co)
+	for i in pos_list.size():
+		var p1 :Vector3 = pos_list[i][0]
+		var p2 :Vector3 = pos_list[i][1]
+		var center := (p1+p2)/2
+		var l := p1.distance_to(p2)
+		var wire_scale := Vector3(wire_width, wire_width, l)
+		var t := Transform3D(Basis(), center)
+		t = t.looking_at(p2)
+		t = t.scaled_local(wire_scale)
+		multimesh.set_instance_transform(i,t)
+	return self
+
+const TetrahedronPoints := [
+		[Vector3(10,10,10), Vector3(10,-10,-10)],
+		[Vector3(10,10,10), Vector3(-10,10,-10)],
+		[Vector3(10,10,10), Vector3(-10,-10,10)],
+		[Vector3(10,-10,-10), Vector3(-10,10,-10)],
+		[Vector3(-10,10,-10), Vector3(-10,-10,10)],
+		[Vector3(-10,-10,10), Vector3(10,-10,-10)],
+	]
 
 # end example ##################################################################
 
