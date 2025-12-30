@@ -104,7 +104,7 @@ const TetrahedronPoints := [
 	Vector3(-1,1,-1),
 	Vector3(-1,-1,1),
 ]
-static var TetrahedronLines := PointListToLineList(TetrahedronPoints,3,10)
+static var TetrahedronLines := PointListToLineList(TetrahedronPoints,3)
 
 const OctahedronPoints := [
 	Vector3(1,0,0),
@@ -114,7 +114,7 @@ const OctahedronPoints := [
 	Vector3(0,-1,0),
 	Vector3(0,0,-1),
 ]
-static var OctahedronLines := PointListToLineList(OctahedronPoints,4,14)
+static var OctahedronLines := PointListToLineList(OctahedronPoints,4)
 
 static var golden_ratio := (1+sqrt(5))/2
 static var IcosahedronPoints :Array= [
@@ -131,7 +131,7 @@ static var IcosahedronPoints :Array= [
 	Vector3(-golden_ratio,0,1),
 	Vector3(-golden_ratio,0,-1),
 ]
-static var IcosahedronLines := PointListToLineList(IcosahedronPoints,5,8)
+static var IcosahedronLines := PointListToLineList(IcosahedronPoints,5)
 
 static var DodecahedronPoints := [
 	Vector3(1,1,1),
@@ -155,17 +155,22 @@ static var DodecahedronPoints := [
 	Vector3(-golden_ratio, 0, 1/golden_ratio),
 	Vector3(-golden_ratio, 0, -1/golden_ratio),
 ]
-static var DodecahedronLines := PointListToLineList(DodecahedronPoints,3,8)
+static var DodecahedronLines := PointListToLineList(DodecahedronPoints,3)
 
-static func PointListToLineList(point_list:Array, cut_count :int, m :float =1) -> Array:
-	var muliplied_point_list := []
-	# multiply_points
-	for p in point_list:
-		muliplied_point_list.append(p *m)
+static func MultiplyLineList(line_list :Array,  m :float) -> Array:
+	var rtn := []
+	for l in line_list:
+		var ml := []
+		for v in l:
+			ml.append(v*m)
+		rtn.append(ml)
+	return rtn
+
+static func PointListToLineList(point_list:Array, cut_count :int) -> Array:
 	var sorted_point_list_list := []
 	# 각 배열의 첫 원소와 가장 가까운 순으로 점들을 정렬한다.
-	for p :Vector3 in muliplied_point_list:
-		var plist := muliplied_point_list.duplicate()
+	for p :Vector3 in point_list:
+		var plist := point_list.duplicate()
 		plist.sort_custom(func(a , b): return p.distance_to(a) < p.distance_to(b))
 		sorted_point_list_list.append(plist)
 	# make_line_from_sorted_point_list_list
