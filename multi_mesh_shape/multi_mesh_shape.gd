@@ -99,13 +99,28 @@ func multi_line_by_pos(pos_list:Array, wire_width :float, co :Color, alpha :floa
 	return self
 
 const TetrahedronPoints := [
-		[Vector3(10,10,10), Vector3(10,-10,-10)],
-		[Vector3(10,10,10), Vector3(-10,10,-10)],
-		[Vector3(10,10,10), Vector3(-10,-10,10)],
-		[Vector3(10,-10,-10), Vector3(-10,10,-10)],
-		[Vector3(-10,10,-10), Vector3(-10,-10,10)],
-		[Vector3(-10,-10,10), Vector3(10,-10,-10)],
-	]
+	[Vector3(10,10,10), Vector3(10,-10,-10)],
+	[Vector3(10,10,10), Vector3(-10,10,-10)],
+	[Vector3(10,10,10), Vector3(-10,-10,10)],
+	[Vector3(10,-10,-10), Vector3(-10,10,-10)],
+	[Vector3(-10,10,-10), Vector3(-10,-10,10)],
+	[Vector3(-10,-10,10), Vector3(10,-10,-10)],
+]
+
+const OctahedronPoints := [
+	[Vector3(10,0,0), Vector3(0,10,0)],
+	[Vector3(10,0,0), Vector3(0,0,10)],
+	[Vector3(10,0,0), Vector3(0,-10,0)],
+	[Vector3(10,0,0), Vector3(0,0,-10)],
+	[Vector3(-10,0,0), Vector3(0,10,0)],
+	[Vector3(-10,0,0), Vector3(0,0,10)],
+	[Vector3(-10,0,0), Vector3(0,-10,0)],
+	[Vector3(-10,0,0), Vector3(0,0,-10)],
+	[Vector3(0,10,0), Vector3(0,0,10)],
+	[Vector3(0,0,10), Vector3(0,-10,0)],
+	[Vector3(0,-10,0), Vector3(0,0,-10)],
+	[Vector3(0,0,-10), Vector3(0,10,0)],
+]
 
 # end example ##################################################################
 
