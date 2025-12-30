@@ -138,41 +138,59 @@ static var IcosahedronPoints :Array= [
 	Vector3(-golden_ratio,0,-1),
 ]
 
-static var IcosahedronLines := make_line_from_sorted_point_list(
-	sort_points_for_line(
-		multiply_points(IcosahedronPoints,10)
-	),5)
+static var IcosahedronLines := PointListToLineList(IcosahedronPoints,5,10)
 
-static func multiply_points(point_list:Array, m :float) -> Array:
-	var rtn := []
+static var DodecahedronPoints := [
+	Vector3(1,1,1),
+	Vector3(-1,1,1),
+	Vector3(1,-1,1),
+	Vector3(-1,-1,1),
+	Vector3(1,1,-1),
+	Vector3(-1,1,-1),
+	Vector3(1,-1,-1),
+	Vector3(-1,-1,-1),
+	Vector3(0, 1/golden_ratio, golden_ratio),
+	Vector3(0, -1/golden_ratio, golden_ratio),
+	Vector3(0, 1/golden_ratio, -golden_ratio),
+	Vector3(0, -1/golden_ratio, -golden_ratio),
+	Vector3(1/golden_ratio, golden_ratio, 0),
+	Vector3(-1/golden_ratio, golden_ratio, 0),
+	Vector3(1/golden_ratio, -golden_ratio, 0),
+	Vector3(-1/golden_ratio, -golden_ratio, 0),
+	Vector3(golden_ratio, 0, 1/golden_ratio),
+	Vector3(golden_ratio, 0, -1/golden_ratio),
+	Vector3(-golden_ratio, 0, 1/golden_ratio),
+	Vector3(-golden_ratio, 0, -1/golden_ratio),
+]
+
+static var DodecahedronLines := PointListToLineList(DodecahedronPoints,3,10)
+
+static func PointListToLineList(point_list:Array, cut_count :int, m :float =1) -> Array:
+	var muliplied_point_list := []
+	# multiply_points
 	for p in point_list:
-		rtn.append(p *m)
-	return rtn
-
-# 각 배열의 첫 원소와 가장 가까운 순으로 점들을 정렬한다.
-static func sort_points_for_line(point_list :Array) -> Array:
-	var rtn := []
-	for p :Vector3 in point_list:
-		var plist := point_list.duplicate()
+		muliplied_point_list.append(p *m)
+	var sorted_point_list_list := []
+	# 각 배열의 첫 원소와 가장 가까운 순으로 점들을 정렬한다.
+	for p :Vector3 in muliplied_point_list:
+		var plist := muliplied_point_list.duplicate()
 		plist.sort_custom(func(a , b): return p.distance_to(a) < p.distance_to(b))
-		rtn.append(plist)
-	return rtn
-
-static func make_line_from_sorted_point_list(sorted_point_list :Array, cut_count :int) -> Array:
-	var rtn := []
-	for v in sorted_point_list:
+		sorted_point_list_list.append(plist)
+	# make_line_from_sorted_point_list_list
+	var line_list := []
+	for v in sorted_point_list_list:
 		for i in cut_count:
-			# for del duplicated line
+			# prepare del duplicated line
 			if v[0] < v[1+i]:
-				rtn.append([v[0], v[1+i]])
+				line_list.append([v[0], v[1+i]])
 			else:
-				rtn.append([v[1+i], v[0]])
-	rtn.sort_custom(func(a,b): return a < b)
-	var rtn2 := []
-	for i in range(0,rtn.size(),2):
-		rtn2.append(rtn[i])
-	return rtn2
-
+				line_list.append([v[1+i], v[0]])
+	line_list.sort_custom(func(a,b): return a < b)
+	var rtn := []
+	# del duplicated line
+	for i in range(0,line_list.size(),2):
+		rtn.append(line_list[i])
+	return rtn
 
 # end example ##################################################################
 

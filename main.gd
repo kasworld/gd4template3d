@@ -101,6 +101,7 @@ var wire_cube :MultiMeshShape
 var wire_tetrahedron :MultiMeshShape
 var wire_octahedron :MultiMeshShape
 var wire_icosahedron :MultiMeshShape
+var wire_dodecahedron :MultiMeshShape
 func platonic_solids_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
@@ -108,11 +109,13 @@ func platonic_solids_demo(glasscabinet :GlassCabinet, labeltext :String = "") ->
 	wire_cube = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).init_wire_box( Vector3(20,20,20), 1, random_color())
 	glasscabinet.add_child(wire_cube)
-	wire_cube.position = Vector3(WorldSize.x/4, 0,0)
+	wire_cube.position = Vector3(WorldSize.x/4, WorldSize.y/4,0)
+
 	wire_tetrahedron = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).multi_line_by_pos( MultiMeshShape.TetrahedronLines, 1, random_color())
 	glasscabinet.add_child(wire_tetrahedron)
-	wire_tetrahedron.position = Vector3(-WorldSize.x/4, 0,0)
+	wire_tetrahedron.position = Vector3(-WorldSize.x/4, WorldSize.y/4,0)
+
 	wire_octahedron = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).multi_line_by_pos( MultiMeshShape.OctahedronLines, 1, random_color())
 	glasscabinet.add_child(wire_octahedron)
@@ -121,7 +124,12 @@ func platonic_solids_demo(glasscabinet :GlassCabinet, labeltext :String = "") ->
 	wire_icosahedron = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).multi_line_by_pos( MultiMeshShape.IcosahedronLines, 1, random_color())
 	glasscabinet.add_child(wire_icosahedron)
-	wire_icosahedron.position = Vector3(0,-WorldSize.y/4,0)
+	wire_icosahedron.position = Vector3(-WorldSize.x/4,-WorldSize.y/4,0)
+
+	wire_dodecahedron = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
+		).multi_line_by_pos( MultiMeshShape.DodecahedronLines, 1, random_color())
+	glasscabinet.add_child(wire_dodecahedron)
+	wire_dodecahedron.position = Vector3(WorldSize.x/4,-WorldSize.y/4,0)
 
 	platonic_solids_animation.animation_ended.connect(platonic_solids_animation_ended)
 	start_platonic_solids_animation()
@@ -147,6 +155,10 @@ func start_platonic_solids_animation() -> void:
 	axis = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
 	platonic_solids_animation.start_rotate_subfield(
 		"ani_rot", wire_icosahedron, axis , wire_icosahedron.rotation[axis], wire_icosahedron.rotation[axis] + diff, 1.0)
+	diff = [PI/2,-PI/2].pick_random()
+	axis = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
+	platonic_solids_animation.start_rotate_subfield(
+		"ani_rot", wire_dodecahedron, axis , wire_dodecahedron.rotation[axis], wire_dodecahedron.rotation[axis] + diff, 1.0)
 
 
 var tornado_list :Array # [ tornado , colorinfo ]
