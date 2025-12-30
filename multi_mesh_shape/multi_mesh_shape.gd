@@ -98,7 +98,7 @@ func multi_line_by_pos(pos_list:Array, wire_width :float, co :Color, alpha :floa
 		multimesh.set_instance_transform(i,t)
 	return self
 
-const TetrahedronPoints := [
+const TetrahedronLines := [
 	[Vector3(10,10,10), Vector3(10,-10,-10)],
 	[Vector3(10,10,10), Vector3(-10,10,-10)],
 	[Vector3(10,10,10), Vector3(-10,-10,10)],
@@ -107,7 +107,7 @@ const TetrahedronPoints := [
 	[Vector3(-10,-10,10), Vector3(10,-10,-10)],
 ]
 
-const OctahedronPoints := [
+const OctahedronLines := [
 	[Vector3(10,0,0), Vector3(0,10,0)],
 	[Vector3(10,0,0), Vector3(0,0,10)],
 	[Vector3(10,0,0), Vector3(0,-10,0)],
@@ -121,6 +121,58 @@ const OctahedronPoints := [
 	[Vector3(0,-10,0), Vector3(0,0,-10)],
 	[Vector3(0,0,-10), Vector3(0,10,0)],
 ]
+
+static var golden_ratio := (1+sqrt(5))/2
+static var IcosahedronPoints :Array= [
+	Vector3(0,1,golden_ratio),
+	Vector3(0,-1,golden_ratio),
+	Vector3(0,1,-golden_ratio),
+	Vector3(0,-1,-golden_ratio),
+	Vector3(1,golden_ratio,0),
+	Vector3(-1,golden_ratio,0),
+	Vector3(1,-golden_ratio,0),
+	Vector3(-1,-golden_ratio,0),
+	Vector3(golden_ratio,0,1),
+	Vector3(golden_ratio,0,-1),
+	Vector3(-golden_ratio,0,1),
+	Vector3(-golden_ratio,0,-1),
+]
+
+static var IcosahedronLines := make_line_from_sorted_point_list(
+	sort_points_for_line(
+		multiply_points(IcosahedronPoints,10)
+	),5)
+
+static func multiply_points(point_list:Array, m :float) -> Array:
+	var rtn := []
+	for p in point_list:
+		rtn.append(p *m)
+	return rtn
+
+# 각 배열의 첫 원소와 가장 가까운 순으로 점들을 정렬한다.
+static func sort_points_for_line(point_list :Array) -> Array:
+	var rtn := []
+	for p :Vector3 in point_list:
+		var plist := point_list.duplicate()
+		plist.sort_custom(func(a , b): return p.distance_to(a) < p.distance_to(b))
+		rtn.append(plist)
+	return rtn
+
+static func make_line_from_sorted_point_list(sorted_point_list :Array, cut_count :int) -> Array:
+	var rtn := []
+	for v in sorted_point_list:
+		for i in cut_count:
+			# for del duplicated line
+			if v[0] < v[1+i]:
+				rtn.append([v[0], v[1+i]])
+			else:
+				rtn.append([v[1+i], v[0]])
+	rtn.sort_custom(func(a,b): return a < b)
+	var rtn2 := []
+	for i in range(0,rtn.size(),2):
+		rtn2.append(rtn[i])
+	return rtn2
+
 
 # end example ##################################################################
 
