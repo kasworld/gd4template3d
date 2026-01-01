@@ -7,6 +7,7 @@ func init(box_size :Vector3) -> GlassCabinet:
 	$AxisArrow3D.set_size(box_size.length()/10).set_colors()
 	$Label3D.pixel_size = box_size.y/200
 	$Label3D.position = Vector3(0,-box_size.y/2,box_size.z/2)
+	$WireBox.init_wire_box( box_size, box_size.length()/200, Color.WHITE)
 	return self
 
 func show_axis_arrow(b :bool = true) -> GlassCabinet:
@@ -16,8 +17,15 @@ func show_axis_arrow(b :bool = true) -> GlassCabinet:
 func show_wall_box(b :bool = true) -> GlassCabinet:
 	$WallBox.visible = b
 	return self
-func set_box_color(co :Color) -> GlassCabinet:
+func set_wall_box_color(co :Color) -> GlassCabinet:
 	$WallBox.mesh.material.albedo_color = co
+	return self
+
+func show_wire_box(b :bool = true) -> GlassCabinet:
+	$WireBox.visible = b
+	return self
+func set_wire_box_color(co :Color) -> GlassCabinet:
+	$WireBox.set_color_all(co)
 	return self
 
 func show_label(b :bool = true) -> GlassCabinet:

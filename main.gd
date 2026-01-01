@@ -389,7 +389,7 @@ func orbit_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 		demo_name_to_glass_cabinet[labeltext] = glasscabinet
-	glasscabinet.set_box_color(Color(Color.WHITE,0.2))
+	glasscabinet.set_wall_box_color(Color(Color.WHITE,0.2))
 	for i in 9:
 		add_orbitsphere(glasscabinet, i)
 func add_orbitsphere(glasscabinet :GlassCabinet, i :int) -> void:
