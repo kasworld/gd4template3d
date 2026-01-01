@@ -70,6 +70,7 @@ func setup_demo_to_cabinet() -> void:
 	wavegauge_demo(glass_cabinet_list.pop_front(), "wavegauge")
 	tornado_demo(glass_cabinet_list.pop_front(), "tornado")
 	platonic_solids_demo(glass_cabinet_list.pop_front(), "platonic solids")
+	line_tree_demo(glass_cabinet_list.pop_front(), "winter tree")
 	print_debug("remain glass cabinet %d\ndemo size %s" % [
 		glass_cabinet_list.size(),demo_name_to_glass_cabinet.size()])
 
@@ -96,6 +97,15 @@ func make_glass_cabinet() -> void:
 
 func random_color() -> Color:
 	return NamedColorList.color_list.pick_random()[0]
+
+var line_tree :LineTree
+func line_tree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
+	if labeltext != "":
+		glasscabinet.set_label_text(labeltext)
+	line_tree = preload("res://line_tree/line_tree.tscn").instantiate(
+		).init(WorldSize.y, WorldSize.z/2, random_color(),random_color())
+	glasscabinet.add_child(line_tree)
+	line_tree.position.y = -WorldSize.y/2
 
 var wire_cube :MultiMeshShape
 var wire_tetrahedron :MultiMeshShape
@@ -478,6 +488,7 @@ func _process(delta: float) -> void:
 	for mt in meshtrail_list:
 		mt.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
 	tornado_animate()
+	line_tree.rotate_y(delta)
 	$GlassCabinetContainer1.rotate_y(delta/10)
 	$GlassCabinetContainer2.rotate_y(-delta/10)
 	platonic_solids_animation.handle_animation()
