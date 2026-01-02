@@ -103,9 +103,26 @@ func line_tree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 	line_tree = preload("res://line_tree/line_tree.tscn").instantiate(
-		).init(WorldSize.y, WorldSize.z/2, random_color(),random_color())
+		).init(WorldSize.y, WorldSize.z/2).set_color(random_color(), random_color(),random_color())
 	glasscabinet.add_child(line_tree)
 	line_tree.position.y = -WorldSize.y/2
+	line_tree_inst_index = line_tree.make_index_array()
+	linetree_color_animate()
+
+var line_tree_inst_index :Array
+func linetree_color_animate() -> void:
+	var lines := line_tree.get_lines()
+	for a in line_tree_inst_index:
+		var co := random_color()
+		for i in a:
+			lines.set_inst_color(i, co)
+
+func linetree_color_animate2() -> void:
+	var lines := line_tree.get_lines()
+	var a :Array = line_tree_inst_index.pick_random()
+	var co := random_color()
+	for i in a:
+		lines.set_inst_color(i, co)
 
 var wire_cube :MultiMeshShape
 var wire_tetrahedron :MultiMeshShape
@@ -489,6 +506,7 @@ func _process(delta: float) -> void:
 		mt.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
 	tornado_animate()
 	line_tree.rotate_y(delta)
+	linetree_color_animate2()
 	$GlassCabinetContainer1.rotate_y(delta/10)
 	$GlassCabinetContainer2.rotate_y(-delta/10)
 	platonic_solids_animation.handle_animation()
