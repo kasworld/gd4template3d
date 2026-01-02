@@ -8,6 +8,10 @@ func init(box_size :Vector3) -> GlassCabinet:
 	$Label3D.pixel_size = box_size.y/200
 	$Label3D.position = Vector3(0,-box_size.y/2,box_size.z/2)
 	$WireBox.init_wire_box( box_size, box_size.length()/200, Color.WHITE)
+	$Points.init_spheres_by_point_list(
+		MultiMeshShape.MultiplyPointList(MultiMeshShape.CubePoints, box_size/2),
+		box_size.length()/200, Color.WHITE,
+	)
 	return self
 
 func show_axis_arrow(b :bool = true) -> GlassCabinet:
@@ -27,6 +31,14 @@ func show_wire_box(b :bool = true) -> GlassCabinet:
 func set_wire_box_color(co :Color) -> GlassCabinet:
 	$WireBox.set_color_all(co)
 	return self
+
+func show_points(b :bool = true) -> GlassCabinet:
+	$Points.visible = b
+	return self
+func set_points_color(co :Color) -> GlassCabinet:
+	$Points.set_color_all(co)
+	return self
+
 
 func show_label(b :bool = true) -> GlassCabinet:
 	$Label3D.visible = b

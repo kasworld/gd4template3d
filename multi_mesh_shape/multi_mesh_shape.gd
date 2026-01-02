@@ -83,6 +83,17 @@ func init_wire_box(box_size :Vector3, wire_width :float, co :Color, alpha :float
 			i += 1
 	return self
 
+func init_spheres_by_point_list(point_list :Array, point_radius :float, co :Color, alpha :float = 1.0) -> MultiMeshShape:
+	var sp_mesh := SphereMesh.new()
+	sp_mesh.radius = point_radius
+	sp_mesh.height = point_radius*2
+	init_with_alpha(sp_mesh, point_list.size(), alpha, false)
+	set_color_all(co)
+	for i in point_list.size():
+		var pos  = point_list[i]
+		multimesh.set_instance_transform(i, Transform3D(Basis(), pos))
+	return self
+
 func multi_line_by_pos(pos_list:Array, wire_width :float, co :Color, alpha :float = 1.0) -> MultiMeshShape:
 	init_with_alpha(BoxMesh.new(), pos_list.size(), alpha, false)
 	set_color_all(co)
@@ -97,6 +108,18 @@ func multi_line_by_pos(pos_list:Array, wire_width :float, co :Color, alpha :floa
 		t = t.scaled_local(wire_scale)
 		multimesh.set_instance_transform(i,t)
 	return self
+
+const CubePoints := [
+	Vector3(1,1,1),
+	Vector3(-1,1,1),
+	Vector3(1,-1,1),
+	Vector3(-1,-1,1),
+	Vector3(1,1,-1),
+	Vector3(-1,1,-1),
+	Vector3(1,-1,-1),
+	Vector3(-1,-1,-1),
+]
+static var CubeLines := PointListToLineList(CubePoints,3)
 
 const TetrahedronPoints := [
 	Vector3(1,1,1),
@@ -166,6 +189,14 @@ static func MultiplyLineList(line_list :Array,  m :float) -> Array:
 		rtn.append(ml)
 	return rtn
 
+## m can float, Vector3
+static func MultiplyPointList(point_list :Array, m ) -> Array:
+	var rtn := []
+	for l in point_list:
+		rtn.append(l*m)
+	return rtn
+
+## cut_count : edge count per vertex
 static func PointListToLineList(point_list:Array, cut_count :int) -> Array:
 	var sorted_point_list_list := []
 	# 각 배열의 첫 원소와 가장 가까운 순으로 점들을 정렬한다.
