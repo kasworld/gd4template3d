@@ -1,7 +1,6 @@
 extends Node3D
 class_name LineTree
 
-
 func get_lines() -> MultiMeshShape:
 	return $Lines
 
@@ -13,7 +12,7 @@ func set_gradient_color( co1 :Color, co2 :Color) -> LineTree:
 	$Lines.set_gradient_color_all(co1,co2)
 	return self
 
-func init(h :float, w :float, y_count :int, line_width :float = 0.5, stage_count :int=5) -> LineTree:
+func init(mesh :Mesh, h :float, w :float, y_count :int, w_branch_density :float = PI, line_width :float = 0.5, stage_count :int=5) -> LineTree:
 	$"중심기둥".mesh.top_radius = w/1000
 	$"중심기둥".mesh.bottom_radius = w/100
 	$"중심기둥".mesh.height = h
@@ -24,8 +23,8 @@ func init(h :float, w :float, y_count :int, line_width :float = 0.5, stage_count
 		var y := y_step * yi
 		var rate := 1-float(yi) / float(y_count)
 		var r :float= lerp(w/100, w/2, rate ) + fposmod(rate*h, h/stage_count)*rate
-		lines.append_array(make_lines(y, y_step, w*1.5*(rate+0.1), 10*rate,r))
-	$Lines.multi_line_by_pos(lines, line_width, Color.WHITE)
+		lines.append_array(make_lines(y, y_step, w*w_branch_density*(rate+0.1), 10*rate, r))
+	$Lines.multi_mesh_line_by_pos(mesh, lines, line_width, Color.WHITE)
 	return self
 
 func make_lines(start_y :float, y_step :float, count :int, h :float, r :float) -> Array:
