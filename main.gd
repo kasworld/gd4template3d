@@ -107,59 +107,51 @@ func line_tree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	glasscabinet.add_child(line_tree)
 	line_tree.position.y = -WorldSize.y/2
 	line_tree_inst_index = line_tree.make_index_array()
-	#linetree_color_animate()
 
+enum AniDir { Up, Down, Left , Right }
 var line_tree_inst_index :Array
-var rgb_index :int = 0
-var rgb_data := [[0],[1],[2],[0,1],[1,2],[2,0], [0,1,2]]
+var color_fn_args := ShuffleIter.new( [[0],[1],[2],[0,1],[1,2],[2,0], [0,1,2]] )
+var color_fn :Callable = RandomColor.pure_color
+var ani_dir_data := ShuffleIter.new( [AniDir.Up, AniDir.Down, AniDir.Left , AniDir.Right] )
 var change_count := 0
-var forward_dir :bool = true
-func linetree_color_animate2() -> void:
-	var lines :MultiMeshShape = line_tree.get_lines()
-	var a :Array
-	if forward_dir:
-		a = line_tree_inst_index[change_count]
-	else:
-		a = line_tree_inst_index[-change_count-1]
-	var co :Color = RandomColor.rate_color(rgb_data[rgb_index])
-	for i in a:
-		lines.set_inst_color(i, co)
-	change_count +=1
-	if change_count >= line_tree_inst_index.size():
-		change_count = 0
-		rgb_index += 1
-		rgb_index %= rgb_data.size()
-
-func linetree_color_animate3() -> void:
-	var lines :MultiMeshShape = line_tree.get_lines()
-	var co :Color = RandomColor.rate_color(rgb_data[rgb_index])
-	if forward_dir:
-		for a :Array in line_tree_inst_index:
-			var i = a.pop_front()
-			lines.set_inst_color(i, co)
-			a.push_back(i)
-	else:
-		for a :Array in line_tree_inst_index:
-			var i = a.pop_back()
-			lines.set_inst_color(i, co)
-			a.push_front(i)
-	change_count +=1
-	if change_count >= line_tree_inst_index[-1].size():
-		change_count = 0
-		rgb_index += 1
-		rgb_index %= rgb_data.size()
-		if rgb_index == 0:
-			line_tree_inst_index = line_tree.make_index_array()
-
-var linetree_color_animate_fn :Callable = linetree_color_animate2
 func linetree_color_animate() -> void:
-	linetree_color_animate_fn.call()
-	if change_count == 0 and rgb_index == 0:
-		if linetree_color_animate_fn == linetree_color_animate2:
-			linetree_color_animate_fn = linetree_color_animate3
-		else:
-			linetree_color_animate_fn = linetree_color_animate2
-			forward_dir = not forward_dir
+	var lines :MultiMeshShape = line_tree.get_lines()
+	var co :Color = color_fn.call(color_fn_args.get_current())
+	var ani_ended :bool = false
+	match ani_dir_data.get_current():
+		AniDir.Up:
+			for i in line_tree_inst_index[-change_count-1]:
+				lines.set_inst_color(i, co)
+			change_count +=1
+			ani_ended = change_count >= line_tree_inst_index.size()
+		AniDir.Down:
+			for i in line_tree_inst_index[change_count]:
+				lines.set_inst_color(i, co)
+			change_count +=1
+			ani_ended = change_count >= line_tree_inst_index.size()
+		AniDir.Left:
+			for a :Array in line_tree_inst_index:
+				if change_count >= a.size():
+					continue
+				var i = a[change_count]
+				lines.set_inst_color(i, co)
+			change_count +=1
+			ani_ended = change_count >= line_tree_inst_index[-1].size()
+		AniDir.Right:
+			for a :Array in line_tree_inst_index:
+				if change_count >= a.size():
+					continue
+				var i = a[-change_count-1]
+				lines.set_inst_color(i, co)
+			change_count +=1
+			ani_ended = change_count >= line_tree_inst_index[-1].size()
+
+	if ani_ended:
+		color_fn_args.get_next()
+		ani_dir_data.get_next()
+		change_count = 0
+		color_fn = [RandomColor.pure_color, RandomColor.rate_color].pick_random()
+
 
 var wire_cube :MultiMeshShape
 var wire_tetrahedron :MultiMeshShape

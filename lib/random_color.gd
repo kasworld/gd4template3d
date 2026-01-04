@@ -24,9 +24,9 @@ static func rate_color(high_index_list :Array, rate :float=0.6) -> Color:
 			rtn[i] = randf_range(0,1-rate)
 	return rtn
 
-static func pure_color(index_list :Array) -> Color:
+static func pure_color(index_list :Array, begin :float = 0.0, end :float = 1.0) -> Color:
 	var rtn := Color(0,0,0)
-	var v := randf()
+	var v := randf_range(begin, end)
 	for i in index_list:
 		rtn[i] = v
 	return rtn
