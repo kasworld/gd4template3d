@@ -41,6 +41,9 @@ layout_mode = 2
 [node name="LabelWheel" type="Label" parent="왼쪽패널"]
 layout_mode = 2
 
+[node name="LabelTree" type="Label" parent="왼쪽패널"]
+layout_mode = 2
+
 [node name="오른쪽패널" type="VBoxContainer" parent="."]
 modulate = Color(1, 1, 1, 0.501961)
 offset_right = 344.0
