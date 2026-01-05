@@ -222,7 +222,7 @@ func start_platonic_solids_animation() -> void:
 		"ani_rot", wire_dodecahedron, axis , wire_dodecahedron.rotation[axis], wire_dodecahedron.rotation[axis] + diff, 1.0)
 
 
-var tornado_list :Array # [ tornado , colorinfo ]
+var tornado_list :Array # [ tornado , AnimateGradient , AnimateGradient ]
 func tornado_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
@@ -231,7 +231,7 @@ func tornado_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 		var tb = preload("res://tornado/tornado.tscn").instantiate(
 			).init_sample(WorldSize.x/2, WorldSize.y*0.3, 0.5, random_color(),random_color())
 		glasscabinet.add_child(tb)
-		tornado_list.append([tb, AnimateGradient.new()])
+		tornado_list.append([tb, AnimateGradient.new(), AnimateGradient.new()])
 
 func scale_tornado(rate):
 	return Vector3(rate,1,rate)*rate
@@ -248,8 +248,9 @@ func tornado_animate() -> void:
 	for i in tornado_list.size():
 		var tt := t+ i
 		tornado_list[i][0].set_transform_all(scale_tornado, shift_tornado_lambda( sin(tt) ))
-		tornado_list[i][0].set_color_all(tornado_list[i][1].get_color1(),tornado_list[i][1].get_color2())
+		tornado_list[i][0].set_color_all(tornado_list[i][1].get_color(),tornado_list[i][2].get_color())
 		tornado_list[i][1].inc_rate()
+		tornado_list[i][2].inc_rate()
 		tornado_list[i][0].position = Vector3(cos(i*unit_rad+t)*radius, sin(i*unit_rad+t*1.7)*radius/2, sin(i*unit_rad+t)*radius)
 		tornado_list[i][0].rotation.y = -rad*5
 
