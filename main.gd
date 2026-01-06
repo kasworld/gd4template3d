@@ -368,12 +368,13 @@ func meshtrail_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	bound_aabb = AABB( -WorldSize/2, WorldSize)
 	var mesh := BoxMesh.new()
+	mesh.material = MultiMeshShape.make_color_material()
 	mesh.size = Vector3(trailmesh_radius*3, trailmesh_radius /5, trailmesh_radius/5)
 	for i in 10:
 		make_meshtrail(glasscabinet, randi_range(0,4), mesh, 100, bound_aabb.get_center())
 func make_meshtrail(glasscabinet :GlassCabinet, mt_type:int, mesh :Mesh, count :int, pos :Vector3 ) -> void:
 	var mt = preload("res://mesh_trail/mesh_trail.tscn").instantiate(
-		).init_with_alpha(mesh, count,  1.0 ,true, pos,
+		).init_with_color_mesh(mesh, count, true, pos,
 		).set_speed(trailmesh_radius*20,trailmesh_radius*40)
 	glasscabinet.add_child(mt)
 	meshtrail_list.append(mt)

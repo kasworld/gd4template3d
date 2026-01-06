@@ -25,13 +25,14 @@ func init_basic(count :int, radius :float, ring_height :float) -> Tornado:
 
 func _init_rings(rings :MultiMeshShape, count :int, radius :float, ring_height :float, flip_faces :bool) -> void:
 	var ring_mesh := CylinderMesh.new()
+	ring_mesh.material = MultiMeshShape.make_color_material(0.9)
 	ring_mesh.cap_bottom = false
 	ring_mesh.cap_top = false
 	ring_mesh.top_radius = radius
 	ring_mesh.bottom_radius = radius
 	ring_mesh.height = ring_height
 	ring_mesh.flip_faces = flip_faces
-	rings.init_with_alpha(ring_mesh, count, 0.9, false)
+	rings.init_with_color_mesh(ring_mesh, count, false)
 
 func set_transform_all(scale_fn :Callable,shift_fn :Callable) -> Tornado:
 	var count :int = $RingsOut.multimesh.visible_instance_count
