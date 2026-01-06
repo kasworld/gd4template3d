@@ -104,7 +104,7 @@ func line_tree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	var bmesh := PrismMesh.new()
 	bmesh.size = Vector3(1,0.3,1)
 	line_tree = preload("res://line_tree/line_tree.tscn").instantiate(
-		).init(bmesh, WorldSize.y, WorldSize.z/2, WorldSize.y, PI, 1.0,
+		).init(bmesh, WorldSize.y, WorldSize.z/2, WorldSize.y*2, PI, 1.0,
 		).set_center_color(Color.GREEN)
 	glasscabinet.add_child(line_tree)
 	$"왼쪽패널/LabelTree".text = "branch count %d" % [ line_tree.get_lines().multimesh.instance_count ]
@@ -155,7 +155,11 @@ func linetree_animate(delta :float) -> void:
 		color_fn_args.get_next()
 		ani_dir_data.get_next()
 		change_count = 0
-		color_fn = [RandomColor.pure_color, RandomColor.rate_color].pick_random()
+		color_fn = [RandomColor.pure_color, RandomColor.rate_color, random_color2].pick_random()
+
+var named_color_list := ShuffleIter.new(NamedColorList.color_list)
+func random_color2(_arg ) -> Color:
+	return named_color_list.get_next()[0]
 
 
 var wire_cube :MultiMeshShape

@@ -87,11 +87,13 @@ func init_spheres_by_point_list(point_list :Array, point_radius :float, co :Colo
 	var sp_mesh := SphereMesh.new()
 	sp_mesh.radius = point_radius
 	sp_mesh.height = point_radius*2
-	init_with_alpha(sp_mesh, point_list.size(), alpha, false)
+	return init_meshs_by_point_list(sp_mesh, point_list, co, alpha)
+
+func init_meshs_by_point_list(mesh :Mesh, point_list :Array, co :Color, alpha :float = 1.0) -> MultiMeshShape:
+	init_with_alpha(mesh, point_list.size(), alpha, false)
 	set_color_all(co)
 	for i in point_list.size():
-		var pos  = point_list[i]
-		multimesh.set_instance_transform(i, Transform3D(Basis(), pos))
+		multimesh.set_instance_transform(i, Transform3D(Basis(), point_list[i]))
 	return self
 
 func multi_line_by_pos(pos_list:Array, wire_width :float, co :Color, alpha :float = 1.0) -> MultiMeshShape:
