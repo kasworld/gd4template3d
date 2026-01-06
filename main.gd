@@ -70,7 +70,7 @@ func setup_demo_to_cabinet() -> void:
 	wavegauge_demo(glass_cabinet_list.pop_front(), "wavegauge")
 	tornado_demo(glass_cabinet_list.pop_front(), "tornado")
 	platonic_solids_demo(glass_cabinet_list.pop_front(), "platonic solids")
-	line_tree_demo(glass_cabinet_list.pop_front(), "winter tree")
+	winter_tree_demo(glass_cabinet_list.pop_front(), "winter tree")
 	print_debug("remain glass cabinet %d\ndemo size %s" % [
 		glass_cabinet_list.size(),demo_name_to_glass_cabinet.size()])
 
@@ -98,64 +98,66 @@ func make_glass_cabinet() -> void:
 func random_color() -> Color:
 	return NamedColorList.color_list.pick_random()[0]
 
-func line_tree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
+func winter_tree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 	var bmesh := PrismMesh.new()
 	bmesh.size = Vector3(1,0.3,1)
-	line_tree = preload("res://line_tree/line_tree.tscn").instantiate(
-		).init(bmesh, WorldSize.y, WorldSize.z/2, WorldSize.y*2, PI, 1.0,
+	winter_tree = preload("res://winter_tree/winter_tree.tscn").instantiate(
+		).init(WorldSize.y, WorldSize.z/2, WorldSize.y*2, PI, 1.0,
 		).set_center_color(Color.GREEN)
-	glasscabinet.add_child(line_tree)
-	$"왼쪽패널/LabelTree".text = "branch count %d" % [ line_tree.get_lines().multimesh.instance_count ]
-	line_tree.position.y = -WorldSize.y/2
-	line_tree_inst_index = line_tree.make_index_array()
+	glasscabinet.add_child(winter_tree)
+	$"왼쪽패널/LabelTree".text = "branch count %d" % [ winter_tree.가지들얻기().multimesh.instance_count ]
+	winter_tree.position.y = -WorldSize.y/2
+	winter_tree_inst_index = winter_tree.make_index_array()
 
-var line_tree :LineTree
+var winter_tree :WinterTree
 enum AniDir { Up, Down, Left , Right }
-var line_tree_inst_index :Array
+var winter_tree_inst_index :Array
 var color_fn_args := ShuffleIter.new( [[0],[1],[2],[0,1],[1,2],[2,0], [0,1,2]] )
 var color_fn :Callable = RandomColor.pure_color
 var ani_dir_data := ShuffleIter.new( [AniDir.Up, AniDir.Down, AniDir.Left , AniDir.Right] )
 var change_count := 0
 func linetree_animate(delta :float) -> void:
-	line_tree.rotate_y(delta)
-	var lines :MultiMeshShape = line_tree.get_lines()
+	winter_tree.rotate_y(delta)
+	var lines :MultiMeshShape = winter_tree.가지들얻기()
 	var co :Color = color_fn.call(color_fn_args.get_current())
 	var ani_ended :bool = false
 	match ani_dir_data.get_current():
 		AniDir.Up:
-			for i in line_tree_inst_index[-change_count-1]:
+			for i in winter_tree_inst_index[-change_count-1]:
 				lines.set_inst_color(i, co)
 			change_count +=1
-			ani_ended = change_count >= line_tree_inst_index.size()
+			ani_ended = change_count >= winter_tree_inst_index.size()
 		AniDir.Down:
-			for i in line_tree_inst_index[change_count]:
+			for i in winter_tree_inst_index[change_count]:
 				lines.set_inst_color(i, co)
 			change_count +=1
-			ani_ended = change_count >= line_tree_inst_index.size()
+			ani_ended = change_count >= winter_tree_inst_index.size()
 		AniDir.Left:
-			for a :Array in line_tree_inst_index:
+			for a :Array in winter_tree_inst_index:
 				if change_count >= a.size():
 					continue
 				var i = a[change_count]
 				lines.set_inst_color(i, co)
 			change_count +=1
-			ani_ended = change_count >= line_tree_inst_index[-1].size()
+			ani_ended = change_count >= winter_tree_inst_index[-1].size()
 		AniDir.Right:
-			for a :Array in line_tree_inst_index:
+			for a :Array in winter_tree_inst_index:
 				if change_count >= a.size():
 					continue
 				var i = a[-change_count-1]
 				lines.set_inst_color(i, co)
 			change_count +=1
-			ani_ended = change_count >= line_tree_inst_index[-1].size()
+			ani_ended = change_count >= winter_tree_inst_index[-1].size()
+	winter_tree.장식들얻기().set_inst_color( randi_range(0, winter_tree.장식들얻기().multimesh.instance_count-1),  random_color())
 
 	if ani_ended:
 		color_fn_args.get_next()
 		ani_dir_data.get_next()
 		change_count = 0
 		color_fn = [RandomColor.pure_color, RandomColor.rate_color, random_color2].pick_random()
+		winter_tree.장식들얻기().set_color_all( random_color())
 
 var named_color_list := ShuffleIter.new(NamedColorList.color_list)
 func random_color2(_arg ) -> Color:
