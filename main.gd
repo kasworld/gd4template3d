@@ -118,7 +118,7 @@ var color_fn_args := ShuffleIter.new( [[0],[1],[2],[0,1],[1,2],[2,0], [0,1,2]] )
 var color_fn :Callable = RandomColor.pure_color
 var ani_dir_data := ShuffleIter.new( [AniDir.Up, AniDir.Down, AniDir.Left , AniDir.Right] )
 var change_count := 0
-func linetree_animate(delta :float) -> void:
+func wintertree_animate(delta :float) -> void:
 	winter_tree.rotate_y(delta)
 	var lines :MultiMeshShape = winter_tree.가지들얻기()
 	var co :Color = color_fn.call(color_fn_args.get_current())
@@ -468,14 +468,24 @@ func add_orbitsphere(glasscabinet :GlassCabinet, i :int) -> void:
 	var axis1 := Vector3.UP.rotated(
 		[Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK].pick_random(),
 		a30)
-	var mat1 := StandardMaterial3D.new()
-	mat1.albedo_color = random_color()
-	var mat2 := StandardMaterial3D.new()
-	mat2.albedo_color = random_color()
+	var 궤도mat1 := StandardMaterial3D.new()
+	궤도mat1.albedo_color = random_color()
+	var 구mat2
+	match i:
+		8,7,6,5:
+			구mat2 = [
+				preload("res://earthmoon/sun_mat.tres"),
+				preload("res://earthmoon/earth_mat.tres"),
+				preload("res://earthmoon/moon_mat.tres"),
+				preload("res://image/leaf.tres"),
+				][8-i]
+		_:
+			구mat2 = StandardMaterial3D.new()
+			구mat2.albedo_color = random_color()
 	var os = preload("res://orbit_sphere/orbit_sphere.tscn").instantiate(
 		).궤도설정(diagonal_length, diagonal_length/200, axis1, a120*[0,1,2].pick_random()
 		).구설정(WorldSize.x/400*i+1, WorldSize.x/50, Vector3.UP
-		).구재질설정(mat2).궤도재질설정(mat1)
+		).구재질설정(구mat2).궤도재질설정(궤도mat1)
 	glasscabinet.add_child(os)
 	orbitsphere_list.append(os)
 
@@ -508,24 +518,32 @@ func bartree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 		glasscabinet.set_label_text(labeltext)
 		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	var tree_size := Vector3(WorldSize.z/3, WorldSize.y, WorldSize.z / 30)
-	make_tree3(randi_range(1,7), glasscabinet, tree_size, randi_range(20,100), Vector3(-WorldSize.x/4,-WorldSize.y/2,0))
-	make_tree3(randi_range(1,7), glasscabinet, tree_size, randi_range(20,100), Vector3(WorldSize.x/4,-WorldSize.y/2,0))
-func make_tree3(make_flag:int, glasscabinet :GlassCabinet, tree_size :Vector3, bar_count :int, pos :Vector3) -> void:
+	make_tree3(randi_range(1,7), glasscabinet, tree_size, randi_range(20,100), Vector3(-WorldSize.x/4,-WorldSize.y/2,0), false)
+	make_tree3(randi_range(1,7), glasscabinet, tree_size, randi_range(20,100), Vector3(WorldSize.x/4,-WorldSize.y/2,0), true)
+func make_tree3(make_flag:int, glasscabinet :GlassCabinet, tree_size :Vector3, bar_count :int, pos :Vector3, use_mat :bool) -> void:
 	if make_flag & (1<<0) != 0: # add left side
-		make_sub_tree(glasscabinet, tree_size, bar_count, 2.0, pos)
+		make_sub_tree(glasscabinet, tree_size, bar_count, 2.0, pos, use_mat)
 	if make_flag & (1<<1) != 0: # add right side
-		make_sub_tree(glasscabinet, tree_size, bar_count, -2.0, pos)
+		make_sub_tree(glasscabinet, tree_size, bar_count, -2.0, pos, use_mat)
 	if make_flag & (1<<2) != 0: # add center
 		if make_flag == (1<<2): # side not exist
 			tree_size.x *= 3
 		else:
 			tree_size.x *= 0.9
-		make_sub_tree(glasscabinet, tree_size, bar_count, 0, pos)
-func make_sub_tree(glasscabinet :GlassCabinet, tree_size :Vector3, bar_count :int, shift :float, pos :Vector3) -> void:
+		make_sub_tree(glasscabinet, tree_size, bar_count, 0, pos, use_mat)
+func make_sub_tree(glasscabinet :GlassCabinet, tree_size :Vector3, bar_count :int, shift :float, pos :Vector3, use_mat :bool) -> void:
 	var t = bartree_scene.instantiate()
 	glasscabinet.add_child(t)
 	t.position = pos
-	t.init_bartree_with_color(random_color(), random_color(), bar_count)
+	if use_mat:
+		t.init_bartree_with_material([
+				preload("res://earthmoon/sun_mat.tres"),
+				preload("res://earthmoon/earth_mat.tres"),
+				preload("res://earthmoon/moon_mat.tres"),
+				preload("res://image/leaf.tres"),
+			].pick_random(), bar_count)
+	else:
+		t.init_bartree_with_color(random_color(), random_color(), bar_count)
 	t.init_bartree_transform(tree_size, shift)
 	bartree_list.append(t)
 
@@ -547,7 +565,7 @@ func _process(delta: float) -> void:
 	for mt in meshtrail_list:
 		mt.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
 	tornado_animate()
-	linetree_animate(delta)
+	wintertree_animate(delta)
 	$GlassCabinetContainer1.rotate_y(delta/10)
 	$GlassCabinetContainer2.rotate_y(-delta/10)
 	platonic_solids_animation.handle_animation()

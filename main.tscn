@@ -1,6 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://c6maulcewyhy5"]
+[gd_scene load_steps=12 format=3 uid="uid://c6maulcewyhy5"]
 
 [ext_resource type="Script" uid="uid://bgj25qi5j8dgh" path="res://main.gd" id="1_ig7tw"]
+[ext_resource type="Texture2D" uid="uid://k1k5bbintag5" path="res://skymap/skymap.hdr" id="3_lquwl"]
 [ext_resource type="PackedScene" uid="uid://dl14flc0fkeyt" path="res://axis_arrow_3d/axis_arrow_3d.tscn" id="5_7mycd"]
 [ext_resource type="PackedScene" uid="uid://c6cct2gj2a3im" path="res://timed_message/timed_message.tscn" id="5_lquwl"]
 [ext_resource type="PackedScene" uid="uid://ces3a6yv0c5fi" path="res://moving_carmera_light/moving_camera_light.tscn" id="8_5vw27"]
@@ -14,14 +15,16 @@ default_font_size = 48
 resource_local_to_scene = true
 default_font = SubResource("SystemFont_bejao")
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1bvp3"]
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_7mycd"]
+panorama = ExtResource("3_lquwl")
 
 [sub_resource type="Sky" id="Sky_lquwl"]
-sky_material = SubResource("ProceduralSkyMaterial_1bvp3")
+sky_material = SubResource("PanoramaSkyMaterial_7mycd")
 
 [sub_resource type="Environment" id="Environment_7mycd"]
 background_mode = 2
 sky = SubResource("Sky_lquwl")
+sky_rotation = Vector3(0, 0, 0.5235988)
 ambient_light_source = 3
 ambient_light_color = Color(1, 1, 1, 1)
 reflected_light_source = 2
