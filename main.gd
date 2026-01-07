@@ -371,7 +371,7 @@ func meshtrail_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	mesh.material = MultiMeshShape.make_color_material()
 	mesh.size = Vector3(trailmesh_radius*3, trailmesh_radius /5, trailmesh_radius/5)
 	for i in 10:
-		make_meshtrail(glasscabinet, randi_range(0,4), mesh, 100, bound_aabb.get_center())
+		make_meshtrail(glasscabinet, i %4, mesh, 100, bound_aabb.get_center())
 func make_meshtrail(glasscabinet :GlassCabinet, mt_type:int, mesh :Mesh, count :int, pos :Vector3 ) -> void:
 	var mt = preload("res://mesh_trail/mesh_trail.tscn").instantiate(
 		).init_with_color_mesh(mesh, count, true, pos,
