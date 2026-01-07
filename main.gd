@@ -458,11 +458,12 @@ func orbit_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 		demo_name_to_glass_cabinet[labeltext] = glasscabinet
-	glasscabinet.set_wall_box_color(Color(Color.WHITE,0.2))
+	glasscabinet.show_wall_box(false)
 	for i in 9:
-		add_orbitsphere(glasscabinet, i)
-func add_orbitsphere(glasscabinet :GlassCabinet, i :int) -> void:
-	var diagonal_length := WorldSize.length()/19 *i +10
+		add_orbitsphere(glasscabinet, i, 9)
+func add_orbitsphere(glasscabinet :GlassCabinet, i :int, count :int) -> void:
+	var rate := float(i)/float(count-1) * 0.5 + 0.5
+	var diagonal_length := WorldSize.length()/2 * rate
 	var a120 := PI*2/3
 	var a30 := PI/6
 	var axis1 := Vector3.UP.rotated(
@@ -472,13 +473,13 @@ func add_orbitsphere(glasscabinet :GlassCabinet, i :int) -> void:
 	궤도mat1.albedo_color = random_color()
 	var 구mat2
 	match i:
-		8,7,6,5:
+		0,1,2,3:
 			구mat2 = [
 				preload("res://earthmoon/sun_mat.tres"),
 				preload("res://earthmoon/earth_mat.tres"),
 				preload("res://earthmoon/moon_mat.tres"),
 				preload("res://image/leaf.tres"),
-				][8-i]
+				][i]
 		_:
 			구mat2 = StandardMaterial3D.new()
 			구mat2.albedo_color = random_color()
