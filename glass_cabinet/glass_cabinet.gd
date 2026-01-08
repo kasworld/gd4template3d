@@ -9,7 +9,7 @@ func init(box_size :Vector3) -> GlassCabinet:
 	$Label3D.position = Vector3(0,-box_size.y/2,box_size.z/2)
 	$WireBox.init_wire_box( box_size, box_size.length()/200, Color.WHITE)
 	$Points.init_spheres_by_point_list(
-		MultiMeshShape.MultiplyPointList(MultiMeshShape.CubePoints, box_size/2),
+		PlatonicSolids.MultiplyPointList(PlatonicSolids.CubePoints, box_size/2),
 		box_size.length()/200, Color.WHITE,
 	)
 	return self
