@@ -173,13 +173,6 @@ func platonic_solids_demo(glasscabinet :GlassCabinet, labeltext :String = "") ->
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 
-	wire_cube = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).multi_line_by_pos(PlatonicSolids.MultiplyLineList(
-				PlatonicSolids.CubeLinesNomalized, WorldSize.length()/10 ),
-			1, random_color())
-	glasscabinet.add_child(wire_cube)
-	wire_cube.position = Vector3(WorldSize.x/4, WorldSize.y/4,0)
-
 	wire_tetrahedron = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).multi_line_by_pos(PlatonicSolids.MultiplyLineList(
 				PlatonicSolids.TetrahedronLinesNomalized, WorldSize.length()/10 ),
@@ -187,26 +180,33 @@ func platonic_solids_demo(glasscabinet :GlassCabinet, labeltext :String = "") ->
 	glasscabinet.add_child(wire_tetrahedron)
 	wire_tetrahedron.position = Vector3(-WorldSize.x/4, WorldSize.y/4,0)
 
+	wire_cube = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
+		).multi_line_by_pos(PlatonicSolids.MultiplyLineList(
+				PlatonicSolids.CubeLinesNomalized, WorldSize.length()/10 ),
+			1, random_color())
+	glasscabinet.add_child(wire_cube)
+	wire_cube.position = Vector3(0,WorldSize.y/4,0)
+
 	wire_octahedron = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).multi_line_by_pos(PlatonicSolids.MultiplyLineList(
 				PlatonicSolids.OctahedronLinesNomalized, WorldSize.length()/10 ),
 			1, random_color())
 	glasscabinet.add_child(wire_octahedron)
-	wire_octahedron.position = Vector3(0,WorldSize.y/4,0)
-
-	wire_icosahedron = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).multi_line_by_pos(PlatonicSolids.MultiplyLineList(
-				PlatonicSolids.IcosahedronLinesNomalized, WorldSize.length()/10 ),
-			1, random_color())
-	glasscabinet.add_child(wire_icosahedron)
-	wire_icosahedron.position = Vector3(-WorldSize.x/4,-WorldSize.y/4,0)
+	wire_octahedron.position = Vector3(WorldSize.x/4, WorldSize.y/4,0)
 
 	wire_dodecahedron = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).multi_line_by_pos(PlatonicSolids.MultiplyLineList(
 				PlatonicSolids.DodecahedronLinesNomalized, WorldSize.length()/10 ),
 			1, random_color())
 	glasscabinet.add_child(wire_dodecahedron)
-	wire_dodecahedron.position = Vector3(WorldSize.x/4,-WorldSize.y/4,0)
+	wire_dodecahedron.position = Vector3(-WorldSize.x/4,-WorldSize.y/4,0)
+
+	wire_icosahedron = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
+		).multi_line_by_pos(PlatonicSolids.MultiplyLineList(
+				PlatonicSolids.IcosahedronLinesNomalized, WorldSize.length()/10 ),
+			1, random_color())
+	glasscabinet.add_child(wire_icosahedron)
+	wire_icosahedron.position = Vector3(WorldSize.x/4,-WorldSize.y/4,0)
 
 	platonic_solids_animation.animation_ended.connect(platonic_solids_animation_ended)
 	start_platonic_solids_animation()
