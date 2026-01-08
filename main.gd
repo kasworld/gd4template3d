@@ -164,49 +164,22 @@ func random_color2(_arg ) -> Color:
 	return named_color_list.get_next()[0]
 
 
-var wire_cube :MultiMeshShape
-var wire_tetrahedron :MultiMeshShape
-var wire_octahedron :MultiMeshShape
-var wire_icosahedron :MultiMeshShape
-var wire_dodecahedron :MultiMeshShape
+var platonic_solid_list :Array = []
 func platonic_solids_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
-
-	wire_tetrahedron = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).multi_line_by_pos(PlatonicSolids.MultiplyLineList(
-				PlatonicSolids.TetrahedronLinesNomalized, WorldSize.length()/10 ),
-			1, random_color())
-	glasscabinet.add_child(wire_tetrahedron)
-	wire_tetrahedron.position = Vector3(-WorldSize.x/4, WorldSize.y/4,0)
-
-	wire_cube = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).multi_line_by_pos(PlatonicSolids.MultiplyLineList(
-				PlatonicSolids.CubeLinesNomalized, WorldSize.length()/10 ),
-			1, random_color())
-	glasscabinet.add_child(wire_cube)
-	wire_cube.position = Vector3(0,WorldSize.y/4,0)
-
-	wire_octahedron = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).multi_line_by_pos(PlatonicSolids.MultiplyLineList(
-				PlatonicSolids.OctahedronLinesNomalized, WorldSize.length()/10 ),
-			1, random_color())
-	glasscabinet.add_child(wire_octahedron)
-	wire_octahedron.position = Vector3(WorldSize.x/4, WorldSize.y/4,0)
-
-	wire_dodecahedron = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).multi_line_by_pos(PlatonicSolids.MultiplyLineList(
-				PlatonicSolids.DodecahedronLinesNomalized, WorldSize.length()/10 ),
-			1, random_color())
-	glasscabinet.add_child(wire_dodecahedron)
-	wire_dodecahedron.position = Vector3(-WorldSize.x/4,-WorldSize.y/4,0)
-
-	wire_icosahedron = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).multi_line_by_pos(PlatonicSolids.MultiplyLineList(
-				PlatonicSolids.IcosahedronLinesNomalized, WorldSize.length()/10 ),
-			1, random_color())
-	glasscabinet.add_child(wire_icosahedron)
-	wire_icosahedron.position = Vector3(WorldSize.x/4,-WorldSize.y/4,0)
+	for ll in [
+		[PlatonicSolids.TetrahedronLinesNomalized, 		Vector3(-WorldSize.x/4, WorldSize.y/4,0)],
+		[PlatonicSolids.CubeLinesNomalized, 			Vector3(0, WorldSize.y/4,0)],
+		[PlatonicSolids.OctahedronLinesNomalized, 		Vector3(WorldSize.x/4, WorldSize.y/4,0)],
+		[PlatonicSolids.DodecahedronLinesNomalized, 	Vector3(-WorldSize.x/4, -WorldSize.y/4,0)],
+		[PlatonicSolids.IcosahedronLinesNomalized, 		Vector3(WorldSize.x/4, -WorldSize.y/4,0)],
+	]:
+		var ps = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
+		).multi_line_by_pos(PlatonicSolids.MultiplyLineList(ll[0], WorldSize.length()/10 ), 1.0, random_color())
+		glasscabinet.add_child(ps)
+		ps.position = ll[1]
+		platonic_solid_list.append(ps)
 
 	platonic_solids_animation.animation_ended.connect(platonic_solids_animation_ended)
 	start_platonic_solids_animation()
@@ -216,26 +189,11 @@ func platonic_solids_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
 	if platonic_solids_animation.is_empty():
 		start_platonic_solids_animation()
 func start_platonic_solids_animation() -> void:
-	var diff :float = [PI/2,-PI/2].pick_random()
-	var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-	platonic_solids_animation.start_rotate_subfield(
-		"ani_rot", wire_cube, axis , wire_cube.rotation[axis], wire_cube.rotation[axis] + diff, 1.0)
-	diff = [PI/2,-PI/2].pick_random()
-	axis = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-	platonic_solids_animation.start_rotate_subfield(
-		"ani_rot", wire_tetrahedron, axis , wire_tetrahedron.rotation[axis], wire_tetrahedron.rotation[axis] + diff, 1.0)
-	diff = [PI/2,-PI/2].pick_random()
-	axis = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-	platonic_solids_animation.start_rotate_subfield(
-		"ani_rot", wire_octahedron, axis , wire_octahedron.rotation[axis], wire_octahedron.rotation[axis] + diff, 1.0)
-	diff = [PI/2,-PI/2].pick_random()
-	axis = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-	platonic_solids_animation.start_rotate_subfield(
-		"ani_rot", wire_icosahedron, axis , wire_icosahedron.rotation[axis], wire_icosahedron.rotation[axis] + diff, 1.0)
-	diff = [PI/2,-PI/2].pick_random()
-	axis = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-	platonic_solids_animation.start_rotate_subfield(
-		"ani_rot", wire_dodecahedron, axis , wire_dodecahedron.rotation[axis], wire_dodecahedron.rotation[axis] + diff, 1.0)
+	for ps in platonic_solid_list:
+		var diff :float = [PI/2,-PI/2].pick_random()
+		var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
+		platonic_solids_animation.start_rotate_subfield(
+			"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
 
 
 var tornado_list :Array # [ tornado , AnimateGradient , AnimateGradient ]
