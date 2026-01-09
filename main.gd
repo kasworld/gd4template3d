@@ -169,14 +169,16 @@ func platonic_solids_demo(glasscabinet :GlassCabinet, labeltext :String = "") ->
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 	for ll in [
-		[PlatonicSolids.TetrahedronLinesNomalized, 		Vector3(-WorldSize.x/4, WorldSize.y/4,0)],
-		[PlatonicSolids.CubeLinesNomalized, 			Vector3(0, WorldSize.y/4,0)],
-		[PlatonicSolids.OctahedronLinesNomalized, 		Vector3(WorldSize.x/4, WorldSize.y/4,0)],
-		[PlatonicSolids.DodecahedronLinesNomalized, 	Vector3(-WorldSize.x/4, -WorldSize.y/4,0)],
-		[PlatonicSolids.IcosahedronLinesNomalized, 		Vector3(WorldSize.x/4, -WorldSize.y/4,0)],
+		[4,  Vector3(-WorldSize.x/4, WorldSize.y/4,0)],
+		[6,  Vector3(0, WorldSize.y/4,0)],
+		[8,  Vector3(WorldSize.x/4, WorldSize.y/4,0)],
+		[12, Vector3(-WorldSize.x/4, -WorldSize.y/4,0)],
+		[20, Vector3(WorldSize.x/4, -WorldSize.y/4,0)],
 	]:
+		var points := PlatonicSolids.ScalePointList( PlatonicSolids.Points[ll[0]], WorldSize.length()/10 )
+		var lines := PlatonicSolids.PointListToLineList(points, PlatonicSolids.EdgePerVertex[ll[0]] )
 		var ps = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).multi_line_by_pos(PlatonicSolids.MultiplyLineList(ll[0], WorldSize.length()/10 ), 1.0, random_color())
+		).multi_line_by_pos(lines, 1.0, random_color())
 		glasscabinet.add_child(ps)
 		ps.position = ll[1]
 		platonic_solid_list.append(ps)

@@ -90,41 +90,16 @@ const IcosahedronPoints :Array = [
 	Vector3(-GoldenRatio,0,-1),
 ]
 
-## face 4
-static var TetrahedronPointsNomalized := NormalizePointList(TetrahedronPoints)
-static var TetrahedronLines := PointListToLineList(TetrahedronPoints,3)
-static var TetrahedronLinesNomalized := PointListToLineList(TetrahedronPointsNomalized,3)
-## face 6
-static var CubePointsNomalized := NormalizePointList(CubePoints)
-static var CubeLines := PointListToLineList(CubePoints,3)
-static var CubeLinesNomalized := PointListToLineList(CubePointsNomalized,3)
-## face 8
-static var OctahedronPointsNomalized := NormalizePointList(OctahedronPoints)
-static var OctahedronLines := PointListToLineList(OctahedronPoints,4)
-static var OctahedronLinesNomalized := PointListToLineList(OctahedronPointsNomalized,4)
-## face 12
-static var DodecahedronPointsNomalized := NormalizePointList(DodecahedronPoints)
-static var DodecahedronLines := PointListToLineList(DodecahedronPoints,3)
-static var DodecahedronLinesNomalized := PointListToLineList(DodecahedronPointsNomalized,3)
-## face 20
-static var IcosahedronPointsNomalized := NormalizePointList(IcosahedronPoints)
-static var IcosahedronLines := PointListToLineList(IcosahedronPoints,5)
-static var IcosahedronLinesNomalized := PointListToLineList(IcosahedronPointsNomalized,5)
-
-
-static func MultiplyLineList(line_list :Array,  m :float) -> Array:
+## nomalize and multiply,  m can float, Vector3
+static func ScalePointList(point_list :Array, m ) -> Array:
 	var rtn := []
-	for l in line_list:
-		var ml := []
-		for v in l:
-			ml.append(v*m)
-		rtn.append(ml)
+	for l :Vector3 in point_list:
+		rtn.append(l.normalized()*m)
 	return rtn
 
 static func NormalizePointList(point_list :Array) -> Array:
 	var rtn := []
 	for l :Vector3 in point_list:
-		l.normalized()
 		rtn.append(l.normalized())
 	return rtn
 
