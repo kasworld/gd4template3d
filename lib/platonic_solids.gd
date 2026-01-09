@@ -1,5 +1,34 @@
 class_name PlatonicSolids
 
+const GoldenRatio :float = (1+sqrt(5))/2
+
+## key : face count , value : point list
+static var Points = {
+	4 : TetrahedronPoints,
+	6 : CubePoints,
+	8 : OctahedronPoints,
+	12 : DodecahedronPoints,
+	20 : IcosahedronPoints,
+}
+
+## key : face count , value : edge count per vertex
+static var EdgePerVertex = {
+	4 : 3,
+	6 : 3,
+	8 : 4,
+	12 : 3,
+	20 : 5,
+}
+
+## face 4
+const TetrahedronPoints := [
+	Vector3(1,1,1),
+	Vector3(1,-1,-1),
+	Vector3(-1,1,-1),
+	Vector3(-1,-1,1),
+]
+
+## face 6
 const CubePoints := [
 	Vector3(1,1,1),
 	Vector3(-1,1,1),
@@ -10,20 +39,8 @@ const CubePoints := [
 	Vector3(1,-1,-1),
 	Vector3(-1,-1,-1),
 ]
-static var CubePointsNomalized := NormalizePointList(CubePoints)
-static var CubeLines := PointListToLineList(CubePoints,3)
-static var CubeLinesNomalized := PointListToLineList(CubePointsNomalized,3)
 
-const TetrahedronPoints := [
-	Vector3(1,1,1),
-	Vector3(1,-1,-1),
-	Vector3(-1,1,-1),
-	Vector3(-1,-1,1),
-]
-static var TetrahedronPointsNomalized := NormalizePointList(TetrahedronPoints)
-static var TetrahedronLines := PointListToLineList(TetrahedronPoints,3)
-static var TetrahedronLinesNomalized := PointListToLineList(TetrahedronPointsNomalized,3)
-
+## face 8
 const OctahedronPoints := [
 	Vector3(1,0,0),
 	Vector3(0,1,0),
@@ -32,29 +49,8 @@ const OctahedronPoints := [
 	Vector3(0,-1,0),
 	Vector3(0,0,-1),
 ]
-static var OctahedronPointsNomalized := NormalizePointList(OctahedronPoints)
-static var OctahedronLines := PointListToLineList(OctahedronPoints,4)
-static var OctahedronLinesNomalized := PointListToLineList(OctahedronPointsNomalized,4)
 
-const GoldenRatio :float = (1+sqrt(5))/2
-const IcosahedronPoints :Array = [
-	Vector3(0,1,GoldenRatio),
-	Vector3(0,-1,GoldenRatio),
-	Vector3(0,1,-GoldenRatio),
-	Vector3(0,-1,-GoldenRatio),
-	Vector3(1,GoldenRatio,0),
-	Vector3(-1,GoldenRatio,0),
-	Vector3(1,-GoldenRatio,0),
-	Vector3(-1,-GoldenRatio,0),
-	Vector3(GoldenRatio,0,1),
-	Vector3(GoldenRatio,0,-1),
-	Vector3(-GoldenRatio,0,1),
-	Vector3(-GoldenRatio,0,-1),
-]
-static var IcosahedronPointsNomalized := NormalizePointList(IcosahedronPoints)
-static var IcosahedronLines := PointListToLineList(IcosahedronPoints,5)
-static var IcosahedronLinesNomalized := PointListToLineList(IcosahedronPointsNomalized,5)
-
+## face 12
 const DodecahedronPoints := [
 	Vector3(1,1,1),
 	Vector3(-1,1,1),
@@ -77,9 +73,44 @@ const DodecahedronPoints := [
 	Vector3(-GoldenRatio, 0, 1/GoldenRatio),
 	Vector3(-GoldenRatio, 0, -1/GoldenRatio),
 ]
+
+## face 20
+const IcosahedronPoints :Array = [
+	Vector3(0,1,GoldenRatio),
+	Vector3(0,-1,GoldenRatio),
+	Vector3(0,1,-GoldenRatio),
+	Vector3(0,-1,-GoldenRatio),
+	Vector3(1,GoldenRatio,0),
+	Vector3(-1,GoldenRatio,0),
+	Vector3(1,-GoldenRatio,0),
+	Vector3(-1,-GoldenRatio,0),
+	Vector3(GoldenRatio,0,1),
+	Vector3(GoldenRatio,0,-1),
+	Vector3(-GoldenRatio,0,1),
+	Vector3(-GoldenRatio,0,-1),
+]
+
+## face 4
+static var TetrahedronPointsNomalized := NormalizePointList(TetrahedronPoints)
+static var TetrahedronLines := PointListToLineList(TetrahedronPoints,3)
+static var TetrahedronLinesNomalized := PointListToLineList(TetrahedronPointsNomalized,3)
+## face 6
+static var CubePointsNomalized := NormalizePointList(CubePoints)
+static var CubeLines := PointListToLineList(CubePoints,3)
+static var CubeLinesNomalized := PointListToLineList(CubePointsNomalized,3)
+## face 8
+static var OctahedronPointsNomalized := NormalizePointList(OctahedronPoints)
+static var OctahedronLines := PointListToLineList(OctahedronPoints,4)
+static var OctahedronLinesNomalized := PointListToLineList(OctahedronPointsNomalized,4)
+## face 12
 static var DodecahedronPointsNomalized := NormalizePointList(DodecahedronPoints)
 static var DodecahedronLines := PointListToLineList(DodecahedronPoints,3)
 static var DodecahedronLinesNomalized := PointListToLineList(DodecahedronPointsNomalized,3)
+## face 20
+static var IcosahedronPointsNomalized := NormalizePointList(IcosahedronPoints)
+static var IcosahedronLines := PointListToLineList(IcosahedronPoints,5)
+static var IcosahedronLinesNomalized := PointListToLineList(IcosahedronPointsNomalized,5)
+
 
 static func MultiplyLineList(line_list :Array,  m :float) -> Array:
 	var rtn := []
