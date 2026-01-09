@@ -2,22 +2,13 @@ class_name PlatonicSolids
 
 const GoldenRatio :float = (1+sqrt(5))/2
 
-## key : face count , value : point list
-static var Points = {
-	4 : TetrahedronPoints,
-	6 : CubePoints,
-	8 : OctahedronPoints,
-	12 : DodecahedronPoints,
-	20 : IcosahedronPoints,
-}
-
-## key : face count , value : edge count per vertex
-static var EdgePerVertex = {
-	4 : 3,
-	6 : 3,
-	8 : 4,
-	12 : 3,
-	20 : 5,
+## key : face count , value : point list , edge count per vertex
+const PointEdge = {
+	4 : [TetrahedronPoints, 3],
+	6 : [CubePoints, 3],
+	8 : [OctahedronPoints, 4],
+	12 : [DodecahedronPoints, 3],
+	20 : [IcosahedronPoints, 5],
 }
 
 ## face 4
