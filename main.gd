@@ -175,13 +175,17 @@ func platonic_solids_demo(glasscabinet :GlassCabinet, labeltext :String = "") ->
 		[12, Vector3(-WorldSize.x/4, -WorldSize.y/4,0)],
 		[20, Vector3(WorldSize.x/4, -WorldSize.y/4,0)],
 	]:
-		var points := PlatonicSolids.ScalePointList( PlatonicSolids.Points[ll[0]], WorldSize.length()/10 )
-		var lines := PlatonicSolids.PointListToLineList(points, PlatonicSolids.EdgePerVertex[ll[0]] )
+		var face :int = ll[0]
+		var points := PlatonicSolids.ScalePointList( PlatonicSolids.Points[face], WorldSize.length()/10 )
+		var lines := PlatonicSolids.PointListToLineList(points, PlatonicSolids.EdgePerVertex[face] )
 		var ps = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).multi_line_by_pos(lines, 1.0, random_color())
 		glasscabinet.add_child(ps)
 		ps.position = ll[1]
 		platonic_solid_list.append(ps)
+		var sps = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
+			).init_spheres_by_point_list(points, 1.0, random_color())
+		ps.add_child(sps)
 
 	platonic_solids_animation.animation_ended.connect(platonic_solids_animation_ended)
 	start_platonic_solids_animation()
