@@ -471,8 +471,6 @@ func calendar_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	calendar = preload("res://calendar_3d/calendar_3d.tscn").instantiate(
 		).init(WorldSize.x/2, WorldSize.y, WorldSize.z/10, WorldSize.y/2.0/6 , false )
-	calendar.rotate_y(PI/2)
-	calendar.rotate_x(PI/2)
 	glasscabinet.add_child(calendar)
 
 var clock :AnalogClock3D
@@ -482,8 +480,6 @@ func clock_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	clock = preload("res://analog_clock_3d/analog_clock_3d.tscn").instantiate(
 		).init(WorldSize.x/4, WorldSize.z/10, WorldSize.y/2.0/7 ,9.0, false )
-	clock.rotate_y(PI/2)
-	clock.rotate_x(PI/2)
 	glasscabinet.add_child(clock)
 
 var bartree_scene = preload("res://bar_tree/bar_tree.tscn")
