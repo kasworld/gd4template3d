@@ -189,7 +189,7 @@ func platonic_solids_demo(glasscabinet :GlassCabinet, labeltext :String = "") ->
 	platonic_solids_animation.animation_ended.connect(platonic_solids_animation_ended)
 	start_platonic_solids_animation()
 
-var platonic_solids_animation := Animation3D.new()
+var platonic_solids_animation := SimpleAnimation.new()
 func platonic_solids_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
 	if platonic_solids_animation.is_empty():
 		start_platonic_solids_animation()
@@ -387,7 +387,7 @@ func props_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	props_animation.animation_ended.connect(props_animation_ended)
 	start_props_animation()
 
-var props_animation := Animation3D.new()
+var props_animation := SimpleAnimation.new()
 func props_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
 	if props_animation.is_empty():
 		start_props_animation()
@@ -463,7 +463,7 @@ func add_orbitsphere(glasscabinet :GlassCabinet, i :int, count :int) -> void:
 	glasscabinet.add_child(os)
 	orbitsphere_list.append(os)
 
-var clock_calendar_animation := Animation3D.new()
+var clock_calendar_animation := SimpleAnimation.new()
 func clock_calendar_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
 	if clock_calendar_animation.is_empty():
 		start_clock_calendar_animation()
