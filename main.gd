@@ -468,13 +468,18 @@ func clock_calendar_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
 	if clock_calendar_animation.is_empty():
 		start_clock_calendar_animation()
 var clock_calendar_pos_list := []
+var clock_calendar_rot_args := [ [0.0, 2*PI], [2*PI, 0.0] ]
 func reset_clock_calendar_pos()->void:
 	clock.position = clock_calendar_pos_list[0]
 	calendar.position = clock_calendar_pos_list[1]
 func start_clock_calendar_animation():
-	clock_calendar_animation.start_move("clock",clock, clock_calendar_pos_list[0], clock_calendar_pos_list[1], 10)
-	clock_calendar_animation.start_move("clock",calendar, clock_calendar_pos_list[1], clock_calendar_pos_list[0], 10)
+	const ani_speed :float = 3
+	clock_calendar_animation.start_move("clock",clock, clock_calendar_pos_list[0], clock_calendar_pos_list[1], ani_speed)
+	clock_calendar_animation.start_rotate_subfield("clock",clock, Vector3.Axis.AXIS_Y, clock_calendar_rot_args[0][0] , clock_calendar_rot_args[0][1], ani_speed)
+	clock_calendar_animation.start_move("clock",calendar, clock_calendar_pos_list[1], clock_calendar_pos_list[0], ani_speed)
+	clock_calendar_animation.start_rotate_subfield("clock",calendar, Vector3.Axis.AXIS_Y, clock_calendar_rot_args[1][0], clock_calendar_rot_args[1][1], ani_speed)
 	clock_calendar_pos_list = [clock_calendar_pos_list[1], clock_calendar_pos_list[0]]
+	clock_calendar_rot_args = [clock_calendar_rot_args[1], clock_calendar_rot_args[0]]
 
 var calendar :Calendar3D
 var clock :AnalogClock3D
