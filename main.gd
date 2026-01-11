@@ -57,8 +57,7 @@ func _ready() -> void:
 var demo_name_to_glass_cabinet := {}
 func setup_demo_to_cabinet() -> void:
 	bartree_demo(glass_cabinet_list.pop_front(), "bartree")
-	clock_demo(glass_cabinet_list.pop_front(), "clock3d")
-	calendar_demo(glass_cabinet_list.pop_front(), "calender3d")
+	clock_calendar_demo(glass_cabinet_list.pop_front(), "clock calender")
 	orbit_demo(glass_cabinet_list.pop_front(), "orbit")
 	line2d_demo(glass_cabinet_list.pop_front(), "moveline2d")
 	meshtrail_demo(glass_cabinet_list.pop_front(), "meshtrail")
@@ -464,23 +463,35 @@ func add_orbitsphere(glasscabinet :GlassCabinet, i :int, count :int) -> void:
 	glasscabinet.add_child(os)
 	orbitsphere_list.append(os)
 
+var clock_calendar_animation := Animation3D.new()
+func clock_calendar_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
+	if clock_calendar_animation.is_empty():
+		start_clock_calendar_animation()
+var clock_calendar_pos_list := []
+func reset_clock_calendar_pos()->void:
+	clock.position = clock_calendar_pos_list[0]
+	calendar.position = clock_calendar_pos_list[1]
+func start_clock_calendar_animation():
+	clock_calendar_animation.start_move("clock",clock, clock_calendar_pos_list[0], clock_calendar_pos_list[1], 10)
+	clock_calendar_animation.start_move("clock",calendar, clock_calendar_pos_list[1], clock_calendar_pos_list[0], 10)
+	clock_calendar_pos_list = [clock_calendar_pos_list[1], clock_calendar_pos_list[0]]
+
 var calendar :Calendar3D
-func calendar_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
+var clock :AnalogClock3D
+func clock_calendar_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	calendar = preload("res://calendar_3d/calendar_3d.tscn").instantiate(
 		).init(WorldSize.x/2, WorldSize.y, WorldSize.z/10, WorldSize.y/2.0/6 , false )
 	glasscabinet.add_child(calendar)
-
-var clock :AnalogClock3D
-func clock_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	if labeltext != "":
-		glasscabinet.set_label_text(labeltext)
-		demo_name_to_glass_cabinet[labeltext] = glasscabinet
 	clock = preload("res://analog_clock_3d/analog_clock_3d.tscn").instantiate(
 		).init(WorldSize.x/4, WorldSize.z/10, WorldSize.y/2.0/7 ,9.0, false )
 	glasscabinet.add_child(clock)
+	clock_calendar_pos_list = [Vector3(-WorldSize.x/4,0,0), Vector3(WorldSize.x/4,0,0)]
+	reset_clock_calendar_pos()
+	clock_calendar_animation.animation_ended.connect(clock_calendar_animation_ended)
+	start_clock_calendar_animation()
 
 var bartree_scene = preload("res://bar_tree/bar_tree.tscn")
 var bartree_list :Array
@@ -537,6 +548,7 @@ func _process(delta: float) -> void:
 		mt.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
 	tornado_animate()
 	wintertree_animate(delta)
+	clock_calendar_animation.handle_animation()
 	$GlassCabinetContainer1.rotate_y(delta/10)
 	$GlassCabinetContainer2.rotate_y(-delta/10)
 	platonic_solids_animation.handle_animation()
