@@ -487,11 +487,12 @@ func clock_calendar_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> 
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 		demo_name_to_glass_cabinet[labeltext] = glasscabinet
+	glasscabinet.show_wall_box(false)
 	calendar = preload("res://calendar_3d/calendar_3d.tscn").instantiate(
-		).init(WorldSize.x/2, WorldSize.y, WorldSize.z/10, WorldSize.y/2.0/6 , false )
+		).init(WorldSize.x/2, WorldSize.y, WorldSize.z/10, WorldSize.y/2.0/6 , true )
 	glasscabinet.add_child(calendar)
 	clock = preload("res://analog_clock_3d/analog_clock_3d.tscn").instantiate(
-		).init(WorldSize.x/4, WorldSize.z/10, WorldSize.y/2.0/7 ,9.0, false )
+		).init(WorldSize.x/4, WorldSize.z/10, WorldSize.y/2.0/7 ,9.0, true )
 	glasscabinet.add_child(clock)
 	clock_calendar_pos_list = [Vector3(-WorldSize.x/4,0,0), Vector3(WorldSize.x/4,0,0)]
 	reset_clock_calendar_pos()
