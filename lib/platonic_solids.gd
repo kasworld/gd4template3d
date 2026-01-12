@@ -4,11 +4,11 @@ const GoldenRatio :float = (1+sqrt(5))/2
 
 ## key : face count , value : point list , edge count per vertex
 const PointEdge = {
-	4 : [TetrahedronPoints, 3],
-	6 : [CubePoints, 3],
-	8 : [OctahedronPoints, 4],
-	12 : [DodecahedronPoints, 3],
-	20 : [IcosahedronPoints, 5],
+	4 : [TetrahedronPoints, 3, 3, 3],
+	6 : [CubePoints, 3, 6, 7],
+	8 : [OctahedronPoints, 4, 5, 5],
+	12 : [DodecahedronPoints, 3, 9, 18, 19], # ??
+	20 : [IcosahedronPoints, 5, 10, 11],
 }
 
 ## face 4

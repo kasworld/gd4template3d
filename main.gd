@@ -176,7 +176,7 @@ func platonic_solids_demo(glasscabinet :GlassCabinet, labeltext :String = "") ->
 	]:
 		var face :int = ll[0]
 		var points := PlatonicSolids.ScalePointList( PlatonicSolids.PointEdge[face][0], WorldSize.length()/10 )
-		var lines := PlatonicSolids.PointListToLineList(points, PlatonicSolids.PointEdge[face][1] )
+		var lines := PlatonicSolids.PointListToLineList(points, PlatonicSolids.PointEdge[face][2] )
 		var ps = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).multi_line_by_pos(lines, 1.0, random_color())
 		glasscabinet.add_child(ps)
