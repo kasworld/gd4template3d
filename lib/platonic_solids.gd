@@ -117,13 +117,20 @@ static func PointListToLineList(point_list:Array, cut_count :int) -> Array:
 	# make_line_from_sorted_point_list_list
 	var line_list := []
 	for v in sorted_point_list_list:
-		for i in min(cut_count, v.size()-1):
-			# prepare del duplicated line
-			if v[0] < v[1+i]:
-				line_list.append([v[0], v[1+i]])
-			else:
-				line_list.append([v[1+i], v[0]])
+		var lines := make_lines_from_1st_point(v)
+		line_list.append_array(lines.slice(0,cut_count))
 	return sort_and_del_duplicate_line(line_list)
+
+static func make_lines_from_1st_point(point_list:Array) -> Array:
+	var lines := []
+	var p0 :Vector3 = point_list[0]
+	for v in  point_list.slice(1):
+		# prepare del duplicated line
+		if p0 < v:
+			lines.append([p0, v])
+		else:
+			lines.append([v, p0])
+	return lines
 
 static func sort_and_del_duplicate_line(line_list :Array) -> Array:
 	line_list.sort_custom(func(a,b): return a < b)
