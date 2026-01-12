@@ -230,7 +230,7 @@ func tornado_animate() -> void:
 		tornado_list[i][0].set_color_all(tornado_list[i][1].get_color(),tornado_list[i][2].get_color())
 		tornado_list[i][1].inc_rate()
 		tornado_list[i][2].inc_rate()
-		tornado_list[i][0].position = Vector3(cos(i*unit_rad+t)*radius, sin(i*unit_rad+t*1.7)*radius/2, sin(i*unit_rad+t)*radius)
+		tornado_list[i][0].position = Vector3(cos(i*unit_rad+t)*radius, sin(i*unit_rad+t*1.7)*radius/2 -WorldSize.y/4, sin(i*unit_rad+t)*radius)
 		tornado_list[i][0].rotation.y = -rad*5
 
 var colorlist_dark :Array = NamedColorList.filter_to_colorlist(NamedColorList.make_dark_color_list())
