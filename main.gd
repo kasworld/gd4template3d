@@ -164,28 +164,20 @@ func random_color2(_arg ) -> Color:
 
 
 var platonic_solid_list :Array = []
-const EdgeFromTo := {
-	4 : [0, 3],
-	6 : [3, 7],
-	8 : [0, 5],
-	12 : [9, 18], # ??
-	20 : [5, 10],
-}
-
 func platonic_solids_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 	for ll in [
-		[4,  Vector3(-WorldSize.x/4, WorldSize.y/4,0)],
-		[6,  Vector3(0, WorldSize.y/4,0)],
-		[8,  Vector3(WorldSize.x/4, WorldSize.y/4,0)],
-		[12, Vector3(-WorldSize.x/4, -WorldSize.y/4,0)],
-		[20, Vector3(WorldSize.x/4, -WorldSize.y/4,0)],
+		[4,  Vector3(-WorldSize.x/4, WorldSize.y/4,0), 0, 3],
+		[6,  Vector3(0, WorldSize.y/4,0), 3, 7],
+		[8,  Vector3(WorldSize.x/4, WorldSize.y/4,0), 0, 5],
+		[12, Vector3(-WorldSize.x/4, -WorldSize.y/4,0), 9, 18],
+		[20, Vector3(WorldSize.x/4, -WorldSize.y/4,0), 5, 10],
 	]:
 		var face :int = ll[0]
 		var points := PlatonicSolids.ScalePointList( PlatonicSolids.PointEdge[face][0], WorldSize.length()/10 )
-		var from :int = EdgeFromTo[face][0]
-		var to :int = EdgeFromTo[face][1]
+		var from :int = ll[2]
+		var to :int = ll[3]
 		var lines := PlatonicSolids.PointListToLineList2(points, from, to )
 		var ps = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).multi_line_by_pos(lines, 1.0, random_color())

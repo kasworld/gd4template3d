@@ -113,13 +113,7 @@ static func sort_point_by_len(point_list:Array) -> Array:
 
 ## cut_count : edge count per vertex
 static func PointListToLineList(point_list:Array, cut_count :int) -> Array:
-	var sorted_point_list_list := sort_point_by_len(point_list)
-	# make_line_from_sorted_point_list_list
-	var line_list := []
-	for v in sorted_point_list_list:
-		var lines := make_lines_from_1st_point(v)
-		line_list.append_array(lines.slice(0,cut_count))
-	return sort_and_del_duplicate_line(line_list)
+	return PointListToLineList2(point_list,0,cut_count)
 
 static func PointListToLineList2(point_list:Array, begin :int, end :int) -> Array:
 	var line_list := []
