@@ -164,6 +164,14 @@ func random_color2(_arg ) -> Color:
 
 
 var platonic_solid_list :Array = []
+const EdgeFromTo := {
+	4 : [0, 3],
+	6 : [3, 7],
+	8 : [0, 5],
+	12 : [9, 18], # ??
+	20 : [5, 10],
+}
+
 func platonic_solids_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
@@ -176,7 +184,9 @@ func platonic_solids_demo(glasscabinet :GlassCabinet, labeltext :String = "") ->
 	]:
 		var face :int = ll[0]
 		var points := PlatonicSolids.ScalePointList( PlatonicSolids.PointEdge[face][0], WorldSize.length()/10 )
-		var lines := PlatonicSolids.PointListToLineList(points, PlatonicSolids.PointEdge[face][2] )
+		var from :int = EdgeFromTo[face][0]
+		var to :int = EdgeFromTo[face][1]
+		var lines := PlatonicSolids.PointListToLineList2(points, from, to )
 		var ps = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).multi_line_by_pos(lines, 1.0, random_color())
 		glasscabinet.add_child(ps)
