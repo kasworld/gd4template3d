@@ -168,21 +168,26 @@ func platonic_solids_demo(glasscabinet :GlassCabinet, labeltext :String = "") ->
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 	for ll in [
-		[4,  Vector3(-WorldSize.x/4, WorldSize.y/4,0), 0, 3],
-		[6,  Vector3(0, WorldSize.y/4,0), 3, 7],
-		[8,  Vector3(WorldSize.x/4, WorldSize.y/4,0), 0, 5],
-		[12, Vector3(-WorldSize.x/4, -WorldSize.y/4,0), 9, 18],
-		[20, Vector3(WorldSize.x/4, -WorldSize.y/4,0), 5, 10],
+		[4,  [-1.0/3.0,  1.0/3.0], 0, 3],
+		[6,  [-0.0/3.0,  1.0/3.0], 0, 3],
+		[6,  [ 1.0/3.0,  1.0/3.0], 3, 7],
+		[8,  [-1.0/3.0,  0.0/3.0], 0, 4],
+		[8,  [-0.0/3.0,  0.0/3.0], 0, 5],
+		[12, [ 1.0/3.0, -0.0/3.0], 0, 9,],
+		[12, [ 1.0/3.0, -1.0/3.0], 9, 18],
+		[20, [-1.0/3.0, -1.0/3.0], 0, 5],
+		[20, [-0.0/3.0, -1.0/3.0], 5, 10],
 	]:
 		var face :int = ll[0]
-		var points := PlatonicSolids.ScalePointList( PlatonicSolids.PointEdge[face][0], WorldSize.length()/10 )
+		var pos := Vector3(WorldSize.x * ll[1][0], WorldSize.y * ll[1][1], 0)
+		var points := PlatonicSolids.ScalePointList( PlatonicSolids.PointEdge[face][0], WorldSize.length()/13 )
 		var from :int = ll[2]
 		var to :int = ll[3]
 		var lines := PlatonicSolids.PointListToLineList2(points, from, to )
 		var ps = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).multi_line_by_pos(lines, 1.0, random_color())
 		glasscabinet.add_child(ps)
-		ps.position = ll[1]
+		ps.position = pos
 		platonic_solid_list.append(ps)
 		var sps = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 			).init_spheres_by_point_list(points, 1.0, random_color())
