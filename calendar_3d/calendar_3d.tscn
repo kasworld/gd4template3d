@@ -4,6 +4,7 @@
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g3tgt"]
 resource_local_to_scene = true
+transparency = 1
 
 [sub_resource type="BoxMesh" id="BoxMesh_yig0t"]
 resource_local_to_scene = true
