@@ -168,18 +168,22 @@ func platonic_solids_demo(glasscabinet :GlassCabinet, labeltext :String = "") ->
 	if labeltext != "":
 		glasscabinet.set_label_text(labeltext)
 	for ll in [
-		[4,  [-1.0/3.0,  1.0/3.0], 0, 3],
-		[6,  [-0.0/3.0,  1.0/3.0], 0, 3],
-		[6,  [ 1.0/3.0,  1.0/3.0], 3, 7],
-		[8,  [-1.0/3.0,  0.0/3.0], 0, 4],
-		[8,  [-0.0/3.0,  0.0/3.0], 0, 5],
-		[12, [ 1.0/3.0, -0.0/3.0], 0, 9,],
-		[12, [ 1.0/3.0, -1.0/3.0], 9, 18],
-		[20, [-1.0/3.0, -1.0/3.0], 0, 5],
-		[20, [-0.0/3.0, -1.0/3.0], 5, 10],
+		[4,  [ 0,  0], 0, 3],
+		[6,  [ 1,  0], 0, 3],
+		[6,  [ 2,  0], 3, 7],
+		[8,  [ 0,  1], 0, 4],
+		[8,  [ 1,  1], 0, 5],
+		[20, [ 2,  1], 0, 5],
+		[20, [ 0,  2], 5, 10],
+		[12, [ 3,  0], 0, 3,],
+		[12, [ 3,  1], 3, 9,],
+		[12, [ 3,  2], 9, 18],
 	]:
 		var face :int = ll[0]
-		var pos := Vector3(WorldSize.x * ll[1][0], WorldSize.y * ll[1][1], 0)
+		var xunit := WorldSize.x/4
+		var yunit := WorldSize.y/3
+		var posadj := Vector3(+xunit/2 - WorldSize.x/2, +yunit/2-WorldSize.y/2, 0)
+		var pos := Vector3(xunit * ll[1][0]  , yunit * ll[1][1] , 0) + posadj
 		var points := PlatonicSolids.ScalePointList( PlatonicSolids.PointEdge[face][0], WorldSize.length()/13 )
 		var from :int = ll[2]
 		var to :int = ll[3]
