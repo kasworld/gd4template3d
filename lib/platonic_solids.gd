@@ -101,14 +101,19 @@ static func MultiplyPointList(point_list :Array, m ) -> Array:
 		rtn.append(l*m)
 	return rtn
 
-## cut_count : edge count per vertex
-static func PointListToLineList(point_list:Array, cut_count :int) -> Array:
+# 모든 점에 대해서 거리순으로 정렬한 목록을 만든다.
+static func sort_point_by_len(point_list:Array) -> Array:
 	var sorted_point_list_list := []
 	# 각 배열의 첫 원소와 가장 가까운 순으로 점들을 정렬한다.
 	for p :Vector3 in point_list:
 		var plist := point_list.duplicate()
 		plist.sort_custom(func(a , b): return p.distance_to(a) < p.distance_to(b))
 		sorted_point_list_list.append(plist)
+	return sorted_point_list_list
+
+## cut_count : edge count per vertex
+static func PointListToLineList(point_list:Array, cut_count :int) -> Array:
+	var sorted_point_list_list := sort_point_by_len(point_list)
 	# make_line_from_sorted_point_list_list
 	var line_list := []
 	for v in sorted_point_list_list:
@@ -118,9 +123,14 @@ static func PointListToLineList(point_list:Array, cut_count :int) -> Array:
 				line_list.append([v[0], v[1+i]])
 			else:
 				line_list.append([v[1+i], v[0]])
+	return sort_and_del_duplicate_line(line_list)
+
+static func sort_and_del_duplicate_line(line_list :Array) -> Array:
 	line_list.sort_custom(func(a,b): return a < b)
-	var rtn := []
+	var rtn := [line_list[0]]
 	# del duplicated line
-	for i in range(0,line_list.size(),2):
+	for i in line_list.size():
+		if line_list[i] == rtn[-1]:
+			continue
 		rtn.append(line_list[i])
 	return rtn
