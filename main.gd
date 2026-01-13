@@ -73,16 +73,19 @@ func setup_demo_to_cabinet() -> void:
 	print_debug("remain glass cabinet %d\ndemo size %s" % [
 		glass_cabinet_list.size(),demo_name_to_glass_cabinet.size()])
 
-func run_demo(demo :Callable, name :String) -> void:
+func run_demo(demo :Callable, text :String) -> void:
 	var gc :GlassCabinet = glass_cabinet_list.pop_front()
 	demo.call(gc)
-	gc.set_label_text(name)
-	demo_name_to_glass_cabinet[name] = gc
-	$"왼쪽패널/SelectCamera".add_item(name)
+	gc.set_label_text(text)
+	demo_name_to_glass_cabinet[text] = gc
+	$"왼쪽패널/SelectCamera".add_item(text)
 
 func _on_select_camera_item_selected(index: int) -> void:
 	var text :String =  $"왼쪽패널/SelectCamera".get_item_text(index)
-	print_debug(index, " ", text, " ", demo_name_to_glass_cabinet[text])
+	var gc :GlassCabinet = demo_name_to_glass_cabinet[text]
+	if gc != null :
+		gc.get_camera_light().make_current()
+	$"왼쪽패널/SelectCamera".release_focus()
 
 
 var glass_cabinet_list :Array
