@@ -56,23 +56,28 @@ func _ready() -> void:
 
 var demo_name_to_glass_cabinet := {}
 func setup_demo_to_cabinet() -> void:
-	bartree_demo(glass_cabinet_list.pop_front(), "bartree")
-	clock_calendar_demo(glass_cabinet_list.pop_front(), "clock calender")
-	orbit_demo(glass_cabinet_list.pop_front(), "orbit")
-	line2d_demo(glass_cabinet_list.pop_front(), "moveline2d")
-	meshtrail_demo(glass_cabinet_list.pop_front(), "meshtrail")
-	maze3d_demo(glass_cabinet_list.pop_front(), "maze3d")
-	slotreel_demo(glass_cabinet_list.pop_front(), "slotreel")
-	wheel_demo(glass_cabinet_list.pop_front(), "roulettewheel" )
-	props_demo(glass_cabinet_list.pop_front(), "props")
-	wirenet_wavegauge_demo(glass_cabinet_list.pop_front(), "wirenet,wavegauge")
-	wavegauge_demo(glass_cabinet_list.pop_front(), "wavegauge")
-	tornado_demo(glass_cabinet_list.pop_front(), "tornado")
-	platonic_solids_demo(glass_cabinet_list.pop_front(), "platonic solids")
-	winter_tree_demo(glass_cabinet_list.pop_front(), "winter tree")
+	run_demo(bartree_demo, "bartree")
+	run_demo(clock_calendar_demo, "clock calender")
+	run_demo(orbit_demo, "orbit")
+	run_demo(line2d_demo, "moveline2d")
+	run_demo(meshtrail_demo, "meshtrail")
+	run_demo(maze3d_demo, "maze3d")
+	run_demo(slotreel_demo, "slotreel")
+	run_demo(wheel_demo, "roulettewheel" )
+	run_demo(props_demo, "props")
+	run_demo(wirenet_wavegauge_demo, "wirenet,wavegauge")
+	run_demo(wavegauge_demo, "wavegauge")
+	run_demo(tornado_demo, "tornado")
+	run_demo(platonic_solids_demo, "platonic solids")
+	run_demo(winter_tree_demo, "winter tree")
 	print_debug("remain glass cabinet %d\ndemo size %s" % [
 		glass_cabinet_list.size(),demo_name_to_glass_cabinet.size()])
 
+func run_demo(demo :Callable, name :String) -> void:
+	var gc :GlassCabinet = glass_cabinet_list.pop_front()
+	demo.call(gc)
+	gc.set_label_text(name)
+	demo_name_to_glass_cabinet[name] = gc
 
 var glass_cabinet_list :Array
 func make_glass_cabinet() -> void:
@@ -97,9 +102,7 @@ func make_glass_cabinet() -> void:
 func random_color() -> Color:
 	return NamedColorList.color_list.pick_random()[0]
 
-func winter_tree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	if labeltext != "":
-		glasscabinet.set_label_text(labeltext)
+func winter_tree_demo(glasscabinet :GlassCabinet) -> void:
 	var bmesh := PrismMesh.new()
 	bmesh.size = Vector3(1,0.3,1)
 	winter_tree = preload("res://winter_tree/winter_tree.tscn").instantiate(
@@ -164,9 +167,7 @@ func random_color2(_arg ) -> Color:
 
 
 var platonic_solid_list :Array = []
-func platonic_solids_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	if labeltext != "":
-		glasscabinet.set_label_text(labeltext)
+func platonic_solids_demo(glasscabinet :GlassCabinet) -> void:
 	for ll in [
 		[4,  [ 0,  0], 0, 3],
 		[6,  [ 1,  0], 0, 3],
@@ -213,9 +214,7 @@ func start_platonic_solids_animation() -> void:
 
 
 var tornado_list :Array # [ tornado , AnimateGradient , AnimateGradient ]
-func tornado_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	if labeltext != "":
-		glasscabinet.set_label_text(labeltext)
+func tornado_demo(glasscabinet :GlassCabinet) -> void:
 	glasscabinet.show_wall_box(false)
 	for i in 4:
 		var tb = preload("res://tornado/tornado.tscn").instantiate(
@@ -254,10 +253,7 @@ func make_color_text_info_list(colist :Array, cdlist :Array) -> Array:
 	return rtn
 
 var roulette :Roulette
-func wheel_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	if labeltext != "":
-		glasscabinet.set_label_text(labeltext)
-		demo_name_to_glass_cabinet[labeltext] = glasscabinet
+func wheel_demo(glasscabinet :GlassCabinet) -> void:
 	var color_text_into_list := make_color_text_info_list(
 		colorlist_light, cardlist,
 	).duplicate()
@@ -282,10 +278,7 @@ func _on_timer_wheel_timeout() -> void:
 	wheel돌리기()
 
 var slot :Slots
-func slotreel_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	if labeltext != "":
-		glasscabinet.set_label_text(labeltext)
-		demo_name_to_glass_cabinet[labeltext] = glasscabinet
+func slotreel_demo(glasscabinet :GlassCabinet) -> void:
 	var symbol크기 := Vector2(WorldSize.x/20 ,WorldSize.y/20)
 	var color_text_into_list := make_color_text_info_list(colorlist_dark, cardlist).duplicate()
 	slot = preload("res://slots/slots.tscn").instantiate().init(5, symbol크기,color_text_into_list)
@@ -304,20 +297,14 @@ func _on_timer_reel_timeout() -> void:
 
 
 var wavegauge_box :WaveGauge
-func wavegauge_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	if labeltext != "":
-		glasscabinet.set_label_text(labeltext)
-		demo_name_to_glass_cabinet[labeltext] = glasscabinet
+func wavegauge_demo(glasscabinet :GlassCabinet) -> void:
 	wavegauge_box = preload("res://wave_gauge/wave_gauge.tscn").instantiate(
 		).init(Vector3(WorldSize.x-1,WorldSize.y-1,WorldSize.z-1), Vector3i(32,32,32), WaveGauge.color_list, 0.1, 1.0 )
 	glasscabinet.add_child(wavegauge_box)
 
 var wirenet :MultiMeshShape
 var wavegauge_plane :WaveGauge
-func wirenet_wavegauge_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	if labeltext != "":
-		glasscabinet.set_label_text(labeltext)
-		demo_name_to_glass_cabinet[labeltext] = glasscabinet
+func wirenet_wavegauge_demo(glasscabinet :GlassCabinet) -> void:
 	var grid_size := Vector2i(16,9)*2
 	wirenet = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).init_wire_net(Vector2(WorldSize.x,WorldSize.y), Vector2i(grid_size.x,grid_size.y), WorldSize.x/grid_size.x/10, random_color())
@@ -327,10 +314,7 @@ func wirenet_wavegauge_demo(glasscabinet :GlassCabinet, labeltext :String = "") 
 	glasscabinet.add_child(wavegauge_plane)
 
 var maze3d :Maze3D
-func maze3d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	if labeltext != "":
-		glasscabinet.set_label_text(labeltext)
-		demo_name_to_glass_cabinet[labeltext] = glasscabinet
+func maze3d_demo(glasscabinet :GlassCabinet) -> void:
 	var ms := Maze3DSetting.new_default()
 	ms.MazeSize = Vector2i(16,9)
 	ms.LaneW = WorldSize.x/ms.MazeSize.x-0.1
@@ -346,10 +330,7 @@ func maze3d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 var meshtrail_list :Array
 var bound_aabb :AABB
 var trailmesh_radius := WorldSize.length()/100
-func meshtrail_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	if labeltext != "":
-		glasscabinet.set_label_text(labeltext)
-		demo_name_to_glass_cabinet[labeltext] = glasscabinet
+func meshtrail_demo(glasscabinet :GlassCabinet) -> void:
 	bound_aabb = AABB( -WorldSize/2, WorldSize)
 	var mesh := BoxMesh.new()
 	mesh.material = MultiMeshShape.make_color_material()
@@ -382,10 +363,7 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 
 var arrow3d :Arrow3D
 var valvehandle :ValveHandle
-func props_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	if labeltext != "":
-		glasscabinet.set_label_text(labeltext)
-		demo_name_to_glass_cabinet[labeltext] = glasscabinet
+func props_demo(glasscabinet :GlassCabinet) -> void:
 	glasscabinet.show_axis_arrow()
 	arrow3d = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
 		).set_color(random_color()).set_size( WorldSize.x/5, WorldSize.x/50, WorldSize.x/25)
@@ -411,10 +389,7 @@ func start_props_animation() -> void:
 	props_animation.start_rotate_subfield("ani_rot", valvehandle, axis , valvehandle.rotation[axis], valvehandle.rotation[axis] + diff, 1.0)
 
 
-func line2d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	if labeltext != "":
-		glasscabinet.set_label_text(labeltext)
-		demo_name_to_glass_cabinet[labeltext] = glasscabinet
+func line2d_demo(glasscabinet :GlassCabinet) -> void:
 	glasscabinet.show_wall_box(false)
 	var size_pixel := Vector2i(2048,2048)
 	var ml2d = preload("res://move_line_2d/move_line_2d.tscn").instantiate()
@@ -438,10 +413,7 @@ func line2d_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
 	glasscabinet.add_child(ml2dmi)
 
 var orbitsphere_list :Array
-func orbit_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	if labeltext != "":
-		glasscabinet.set_label_text(labeltext)
-		demo_name_to_glass_cabinet[labeltext] = glasscabinet
+func orbit_demo(glasscabinet :GlassCabinet) -> void:
 	glasscabinet.show_wall_box(false)
 	for i in 9:
 		add_orbitsphere(glasscabinet, i, 9)
@@ -494,10 +466,7 @@ func start_clock_calendar_animation():
 
 var calendar :Calendar3D
 var clock :AnalogClock3D
-func clock_calendar_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	if labeltext != "":
-		glasscabinet.set_label_text(labeltext)
-		demo_name_to_glass_cabinet[labeltext] = glasscabinet
+func clock_calendar_demo(glasscabinet :GlassCabinet) -> void:
 	glasscabinet.show_wall_box(false)
 	calendar = preload("res://calendar_3d/calendar_3d.tscn").instantiate(
 		).init(WorldSize.x/2, WorldSize.y, WorldSize.z/10, WorldSize.y/2.0/6 , true )
@@ -512,10 +481,7 @@ func clock_calendar_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> 
 
 var bartree_scene = preload("res://bar_tree/bar_tree.tscn")
 var bartree_list :Array
-func bartree_demo(glasscabinet :GlassCabinet, labeltext :String = "") -> void:
-	if labeltext != "":
-		glasscabinet.set_label_text(labeltext)
-		demo_name_to_glass_cabinet[labeltext] = glasscabinet
+func bartree_demo(glasscabinet :GlassCabinet) -> void:
 	var tree_size := Vector3(WorldSize.z/3, WorldSize.y, WorldSize.z / 30)
 	make_tree3(randi_range(1,7), glasscabinet, tree_size, randi_range(20,100), Vector3(-WorldSize.x/4,-WorldSize.y/2,0), false)
 	make_tree3(randi_range(1,7), glasscabinet, tree_size, randi_range(20,100), Vector3(WorldSize.x/4,-WorldSize.y/2,0), true)
