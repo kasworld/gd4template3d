@@ -1,8 +1,5 @@
 extends Node3D
-
 const WorldSize := Vector3(160,90,80)
-
-
 
 func on_viewport_size_changed() -> void:
 	var vp_size := get_viewport().get_visible_rect().size
@@ -36,7 +33,6 @@ Currently rendering: occlusion culling:%s
 	if $"오른쪽패널/LabelInfo".visible:
 		$"오른쪽패널/LabelInfo".text = "%s" % [ MovingCameraLight.GetCurrentCamera() ]
 
-
 func _ready() -> void:
 	on_viewport_size_changed()
 	get_viewport().size_changed.connect(on_viewport_size_changed)
@@ -45,16 +41,19 @@ func _ready() -> void:
 	$OmniLight3D.position = Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
 	$CenterCameraLight.set_center_pos_far( Vector3(0, 0, -WorldSize.z), Vector3.ZERO, WorldSize.length()*3)
+	add_camera_dict($CenterCameraLight, "Center")
 	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
+	add_camera_dict($FixedCameraLight, "Fixed")
 	$MovingCameraLightHober.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
+	add_camera_dict($MovingCameraLightHober, "Hober")
 	$MovingCameraLightAround.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
+	add_camera_dict($MovingCameraLightAround, "Around")
 	$AxisArrow3D.set_colors().set_size(WorldSize.length()/20)
 
 	make_glass_cabinet()
 	setup_demo_to_cabinet()
 	$CenterCameraLight.make_current()
 
-var demo_name_to_glass_cabinet := {}
 func setup_demo_to_cabinet() -> void:
 	run_demo(bartree_demo, "bartree")
 	run_demo(clock_calendar_demo, "clock calender")
@@ -73,18 +72,24 @@ func setup_demo_to_cabinet() -> void:
 	print_debug("remain glass cabinet %d\ndemo size %s" % [
 		glass_cabinet_list.size(),demo_name_to_glass_cabinet.size()])
 
+var demo_name_to_glass_cabinet := {}
 func run_demo(demo :Callable, text :String) -> void:
 	var gc :GlassCabinet = glass_cabinet_list.pop_front()
 	demo.call(gc)
 	gc.set_label_text(text)
 	demo_name_to_glass_cabinet[text] = gc
-	$"왼쪽패널/SelectCamera".add_item(text)
+	add_camera_dict(gc.get_camera_light(), text)
 
+var name_to_camera := {}
+func add_camera_dict(mcl :MovingCameraLight, text :String) -> void:
+	mcl.set_info_text(text)
+	name_to_camera[text] = mcl
+	$"왼쪽패널/SelectCamera".add_item(text)
 func _on_select_camera_item_selected(index: int) -> void:
 	var text :String =  $"왼쪽패널/SelectCamera".get_item_text(index)
-	var gc :GlassCabinet = demo_name_to_glass_cabinet.get(text)
-	if gc != null :
-		gc.get_camera_light().make_current()
+	var mcl :MovingCameraLight = name_to_camera.get(text)
+	if mcl != null :
+		mcl.make_current()
 	$"왼쪽패널/SelectCamera".release_focus()
 
 

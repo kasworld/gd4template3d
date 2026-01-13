@@ -16,7 +16,10 @@ static func FindCameraIndex( mcl :MovingCameraLight) -> int:
 	assert(false)
 	return -1
 
-var number :int # may be unique but not continuous is some deleted
+var info_text :String
+func set_info_text(s :String) -> MovingCameraLight:
+	info_text = s
+	return self
 var camera_fov := ClampedFloat.new(75,1,179)
 var light_angle := ClampedFloat.new(75,1,179)
 
@@ -27,7 +30,6 @@ func get_light() -> SpotLight3D:
 	return $SpotLight3D
 
 func _ready() -> void:
-	number = SelfList.size()
 	SelfList.append(self)
 	camera_fov_reset()
 	light_angle_reset()
@@ -38,8 +40,8 @@ func copy_position_rotation(n :Node3D) -> void:
 	rotation = n.rotation
 
 func _to_string() -> String:
-	return "MovingCameraLight%d[camera fov:%s, light angle:%s, rotation:%s, position:%s]" % [
-		number, camera_fov,light_angle, rotation_degrees, position ]
+	return "MovingCameraLight %s[camera fov:%s, light angle:%s, rotation:%s, position:%s]" % [
+		info_text, camera_fov,light_angle, rotation_degrees, position ]
 
 func camera_fov_inc() -> void:
 	$Camera3D.fov = camera_fov.set_up()
