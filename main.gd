@@ -78,6 +78,12 @@ func run_demo(demo :Callable, name :String) -> void:
 	demo.call(gc)
 	gc.set_label_text(name)
 	demo_name_to_glass_cabinet[name] = gc
+	$"왼쪽패널/SelectCamera".add_item(name)
+
+func _on_select_camera_item_selected(index: int) -> void:
+	var text :String =  $"왼쪽패널/SelectCamera".get_item_text(index)
+	print_debug(index, " ", text, " ", demo_name_to_glass_cabinet[text])
+
 
 var glass_cabinet_list :Array
 func make_glass_cabinet() -> void:

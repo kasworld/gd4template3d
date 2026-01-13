@@ -38,6 +38,9 @@ offset_right = 40.0
 offset_bottom = 138.0
 theme = SubResource("Theme_h2yge")
 
+[node name="SelectCamera" type="OptionButton" parent="왼쪽패널"]
+layout_mode = 2
+
 [node name="LabelReel" type="Label" parent="왼쪽패널"]
 layout_mode = 2
 
@@ -108,5 +111,6 @@ one_shot = true
 
 [node name="MovingCameraLightAround" parent="." instance=ExtResource("8_5vw27")]
 
+[connection signal="item_selected" from="왼쪽패널/SelectCamera" to="." method="_on_select_camera_item_selected"]
 [connection signal="timeout" from="TimerWheel" to="." method="_on_timer_wheel_timeout"]
 [connection signal="timeout" from="TimerReel" to="." method="_on_timer_reel_timeout"]
