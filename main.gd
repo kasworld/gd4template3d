@@ -82,7 +82,7 @@ func run_demo(demo :Callable, text :String) -> void:
 
 func _on_select_camera_item_selected(index: int) -> void:
 	var text :String =  $"왼쪽패널/SelectCamera".get_item_text(index)
-	var gc :GlassCabinet = demo_name_to_glass_cabinet[text]
+	var gc :GlassCabinet = demo_name_to_glass_cabinet.get(text)
 	if gc != null :
 		gc.get_camera_light().make_current()
 	$"왼쪽패널/SelectCamera".release_focus()
@@ -178,13 +178,13 @@ func random_color2(_arg ) -> Color:
 var platonic_solid_list :Array = []
 func platonic_solids_demo(glasscabinet :GlassCabinet) -> void:
 	for ll in [
-		[4,  [ 0,  0], 0, 3],
-		[6,  [ 1,  0], 0, 3],
-		[6,  [ 2,  0], 3, 7],
+		[4,  [ 2,  1], 0, 3],
+		[6,  [ 0,  0], 0, 3],
+		[6,  [ 1,  0], 3, 7],
 		[8,  [ 0,  1], 0, 4],
 		[8,  [ 1,  1], 0, 5],
-		[20, [ 2,  1], 0, 5],
-		[20, [ 0,  2], 5, 10],
+		[20, [ 0,  2], 0, 5],
+		[20, [ 1,  2], 5, 10],
 		[12, [ 3,  0], 0, 3,],
 		[12, [ 3,  1], 3, 9,],
 		[12, [ 3,  2], 9, 18],
