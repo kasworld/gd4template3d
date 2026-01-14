@@ -1,5 +1,11 @@
 extends Node3D
 const WorldSize := Vector3(160,90,80)
+func calc_pos_in_WorldSize(x :int, y :int, x_grid:int, y_grid:int) -> Vector3:
+	var xunit := WorldSize.x/x_grid
+	var yunit := WorldSize.y/y_grid
+	var posadj := Vector3(+xunit/2 - WorldSize.x/2, +yunit/2-WorldSize.y/2, 0)
+	var pos := Vector3(xunit * x  , yunit * y , 0) + posadj
+	return pos
 
 func on_viewport_size_changed() -> void:
 	var vp_size := get_viewport().get_visible_rect().size
@@ -205,11 +211,7 @@ func platonic_solids_demo(glasscabinet :GlassCabinet) -> void:
 			).init(face, from, to, WorldSize.length()/13 , wire_width, random_color())
 		glasscabinet.add_child(ws)
 		platonic_solid_list.append(ws)
-		var xunit := WorldSize.x/4
-		var yunit := WorldSize.y/3
-		var posadj := Vector3(+xunit/2 - WorldSize.x/2, +yunit/2-WorldSize.y/2, 0)
-		var pos := Vector3(xunit * ll[2][0]  , yunit * ll[2][1] , 0) + posadj
-		ws.position = pos
+		ws.position = calc_pos_in_WorldSize(ll[2][0],ll[2][1], 4,3)
 	platonic_solids_animation.animation_ended.connect(platonic_solids_animation_ended)
 	start_platonic_solids_animation()
 
@@ -378,12 +380,12 @@ func props_demo(glasscabinet :GlassCabinet) -> void:
 	glasscabinet.show_axis_arrow()
 	var arrow3d = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
 		).set_color(random_color()).set_size( WorldSize.x/5, WorldSize.x/50, WorldSize.x/25)
-	arrow3d.position = Vector3(WorldSize.x/4, 0,0)
+	arrow3d.position = calc_pos_in_WorldSize(0,0,2,1)
 	glasscabinet.add_child(arrow3d)
 	prop_list.append(arrow3d)
 	var valvehandle = preload("res://valve_handle/valve_handle.tscn").instantiate(
 		).init(WorldSize.x/10,WorldSize.x/10,4, random_color())
-	valvehandle.position = Vector3(-WorldSize.x/4, 0,0)
+	valvehandle.position = calc_pos_in_WorldSize(1,0,2,1)
 	glasscabinet.add_child(valvehandle)
 	prop_list.append(valvehandle)
 
