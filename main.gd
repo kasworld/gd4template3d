@@ -182,6 +182,7 @@ func random_color2(_arg ) -> Color:
 
 var platonic_solid_list :Array = []
 func platonic_solids_demo(glasscabinet :GlassCabinet) -> void:
+	glasscabinet.show_wall_box(false)
 	for ll in [
 		[4,  [ 2,  1], 0, 3],
 		[6,  [ 0,  0], 0, 3],
@@ -553,10 +554,10 @@ func _on_카메라변경_pressed() -> void:
 	MovingCameraLight.NextCamera()
 
 func _on_button_fov_up_pressed() -> void:
-	MovingCameraLight.GetCurrentCamera().fov_camera_inc()
+	MovingCameraLight.GetCurrentCamera().camera_fov_inc()
 
 func _on_button_fov_down_pressed() -> void:
-	MovingCameraLight.GetCurrentCamera().fov_camera_dec()
+	MovingCameraLight.GetCurrentCamera().camera_fov_dec()
 
 var key2fn = {
 	KEY_ESCAPE:_on_button_esc_pressed,
