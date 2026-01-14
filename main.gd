@@ -373,18 +373,20 @@ func get_color_ByPosition(pos :Vector3) -> Color:
 func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	return Bounce.v3f(pos, bound_aabb, radius)
 
-var arrow3d :Arrow3D
-var valvehandle :ValveHandle
+var prop_list :Array
 func props_demo(glasscabinet :GlassCabinet) -> void:
 	glasscabinet.show_axis_arrow()
-	arrow3d = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
+	var arrow3d = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
 		).set_color(random_color()).set_size( WorldSize.x/5, WorldSize.x/50, WorldSize.x/25)
 	arrow3d.position = Vector3(WorldSize.x/4, 0,0)
 	glasscabinet.add_child(arrow3d)
-	valvehandle = preload("res://valve_handle/valve_handle.tscn").instantiate(
+	prop_list.append(arrow3d)
+	var valvehandle = preload("res://valve_handle/valve_handle.tscn").instantiate(
 		).init(WorldSize.x/10,WorldSize.x/10,4, random_color())
 	valvehandle.position = Vector3(-WorldSize.x/4, 0,0)
 	glasscabinet.add_child(valvehandle)
+	prop_list.append(valvehandle)
+
 	props_animation.animation_ended.connect(props_animation_ended)
 	start_props_animation()
 
@@ -393,13 +395,11 @@ func props_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
 	if props_animation.is_empty():
 		start_props_animation()
 func start_props_animation() -> void:
-	var diff :float = [PI/2,-PI/2].pick_random()
-	var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-	props_animation.start_rotate_subfield("ani_rot", arrow3d, axis , arrow3d.rotation[axis], arrow3d.rotation[axis] + diff, 1.0)
-	diff = [PI/2,-PI/2].pick_random()
-	axis = Vector3.Axis.AXIS_Y
-	props_animation.start_rotate_subfield("ani_rot", valvehandle, axis , valvehandle.rotation[axis], valvehandle.rotation[axis] + diff, 1.0)
-
+	for ps in prop_list:
+		var diff :float = [PI/2,-PI/2].pick_random()
+		var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
+		props_animation.start_rotate_subfield(
+			"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
 
 func line2d_demo(glasscabinet :GlassCabinet) -> void:
 	glasscabinet.show_wall_box(false)
