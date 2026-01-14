@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://8qpoj7xgl4b1"]
+
+[ext_resource type="Script" uid="uid://b013xpyacdtyk" path="res://wire_solid/wire_solid.gd" id="1_jr21j"]
+[ext_resource type="PackedScene" uid="uid://cfnbpemvoy1i6" path="res://multi_mesh_shape/multi_mesh_shape.tscn" id="2_6ltxa"]
+
+[sub_resource type="MultiMesh" id="MultiMesh_gvvot"]
+resource_local_to_scene = true
+
+[sub_resource type="MultiMesh" id="MultiMesh_gxs7u"]
+resource_local_to_scene = true
+
+[node name="WireSolid" type="Node3D"]
+script = ExtResource("1_jr21j")
+
+[node name="Wires" parent="." instance=ExtResource("2_6ltxa")]
+multimesh = SubResource("MultiMesh_gvvot")
+
+[node name="Spheres" parent="." instance=ExtResource("2_6ltxa")]
+multimesh = SubResource("MultiMesh_gxs7u")

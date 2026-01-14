@@ -195,23 +195,17 @@ func platonic_solids_demo(glasscabinet :GlassCabinet) -> void:
 		[12, [ 3,  2], 9, 18],
 	]:
 		var face :int = ll[0]
+		var from :int = ll[2]
+		var to :int = ll[3]
+		var ws :WireSolid = preload("res://wire_solid/wire_solid.tscn").instantiate(
+			).init(face, from, to, WorldSize.length()/13 , 1.0, random_color())
+		glasscabinet.add_child(ws)
+		platonic_solid_list.append(ws)
 		var xunit := WorldSize.x/4
 		var yunit := WorldSize.y/3
 		var posadj := Vector3(+xunit/2 - WorldSize.x/2, +yunit/2-WorldSize.y/2, 0)
 		var pos := Vector3(xunit * ll[1][0]  , yunit * ll[1][1] , 0) + posadj
-		var points := PlatonicSolids.ScalePointList( PlatonicSolids.PointEdge[face][0], WorldSize.length()/13 )
-		var from :int = ll[2]
-		var to :int = ll[3]
-		var lines := PlatonicSolids.PointListToLineList2(points, from, to )
-		var ps = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).multi_line_by_pos(lines, 1.0, random_color())
-		glasscabinet.add_child(ps)
-		ps.position = pos
-		platonic_solid_list.append(ps)
-		var sps = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-			).init_spheres_by_point_list(points, 1.0, random_color())
-		ps.add_child(sps)
-
+		ws.position = pos
 	platonic_solids_animation.animation_ended.connect(platonic_solids_animation_ended)
 	start_platonic_solids_animation()
 
