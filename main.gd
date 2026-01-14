@@ -372,16 +372,26 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 var prop_list :Array
 func props_demo(glasscabinet :GlassCabinet) -> void:
 	glasscabinet.show_axis_arrow()
-	var arrow3d = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
-		).set_color(random_color()).set_size( WorldSize.x/5, WorldSize.x/50, WorldSize.x/25)
-	arrow3d.position = glasscabinet.calc_pos_by_grid(0,0,2,1)
-	glasscabinet.add_child(arrow3d)
-	prop_list.append(arrow3d)
-	var valvehandle = preload("res://valve_handle/valve_handle.tscn").instantiate(
-		).init(WorldSize.x/10,WorldSize.x/10,4, random_color())
-	valvehandle.position = glasscabinet.calc_pos_by_grid(1,0,2,1)
-	glasscabinet.add_child(valvehandle)
-	prop_list.append(valvehandle)
+	var prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
+		).set_color(random_color()).set_size( WorldSize.x/5, WorldSize.x/100, WorldSize.x/25,0.3)
+	prop.position = glasscabinet.calc_pos_by_grid(0,0,2,2)
+	glasscabinet.add_child(prop)
+	prop_list.append(prop)
+	prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
+		).set_color(random_color()).set_size( WorldSize.x/5, WorldSize.x/70, WorldSize.x/25)
+	prop.position = glasscabinet.calc_pos_by_grid(1,0,2,2)
+	glasscabinet.add_child(prop)
+	prop_list.append(prop)
+	prop = preload("res://valve_handle/valve_handle.tscn").instantiate(
+		).init(WorldSize.x/20, WorldSize.x/10, 8, random_color())
+	prop.position = glasscabinet.calc_pos_by_grid(0,1,2,2)
+	glasscabinet.add_child(prop)
+	prop_list.append(prop)
+	prop = preload("res://valve_handle/valve_handle.tscn").instantiate(
+		).init(WorldSize.x/10, WorldSize.x/20, 4, random_color())
+	prop.position = glasscabinet.calc_pos_by_grid(1,1,2,2)
+	glasscabinet.add_child(prop)
+	prop_list.append(prop)
 
 	props_animation.animation_ended.connect(props_animation_ended)
 	start_props_animation()
