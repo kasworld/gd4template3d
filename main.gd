@@ -184,28 +184,31 @@ var platonic_solid_list :Array = []
 func platonic_solids_demo(glasscabinet :GlassCabinet) -> void:
 	glasscabinet.show_wall_box(false)
 	for ll in [
-		[4,  [ 2,  1], 0, 3],
-		[6,  [ 0,  0], 0, 3],
-		[6,  [ 1,  0], 3, 7],
-		[8,  [ 0,  1], 0, 4],
-		[8,  [ 1,  1], 0, 5],
-		[20, [ 0,  2], 0, 5],
-		[20, [ 1,  2], 5, 10],
-		[12, [ 3,  0], 0, 3,],
-		[12, [ 3,  1], 3, 9,],
-		[12, [ 3,  2], 9, 18],
+		[4, 0.5,  [2, 0], 0, 3 ],
+		[4, 1.0,  [2, 1], 0, 3 ],
+		[4, 2.0,  [2, 2], 0, 3 ],
+		[6, 2.0,  [0, 0], 0, 3 ],
+		[6, 1.0,  [1, 0], 3, 7 ],
+		[8, 2.0,  [0, 1], 0, 4 ],
+		[8, 1.0,  [1, 1], 0, 5 ],
+		[20, 2.0, [0, 2], 0, 5 ],
+		[20, 1.0, [1, 2], 5, 10 ],
+		[12, 2.0, [3, 0], 0, 3 ],
+		[12, 1.0, [3, 1], 3, 9 ],
+		[12, 1.0, [3, 2], 9, 18 ],
 	]:
 		var face :int = ll[0]
-		var from :int = ll[2]
-		var to :int = ll[3]
+		var from :int = ll[3]
+		var to :int = ll[4]
+		var wire_width :float = ll[1]
 		var ws :WireSolid = preload("res://wire_solid/wire_solid.tscn").instantiate(
-			).init(face, from, to, WorldSize.length()/13 , 1.0, random_color())
+			).init(face, from, to, WorldSize.length()/13 , wire_width, random_color())
 		glasscabinet.add_child(ws)
 		platonic_solid_list.append(ws)
 		var xunit := WorldSize.x/4
 		var yunit := WorldSize.y/3
 		var posadj := Vector3(+xunit/2 - WorldSize.x/2, +yunit/2-WorldSize.y/2, 0)
-		var pos := Vector3(xunit * ll[1][0]  , yunit * ll[1][1] , 0) + posadj
+		var pos := Vector3(xunit * ll[2][0]  , yunit * ll[2][1] , 0) + posadj
 		ws.position = pos
 	platonic_solids_animation.animation_ended.connect(platonic_solids_animation_ended)
 	start_platonic_solids_animation()
