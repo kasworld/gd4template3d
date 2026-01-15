@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://dylwfbugiuwjp"]
+
+[ext_resource type="Script" uid="uid://d0wwnljg0knil" path="res://run_demo/run_demo.gd" id="1_8ttpo"]
+
+[node name="RunDemo" type="Node3D"]
+script = ExtResource("1_8ttpo")
+
+[node name="TimerWheel" type="Timer" parent="."]
+one_shot = true
+
+[node name="TimerReel" type="Timer" parent="."]
+one_shot = true
+
+[node name="GlassCabinetContainer1" type="Node3D" parent="."]
+
+[node name="GlassCabinetContainer2" type="Node3D" parent="."]
+
+[connection signal="timeout" from="TimerWheel" to="." method="_on_timer_wheel_timeout"]
+[connection signal="timeout" from="TimerReel" to="." method="_on_timer_reel_timeout"]

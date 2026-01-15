@@ -1,9 +1,10 @@
-[gd_scene load_steps=12 format=3 uid="uid://c6maulcewyhy5"]
+[gd_scene load_steps=13 format=3 uid="uid://c6maulcewyhy5"]
 
 [ext_resource type="Script" uid="uid://bgj25qi5j8dgh" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Texture2D" uid="uid://k1k5bbintag5" path="res://skymap/skymap.hdr" id="3_lquwl"]
 [ext_resource type="PackedScene" uid="uid://dl14flc0fkeyt" path="res://axis_arrow_3d/axis_arrow_3d.tscn" id="5_7mycd"]
 [ext_resource type="PackedScene" uid="uid://c6cct2gj2a3im" path="res://timed_message/timed_message.tscn" id="5_lquwl"]
+[ext_resource type="PackedScene" uid="uid://dylwfbugiuwjp" path="res://run_demo/run_demo.tscn" id="6_7mycd"]
 [ext_resource type="PackedScene" uid="uid://ces3a6yv0c5fi" path="res://moving_carmera_light/moving_camera_light.tscn" id="8_5vw27"]
 
 [sub_resource type="Theme" id="Theme_h2yge"]
@@ -91,17 +92,7 @@ sky_mode = 1
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_7mycd")
 
-[node name="TimerWheel" type="Timer" parent="."]
-one_shot = true
-
-[node name="TimerReel" type="Timer" parent="."]
-one_shot = true
-
 [node name="AxisArrow3D" parent="." instance=ExtResource("5_7mycd")]
-
-[node name="GlassCabinetContainer1" type="Node3D" parent="."]
-
-[node name="GlassCabinetContainer2" type="Node3D" parent="."]
 
 [node name="FixedCameraLight" parent="." instance=ExtResource("8_5vw27")]
 
@@ -111,6 +102,6 @@ one_shot = true
 
 [node name="MovingCameraLightAround" parent="." instance=ExtResource("8_5vw27")]
 
+[node name="RunDemo" parent="." instance=ExtResource("6_7mycd")]
+
 [connection signal="item_selected" from="왼쪽패널/SelectCamera" to="." method="_on_select_camera_item_selected"]
-[connection signal="timeout" from="TimerWheel" to="." method="_on_timer_wheel_timeout"]
-[connection signal="timeout" from="TimerReel" to="." method="_on_timer_reel_timeout"]
