@@ -25,7 +25,7 @@ func set_info_text(s :String) -> MovingCameraLight:
 	info_text = s
 	return self
 var camera_fov := ClampedFloat.new(75,1,179)
-var light_angle := ClampedFloat.new(75,1,179)
+var light_angle := ClampedFloat.new(45,1,179)
 
 func get_camera() -> Camera3D:
 	return $Camera3D

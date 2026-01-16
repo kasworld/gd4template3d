@@ -52,8 +52,7 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(on_viewport_size_changed)
 	$TimedMessage.panel_hidden.connect(timed_message_hidden)
 	$TimedMessage.show_message("",0)
-	#$OmniLight3D.position = Vector3(0,0,WorldSize.length())
-	$OmniLight3D.omni_range = WorldSize.length()*2
+	$OmniLight3D.omni_range = WorldSize.length()*3
 	$CenterCameraLight.set_center_pos_far( Vector3(0, 0, -WorldSize.z), Vector3.ZERO, WorldSize.length()*3)
 	add_camera_dict($CenterCameraLight, "Center")
 	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)

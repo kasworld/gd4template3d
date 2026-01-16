@@ -70,7 +70,6 @@ self_modulate = Color(1, 1, 1, 0.498039)
 theme = SubResource("Theme_7mycd")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
-light_energy = 5.0
 shadow_opacity = 0.5
 omni_attenuation = 0.0
 
