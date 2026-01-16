@@ -92,6 +92,7 @@ func new_dialgauge(radius :float, cabinet_size :Vector3) -> DialGauge:
 		)
 var dialgauge_list :Array
 func dialgauge_demo(gc :GlassCabinet) -> void:
+	gc.show_wall_box(false)
 	var radius := gc.cabinet_size.x/5
 	var dg = new_dialgauge(radius, gc.cabinet_size)
 	dg.position = gc.calc_pos_by_grid(0,0,2,1)
