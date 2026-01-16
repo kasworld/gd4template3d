@@ -36,6 +36,7 @@ func setup_demo_to_cabinet(add_camera_dict_a :Callable) -> void:
 	run_demo(tornado_demo, "tornado")
 	run_demo(platonic_solids_demo, "platonic solids")
 	run_demo(winter_tree_demo, "winter tree")
+	run_demo(dialgauge_demo, "dial gauge")
 	print_debug("remain glass cabinet %d\ndemo size %s" % [
 		glass_cabinet_list.size(),demo_name_to_glass_cabinet.size()])
 
@@ -64,6 +65,7 @@ func _process(delta: float) -> void:
 	meshtrail_animate(delta)
 	tornado_animate()
 	wintertree_animate(delta)
+	dialgauge_animate()
 	clock_calendar_animation.handle_animation()
 	$GlassCabinetContainer1.rotate_y(delta/10)
 	$GlassCabinetContainer2.rotate_y(-delta/10)
@@ -73,6 +75,47 @@ func _process(delta: float) -> void:
 
 func random_color() -> Color:
 	return NamedColorList.color_list.pick_random()[0]
+
+func make_rand_range(v :float, l :float) -> Array:
+	var r1 := randf_range(v,v+l)
+	var r2 := randf_range(r1+l/2,r1+l)
+	return [r1,r2]
+func new_dialgauge(radius :float, cabinet_size :Vector3) -> DialGauge:
+	return preload("res://dial_gauge/dial_gauge.tscn").instantiate(
+		).init(radius, cabinet_size.z/20, random_color(),random_color(),random_color(),
+		).init_range( make_rand_range(0,360), make_rand_range(0,2*PI)
+		).add_dial_num(radius*0.80, cabinet_size.z/100, radius/20, 12, random_color(),
+		).add_dial_bar(radius*0.92, Vector3(cabinet_size.z/40, cabinet_size.z/200, cabinet_size.z/100),
+			DialGauge.BarAlign.Out, 60, random_color()
+		).add_dial_bar(radius*0.92, Vector3(cabinet_size.z/40, cabinet_size.z/200, cabinet_size.z/100),
+			DialGauge.BarAlign.In, 12, random_color()
+		)
+var dialgauge_list :Array
+func dialgauge_demo(gc :GlassCabinet) -> void:
+	var radius := gc.cabinet_size.x/5
+	var dg = new_dialgauge(radius, gc.cabinet_size)
+	dg.position = gc.calc_pos_by_grid(0,0,2,1)
+	gc.add_child(dg)
+	dialgauge_list.append([dg, dg.value_range_mid()])
+	dg = new_dialgauge(radius, gc.cabinet_size)
+	dg.position = gc.calc_pos_by_grid(1,0,2,1)
+	gc.add_child(dg)
+	dialgauge_list.append([dg, dg.value_range_mid()])
+	radius = gc.cabinet_size.x/10
+	dg = new_dialgauge(radius, gc.cabinet_size)
+	dg.position = gc.calc_pos_by_grid(1,0,3,3)
+	gc.add_child(dg)
+	dialgauge_list.append([dg, dg.value_range_mid()])
+	dg = new_dialgauge(radius, gc.cabinet_size)
+	dg.position = gc.calc_pos_by_grid(1,2,3,3)
+	gc.add_child(dg)
+	dialgauge_list.append([dg, dg.value_range_mid()])
+func dialgauge_animate() -> void:
+	for dg in dialgauge_list:
+		dg[1] += randfn(0,1)*dg[0].value_range_len()/100
+		dg[1] = dg[0].clamp_value(dg[1])
+		dg[0].set_needle_value(dg[1])
+
 
 func winter_tree_demo(gc :GlassCabinet) -> void:
 	var bmesh := PrismMesh.new()
