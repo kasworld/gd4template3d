@@ -42,7 +42,9 @@ func _on_select_camera_item_selected(index: int) -> void:
 	var text :String =  $"왼쪽패널/SelectCamera".get_item_text(index)
 	var mcl :MovingCameraLight = name_to_camera.get(text)
 	if mcl != null :
+		MovingCameraLight.AllLightOn(false)
 		mcl.make_current()
+		MovingCameraLight.GetCurrentCamera().get_light().visible = true
 	$"왼쪽패널/SelectCamera".release_focus()
 
 func _ready() -> void:
@@ -50,7 +52,7 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(on_viewport_size_changed)
 	$TimedMessage.panel_hidden.connect(timed_message_hidden)
 	$TimedMessage.show_message("",0)
-	$OmniLight3D.position = Vector3(0,0,WorldSize.length())
+	#$OmniLight3D.position = Vector3(0,0,WorldSize.length())
 	$OmniLight3D.omni_range = WorldSize.length()*2
 	$CenterCameraLight.set_center_pos_far( Vector3(0, 0, -WorldSize.z), Vector3.ZERO, WorldSize.length()*3)
 	add_camera_dict($CenterCameraLight, "Center")
@@ -64,7 +66,9 @@ func _ready() -> void:
 
 	$RunDemo.make_glass_cabinet(WorldSize)
 	$RunDemo.setup_demo_to_cabinet(add_camera_dict)
+	MovingCameraLight.AllLightOn(false)
 	$CenterCameraLight.make_current()
+	MovingCameraLight.GetCurrentCamera().get_light().visible = true
 
 func _process(_delta: float) -> void:
 	var now := Time.get_unix_time_from_system()
@@ -75,7 +79,9 @@ func _process(_delta: float) -> void:
 		$MovingCameraLightAround.move_wave_around_y(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
 
 func _on_카메라변경_pressed() -> void:
+	MovingCameraLight.AllLightOn(false)
 	MovingCameraLight.NextCamera()
+	MovingCameraLight.GetCurrentCamera().get_light().visible = true
 
 func _on_button_fov_up_pressed() -> void:
 	MovingCameraLight.GetCurrentCamera().camera_fov_inc()

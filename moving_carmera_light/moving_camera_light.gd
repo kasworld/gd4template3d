@@ -16,6 +16,10 @@ static func FindCameraIndex( mcl :MovingCameraLight) -> int:
 	assert(false)
 	return -1
 
+static func AllLightOn(b :bool) -> void:
+	for mcl in SelfList:
+		mcl.get_light().visible = b
+
 var info_text :String
 func set_info_text(s :String) -> MovingCameraLight:
 	info_text = s
