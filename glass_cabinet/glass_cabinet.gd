@@ -21,7 +21,25 @@ func init(cabinet_size_a :Vector3) -> GlassCabinet:
 		PlatonicSolids.MultiplyPointList(PlatonicSolids.CubePoints, cabinet_size/2),
 		cabinet_size.length()/200, Color.WHITE,
 	)
+	add_spot_lights()
 	return self
+
+func add_spot_lights() -> GlassCabinet:
+	var points := PlatonicSolids.MultiplyPointList(PlatonicSolids.CubePoints, cabinet_size/2 )
+	for pos in points:
+		var sl := SpotLight3D.new()
+		$LightContainer.add_child(sl)
+		sl.spot_range = cabinet_size.length()
+		sl.position = pos
+		sl.look_at_from_position(pos, Vector3.ZERO)
+		sl.light_energy = 100
+		sl.shadow_enabled = true
+		#sl.light_color = Color.RED
+	return self
+
+func light_on_all(b :bool) -> void:
+	for lc :SpotLight3D in $LightContainer.get_children():
+		lc.visible = b
 
 func show_axis_arrow(b :bool = true) -> GlassCabinet:
 	$AxisArrow3D.visible = b

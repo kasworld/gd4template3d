@@ -42,9 +42,9 @@ func _on_select_camera_item_selected(index: int) -> void:
 	var text :String =  $"왼쪽패널/SelectCamera".get_item_text(index)
 	var mcl :MovingCameraLight = name_to_camera.get(text)
 	if mcl != null :
-		MovingCameraLight.AllLightOn(false)
+		#MovingCameraLight.AllLightOn(false)
 		mcl.make_current()
-		MovingCameraLight.GetCurrentCamera().get_light().visible = true
+		#MovingCameraLight.GetCurrentCamera().get_light().visible = true
 	$"왼쪽패널/SelectCamera".release_focus()
 
 func _ready() -> void:
@@ -67,7 +67,7 @@ func _ready() -> void:
 	$RunDemo.setup_demo_to_cabinet(add_camera_dict)
 	MovingCameraLight.AllLightOn(false)
 	$CenterCameraLight.make_current()
-	MovingCameraLight.GetCurrentCamera().get_light().visible = true
+	#MovingCameraLight.GetCurrentCamera().get_light().visible = true
 
 func _process(_delta: float) -> void:
 	var now := Time.get_unix_time_from_system()
@@ -78,9 +78,9 @@ func _process(_delta: float) -> void:
 		$MovingCameraLightAround.move_wave_around_y(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
 
 func _on_카메라변경_pressed() -> void:
-	MovingCameraLight.AllLightOn(false)
+	#MovingCameraLight.AllLightOn(false)
 	MovingCameraLight.NextCamera()
-	MovingCameraLight.GetCurrentCamera().get_light().visible = true
+	#MovingCameraLight.GetCurrentCamera().get_light().visible = true
 
 func _on_button_fov_up_pressed() -> void:
 	MovingCameraLight.GetCurrentCamera().camera_fov_inc()

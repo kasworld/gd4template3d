@@ -41,3 +41,5 @@ multimesh = SubResource("MultiMesh_6tr68")
 
 [node name="Points" parent="." instance=ExtResource("4_2eiwf")]
 multimesh = SubResource("MultiMesh_2eiwf")
+
+[node name="LightContainer" type="Node3D" parent="."]
