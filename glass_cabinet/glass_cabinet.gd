@@ -33,13 +33,32 @@ func add_spot_lights() -> GlassCabinet:
 		sl.position = pos
 		sl.look_at_from_position(pos, Vector3.ZERO)
 		sl.light_energy = 100
-		sl.shadow_enabled = true
+		#sl.shadow_enabled = true
 		#sl.light_color = Color.RED
 	return self
 
-func light_on_all(b :bool) -> void:
-	for lc :SpotLight3D in $LightContainer.get_children():
-		lc.visible = b
+#const CubePoints := [
+	#Vector3(1,1,1),
+	#Vector3(-1,1,1),
+	#Vector3(1,-1,1),
+	#Vector3(-1,-1,1),
+	#Vector3(1,1,-1),
+	#Vector3(-1,1,-1),
+	#Vector3(1,-1,-1),
+	#Vector3(-1,-1,-1),
+#]
+
+## flag bit == 1 , set visible to b
+func light_set(b :bool, pos_flag :int = 0xff) -> void:
+	for i in $LightContainer.get_child_count():
+		if BitFlag.TestByPos(i, pos_flag):
+			$LightContainer.get_child(i).visible = b
+
+## all light on/off by flag
+func light_set_all(pos_flag :int = 0xff) -> void:
+	for i in $LightContainer.get_child_count():
+		$LightContainer.get_child(i).visible = BitFlag.TestByPos(i, pos_flag)
+
 
 func show_axis_arrow(b :bool = true) -> GlassCabinet:
 	$AxisArrow3D.visible = b

@@ -1,6 +1,6 @@
 extends Node3D
 
-var glass_cabinet_list :Array
+var empty_glass_cabinet_list :Array
 func make_glass_cabinet(cabinet_size :Vector3) -> void:
 	var count := 24
 	var unit_rad := 2*PI/ count
@@ -17,7 +17,7 @@ func make_glass_cabinet(cabinet_size :Vector3) -> void:
 			$GlassCabinetContainer2.add_child(gc)
 		gc.look_at( Vector3(0,gc.position.y,0), Vector3.UP, true)
 		gc.set_label_text("%d" % i).show_label(true)
-		glass_cabinet_list.append(gc)
+		empty_glass_cabinet_list.append(gc)
 
 var add_camera_dict :Callable
 func setup_demo_to_cabinet(add_camera_dict_a :Callable) -> void:
@@ -38,11 +38,11 @@ func setup_demo_to_cabinet(add_camera_dict_a :Callable) -> void:
 	run_demo(winter_tree_demo, "winter tree")
 	run_demo(dialgauge_demo, "dial gauge")
 	print_debug("remain glass cabinet %d\ndemo size %s" % [
-		glass_cabinet_list.size(),demo_name_to_glass_cabinet.size()])
+		empty_glass_cabinet_list.size(),demo_name_to_glass_cabinet.size()])
 
 var demo_name_to_glass_cabinet := {}
 func run_demo(demo :Callable, text :String) -> void:
-	var gc :GlassCabinet = glass_cabinet_list.pop_front()
+	var gc :GlassCabinet = empty_glass_cabinet_list.pop_front()
 	demo.call(gc)
 	gc.set_label_text(text)
 	demo_name_to_glass_cabinet[text] = gc
@@ -50,6 +50,9 @@ func run_demo(demo :Callable, text :String) -> void:
 
 
 func _process(delta: float) -> void:
+	var gc :GlassCabinet = empty_glass_cabinet_list.pick_random()
+	gc.light_set(randi_range(0,8), randi_range(0,256))
+
 	var now := Time.get_unix_time_from_system()
 	if wavegauge_box !=null:
 		wavegauge_box.animate_wave(now)
@@ -92,7 +95,7 @@ func new_dialgauge(radius :float, cabinet_size :Vector3) -> DialGauge:
 		)
 var dialgauge_list :Array
 func dialgauge_demo(gc :GlassCabinet) -> void:
-	gc.show_wall_box(false)
+	#gc.show_wall_box(false)
 	var radius := gc.cabinet_size.x/5
 	var dg = new_dialgauge(radius, gc.cabinet_size)
 	dg.position = gc.calc_pos_by_grid(0,0,2,1)
@@ -184,7 +187,7 @@ func random_color2(_arg ) -> Color:
 
 var platonic_solid_list :Array = []
 func platonic_solids_demo(gc :GlassCabinet) -> void:
-	gc.show_wall_box(false)
+	#gc.show_wall_box(false)
 	for ll in [
 		[4, 0.5,  [2, 0], 0, 3 ],
 		[4, 1.0,  [2, 1], 0, 3 ],
@@ -225,7 +228,7 @@ func start_platonic_solids_animation() -> void:
 
 var tornado_list :Array # [ tornado , AnimateGradient , AnimateGradient ]
 func tornado_demo(gc :GlassCabinet) -> void:
-	gc.show_wall_box(false)
+	#gc.show_wall_box(false)
 	for i in 4:
 		var tb = preload("res://tornado/tornado.tscn").instantiate(
 			).init_sample(gc.cabinet_size.x/2, gc.cabinet_size.y*0.3, 0.5, random_color(),random_color())
@@ -415,7 +418,7 @@ func start_props_animation() -> void:
 			"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
 
 func line2d_demo(gc :GlassCabinet) -> void:
-	gc.show_wall_box(false)
+	#gc.show_wall_box(false)
 	var size_pixel := Vector2i(2048,2048)
 	var ml2d = preload("res://move_line_2d/move_line_2d.tscn").instantiate()
 	ml2d.init_with_random(300, 4, 1, size_pixel)
@@ -439,7 +442,7 @@ func line2d_demo(gc :GlassCabinet) -> void:
 
 var orbitsphere_list :Array
 func orbit_demo(gc :GlassCabinet) -> void:
-	gc.show_wall_box(false)
+	#gc.show_wall_box(false)
 	for i in 9:
 		add_orbitsphere(gc, i, 9)
 func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
@@ -492,7 +495,7 @@ func start_clock_calendar_animation():
 var calendar :Calendar3D
 var clock :AnalogClock3D
 func clock_calendar_demo(gc :GlassCabinet) -> void:
-	gc.show_wall_box(false)
+	#gc.show_wall_box(false)
 	calendar = preload("res://calendar_3d/calendar_3d.tscn").instantiate(
 		).init(gc.cabinet_size.x/2, gc.cabinet_size.y, gc.cabinet_size.z/10, gc.cabinet_size.y/2.0/6 , true )
 	gc.add_child(calendar)
