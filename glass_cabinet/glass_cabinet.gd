@@ -49,15 +49,31 @@ func add_spot_lights() -> GlassCabinet:
 #]
 
 ## flag bit == 1 , set visible to b
-func light_set(b :bool, pos_flag :int = 0xff) -> void:
+func light_on(b :bool, pos_flag :int = 0xff) -> void:
 	for i in $LightContainer.get_child_count():
 		if BitFlag.TestByPos(i, pos_flag):
 			$LightContainer.get_child(i).visible = b
 
 ## all light on/off by flag
-func light_set_all(pos_flag :int = 0xff) -> void:
+func light_on_all(pos_flag :int = 0xff) -> void:
 	for i in $LightContainer.get_child_count():
 		$LightContainer.get_child(i).visible = BitFlag.TestByPos(i, pos_flag)
+
+## flag bit == 1 , set light shadow to b
+func light_shadow(b :bool, pos_flag :int = 0xff) -> void:
+	for i in $LightContainer.get_child_count():
+		if BitFlag.TestByPos(i, pos_flag):
+			$LightContainer.get_child(i).shadow_enabled = b
+
+## all light shadow on/off by flag
+func light_shadow_all(pos_flag :int = 0xff) -> void:
+	for i in $LightContainer.get_child_count():
+		$LightContainer.get_child(i).shadow_enabled = BitFlag.TestByPos(i, pos_flag)
+
+func light_color(co :Color, pos_flag :int = 0xff) -> void:
+	for i in $LightContainer.get_child_count():
+		if BitFlag.TestByPos(i, pos_flag):
+			$LightContainer.get_child(i).light_color = co
 
 
 func show_axis_arrow(b :bool = true) -> GlassCabinet:
