@@ -139,9 +139,9 @@ func winter_tree_demo(gc :GlassCabinet) -> void:
 var winter_tree :WinterTree
 enum AniDir { Up, Down, Left , Right }
 var winter_tree_inst_index :Array
-var color_fn_args := ShuffleIter.new( [[0],[1],[2],[0,1],[1,2],[2,0], [0,1,2]] )
+var color_fn_args := ListIter.new( [[0],[1],[2],[0,1],[1,2],[2,0], [0,1,2]] )
 var color_fn :Callable = RandomColor.pure_color
-var ani_dir_data := ShuffleIter.new( [AniDir.Up, AniDir.Down, AniDir.Left , AniDir.Right] )
+var ani_dir_data := ListIter.new( [AniDir.Up, AniDir.Down, AniDir.Left , AniDir.Right] )
 var change_count := 0
 func wintertree_animate(delta :float) -> void:
 	winter_tree.rotate_y(delta)
@@ -184,7 +184,7 @@ func wintertree_animate(delta :float) -> void:
 		color_fn = [RandomColor.pure_color, RandomColor.rate_color, random_color2].pick_random()
 		winter_tree.장식들얻기().set_color_all( random_color())
 
-var named_color_list := ShuffleIter.new(NamedColorList.color_list)
+var named_color_list := ListIter.new(NamedColorList.color_list)
 func random_color2(_arg ) -> Color:
 	return named_color_list.get_next()[0]
 
