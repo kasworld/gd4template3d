@@ -1,6 +1,8 @@
 extends Node3D
 
-var empty_glass_cabinet_list :Array
+var glass_cabinet_list :Array
+var empty_cursor :int
+var demo_name_to_glass_cabinet := {}
 func make_glass_cabinet(cabinet_size :Vector3) -> void:
 	var count := 24
 	var unit_rad := 2*PI/ count
@@ -17,7 +19,15 @@ func make_glass_cabinet(cabinet_size :Vector3) -> void:
 			$GlassCabinetContainer2.add_child(gc)
 		gc.look_at( Vector3(0,gc.position.y,0), Vector3.UP, true)
 		gc.set_title_text("%d" % i).show_title(true)
-		empty_glass_cabinet_list.append(gc)
+		glass_cabinet_list.append(gc)
+
+func run_demo(demo :Callable, text :String) -> void:
+	var gc :GlassCabinet = glass_cabinet_list[empty_cursor]
+	empty_cursor += 1
+	demo.call(gc)
+	gc.set_title_text(text)
+	demo_name_to_glass_cabinet[text] = gc
+	add_camera_dict.call(gc.get_camera_light(), text)
 
 var add_camera_dict :Callable
 func setup_demo_to_cabinet(add_camera_dict_a :Callable) -> void:
@@ -37,20 +47,12 @@ func setup_demo_to_cabinet(add_camera_dict_a :Callable) -> void:
 	run_demo(platonic_solids_demo, "platonic solids")
 	run_demo(winter_tree_demo, "winter tree")
 	run_demo(dialgauge_demo, "dial gauge")
-	print_debug("remain glass cabinet %d\ndemo size %s" % [
-		empty_glass_cabinet_list.size(),demo_name_to_glass_cabinet.size()])
-
-var demo_name_to_glass_cabinet := {}
-func run_demo(demo :Callable, text :String) -> void:
-	var gc :GlassCabinet = empty_glass_cabinet_list.pop_front()
-	demo.call(gc)
-	gc.set_title_text(text)
-	demo_name_to_glass_cabinet[text] = gc
-	add_camera_dict.call(gc.get_camera_light(), text)
+	print_debug("remain glass cabinet %d\ndemo count %s" % [
+		glass_cabinet_list.size()-empty_cursor,demo_name_to_glass_cabinet.size()])
 
 
 func _process(delta: float) -> void:
-	var gc :GlassCabinet = empty_glass_cabinet_list.pick_random()
+	var gc :GlassCabinet = glass_cabinet_list.slice(empty_cursor).pick_random()
 	var lights := randi_range(0,256)
 	gc.lights.set_light_on_all(lights)
 	gc.lights.set_light_color(random_color(), lights)
