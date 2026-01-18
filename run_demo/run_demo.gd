@@ -52,8 +52,8 @@ func run_demo(demo :Callable, text :String) -> void:
 func _process(delta: float) -> void:
 	var gc :GlassCabinet = empty_glass_cabinet_list.pick_random()
 	var lights := randi_range(0,256)
-	gc.set_light_on_all(lights)
-	gc.set_light_color(random_color(), lights)
+	gc.lights.set_light_on_all(lights)
+	gc.lights.set_light_color(random_color(), lights)
 
 	var now := Time.get_unix_time_from_system()
 	if wavegauge_box !=null:

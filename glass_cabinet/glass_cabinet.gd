@@ -1,6 +1,7 @@
 extends Node3D
 class_name GlassCabinet
 
+var lights :AnimateSpotLightList
 var cabinet_size :Vector3
 func calc_pos_by_grid(x :int, y :int, x_grid:int, y_grid:int) -> Vector3:
 	var xunit := cabinet_size.x/x_grid
@@ -22,6 +23,7 @@ func init(cabinet_size_a :Vector3) -> GlassCabinet:
 		cabinet_size.length()/200, Color.WHITE,
 	)
 	add_spot_lights()
+	lights = AnimateSpotLightList.new($LightContainer)
 	return self
 
 func add_spot_lights() -> GlassCabinet:
@@ -47,51 +49,6 @@ func add_spot_lights() -> GlassCabinet:
 	#Vector3(1,-1,-1),
 	#Vector3(-1,-1,-1),
 #]
-
-## flag bit == 1 , set visible to b
-func set_light_on(b :bool, pos_flag :int = 0xff) -> void:
-	for i in $LightContainer.get_child_count():
-		if BitFlag.TestByPos(i, pos_flag):
-			$LightContainer.get_child(i).visible = b
-
-## all light on/off by flag
-func set_light_on_all(pos_flag :int = 0xff) -> void:
-	for i in $LightContainer.get_child_count():
-		$LightContainer.get_child(i).visible = BitFlag.TestByPos(i, pos_flag)
-
-func get_light_on_all() -> int:
-	var rtn := 0
-	for i in $LightContainer.get_child_count():
-		BitFlag.SetByPos(i, $LightContainer.get_child(i).visible)
-	return rtn
-
-## flag bit == 1 , set light shadow to b
-func set_light_shadow(b :bool, pos_flag :int = 0xff) -> void:
-	for i in $LightContainer.get_child_count():
-		if BitFlag.TestByPos(i, pos_flag):
-			$LightContainer.get_child(i).shadow_enabled = b
-
-## all light shadow on/off by flag
-func set_light_shadow_all(pos_flag :int = 0xff) -> void:
-	for i in $LightContainer.get_child_count():
-		$LightContainer.get_child(i).shadow_enabled = BitFlag.TestByPos(i, pos_flag)
-
-func get_light_shadow_all() -> int:
-	var rtn := 0
-	for i in $LightContainer.get_child_count():
-		BitFlag.SetByPos(i, $LightContainer.get_child(i).shadow_enabled)
-	return rtn
-
-func set_light_color(co :Color, pos_flag :int = 0xff) -> void:
-	for i in $LightContainer.get_child_count():
-		if BitFlag.TestByPos(i, pos_flag):
-			$LightContainer.get_child(i).light_color = co
-
-func get_light_color_all() -> Array[Color]:
-	var rtn :Array[Color] = []
-	for lt in $LightContainer.get_children():
-		rtn.append(lt.light_color)
-	return rtn
 
 func show_axis_arrow(b :bool = true) -> GlassCabinet:
 	$AxisArrow3D.visible = b

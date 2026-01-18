@@ -13,8 +13,8 @@ static func TestByPos(pos :int, v :int) -> bool:
 	return v & (1 << pos)
 
 ## 0b101 -> [0,2]
-static func MakePosList(v :int) -> Array:
-	var rtn := []
+static func MakePosList(v :int) -> Array[int]:
+	var rtn :Array[int] = []
 	var pos := 0
 	while v > 0:
 		if v % 2 == 1:
