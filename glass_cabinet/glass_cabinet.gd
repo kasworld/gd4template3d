@@ -15,8 +15,8 @@ func init(cabinet_size_a :Vector3) -> GlassCabinet:
 	$WallBox.mesh.size = cabinet_size
 	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, 	Vector3(0, 0, cabinet_size.z*2), cabinet_size.length()*2)
 	$AxisArrow3D.set_size(cabinet_size.length()/10).set_colors()
-	$Label3D.pixel_size = cabinet_size.y/200
-	$Label3D.position = Vector3(0,-cabinet_size.y/2,cabinet_size.z/2)
+	$Title.pixel_size = cabinet_size.y/200
+	$Title.position = Vector3(0,-cabinet_size.y/2,cabinet_size.z/2)
 	$WireBox.init_wire_box( cabinet_size, cabinet_size.length()/200, Color.WHITE)
 	$Points.init_spheres_by_point_list(
 		PlatonicSolids.MultiplyPointList(PlatonicSolids.CubePoints, cabinet_size/2),
@@ -76,14 +76,14 @@ func set_points_color(co :Color) -> GlassCabinet:
 	return self
 
 
-func show_label(b :bool = true) -> GlassCabinet:
-	$Label3D.visible = b
+func show_title(b :bool = true) -> GlassCabinet:
+	$Title.visible = b
 	return self
-func set_label_text(t :String) -> GlassCabinet:
-	$Label3D.text = t
+func set_title_text(t :String) -> GlassCabinet:
+	$Title.text = t
 	return self
-func set_label_pixel_size(sz :float) -> GlassCabinet:
-	$Label3D.pixel_size = sz
+func set_title_pixel_size(sz :float) -> GlassCabinet:
+	$Title.pixel_size = sz
 	return self
 
 func get_camera_light() -> MovingCameraLight:

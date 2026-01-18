@@ -16,7 +16,7 @@ func make_glass_cabinet(cabinet_size :Vector3) -> void:
 			gc.position = Vector3(sin(rad)*radius, -gc.cabinet_size.y/2 *1.0, cos(rad)*radius)
 			$GlassCabinetContainer2.add_child(gc)
 		gc.look_at( Vector3(0,gc.position.y,0), Vector3.UP, true)
-		gc.set_label_text("%d" % i).show_label(true)
+		gc.set_title_text("%d" % i).show_title(true)
 		empty_glass_cabinet_list.append(gc)
 
 var add_camera_dict :Callable
@@ -44,7 +44,7 @@ var demo_name_to_glass_cabinet := {}
 func run_demo(demo :Callable, text :String) -> void:
 	var gc :GlassCabinet = empty_glass_cabinet_list.pop_front()
 	demo.call(gc)
-	gc.set_label_text(text)
+	gc.set_title_text(text)
 	demo_name_to_glass_cabinet[text] = gc
 	add_camera_dict.call(gc.get_camera_light(), text)
 

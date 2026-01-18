@@ -32,7 +32,7 @@ mesh = SubResource("BoxMesh_nkhty")
 [node name="AxisArrow3D" parent="." instance=ExtResource("3_nkhty")]
 visible = false
 
-[node name="Label3D" type="Label3D" parent="."]
+[node name="Title" type="Label3D" parent="."]
 visible = false
 vertical_alignment = 2
 
