@@ -270,6 +270,7 @@ func make_color_text_info_list(colist :Array, cdlist :Array) -> Array:
 
 var roulette :Roulette
 func wheel_demo(gc :GlassCabinet) -> void:
+	gc.show_description()
 	var color_text_into_list := make_color_text_info_list(
 		colorlist_light, cardlist,
 	).duplicate()
@@ -288,13 +289,14 @@ func wheel돌리기() -> void:
 		rot = -rot
 	roulette.돌리기시작.call_deferred(rot)
 func wheel결과가결정됨(rl :Roulette) -> void:
-	#$"왼쪽패널/LabelWheel".text = rl.선택된cell얻기().글내용얻기()
+	rl.get_parent().set_description_text(rl.선택된cell얻기().글내용얻기())
 	$TimerWheel.start()
 func _on_timer_wheel_timeout() -> void:
 	wheel돌리기()
 
 var slot :Slots
 func slotreel_demo(gc :GlassCabinet) -> void:
+	gc.show_description()
 	var symbol크기 := Vector2(gc.cabinet_size.x/20 ,gc.cabinet_size.y/20)
 	var color_text_into_list := make_color_text_info_list(colorlist_dark, cardlist).duplicate()
 	slot = preload("res://slots/slots.tscn").instantiate().init(5, symbol크기,color_text_into_list)
@@ -306,7 +308,7 @@ func 슬롯멈춤(sl :Slots) -> void:
 	var 결과 := ""
 	for k in symbol들:
 		결과 += k.글내용얻기() + " "
-	#$"왼쪽패널/LabelReel".text = 결과
+	sl.get_parent().set_description_text(결과)
 	$TimerReel.start()
 func _on_timer_reel_timeout() -> void:
 	slot.돌리기시작()
