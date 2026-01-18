@@ -32,10 +32,6 @@ mesh = SubResource("BoxMesh_nkhty")
 [node name="AxisArrow3D" parent="." instance=ExtResource("3_nkhty")]
 visible = false
 
-[node name="Title" type="Label3D" parent="."]
-visible = false
-vertical_alignment = 2
-
 [node name="WireBox" parent="." instance=ExtResource("4_2eiwf")]
 multimesh = SubResource("MultiMesh_6tr68")
 
@@ -43,3 +39,13 @@ multimesh = SubResource("MultiMesh_6tr68")
 multimesh = SubResource("MultiMesh_2eiwf")
 
 [node name="LightContainer" type="Node3D" parent="."]
+
+[node name="Title" type="Label3D" parent="."]
+visible = false
+horizontal_alignment = 0
+vertical_alignment = 0
+
+[node name="Description" type="Label3D" parent="."]
+visible = false
+horizontal_alignment = 2
+vertical_alignment = 2
