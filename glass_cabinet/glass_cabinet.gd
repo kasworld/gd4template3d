@@ -1,7 +1,7 @@
 extends Node3D
 class_name GlassCabinet
 
-var lights :AnimateSpotLightList
+var lights :SpotLightGroup
 var cabinet_size :Vector3
 func calc_pos_by_grid(x :int, y :int, x_grid:int, y_grid:int) -> Vector3:
 	var xunit := cabinet_size.x/x_grid
@@ -25,7 +25,7 @@ func init(cabinet_size_a :Vector3) -> GlassCabinet:
 		cabinet_size.length()/200, Color.WHITE,
 	)
 	add_spot_lights()
-	lights = AnimateSpotLightList.new($LightContainer)
+	lights = SpotLightGroup.new($LightContainer)
 	return self
 
 func add_spot_lights() -> GlassCabinet:

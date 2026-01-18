@@ -1,4 +1,4 @@
-class_name AnimateSpotLightList
+class_name SpotLightGroup
 
 var light_list :Array[SpotLight3D]
 
