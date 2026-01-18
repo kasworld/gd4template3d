@@ -2,6 +2,9 @@ extends Node
 
 #class_name NamedColorList
 
+func random_color(clist = color_list) -> Color:
+	return clist.pick_random()[0]
+
 func get_color(i :int)->Color:
 	return color_list[i%color_list.size()][0]
 

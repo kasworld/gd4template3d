@@ -55,7 +55,7 @@ func _process(delta: float) -> void:
 	var gc :GlassCabinet = glass_cabinet_list.slice(empty_cursor).pick_random()
 	var lights := randi_range(0,256)
 	gc.lights.set_light_on_all(lights)
-	gc.lights.set_light_color(random_color(), lights)
+	gc.lights.set_light_color(NamedColorList.random_color(), lights)
 
 	var now := Time.get_unix_time_from_system()
 	if wavegauge_box !=null:
@@ -80,22 +80,19 @@ func _process(delta: float) -> void:
 	props_animation.handle_animation()
 
 
-func random_color() -> Color:
-	return NamedColorList.color_list.pick_random()[0]
-
 func make_rand_range(v :float, l :float) -> Array:
 	var r1 := randf_range(v,v+l)
 	var r2 := randf_range(r1+l/2,r1+l)
 	return [r1,r2]
 func new_dialgauge(radius :float, cabinet_size :Vector3) -> DialGauge:
 	return preload("res://dial_gauge/dial_gauge.tscn").instantiate(
-		).init(radius, cabinet_size.z/20, random_color(),random_color(),random_color(),
+		).init(radius, cabinet_size.z/20, NamedColorList.random_color(),NamedColorList.random_color(),NamedColorList.random_color(),
 		).init_range( make_rand_range(0,360), make_rand_range(0,2*PI)
-		).add_dial_num(radius*0.80, cabinet_size.z/100, radius/20, 12, random_color(),
+		).add_dial_num(radius*0.80, cabinet_size.z/100, radius/20, 12, NamedColorList.random_color(),
 		).add_dial_bar(radius*0.92, Vector3(cabinet_size.z/40, cabinet_size.z/200, cabinet_size.z/100),
-			DialGauge.BarAlign.Out, 60, random_color()
+			DialGauge.BarAlign.Out, 60, NamedColorList.random_color()
 		).add_dial_bar(radius*0.92, Vector3(cabinet_size.z/40, cabinet_size.z/200, cabinet_size.z/100),
-			DialGauge.BarAlign.In, 12, random_color()
+			DialGauge.BarAlign.In, 12, NamedColorList.random_color()
 		)
 var dialgauge_list :Array
 func dialgauge_demo(gc :GlassCabinet) -> void:
@@ -175,14 +172,14 @@ func wintertree_animate(delta :float) -> void:
 				lines.set_inst_color(i, co)
 			change_count +=1
 			ani_ended = change_count >= winter_tree_inst_index[-1].size()
-	winter_tree.장식들얻기().set_inst_color( randi_range(0, winter_tree.장식들얻기().multimesh.instance_count-1),  random_color())
+	winter_tree.장식들얻기().set_inst_color( randi_range(0, winter_tree.장식들얻기().multimesh.instance_count-1),  NamedColorList.random_color())
 
 	if ani_ended:
 		color_fn_args.get_next()
 		ani_dir_data.get_next()
 		change_count = 0
 		color_fn = [RandomColor.pure_color, RandomColor.rate_color, random_color2].pick_random()
-		winter_tree.장식들얻기().set_color_all( random_color())
+		winter_tree.장식들얻기().set_color_all( NamedColorList.random_color())
 
 var named_color_list := ListIter.new(NamedColorList.color_list)
 func random_color2(_arg ) -> Color:
@@ -211,7 +208,7 @@ func platonic_solids_demo(gc :GlassCabinet) -> void:
 		var to :int = ll[4]
 		var wire_width :float = ll[1]
 		var ws :WireSolid = preload("res://wire_solid/wire_solid.tscn").instantiate(
-			).init(face, from, to, gc.cabinet_size.length()/13 , wire_width, random_color())
+			).init(face, from, to, gc.cabinet_size.length()/13 , wire_width, NamedColorList.random_color())
 		gc.add_child(ws)
 		platonic_solid_list.append(ws)
 		ws.position = gc.calc_pos_by_grid(ll[2][0],ll[2][1], 4,3)
@@ -235,7 +232,7 @@ func tornado_demo(gc :GlassCabinet) -> void:
 	#gc.show_wall_box(false)
 	for i in 4:
 		var tb = preload("res://tornado/tornado.tscn").instantiate(
-			).init_sample(gc.cabinet_size.x/2, gc.cabinet_size.y*0.3, 0.5, random_color(),random_color())
+			).init_sample(gc.cabinet_size.x/2, gc.cabinet_size.y*0.3, 0.5, NamedColorList.random_color(),NamedColorList.random_color())
 		gc.add_child(tb)
 		tornado_list.append([tb, AnimateGradient.new(), AnimateGradient.new()])
 
@@ -279,12 +276,10 @@ func wheel_demo(gc :GlassCabinet) -> void:
 	color_text_into_list.shuffle()
 	roulette = preload("res://roulette/roulette.tscn").instantiate(
 		).init(0, gc.cabinet_size.y/2, gc.cabinet_size.z/20, color_text_into_list )
-	roulette.색설정하기(make_random_color(), make_random_color(), make_random_color() )
+	roulette.색설정하기(NamedColorList.random_color(), NamedColorList.random_color(), NamedColorList.random_color() )
 	roulette.rotation_stopped.connect(wheel결과가결정됨)
 	gc.add_child(roulette)
 	wheel돌리기()
-func make_random_color() -> Color:
-	return NamedColorList.color_list.pick_random()[0]
 func wheel돌리기() -> void:
 	var rot = randfn(2*PI, PI/2)
 	if randi_range(0,1) == 0:
@@ -327,7 +322,7 @@ var wavegauge_plane :WaveGauge
 func wirenet_wavegauge_demo(gc :GlassCabinet) -> void:
 	var grid_size := Vector2i(16,9)*2
 	wirenet = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_wire_net(Vector2(gc.cabinet_size.x,gc.cabinet_size.y), Vector2i(grid_size.x,grid_size.y), gc.cabinet_size.x/grid_size.x/10, random_color())
+		).init_wire_net(Vector2(gc.cabinet_size.x,gc.cabinet_size.y), Vector2i(grid_size.x,grid_size.y), gc.cabinet_size.x/grid_size.x/10, NamedColorList.random_color())
 	gc.add_child(wirenet)
 	wavegauge_plane = preload("res://wave_gauge/wave_gauge.tscn").instantiate(
 		).init(Vector3(gc.cabinet_size.x,gc.cabinet_size.y,gc.cabinet_size.z/20), Vector3i(grid_size.x,grid_size.y,1), WaveGauge.color_list, 0.1, 1.0 )
@@ -342,7 +337,7 @@ func maze3d_demo(gc :GlassCabinet) -> void:
 	ms.WallThick = ms.LaneW *0.1
 	ms.MakeSubWallRate = 0.1
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
-		).init_with_color( ms, Callable(), random_color(), random_color(), random_color() )
+		).init_with_color( ms, Callable(), NamedColorList.random_color(), NamedColorList.random_color(), NamedColorList.random_color() )
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(false,false)
 	gc.add_child(maze3d)
@@ -389,22 +384,22 @@ var prop_list :Array
 func props_demo(gc :GlassCabinet) -> void:
 	gc.show_axis_arrow()
 	var prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
-		).set_color(random_color()).set_size( gc.cabinet_size.x/5, gc.cabinet_size.x/100, gc.cabinet_size.x/25,0.3)
+		).set_color(NamedColorList.random_color()).set_size( gc.cabinet_size.x/5, gc.cabinet_size.x/100, gc.cabinet_size.x/25,0.3)
 	prop.position = gc.calc_pos_by_grid(0,0,2,2)
 	gc.add_child(prop)
 	prop_list.append(prop)
 	prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
-		).set_color(random_color()).set_size( gc.cabinet_size.x/5, gc.cabinet_size.x/70, gc.cabinet_size.x/25)
+		).set_color(NamedColorList.random_color()).set_size( gc.cabinet_size.x/5, gc.cabinet_size.x/70, gc.cabinet_size.x/25)
 	prop.position = gc.calc_pos_by_grid(1,0,2,2)
 	gc.add_child(prop)
 	prop_list.append(prop)
 	prop = preload("res://valve_handle/valve_handle.tscn").instantiate(
-		).init(gc.cabinet_size.x/20, gc.cabinet_size.x/10, 8, random_color())
+		).init(gc.cabinet_size.x/20, gc.cabinet_size.x/10, 8, NamedColorList.random_color())
 	prop.position = gc.calc_pos_by_grid(0,1,2,2)
 	gc.add_child(prop)
 	prop_list.append(prop)
 	prop = preload("res://valve_handle/valve_handle.tscn").instantiate(
-		).init(gc.cabinet_size.x/10, gc.cabinet_size.x/20, 4, random_color())
+		).init(gc.cabinet_size.x/10, gc.cabinet_size.x/20, 4, NamedColorList.random_color())
 	prop.position = gc.calc_pos_by_grid(1,1,2,2)
 	gc.add_child(prop)
 	prop_list.append(prop)
@@ -460,7 +455,7 @@ func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
 		[Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK].pick_random(),
 		a30)
 	var 궤도mat1 := StandardMaterial3D.new()
-	궤도mat1.albedo_color = random_color()
+	궤도mat1.albedo_color = NamedColorList.random_color()
 	var 구mat2
 	match i:
 		0,1,2,3:
@@ -472,7 +467,7 @@ func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
 				][i]
 		_:
 			구mat2 = StandardMaterial3D.new()
-			구mat2.albedo_color = random_color()
+			구mat2.albedo_color = NamedColorList.random_color()
 	var os = preload("res://orbit_sphere/orbit_sphere.tscn").instantiate(
 		).궤도설정(diagonal_length, diagonal_length/200, axis1, a120*[0,1,2].pick_random()
 		).구설정(gc.cabinet_size.x/400*i+1, gc.cabinet_size.x/50, Vector3.UP
@@ -542,6 +537,6 @@ func make_sub_tree(gc :GlassCabinet, tree_size :Vector3, bar_count :int, shift :
 				preload("res://image/leaf.tres"),
 			].pick_random(), bar_count)
 	else:
-		t.init_bartree_with_color(random_color(), random_color(), bar_count)
+		t.init_bartree_with_color(NamedColorList.random_color(), NamedColorList.random_color(), bar_count)
 	t.init_bartree_transform(tree_size, shift)
 	bartree_list.append(t)
