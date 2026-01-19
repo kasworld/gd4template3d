@@ -447,8 +447,8 @@ func orbit_demo(gc :GlassCabinet) -> void:
 	for i in 9:
 		add_orbitsphere(gc, i, 9)
 func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
-	var rate := float(i)/float(count-1) * 0.5 + 0.5
-	var diagonal_length := gc.cabinet_size.length()/2 * rate
+	var rate := float(count -i)/float(count) * 0.5 + 0.5
+	var diagonal_length := gc.cabinet_size.length()/2.5 * rate
 	var a120 := PI*2/3
 	var a30 := PI/6
 	var axis1 := Vector3.UP.rotated(
@@ -470,7 +470,7 @@ func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
 			구mat2.albedo_color = NamedColors.random_color()
 	var os = preload("res://orbit_sphere/orbit_sphere.tscn").instantiate(
 		).궤도설정(diagonal_length, diagonal_length/200, axis1, a120*[0,1,2].pick_random()
-		).구설정(gc.cabinet_size.x/400*i+1, gc.cabinet_size.x/50, Vector3.UP
+		).구설정(gc.cabinet_size.x/30*rate, gc.cabinet_size.x/50, Vector3.UP
 		).구재질설정(구mat2).궤도재질설정(궤도mat1)
 	gc.add_child(os)
 	orbitsphere_list.append(os)
