@@ -3,86 +3,61 @@ class_name NamedColors
 static func random_color(clist = color_list) -> Color:
 	return clist.pick_random()
 
-static func get_color(i :int)->Color:
+static func iter_color(i :int) -> Color:
 	return color_list[i%color_list.size()]
 
-
-static func get_colorname_by_color(c :Color)->String:
-	for v in color_list:
-		if v == c:
-			return v[1]
-	return c.to_html()
-
-static func filter_to_colorlist(clist = color_list) -> Array[Color]:
-	var rtn :Array[Color] = []
-	for i in clist:
-		rtn.append(i)
-	return rtn
-
-static func filter_to_namelist(clist = color_list) -> Array[String]:
-	var rtn :Array[String] = []
-	for i in clist:
-		rtn.append(i[1])
-	return rtn
-
-static func make_light_color_list(l :float= 0.5) -> Array:
+static func filter_light_color_list(l :float= 0.5) -> Array:
 	var rtn := []
 	for i in color_list:
 		if i.get_luminance() > l:
 			rtn.append(i)
 	return rtn
 
-static func make_dark_color_list(l :float= 0.5, clist = color_list) -> Array:
+static func filter_dark_color_list(l :float= 0.5, clist = color_list) -> Array:
 	var rtn := []
 	for i in clist:
 		if i.get_luminance() < l:
 			rtn.append(i)
 	return rtn
 
-static func make_red_color_list(clist = color_list) -> Array:
-	var rtn := []
-	for i in clist:
-		if i.r > i.g and i.r > i.b:
-			rtn.append(i)
-	return rtn
+static func is_red_like(co :Color) -> bool:
+	return co.r > co.g and co.r > co.b
 
-static func make_blue_color_list(clist = color_list) -> Array:
-	var rtn := []
-	for i in clist:
-		if i.b > i.g and i.b > i.r:
-			rtn.append(i)
-	return rtn
+static func is_blue_like(co :Color) -> bool:
+	return co.b > co.g and co.b > co.r
 
-static func make_green_color_list(clist = color_list) -> Array:
-	var rtn := []
-	for i in clist:
-		if i.g > i.r and i.g > i.b:
-			rtn.append(i)
-	return rtn
+static func is_green_like(co :Color) -> bool:
+	return co.g > co.r and co.g > co.b
 
-static func make_yellow_color_list(clist = color_list) -> Array:
-	var rtn := []
-	for i in clist:
-		if i.r > i.b and i.g > i.b:
-			rtn.append(i)
-	return rtn
+static func is_yellow_like(co :Color) -> bool:
+	return co.r > co.b and co.g > co.b
 
-static func make_cyan_color_list(clist = color_list) -> Array:
-	var rtn := []
-	for i in clist:
-		if i.b > i.r and i.g > i.r:
-			rtn.append(i)
-	return rtn
+static func is_cyan_like(co :Color) -> bool:
+	return co.b > co.r and co.g > co.r
 
-static func make_magenta_color_list(clist = color_list) -> Array:
-	var rtn := []
-	for i in clist:
-		if i.b > i.g and i.r > i.g:
-			rtn.append(i)
-	return rtn
+static func is_magenta_like(co :Color) -> bool:
+	return co.b > co.g and co.r > co.g
+
+static func filter_red_color_list(clist :Array[Color] = color_list) -> Array:
+	return clist.filter(is_red_like)
+
+static func filter_blue_color_list(clist :Array[Color] = color_list) -> Array:
+	return clist.filter(is_blue_like)
+
+static func filter_green_color_list(clist :Array[Color] = color_list) -> Array:
+	return clist.filter(is_green_like)
+
+static func filter_yellow_color_list(clist :Array[Color] = color_list) -> Array:
+	return clist.filter(is_yellow_like)
+
+static func filter_cyan_color_list(clist :Array[Color] = color_list) -> Array:
+	return clist.filter(is_cyan_like)
+
+static func filter_magenta_color_list(clist :Array[Color] = color_list) -> Array:
+	return clist.filter(is_magenta_like)
 
 
-const color_list := [
+const color_list :Array[Color]= [
 Color.ALICE_BLUE,
 Color.ANTIQUE_WHITE,
 Color.AQUA,
@@ -232,11 +207,11 @@ Color.YELLOW_GREEN,
 ]
 
 ## cannot use dictionary because same color value exist in color list
-static func get_colorname(co :Color)->String:
+static func get_colorname_by_color(co :Color)->String:
 	for v in color_to_name:
 		if co == v[0]:
 			return v[1]
-	return "%s" % co
+	return co.to_html()
 
 const color_to_name := [
 [Color.ALICE_BLUE, "ALICE_BLUE"],
