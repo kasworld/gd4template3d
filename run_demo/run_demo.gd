@@ -1,11 +1,11 @@
 extends Node3D
 
-var glass_cabinet_list :Array
-var empty_cursor :int
-var demo_name_to_glass_cabinet := {}
+var glass_cabinet_ani_iter :ListIter # [ GlassCabinet, light iter data]
+var demo_count :int
 func make_glass_cabinet(cabinet_size :Vector3) -> void:
 	var count := 24
 	var unit_rad := 2*PI/ count
+	var gc_ani_list :Array = []
 	for i in count:
 		var radius := cabinet_size.length() *1.7
 		var gc :GlassCabinet = preload("res://glass_cabinet/glass_cabinet.tscn").instantiate(
@@ -19,14 +19,13 @@ func make_glass_cabinet(cabinet_size :Vector3) -> void:
 			$GlassCabinetContainer2.add_child(gc)
 		gc.look_at( Vector3(0,gc.position.y,0), Vector3.UP, true)
 		gc.set_title_text("%d" % i).show_title(true)
-		glass_cabinet_list.append(gc)
+		gc_ani_list.append( [gc, ListIter.new(gc.lights.make_pos_list(), false ) ] )
+	glass_cabinet_ani_iter = ListIter.new(gc_ani_list, false)
 
 func run_demo(demo :Callable, text :String) -> void:
-	var gc :GlassCabinet = glass_cabinet_list[empty_cursor]
-	empty_cursor += 1
+	var gc :GlassCabinet = glass_cabinet_ani_iter.get_next()[0]
 	demo.call(gc)
 	gc.set_title_text(text)
-	demo_name_to_glass_cabinet[text] = gc
 	add_camera_dict.call(gc.get_camera_light(), text)
 
 var add_camera_dict :Callable
@@ -47,15 +46,20 @@ func setup_demo_to_cabinet(add_camera_dict_a :Callable) -> void:
 	run_demo(platonic_solids_demo, "platonic solids")
 	run_demo(winter_tree_demo, "winter tree")
 	run_demo(dialgauge_demo, "dial gauge")
+	demo_count = glass_cabinet_ani_iter.curser
 	print_debug("remain glass cabinet %d\ndemo count %s" % [
-		glass_cabinet_list.size()-empty_cursor,demo_name_to_glass_cabinet.size()])
-
+		glass_cabinet_ani_iter.get_size()-demo_count,demo_count ])
 
 func _process(delta: float) -> void:
-	var gc :GlassCabinet = glass_cabinet_list.slice(empty_cursor).pick_random()
-	var lights := randi_range(0,256)
-	gc.lights.set_light_on_all(lights)
-	gc.lights.set_light_color(NamedColors.random_color(), lights)
+	var lai :Array = glass_cabinet_ani_iter.get_current()
+	var gc :GlassCabinet = lai[0]
+	var list_iter :ListIter = lai[1]
+	gc.lights.set_light_on_all(list_iter.get_next())
+	if glass_cabinet_ani_iter.curser >= demo_count:
+		var lights := randi_range(0,256)
+		gc.lights.set_light_on_all(lights)
+		gc.lights.set_light_color(NamedColors.random_color(), lights)
+	glass_cabinet_ani_iter.next()
 
 	var now := Time.get_unix_time_from_system()
 	if wavegauge_box !=null:

@@ -58,3 +58,6 @@ func get_light_color_all() -> Array[Color]:
 	for lt in light_list:
 		rtn.append(lt.light_color)
 	return rtn
+
+func make_pos_list() -> Array[int]:
+	return BitFlag.MakeFilledPosList(light_list.size())
