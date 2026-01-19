@@ -41,9 +41,6 @@ func 선택된symbol들얻기() -> Array:
 		rtn.append(n.선택된symbol얻기())
 	return rtn
 
-func random_color()->Color:
-	return NamedColorList.color_list.pick_random()[0]
-
 func 돌리기시작() -> void:
 	for r in reel_list:
 		var rot = randfn(2*PI, PI/2)
