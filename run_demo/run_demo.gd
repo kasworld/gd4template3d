@@ -51,9 +51,12 @@ func setup_demo_to_cabinet(add_camera_dict :Callable) -> void:
 
 func animate_empty_glass_cabinet_light() -> void:
 	var lai :Array = empty_glass_cabinet_iter.get_next()
-	var lights := randi_range(0,256)
-	lai[0].lights.set_light_on_all(lights)
-	lai[0].lights.set_light_color(NamedColors.random_color(), lights)
+	#var lights := randi_range(0,256)
+	#var lights := BitFlag.MakeFilledFlags(lai[0].lights.get_size())
+	#lai[0].lights.set_light_on_all(lights)
+	#lai[0].lights.set_light_color(NamedColors.random_color(), lights)
+	for i in lai[0].lights.get_size():
+		lai[0].lights.set_light_color_at(i, NamedColors.random_color())
 
 func animate_used_glass_cabinet_light() -> void:
 	var lai :Array = used_glass_cabinet_iter.get_next()
