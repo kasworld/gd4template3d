@@ -23,30 +23,27 @@ func make_glass_cabinet(cabinet_size :Vector3) -> void:
 		gc_ani_list.append( [gc, ListIter.new(gc.lights.make_pos_list(), false ) ] )
 	glass_cabinet_iter = ListIter.new(gc_ani_list, false)
 
-func run_demo(demo :Callable, text :String) -> void:
-	var gc :GlassCabinet = glass_cabinet_iter.get_next()[0]
-	demo.call(gc)
-	gc.set_title_text(text)
-	add_camera_dict.call(gc.get_camera_light(), text)
-
-var add_camera_dict :Callable
-func setup_demo_to_cabinet(add_camera_dict_a :Callable) -> void:
-	add_camera_dict = add_camera_dict_a
-	run_demo(bartree_demo, "bartree")
-	run_demo(clock_calendar_demo, "clock calender")
-	run_demo(orbit_demo, "orbit")
-	run_demo(line2d_demo, "moveline2d")
-	run_demo(meshtrail_demo, "meshtrail")
-	run_demo(maze3d_demo, "maze3d")
-	run_demo(slotreel_demo, "slotreel")
-	run_demo(wheel_demo, "roulettewheel" )
-	run_demo(props_demo, "props")
-	run_demo(wirenet_wavegauge_demo, "wirenet,wavegauge")
-	run_demo(wavegauge_demo, "wavegauge")
-	run_demo(tornado_demo, "tornado")
-	run_demo(platonic_solids_demo, "platonic solids")
-	run_demo(winter_tree_demo, "winter tree")
-	run_demo(dialgauge_demo, "dial gauge")
+func setup_demo_to_cabinet(add_camera_dict :Callable) -> void:
+	var run_demo := func(demo :Callable, text :String) -> void:
+		var gc :GlassCabinet = glass_cabinet_iter.get_next()[0]
+		demo.call(gc)
+		gc.set_title_text(text)
+		add_camera_dict.call(gc.get_camera_light(), text)
+	run_demo.call(bartree_demo, "bartree")
+	run_demo.call(clock_calendar_demo, "clock calender")
+	run_demo.call(orbit_demo, "orbit")
+	run_demo.call(line2d_demo, "moveline2d")
+	run_demo.call(meshtrail_demo, "meshtrail")
+	run_demo.call(maze3d_demo, "maze3d")
+	run_demo.call(slotreel_demo, "slotreel")
+	run_demo.call(wheel_demo, "roulettewheel" )
+	run_demo.call(props_demo, "props")
+	run_demo.call(wirenet_wavegauge_demo, "wirenet,wavegauge")
+	run_demo.call(wavegauge_demo, "wavegauge")
+	run_demo.call(tornado_demo, "tornado")
+	run_demo.call(platonic_solids_demo, "platonic solids")
+	run_demo.call(winter_tree_demo, "winter tree")
+	run_demo.call(dialgauge_demo, "dial gauge")
 	used_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_itered_slice())
 	empty_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_unitered_slice())
 	print_debug("remain glass cabinet %d\ndemo count %s" % [
