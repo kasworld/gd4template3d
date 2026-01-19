@@ -31,7 +31,7 @@ func get_height() -> int:
 func get_at(pos :Vector2i) -> Variant:
 	return data[pos.y][pos.x]
 
-func set_at(pos :Vector2i, v) -> Variant:
+func set_at(pos :Vector2i, v :Variant) -> Variant:
 	var old = data[pos.y][pos.x]
 	data[pos.y][pos.x] = v
 	if old == null:
