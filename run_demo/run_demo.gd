@@ -63,7 +63,7 @@ func animate_used_glass_cabinet_light() -> void:
 
 func _process(delta: float) -> void:
 	animate_empty_glass_cabinet_light()
-	animate_used_glass_cabinet_light()
+	#animate_used_glass_cabinet_light()
 
 	var now := Time.get_unix_time_from_system()
 	if wavegauge_box !=null:

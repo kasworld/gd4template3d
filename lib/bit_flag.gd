@@ -35,3 +35,6 @@ static func MakeFilledPosList(bit_len :int) -> Array[int]:
 	for i in bit_len:
 		rtn.append(1 << i)
 	return rtn
+
+static func MakeFilledFlags(bit_len :int) -> int:
+	return (1 << bit_len+1) -1
