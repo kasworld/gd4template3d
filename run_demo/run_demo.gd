@@ -20,7 +20,9 @@ func make_glass_cabinet(cabinet_size :Vector3) -> void:
 			$GlassCabinetContainer2.add_child(gc)
 		gc.look_at( Vector3(0,gc.position.y,0), Vector3.UP, true)
 		gc.set_title_text("%d" % i).show_title(true)
-		gc_ani_list.append( [gc, ListIter.new(gc.lights.make_pos_list(), false ) ] )
+		gc_ani_list.append([gc,
+			AnimateGradient.new(),
+			])
 	glass_cabinet_iter = ListIter.new(gc_ani_list, false)
 
 func setup_demo_to_cabinet(add_camera_dict :Callable) -> void:
@@ -51,12 +53,18 @@ func setup_demo_to_cabinet(add_camera_dict :Callable) -> void:
 
 func animate_empty_glass_cabinet_light() -> void:
 	var lai :Array = empty_glass_cabinet_iter.get_next()
+	var gc :GlassCabinet = lai[0]
+	var ani_state :AnimateGradient = lai[1]
+	var flags := BitFlag.MakeFilledFlags(gc.lights.get_size())
+	gc.lights.set_light_color(ani_state.get_color(), flags)
+	ani_state.inc_rate(0.1)
+
 	#var lights := randi_range(0,256)
 	#var lights := BitFlag.MakeFilledFlags(lai[0].lights.get_size())
 	#lai[0].lights.set_light_on_all(lights)
 	#lai[0].lights.set_light_color(NamedColors.random_color(), lights)
-	for i in lai[0].lights.get_size():
-		lai[0].lights.set_light_color_at(i, NamedColors.random_color())
+	#for i in lai[0].lights.get_size():
+		#lai[0].lights.set_light_color_at(i, NamedColors.random_color())
 
 func animate_used_glass_cabinet_light() -> void:
 	var lai :Array = used_glass_cabinet_iter.get_next()
