@@ -73,22 +73,3 @@ func make_pos_list() -> Array[int]:
 
 func get_size() -> int:
 	return light_list.size()
-
-## axis : x:0, y:1, z:2, axis_sign : 1,0,-1
-func make_subgroup_flags_by_pos(axis :int, axis_sign :int) -> int:
-	var rtn := 0
-	for i in light_list.size():
-		if sign(light_list[i].position[axis]) == sign(axis_sign) :
-			rtn = BitFlag.SetByPos(i,rtn)
-	return rtn
-
-func make_6_side_subgroup() -> Dictionary[String,int]:
-	var rtn :Dictionary[String,int]={
-		"x+" : make_subgroup_flags_by_pos(0,+1),
-		"x-" : make_subgroup_flags_by_pos(0,-1),
-		"y+" : make_subgroup_flags_by_pos(1,+1),
-		"y-" : make_subgroup_flags_by_pos(1,-1),
-		"z+" : make_subgroup_flags_by_pos(2,+1),
-		"z-" : make_subgroup_flags_by_pos(2,-1),
-	}
-	return rtn

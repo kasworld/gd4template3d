@@ -1,6 +1,27 @@
 extends Node3D
 class_name GlassCabinet
 
+## axis : x:0, y:1, z:2, axis_sign : 1,0,-1
+static func MakeSubgroupFlagsByPos(axis :int, axis_sign :int) -> int:
+	var pos_list := PlatonicSolids.CubePoints
+	var rtn := 0
+	for i in pos_list.size():
+		if sign(pos_list[i][axis]) == sign(axis_sign) :
+			rtn = BitFlag.SetByPos(i,rtn)
+	return rtn
+
+static var SideSubgroupFlags :Dictionary[String,int] = {
+		"x+" : MakeSubgroupFlagsByPos(0,+1),
+		"x-" : MakeSubgroupFlagsByPos(0,-1),
+		"y+" : MakeSubgroupFlagsByPos(1,+1),
+		"y-" : MakeSubgroupFlagsByPos(1,-1),
+		"z+" : MakeSubgroupFlagsByPos(2,+1),
+		"z-" : MakeSubgroupFlagsByPos(2,-1),
+	}
+
+static func _static_init():
+	pass
+
 var lights :SpotLightGroup
 var cabinet_size :Vector3
 func calc_pos_by_grid(x :int, y :int, x_grid:int, y_grid:int) -> Vector3:
