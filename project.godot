@@ -16,11 +16,6 @@ run/main_scene="uid://c6maulcewyhy5"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
-[autoload]
-
-PlayingCard="*res://global/playing_card.gd"
-Tarot="*res://global/tarot.gd"
-
 [display]
 
 window/size/viewport_width=3840
