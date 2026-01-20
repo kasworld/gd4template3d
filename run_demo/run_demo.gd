@@ -60,24 +60,15 @@ func animate_empty_glass_cabinet_light() -> void:
 		var ani_state :AnimateGradient = lai.slice(1)[i]
 		gc.lights.set_light_color(ani_state.get_color(), flags)
 		ani_state.inc_rate(0.1)
-	#var ani_state1 :AnimateGradient = lai[1]
-	#var ani_state2 :AnimateGradient = lai[2]
-	#var flags := BitFlag.MakeFilledFlags(gc.lights.get_size())
-	#gc.lights.set_light_color(ani_state1.get_color(), flags)
-	#ani_state1.inc_rate(0.1)
-
-	#var lights := randi_range(0,256)
-	#var lights := BitFlag.MakeFilledFlags(lai[0].lights.get_size())
-	#lai[0].lights.set_light_on_all(lights)
-	#lai[0].lights.set_light_color(NamedColors.random_color(), lights)
-	#for i in lai[0].lights.get_size():
-		#lai[0].lights.set_light_color_at(i, NamedColors.random_color())
 
 func animate_used_glass_cabinet_light() -> void:
 	var lai :Array = used_glass_cabinet_iter.get_next()
 	var gc :GlassCabinet = lai[0]
-	var list_iter :ListIter = lai[1]
-	gc.lights.set_light_on_all(list_iter.get_next())
+	for i in lai.slice(1).size():
+		var flags :=  GlassCabinet.SideSubgroupFlags[ GlassCabinet.SideSubgroupFlags.keys()[i] ]
+		var ani_state :AnimateGradient = lai.slice(1)[i]
+		gc.lights.set_light_color(ani_state.get_color(), flags)
+		ani_state.inc_rate(0.1)
 
 func _process(delta: float) -> void:
 	animate_empty_glass_cabinet_light()
