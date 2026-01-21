@@ -59,12 +59,10 @@ func _on_카메라변경_pressed() -> void:
 	MovingCameraLight.NextCamera()
 	focus_to_by_current_mcl()
 	var mcl := MovingCameraLight.GetCurrentCamera()
-	if mcl.get_parent() is GlassCabinet:
-		var gc :GlassCabinet = mcl.get_parent()
-		var text := gc.get_title_text()
-		var info :Array = name_to_info.get(text)
-		if info != null :
-			$"왼쪽패널/SelectCamera".select(info[1])
+	var text := mcl.get_info_text()
+	var info :Array = name_to_info.get(text)
+	if info != null :
+		$"왼쪽패널/SelectCamera".select(info[1])
 
 func _ready() -> void:
 	on_viewport_size_changed()

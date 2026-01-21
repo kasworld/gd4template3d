@@ -24,6 +24,9 @@ var info_text :String
 func set_info_text(s :String) -> MovingCameraLight:
 	info_text = s
 	return self
+func get_info_text() -> String:
+	return info_text
+
 var camera_fov := ClampedFloat.new(75,1,179)
 var light_angle := ClampedFloat.new(45,1,179)
 
