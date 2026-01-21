@@ -4,6 +4,10 @@ var glass_cabinet_iter :ListIter # [ GlassCabinet, light iter data]
 var used_glass_cabinet_iter :ListIter
 var empty_glass_cabinet_iter :ListIter
 
+func show_all_cabinet(b :bool = true) -> void:
+	for gcl in glass_cabinet_iter.get_data_array():
+		gcl[0].visible = b
+
 func setup_demo_to_cabinet(add_camera_dict :Callable) -> void:
 	var run_demo := func(demo :Callable, text :String) -> void:
 		var gc :GlassCabinet = glass_cabinet_iter.get_next()[0]
