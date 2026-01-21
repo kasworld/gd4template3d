@@ -102,7 +102,8 @@ func set_points_color(co :Color) -> GlassCabinet:
 	$Points.set_color_all(co)
 	return self
 
-
+func get_title_text() -> String:
+	return $Title.text
 func show_title(b :bool = true) -> GlassCabinet:
 	$Title.visible = b
 	return self
@@ -113,6 +114,8 @@ func set_title_pixel_size(sz :float) -> GlassCabinet:
 	$Title.pixel_size = sz
 	return self
 
+func get_description_text() -> String:
+	return $Description.text
 func show_description(b :bool = true) -> GlassCabinet:
 	$Description.visible = b
 	return self
