@@ -33,7 +33,7 @@ Currently rendering: occlusion culling:%s
 	if $"오른쪽패널/LabelInfo".visible:
 		$"오른쪽패널/LabelInfo".text = "%s" % [ MovingCameraLight.GetCurrentCamera() ]
 
-var name_to_camera := {}
+var name_to_camera :Dictionary[String,MovingCameraLight] = {}
 func add_camera_dict(mcl :MovingCameraLight, text :String) -> void:
 	mcl.set_info_text(text)
 	name_to_camera[text] = mcl
@@ -42,10 +42,18 @@ func _on_select_camera_item_selected(index: int) -> void:
 	var text :String =  $"왼쪽패널/SelectCamera".get_item_text(index)
 	var mcl :MovingCameraLight = name_to_camera.get(text)
 	if mcl != null :
-		#MovingCameraLight.AllLightOn(false)
 		mcl.make_current()
-		#MovingCameraLight.GetCurrentCamera().get_light().visible = true
+		focus_to_by_current_mcl()
 	$"왼쪽패널/SelectCamera".release_focus()
+
+func focus_to_by_current_mcl() -> void:
+	var mcl := MovingCameraLight.GetCurrentCamera()
+	if mcl.get_parent() is GlassCabinet:
+		$RunDemo.show_all_cabinet(false)
+		mcl.get_parent().visible = true
+	else:
+		$RunDemo.show_all_cabinet(true)
+
 
 func _ready() -> void:
 	on_viewport_size_changed()
@@ -78,9 +86,8 @@ func _process(_delta: float) -> void:
 		$MovingCameraLightAround.move_wave_around_y(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
 
 func _on_카메라변경_pressed() -> void:
-	#MovingCameraLight.AllLightOn(false)
 	MovingCameraLight.NextCamera()
-	#MovingCameraLight.GetCurrentCamera().get_light().visible = true
+	focus_to_by_current_mcl()
 
 func _on_button_fov_up_pressed() -> void:
 	MovingCameraLight.GetCurrentCamera().camera_fov_inc()
