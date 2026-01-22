@@ -103,6 +103,7 @@ func _process(delta: float) -> void:
 
 var samegame :SameGame
 func same_game_demo(gc :GlassCabinet) -> void:
+	gc.show_description()
 	samegame = preload("res://same_game/same_game.tscn").instantiate(
 		).init(gc.cabinet_size)
 	gc.add_child(samegame)

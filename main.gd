@@ -60,7 +60,7 @@ func _on_카메라변경_pressed() -> void:
 	focus_to_by_current_mcl()
 	var mcl := MovingCameraLight.GetCurrentCamera()
 	var text := mcl.get_info_text()
-	var info :Array = name_to_info.get(text)
+	var info = name_to_info.get(text)
 	if info != null :
 		$"왼쪽패널/SelectCamera".select(info[1])
 
@@ -93,8 +93,6 @@ func _process(_delta: float) -> void:
 		$MovingCameraLightHober.move_hober_around_z(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
 	elif $MovingCameraLightAround.is_current_camera():
 		$MovingCameraLightAround.move_wave_around_y(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
-
-
 
 func _on_button_fov_up_pressed() -> void:
 	MovingCameraLight.GetCurrentCamera().camera_fov_inc()
