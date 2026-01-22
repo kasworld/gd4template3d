@@ -87,8 +87,8 @@ func _ready() -> void:
 	#MovingCameraLight.GetCurrentCamera().get_light().visible = true
 
 func _process(_delta: float) -> void:
-	var now := Time.get_unix_time_from_system()
 	label_demo()
+	var now := Time.get_unix_time_from_system()
 	if $MovingCameraLightHober.is_current_camera():
 		$MovingCameraLightHober.move_hober_around_z(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
 	elif $MovingCameraLightAround.is_current_camera():

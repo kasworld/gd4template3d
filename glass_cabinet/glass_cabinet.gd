@@ -1,6 +1,16 @@
 extends Node3D
 class_name GlassCabinet
 
+signal focused_to(me :GlassCabinet)
+signal unfocused_to(me :GlassCabinet)
+
+func get_focused_to() -> void:
+	focused_to.emit(self)
+
+func lost_focused_to() -> void:
+	unfocused_to.emit(self)
+
+
 ## axis : x:0, y:1, z:2, axis_sign : 1,0,-1
 static func MakeSubgroupFlagsByPos(axis :int, axis_sign :int) -> int:
 	var pos_list := PlatonicSolids.CubePoints
