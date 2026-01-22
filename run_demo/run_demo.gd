@@ -29,6 +29,7 @@ func setup_demo_to_cabinet(add_camera_dict :Callable) -> void:
 	run_demo.call(platonic_solids_demo, "platonic solids")
 	run_demo.call(winter_tree_demo, "winter tree")
 	run_demo.call(dialgauge_demo, "dial gauge")
+	run_demo.call(same_game_demo, "same game")
 	used_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_itered_slice())
 	empty_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_unitered_slice())
 	print_debug("remain glass cabinet %d\ndemo count %s" % [
@@ -100,6 +101,19 @@ func _process(delta: float) -> void:
 	platonic_solids_animation.handle_animation()
 	props_animation.handle_animation()
 
+var samegame :SameGame
+func same_game_demo(gc :GlassCabinet) -> void:
+	samegame = preload("res://same_game/same_game.tscn").instantiate(
+		).init(gc.cabinet_size)
+	gc.add_child(samegame)
+	samegame.game_ended.connect(samegame_ended)
+	samegame.score_changed.connect(update_samegame_score_label)
+
+func samegame_ended(game :SameGame) -> void:
+	samegame.new_game()
+
+func update_samegame_score_label(점수 :float) -> void:
+	samegame.get_parent().set_description_text("현재점수 %d" % 점수 )
 
 func make_rand_range(v :float, l :float) -> Array:
 	var r1 := randf_range(v,v+l)
