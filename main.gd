@@ -43,21 +43,25 @@ func _on_select_camera_item_selected(index: int) -> void:
 	var text :String =  $"왼쪽패널/SelectCamera".get_item_text(index)
 	var info :Array = name_to_info.get(text)
 	if info != null :
+		var old := MovingCameraLight.GetCurrentCamera()
 		info[0].make_current()
-		focus_to_by_current_mcl()
+		focus_to_by_current_mcl(old)
 	$"왼쪽패널/SelectCamera".release_focus()
 
-func focus_to_by_current_mcl() -> void:
+func focus_to_by_current_mcl(old: MovingCameraLight) -> void:
+	if old.get_parent() is GlassCabinet:
+		old.get_parent().lost_focused_to()
 	var mcl := MovingCameraLight.GetCurrentCamera()
 	if mcl.get_parent() is GlassCabinet:
+		mcl.get_parent().get_focused_to()
 		$RunDemo.show_all_cabinet(false)
 		mcl.get_parent().visible = true
 	else:
 		$RunDemo.show_all_cabinet(true)
 
 func _on_카메라변경_pressed() -> void:
-	MovingCameraLight.NextCamera()
-	focus_to_by_current_mcl()
+	var old := MovingCameraLight.NextCamera()
+	focus_to_by_current_mcl(old)
 	var mcl := MovingCameraLight.GetCurrentCamera()
 	var text := mcl.get_info_text()
 	var info = name_to_info.get(text)
