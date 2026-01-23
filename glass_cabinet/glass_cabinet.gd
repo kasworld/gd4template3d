@@ -1,13 +1,14 @@
 extends Node3D
 class_name GlassCabinet
 
+## 주목 받음, 끝남
 signal focused_to(me :GlassCabinet)
 signal unfocused_to(me :GlassCabinet)
 
-func get_focused_to() -> void:
+func emit_focused_to() -> void:
 	focused_to.emit(self)
 
-func lost_focused_to() -> void:
+func emit_unfocused_to() -> void:
 	unfocused_to.emit(self)
 
 
