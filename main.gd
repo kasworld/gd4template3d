@@ -33,15 +33,15 @@ Currently rendering: occlusion culling:%s
 	if $"오른쪽패널/LabelInfo".visible:
 		$"오른쪽패널/LabelInfo".text = "%s" % [ MovingCameraLight.GetCurrentCamera() ]
 
-## cabinet name to [camera, sel index]
-var name_to_info :Dictionary[String,Array] = {}
+## MovingCameraLight infotext to [camera, sel index]
+var mcl_info_to_info :Dictionary[String,Array] = {}
 func add_camera_dict(mcl :MovingCameraLight, text :String) -> void:
 	mcl.set_info_text(text)
-	name_to_info[text] = [mcl, $"왼쪽패널/SelectCamera".item_count]
+	mcl_info_to_info[text] = [mcl, $"왼쪽패널/SelectCamera".item_count]
 	$"왼쪽패널/SelectCamera".add_item(text)
 func _on_select_camera_item_selected(index: int) -> void:
 	var text :String =  $"왼쪽패널/SelectCamera".get_item_text(index)
-	var info :Array = name_to_info.get(text)
+	var info :Array = mcl_info_to_info.get(text)
 	if info != null :
 		focus_to_new_MovingCameraLight(info[0])
 	$"왼쪽패널/SelectCamera".release_focus()
@@ -63,7 +63,7 @@ func _on_카메라변경_pressed() -> void:
 	var mcl := MovingCameraLight.GetCurrentCamera()
 	focus_to_new_MovingCameraLight(mcl)
 	var text := mcl.get_info_text()
-	var info = name_to_info.get(text)
+	var info = mcl_info_to_info.get(text)
 	if info != null :
 		$"왼쪽패널/SelectCamera".select(info[1])
 
@@ -87,7 +87,6 @@ func _ready() -> void:
 	$RunDemo.setup_demo_to_cabinet(add_camera_dict)
 	MovingCameraLight.AllLightOn(false)
 	$CenterCameraLight.make_current()
-	#MovingCameraLight.GetCurrentCamera().get_light().visible = true
 
 func _process(_delta: float) -> void:
 	label_demo()

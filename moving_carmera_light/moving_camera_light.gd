@@ -3,6 +3,7 @@ class_name MovingCameraLight
 
 static var SelfList :Array[MovingCameraLight]
 static var CurrentIndex :int
+## retuen old
 static func NextCamera() -> MovingCameraLight:
 	var old := GetCurrentCamera()
 	CurrentIndex +=1
