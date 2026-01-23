@@ -49,10 +49,10 @@ func _on_select_camera_item_selected(index: int) -> void:
 func focus_to_new_MovingCameraLight(newmcl :MovingCameraLight) -> void:
 	var old := MovingCameraLight.GetCurrentCamera()
 	if old.get_parent() is GlassCabinet:
-		old.get_parent().emit_unfocused_to()
+		old.get_parent().set_focus_mode(false)
 	newmcl.make_current()
 	if newmcl.get_parent() is GlassCabinet:
-		newmcl.get_parent().emit_focused_to()
+		newmcl.get_parent().set_focus_mode(true)
 		$RunDemo.show_all_cabinet(false)
 		newmcl.get_parent().visible = true
 	else:

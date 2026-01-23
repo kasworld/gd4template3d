@@ -1,16 +1,13 @@
 extends Node3D
 class_name GlassCabinet
 
-## 주목 받음, 끝남
-signal focused_to(me :GlassCabinet)
-signal unfocused_to(me :GlassCabinet)
-
-func emit_focused_to() -> void:
-	focused_to.emit(self)
-
-func emit_unfocused_to() -> void:
-	unfocused_to.emit(self)
-
+var focus_mode :bool
+signal focus_mode_changed(me :GlassCabinet, mode :bool)
+func set_focus_mode(b :bool) -> void:
+	focus_mode = b
+	focus_mode_changed.emit(self, focus_mode)
+func get_focus_mode() -> bool:
+	return focus_mode
 
 ## axis : x:0, y:1, z:2, axis_sign : 1,0,-1
 static func MakeSubgroupFlagsByPos(axis :int, axis_sign :int) -> int:
