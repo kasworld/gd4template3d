@@ -74,14 +74,15 @@ func _ready() -> void:
 	$TimedMessage.show_message("",0)
 	$OmniLight3D.omni_range = WorldSize.length()*3
 	$CenterCameraLight.set_center_pos_far( Vector3(0, 0, -WorldSize.z), Vector3.ZERO, WorldSize.length()*3)
-	add_camera_dict($CenterCameraLight, "Center")
 	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
-	add_camera_dict($FixedCameraLight, "Fixed")
 	$MovingCameraLightHober.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
-	add_camera_dict($MovingCameraLightHober, "Hober")
 	$MovingCameraLightAround.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
-	add_camera_dict($MovingCameraLightAround, "Around")
 	$AxisArrow3D.set_colors().set_size(WorldSize.length()/20)
+
+	add_camera_dict($CenterCameraLight, "Center")
+	add_camera_dict($FixedCameraLight, "Fixed")
+	add_camera_dict($MovingCameraLightHober, "Hober")
+	add_camera_dict($MovingCameraLightAround, "Around")
 
 	$RunDemo.make_glass_cabinet(WorldSize)
 	$RunDemo.setup_demo_to_cabinet(add_camera_dict)
@@ -89,12 +90,13 @@ func _ready() -> void:
 	$CenterCameraLight.make_current()
 
 func _process(_delta: float) -> void:
-	label_demo()
 	var now := Time.get_unix_time_from_system()
 	if $MovingCameraLightHober.is_current_camera():
 		$MovingCameraLightHober.move_hober_around_z(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
 	elif $MovingCameraLightAround.is_current_camera():
 		$MovingCameraLightAround.move_wave_around_y(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
+
+	label_demo()
 
 func _on_button_fov_up_pressed() -> void:
 	MovingCameraLight.GetCurrentCamera().camera_fov_inc()
