@@ -95,6 +95,8 @@ func _process(delta: float) -> void:
 	tornado_animate()
 	wintertree_animate(delta)
 	dialgauge_animate()
+	maze3d_animation()
+
 	clock_calendar_animation.handle_animation()
 	$GlassCabinetContainer1.rotate_y(delta/10)
 	$GlassCabinetContainer2.rotate_y(-delta/10)
@@ -365,6 +367,7 @@ func wirenet_wavegauge_demo(gc :GlassCabinet) -> void:
 	gc.add_child(wavegauge_plane)
 
 var maze3d :Maze3D
+var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ReducedWithPillar
 func maze3d_demo(gc :GlassCabinet) -> void:
 	var ms := Maze3DSetting.new_default()
 	ms.MazeSize = Vector2i(16,9)
@@ -375,8 +378,24 @@ func maze3d_demo(gc :GlassCabinet) -> void:
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_with_color( ms, Callable(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color() )
 	maze3d.rotation.x = PI/4
-	maze3d.view_floor_ceiling(false,false)
+	maze3d.view_floor_ceiling(true,false)
 	gc.add_child(maze3d)
+var maze_ani_i :int
+func maze3d_animation() -> void:
+	maze_ani_i += 1
+	match maze_ani_i% 60:
+		0:
+			view_walls = Maze3D.wallview_next(view_walls)
+			maze3d.set_wallpillar_view_mode(view_walls)
+		#12:
+			#maze3d.view_floor_ceiling(false,false)
+		#24:
+			#maze3d.view_floor_ceiling(true,false)
+		#36:
+			#maze3d.view_floor_ceiling(false,true)
+		#48:
+			#maze3d.view_floor_ceiling(true,true)
+
 
 var trailmesh_radius :float
 func meshtrail_animate(delta :float) -> void:
