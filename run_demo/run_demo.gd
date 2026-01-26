@@ -36,27 +36,33 @@ func setup_demo_to_cabinet(add_camera_dict :Callable) -> void:
 	print_debug("remain glass cabinet %d\ndemo count %s" % [
 		empty_glass_cabinet_iter.get_size(),used_glass_cabinet_iter.get_size() ])
 
-func make_glass_cabinet(cabinet_size :Vector3) -> void:
-	var count := 24
+func make_glass_cabinet_row(cabinet_size :Vector3, count :int, row :int) -> Node3D:
+	var rtn := Node3D.new()
 	var unit_rad := 2*PI/ count
-	var gc_ani_list :Array = []
+	var radius := cabinet_size.x *count / (PI *2) + cabinet_size.z/2
 	for i in count:
-		var radius := cabinet_size.length() *1.7
 		var gc :GlassCabinet = preload("res://glass_cabinet/glass_cabinet.tscn").instantiate(
 			).init(cabinet_size)
 		var rad := i * unit_rad
-		if i % 2 == 0:
-			gc.position = Vector3(sin(rad)*radius, gc.cabinet_size.y/2 *1.0, cos(rad)*radius)
-			$GlassCabinetContainer1.add_child(gc)
-		else:
-			gc.position = Vector3(sin(rad)*radius, -gc.cabinet_size.y/2 *1.0, cos(rad)*radius)
-			$GlassCabinetContainer2.add_child(gc)
-		gc.look_at( Vector3(0,gc.position.y,0), Vector3.UP, true)
-		gc.set_title_text("%d" % i).show_title(true)
-		gc_ani_list.append([gc,
-			AnimateGradient.new(),AnimateGradient.new(),
-			])
-	glass_cabinet_iter = ListIter.new(gc_ani_list, false)
+		gc.position = Vector3(sin(rad)*radius, 0, cos(rad)*radius)
+		gc.set_title_text("%d-%d" % [row+1, i+1]).show_title(true)
+		gc.look_at_from_position(gc.position, Vector3.ZERO, Vector3.UP, true)
+		rtn.add_child(gc)
+	return rtn
+
+var glass_cabinet_row_list :Array[Node3D]
+func make_glass_cabinet(cabinet_size :Vector3) -> void:
+	var gc_ani_list :Array = []
+	for i in 2: # glass_cabinet_row
+		var gcr := make_glass_cabinet_row(cabinet_size, 12, i)
+		add_child(gcr)
+		glass_cabinet_row_list.append(gcr)
+		gcr.position.y = cabinet_size.y *(float(i)-0.5) * 1.05
+		for gc in gcr.get_children():
+			gc_ani_list.append([gc,
+				AnimateGradient.new(),AnimateGradient.new(),
+				])
+	glass_cabinet_iter = ListIter.new(gc_ani_list, true)
 
 func animate_empty_glass_cabinet_light() -> void:
 	var lai :Array = empty_glass_cabinet_iter.get_next()
@@ -99,8 +105,11 @@ func _process(delta: float) -> void:
 	maze3d_animation()
 
 	clock_calendar_animation.handle_animation()
-	$GlassCabinetContainer1.rotate_y(delta/10)
-	$GlassCabinetContainer2.rotate_y(-delta/10)
+	for i in glass_cabinet_row_list.size():
+		if i % 2 == 0:
+			glass_cabinet_row_list[i].rotate_y(delta/10)
+		else:
+			glass_cabinet_row_list[i].rotate_y(-delta/10)
 	platonic_solids_animation.handle_animation()
 	props_animation.handle_animation()
 
@@ -142,7 +151,7 @@ func same_game_demo(gc :GlassCabinet) -> void:
 	samegame.game_ended.connect(samegame_ended)
 	samegame.score_changed.connect(update_samegame_score_label)
 
-func samegame_ended(game :SameGame) -> void:
+func samegame_ended(_game :SameGame) -> void:
 	samegame.new_game()
 
 func update_samegame_score_label(점수 :float) -> void:

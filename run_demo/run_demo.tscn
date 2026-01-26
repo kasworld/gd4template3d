@@ -11,9 +11,5 @@ one_shot = true
 [node name="TimerReel" type="Timer" parent="."]
 one_shot = true
 
-[node name="GlassCabinetContainer1" type="Node3D" parent="."]
-
-[node name="GlassCabinetContainer2" type="Node3D" parent="."]
-
 [connection signal="timeout" from="TimerWheel" to="." method="_on_timer_wheel_timeout"]
 [connection signal="timeout" from="TimerReel" to="." method="_on_timer_reel_timeout"]
