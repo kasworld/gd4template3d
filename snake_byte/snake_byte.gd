@@ -18,7 +18,7 @@ static func pos3d_to_pos2d( pos :Vector3 ) -> Vector2i:
 signal score_changed(점수 :float)
 signal game_ended(game :SnakeByte)
 
-static var FrameTime := 0.2 # second
+static var FrameTime := 0.1 # second
 static var SnakeLenStart := 12
 static var SankeLenInc := 12
 static var PlumCount := 2
@@ -60,7 +60,6 @@ func init(sz :Vector3) -> SnakeByte:
 	$StageInfo.pixel_size = tile_size.y /24
 	$SnakeInfo.pixel_size = tile_size.y /24
 	$AppleInfo.pixel_size = tile_size.y /24
-	$FrameTimer.wait_time = SnakeByte.FrameTime
 
 	gauge = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).init_bar_gauge_y(SnakeByte.EatStepOverLimit, Vector3(tile_size.x, cabinet_size.y, tile_size.z), Color.GREEN, Color.RED)
@@ -162,7 +161,6 @@ func is_all_apple_eaten() -> bool:
 func snake_enter_complete() -> void:
 	$Walls.close_startpos()
 
-
 func process_frame() -> void:
 	for p in $PlumContainer.get_children():
 		p.move2d()
@@ -178,6 +176,14 @@ func process_frame() -> void:
 	else:
 		gauge.set_visible_count(0)
 
+var last_time :float = Time.get_unix_time_from_system()
+func _process(_delta: float) -> void:
+	var now := Time.get_unix_time_from_system()
+	if now - last_time > FrameTime:
+		process_frame()
+		last_time = now
+
+
 func handle_stepover() -> void:
 	snake_step_after_eat = 0
 	if not is_all_apple_eaten():
@@ -187,8 +193,6 @@ func handle_stepover() -> void:
 		update_info()
 	snake.dest_body_len += SnakeByte.SankeLenInc
 
-func _on_frame_timer_timeout() -> void:
-	process_frame()
 
 func is_snake_alive() -> bool:
 	return snake != null and snake.is_alive

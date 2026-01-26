@@ -8,10 +8,6 @@ script = ExtResource("1_lxyrc")
 
 [node name="Walls" parent="." instance=ExtResource("2_yqn8k")]
 
-[node name="FrameTimer" type="Timer" parent="."]
-wait_time = 0.2
-autostart = true
-
 [node name="StageInfo" type="Label3D" parent="."]
 pixel_size = 0.05
 horizontal_alignment = 0
@@ -26,5 +22,3 @@ pixel_size = 0.05
 [node name="AppleContainer" type="Node3D" parent="."]
 
 [node name="PlumContainer" type="Node3D" parent="."]
-
-[connection signal="timeout" from="FrameTimer" to="." method="_on_frame_timer_timeout"]
