@@ -4,7 +4,7 @@ class_name SameGame
 signal score_changed(점수 :float)
 signal game_ended(game :SameGame)
 
-const MaxBallType := 2
+const MaxBallType := 6
 var color_list := [
 	Color.RED,
 	Color.GREEN,

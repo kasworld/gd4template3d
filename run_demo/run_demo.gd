@@ -513,7 +513,7 @@ func start_props_animation() -> void:
 			"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
 
 func line2d_demo(gc :GlassCabinet) -> void:
-	#gc.show_wall_box(false)
+	gc.show_wall_box(false)
 	var size_pixel := Vector2i(2048,2048)
 	var ml2d = preload("res://move_line_2d/move_line_2d.tscn").instantiate()
 	ml2d.init_with_random(300, 4, 1, size_pixel)
