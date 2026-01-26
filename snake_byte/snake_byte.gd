@@ -212,5 +212,7 @@ func demo_move_pathfinding() -> void:
 		id_path = astar_grid.get_id_path(snake_head_pos2i() , SBWalls.GoalPos, true)
 	else :
 		id_path = astar_grid.get_id_path(snake_head_pos2i() , get_next_apple_pos2i(), true)
+	if id_path.size() < 2:
+		return
 	var vt :Vector2i = sign(id_path[1] - snake_head_pos2i())
 	snake.cmd_queue.append(Dir8Lib.Vt2Dir[vt])
