@@ -30,6 +30,7 @@ func setup_demo_to_cabinet(add_camera_dict :Callable) -> void:
 	run_demo.call(winter_tree_demo, "winter tree")
 	run_demo.call(dialgauge_demo, "dial gauge")
 	run_demo.call(same_game_demo, "same game")
+	run_demo.call(snakebyte_demo, "snakebyte game")
 	used_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_itered_slice())
 	empty_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_unitered_slice())
 	print_debug("remain glass cabinet %d\ndemo count %s" % [
@@ -102,6 +103,35 @@ func _process(delta: float) -> void:
 	$GlassCabinetContainer2.rotate_y(-delta/10)
 	platonic_solids_animation.handle_animation()
 	props_animation.handle_animation()
+
+
+var snake_byte_game :SnakeByte
+var game_info :Dictionary
+func snakebyte_demo(gc :GlassCabinet) -> void:
+	#gc.get_camera_light().get_light().visible = false
+	gc.show_wall_box(false)
+	#gc.lights.set_light_energy(10, BitFlag.MakeFilledFlags( $GlassCabinet.lights.get_size() ))
+	snake_byte_game = preload("res://snake_byte/snake_byte.tscn").instantiate(
+		).init(gc.cabinet_size)
+	gc.add_child(snake_byte_game)
+	snake_byte_game.game_ended.connect(game_ended)
+	snake_byte_game.score_changed.connect(score_changed)
+	new_snakebytegame(true)
+func new_snakebytegame(demo_mode :bool) -> void:
+	game_info = {
+		"score" : 0,
+		"snake" : SnakeByte.SnakeLife,
+		"stage_number" : 0,
+		"demo_mode" : demo_mode,
+	}
+	snake_byte_game.new_game(game_info)
+func score_changed(_score :float) -> void:
+	pass
+func game_ended(_game :SnakeByte) -> void:
+	new_snakebytegame(true)
+func end_demo_start_game() -> void:
+	new_snakebytegame(false)
+
 
 var samegame :SameGame
 func same_game_demo(gc :GlassCabinet) -> void:

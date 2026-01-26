@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://cxxcrdsi8cssr"]
+
+[ext_resource type="Script" uid="uid://jhaourn2k7qe" path="res://snake_byte/plum/plum.gd" id="1_3dh1o"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3dh1o"]
+resource_local_to_scene = true
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_yjcpj"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_3dh1o")
+radius = 0.25
+height = 1.0
+
+[node name="Plum" type="Node3D"]
+script = ExtResource("1_3dh1o")
+
+[node name="모양" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("CapsuleMesh_yjcpj")
+
+[node name="번호" type="Label3D" parent="."]
+visible = false
+pixel_size = 0.01
+no_depth_test = true
+
+[node name="이동모양" type="MeshInstance3D" parent="."]

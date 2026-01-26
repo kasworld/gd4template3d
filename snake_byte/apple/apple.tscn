@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://de3ncklkxr01"]
+
+[ext_resource type="Script" uid="uid://cg01ie0jg3oe3" path="res://snake_byte/apple/apple.gd" id="1_3ed3y"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3ed3y"]
+resource_local_to_scene = true
+
+[sub_resource type="TorusMesh" id="TorusMesh_n78qv"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_3ed3y")
+inner_radius = 0.25
+outer_radius = 0.5
+
+[node name="Apple" type="Node3D"]
+script = ExtResource("1_3ed3y")
+
+[node name="모양" type="MeshInstance3D" parent="."]
+mesh = SubResource("TorusMesh_n78qv")
+
+[node name="번호" type="Label3D" parent="."]
+visible = false
+pixel_size = 0.02
+no_depth_test = true
