@@ -1,8 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://civqmm4724qbj"]
-
-[ext_resource type="Script" uid="uid://csvsis07rld6u" path="res://tour_camera/tour_camera.gd" id="1_5wjrr"]
-
-[node name="TourCamera" type="Node3D"]
-script = ExtResource("1_5wjrr")
-
-[node name="Camera3D" type="Camera3D" parent="."]

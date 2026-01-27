@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dylwfbugiuwjp" path="res://run_demo/run_demo.tscn" id="6_7mycd"]
 [ext_resource type="PackedScene" uid="uid://tbrd3angkio6" path="res://cabinet_demo/cabinet_demo.tscn" id="7_272bh"]
 [ext_resource type="PackedScene" uid="uid://ces3a6yv0c5fi" path="res://moving_carmera_light/moving_camera_light.tscn" id="8_5vw27"]
-[ext_resource type="PackedScene" uid="uid://civqmm4724qbj" path="res://tour_camera/tour_camera.tscn" id="8_kek77"]
+[ext_resource type="PackedScene" uid="uid://civqmm4724qbj" path="res://tour_glass_cabinet/tour_glass_cabinet.tscn" id="8_kek77"]
 
 [sub_resource type="Theme" id="Theme_h2yge"]
 default_font_size = 48
@@ -106,6 +106,6 @@ environment = SubResource("Environment_7mycd")
 
 [node name="RunDemo" parent="." instance=ExtResource("6_7mycd")]
 
-[node name="TourCamera" parent="." instance=ExtResource("8_kek77")]
+[node name="TourGlassCabinet" parent="." instance=ExtResource("8_kek77")]
 
 [connection signal="item_selected" from="왼쪽패널/SelectCamera" to="." method="_on_select_camera_item_selected"]

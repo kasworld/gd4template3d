@@ -88,8 +88,8 @@ func _ready() -> void:
 	$RunDemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict)
 	MovingCameraLight.AllLightOn(false)
 
-	$TourCamera.init($CabinetDemo.glass_cabinet_list)
-	$TourCamera.start()
+	$TourGlassCabinet.init($CabinetDemo.glass_cabinet_list)
+	$TourGlassCabinet.start()
 
 	#$CenterCameraLight.make_current()
 

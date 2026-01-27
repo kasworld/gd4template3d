@@ -1,5 +1,5 @@
 extends Node3D
-class_name TourCamera
+class_name TourGlassCabinet
 
 var wait_btw_animation := 1.0
 var animation_dur := 1.0
@@ -7,7 +7,7 @@ var animation_dur := 1.0
 var animation_queue :Array # [ [ move, rotate, fov ] ]
 var tour_animation :SimpleAnimation
 
-func init(gc_list :Array) -> TourCamera:
+func init(gc_list :Array[GlassCabinet]) -> TourGlassCabinet:
 	animation_queue = []
 	tour_animation = SimpleAnimation.new()
 	tour_animation.animation_ended.connect(animation_ended)
