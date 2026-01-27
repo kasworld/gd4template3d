@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://2x0cka7afmvg"
 path.s3tc="res://.godot/imported/moon_normals.png-53a7e203de5330986701281c7b28c738.s3tc.ctex"
+path.etc2="res://.godot/imported/moon_normals.png-53a7e203de5330986701281c7b28c738.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://earthmoon/moon_normals.png"
-dest_files=["res://.godot/imported/moon_normals.png-53a7e203de5330986701281c7b28c738.s3tc.ctex"]
+dest_files=["res://.godot/imported/moon_normals.png-53a7e203de5330986701281c7b28c738.s3tc.ctex", "res://.godot/imported/moon_normals.png-53a7e203de5330986701281c7b28c738.etc2.ctex"]
 
 [params]
 

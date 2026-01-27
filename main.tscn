@@ -41,6 +41,14 @@ offset_right = 40.0
 offset_bottom = 138.0
 theme = SubResource("Theme_h2yge")
 
+[node name="StartTour" type="Button" parent="왼쪽패널"]
+layout_mode = 2
+text = "Start Tour"
+
+[node name="StopTour" type="Button" parent="왼쪽패널"]
+layout_mode = 2
+text = "Stop Tour"
+
 [node name="SelectCamera" type="OptionButton" parent="왼쪽패널"]
 layout_mode = 2
 
@@ -108,4 +116,6 @@ environment = SubResource("Environment_7mycd")
 
 [node name="TourGlassCabinet" parent="." instance=ExtResource("8_kek77")]
 
+[connection signal="pressed" from="왼쪽패널/StartTour" to="." method="_on_start_tour_pressed"]
+[connection signal="pressed" from="왼쪽패널/StopTour" to="." method="_on_stop_tour_pressed"]
 [connection signal="item_selected" from="왼쪽패널/SelectCamera" to="." method="_on_select_camera_item_selected"]

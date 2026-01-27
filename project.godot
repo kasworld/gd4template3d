@@ -25,3 +25,7 @@ window/size/mode=3
 [physics]
 
 3d/run_on_separate_thread=true
+
+[rendering]
+
+textures/vram_compression/import_etc2_astc=true

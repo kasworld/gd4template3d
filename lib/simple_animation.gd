@@ -155,3 +155,13 @@ func get_value_by_ani(ani :Dictionary, name :String) -> Variant:
 		else:
 			rtn = rtn[ani.Field]
 	return rtn
+
+func force_end(emit_end :bool) -> void:
+	for i in animation_list.size():
+		var ani :Dictionary = animation_list.pop_front()
+		if ani.AniNode == null || ani.From == null || ani.To == null:
+			continue
+		var rate :float = 1.0
+		update_by_ani(ani, rate)
+		if emit_end:
+			animation_ended.emit(ani.AniNode, ani)

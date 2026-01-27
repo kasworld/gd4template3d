@@ -19,6 +19,9 @@ func start() -> void:
 	make_current()
 	next()
 
+func stop() -> void:
+	tour_animation.force_end(false)
+
 func make_current() -> void:
 	$Camera3D.current = true
 
@@ -83,7 +86,6 @@ func animation_ended(_st :Node, _ani :Dictionary) -> void:
 
 func next() -> void:
 	var ani_list = animation_queue.pop_front()
-	#print_debug(ani_list)
 	for ani in ani_list:
 		tour_animation.add_animation(ani)
 	animation_queue.append(ani_list)
