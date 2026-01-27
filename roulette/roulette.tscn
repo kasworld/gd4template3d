@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://sjnpttkqk1qs"]
+[gd_scene format=3 uid="uid://sjnpttkqk1qs"]
 
 [ext_resource type="Script" uid="uid://dwpxaxvkorfar" path="res://roulette/roulette.gd" id="1_7pkjq"]
 [ext_resource type="PackedScene" uid="uid://d4kkhfcvaexg1" path="res://valve_handle/valve_handle.tscn" id="2_14kvd"]
@@ -17,29 +17,29 @@ resource_local_to_scene = true
 [sub_resource type="MultiMesh" id="MultiMesh_cdnmj"]
 resource_local_to_scene = true
 
-[node name="Roulette" type="Node3D"]
+[node name="Roulette" type="Node3D" unique_id=783119175]
 script = ExtResource("1_7pkjq")
 
-[node name="화살표" parent="." instance=ExtResource("2_ed2fd")]
+[node name="화살표" parent="." unique_id=1316159644 instance=ExtResource("2_ed2fd")]
 
-[node name="IDLabel" type="Label3D" parent="."]
+[node name="IDLabel" type="Label3D" parent="." unique_id=879277627]
 visible = false
 billboard = 1
 no_depth_test = true
 modulate = Color(0, 0, 0, 1)
 outline_modulate = Color(1, 1, 1, 1)
 
-[node name="Wheel" parent="." instance=ExtResource("5_wjn2p")]
+[node name="Wheel" parent="." unique_id=441470620 instance=ExtResource("5_wjn2p")]
 
-[node name="원판" type="MeshInstance3D" parent="Wheel"]
+[node name="원판" type="MeshInstance3D" parent="Wheel" unique_id=992620685]
 visible = false
 mesh = SubResource("CylinderMesh_cdnmj")
 
-[node name="ValveHandle" parent="Wheel" instance=ExtResource("2_14kvd")]
+[node name="ValveHandle" parent="Wheel" unique_id=1856228307 instance=ExtResource("2_14kvd")]
 visible = false
 
-[node name="BarTree2" parent="Wheel" instance=ExtResource("3_phm1c")]
+[node name="BarTree2" parent="Wheel" unique_id=601570340 instance=ExtResource("3_phm1c")]
 multimesh = SubResource("MultiMesh_wjn2p")
 
-[node name="BarTree3" parent="Wheel" instance=ExtResource("3_phm1c")]
+[node name="BarTree3" parent="Wheel" unique_id=384633611 instance=ExtResource("3_phm1c")]
 multimesh = SubResource("MultiMesh_cdnmj")

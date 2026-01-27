@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bghys4klmis12"]
+[gd_scene format=3 uid="uid://bghys4klmis12"]
 
 [ext_resource type="Script" uid="uid://dcrypl53l2xia" path="res://dial_gauge/dial_gauge.gd" id="1_7yysf"]
 
@@ -26,21 +26,21 @@ resource_local_to_scene = true
 resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_g7w51")
 
-[node name="DialGauge" type="Node3D"]
+[node name="DialGauge" type="Node3D" unique_id=1324515578]
 script = ExtResource("1_7yysf")
 
-[node name="Case" type="MeshInstance3D" parent="."]
+[node name="Case" type="MeshInstance3D" parent="." unique_id=185167268]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
 mesh = SubResource("CylinderMesh_eliwg")
 
-[node name="Center" type="MeshInstance3D" parent="."]
+[node name="Center" type="MeshInstance3D" parent="." unique_id=1638420230]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
 mesh = SubResource("CylinderMesh_g7w51")
 
-[node name="NeedleBase" type="Node3D" parent="."]
+[node name="NeedleBase" type="Node3D" parent="." unique_id=979211392]
 
-[node name="Needle" type="MeshInstance3D" parent="NeedleBase"]
+[node name="Needle" type="MeshInstance3D" parent="NeedleBase" unique_id=1327964056]
 mesh = SubResource("BoxMesh_c8wkp")
 skeleton = NodePath("../..")
 
-[node name="NumberContainer" type="Node3D" parent="."]
+[node name="NumberContainer" type="Node3D" parent="." unique_id=668754700]

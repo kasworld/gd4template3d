@@ -1,9 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://cpcmrvaeq2qi"]
+[gd_scene format=3 uid="uid://cpcmrvaeq2qi"]
 
 [ext_resource type="Script" uid="uid://bhjhef4e4iffe" path="res://winter_tree/winter_tree.gd" id="1_oh0jj"]
 [ext_resource type="PackedScene" uid="uid://cfnbpemvoy1i6" path="res://multi_mesh_shape/multi_mesh_shape.tscn" id="2_2vil8"]
 
-[sub_resource type="MultiMesh" id="MultiMesh_mc5fr"]
+[sub_resource type="MultiMesh" id="MultiMesh_2tif1"]
 resource_local_to_scene = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2vil8"]
@@ -11,17 +11,17 @@ resource_local_to_scene = true
 [sub_resource type="CylinderMesh" id="CylinderMesh_mc5fr"]
 material = SubResource("StandardMaterial3D_2vil8")
 
-[sub_resource type="MultiMesh" id="MultiMesh_2tif1"]
+[sub_resource type="MultiMesh" id="MultiMesh_wrjh0"]
 resource_local_to_scene = true
 
-[node name="LineTree" type="Node3D"]
+[node name="LineTree" type="Node3D" unique_id=412796263]
 script = ExtResource("1_oh0jj")
 
-[node name="가지들" parent="." instance=ExtResource("2_2vil8")]
-multimesh = SubResource("MultiMesh_mc5fr")
+[node name="가지들" parent="." unique_id=828269096 instance=ExtResource("2_2vil8")]
+multimesh = SubResource("MultiMesh_2tif1")
 
-[node name="중심기둥" type="MeshInstance3D" parent="."]
+[node name="중심기둥" type="MeshInstance3D" parent="." unique_id=997446852]
 mesh = SubResource("CylinderMesh_mc5fr")
 
-[node name="장식들" parent="." instance=ExtResource("2_2vil8")]
-multimesh = SubResource("MultiMesh_2tif1")
+[node name="장식들" parent="." unique_id=1498944185 instance=ExtResource("2_2vil8")]
+multimesh = SubResource("MultiMesh_wrjh0")

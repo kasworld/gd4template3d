@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://cxxcrdsi8cssr"]
+[gd_scene format=3 uid="uid://cxxcrdsi8cssr"]
 
 [ext_resource type="Script" uid="uid://jhaourn2k7qe" path="res://snake_byte/plum/plum.gd" id="1_3dh1o"]
 
@@ -11,16 +11,16 @@ material = SubResource("StandardMaterial3D_3dh1o")
 radius = 0.25
 height = 1.0
 
-[node name="Plum" type="Node3D"]
+[node name="Plum" type="Node3D" unique_id=250238029]
 script = ExtResource("1_3dh1o")
 
-[node name="모양" type="MeshInstance3D" parent="."]
+[node name="모양" type="MeshInstance3D" parent="." unique_id=1761186535]
 visible = false
 mesh = SubResource("CapsuleMesh_yjcpj")
 
-[node name="번호" type="Label3D" parent="."]
+[node name="번호" type="Label3D" parent="." unique_id=751891497]
 visible = false
 pixel_size = 0.01
 no_depth_test = true
 
-[node name="이동모양" type="MeshInstance3D" parent="."]
+[node name="이동모양" type="MeshInstance3D" parent="." unique_id=1510918697]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://o02enb5nefpx"]
+[gd_scene format=3 uid="uid://o02enb5nefpx"]
 
 [ext_resource type="Script" uid="uid://by7055v5bfc5w" path="res://slot_reel/reel_symbol/reel_symbol.gd" id="1_0b0sy"]
 [ext_resource type="FontFile" uid="uid://gdh6qls28unk" path="res://font/HakgyoansimBareondotumR.ttf" id="2_wkmah"]
@@ -13,8 +13,8 @@ text = "test"
 font = ExtResource("2_wkmah")
 pixel_size = 0.1
 
-[node name="ReelSymbol" type="Node3D"]
+[node name="ReelSymbol" type="Node3D" unique_id=739283650]
 script = ExtResource("1_0b0sy")
 
-[node name="글" type="MeshInstance3D" parent="."]
+[node name="글" type="MeshInstance3D" parent="." unique_id=1450009360]
 mesh = SubResource("TextMesh_siyr3")

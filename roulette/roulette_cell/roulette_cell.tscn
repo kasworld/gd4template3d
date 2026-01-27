@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dqc03uxia85uv"]
+[gd_scene format=3 uid="uid://dqc03uxia85uv"]
 
 [ext_resource type="Script" uid="uid://nl8f2irb6sdu" path="res://roulette/roulette_cell/roulette_cell.gd" id="1_0xk0q"]
 
@@ -49,15 +49,13 @@ _data = {
 &"글씨강조끄기": SubResource("Animation_hqw3w")
 }
 
-[node name="RouletteCell" type="Node3D"]
+[node name="RouletteCell" type="Node3D" unique_id=405353042]
 script = ExtResource("1_0xk0q")
 
-[node name="글씨" type="MeshInstance3D" parent="."]
+[node name="글씨" type="MeshInstance3D" parent="." unique_id=455810225]
 mesh = SubResource("TextMesh_g6io7")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-libraries = {
-&"": SubResource("AnimationLibrary_pa73h")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1917221677]
+libraries/ = SubResource("AnimationLibrary_pa73h")
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

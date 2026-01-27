@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c6maulcewyhy5"]
+[gd_scene format=3 uid="uid://c6maulcewyhy5"]
 
 [ext_resource type="Script" uid="uid://bgj25qi5j8dgh" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Texture2D" uid="uid://k1k5bbintag5" path="res://skymap/skymap.hdr" id="3_lquwl"]
@@ -14,7 +14,7 @@ default_font_size = 48
 
 [sub_resource type="SystemFont" id="SystemFont_bejao"]
 
-[sub_resource type="Theme" id="Theme_7mycd"]
+[sub_resource type="Theme" id="Theme_5vw27"]
 resource_local_to_scene = true
 default_font = SubResource("SystemFont_bejao")
 
@@ -33,88 +33,88 @@ ambient_light_color = Color(1, 1, 1, 1)
 reflected_light_source = 1
 glow_normalized = true
 
-[node name="Main" type="Node3D"]
+[node name="Main" type="Node3D" unique_id=660437119]
 script = ExtResource("1_ig7tw")
 
-[node name="왼쪽패널" type="VBoxContainer" parent="."]
+[node name="왼쪽패널" type="VBoxContainer" parent="." unique_id=12431008]
 offset_right = 40.0
 offset_bottom = 138.0
 theme = SubResource("Theme_h2yge")
 
-[node name="StartTour" type="Button" parent="왼쪽패널"]
+[node name="StartTour" type="Button" parent="왼쪽패널" unique_id=664082015]
 layout_mode = 2
 text = "Start Tour"
 
-[node name="StopTour" type="Button" parent="왼쪽패널"]
+[node name="StopTour" type="Button" parent="왼쪽패널" unique_id=542525043]
 layout_mode = 2
 text = "Stop Tour"
 
-[node name="SelectCamera" type="OptionButton" parent="왼쪽패널"]
+[node name="SelectCamera" type="OptionButton" parent="왼쪽패널" unique_id=1610525278]
 layout_mode = 2
 
-[node name="LabelReel" type="Label" parent="왼쪽패널"]
+[node name="LabelReel" type="Label" parent="왼쪽패널" unique_id=2131212475]
 layout_mode = 2
 
-[node name="LabelWheel" type="Label" parent="왼쪽패널"]
+[node name="LabelWheel" type="Label" parent="왼쪽패널" unique_id=706487473]
 layout_mode = 2
 
-[node name="LabelTree" type="Label" parent="왼쪽패널"]
+[node name="LabelTree" type="Label" parent="왼쪽패널" unique_id=505542861]
 layout_mode = 2
 
-[node name="오른쪽패널" type="VBoxContainer" parent="."]
+[node name="오른쪽패널" type="VBoxContainer" parent="." unique_id=1877870506]
 modulate = Color(1, 1, 1, 0.501961)
 offset_right = 344.0
 offset_bottom = 371.0
 theme = SubResource("Theme_h2yge")
 
-[node name="LabelPerformance" type="Label" parent="오른쪽패널"]
+[node name="LabelPerformance" type="Label" parent="오른쪽패널" unique_id=1366601294]
 layout_mode = 2
 autowrap_mode = 3
 
-[node name="LabelInfo" type="Label" parent="오른쪽패널"]
+[node name="LabelInfo" type="Label" parent="오른쪽패널" unique_id=1220518434]
 layout_mode = 2
 autowrap_mode = 3
 
-[node name="TimedMessage" parent="." instance=ExtResource("5_lquwl")]
+[node name="TimedMessage" parent="." unique_id=1248603664 instance=ExtResource("5_lquwl")]
 self_modulate = Color(1, 1, 1, 0.498039)
-theme = SubResource("Theme_7mycd")
+theme = SubResource("Theme_5vw27")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=955085543]
 visible = false
 shadow_opacity = 0.5
 omni_attenuation = 0.0
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1362809251]
 transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 0, 0)
 visible = false
 shadow_enabled = true
 directional_shadow_max_distance = 1000.0
 sky_mode = 1
 
-[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="." unique_id=308330320]
 transform = Transform3D(0.707107, -0.5, -0.5, 0, 0.707107, -0.707107, 0.707107, 0.5, 0.5, 0, 0, 0)
 visible = false
 shadow_enabled = true
 sky_mode = 1
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1464726638]
 environment = SubResource("Environment_7mycd")
 
-[node name="AxisArrow3D" parent="." instance=ExtResource("5_7mycd")]
+[node name="AxisArrow3D" parent="." unique_id=237559987 instance=ExtResource("5_7mycd")]
 
-[node name="FixedCameraLight" parent="." instance=ExtResource("8_5vw27")]
+[node name="FixedCameraLight" parent="." unique_id=2050335635 instance=ExtResource("8_5vw27")]
 
-[node name="CenterCameraLight" parent="." instance=ExtResource("8_5vw27")]
+[node name="CenterCameraLight" parent="." unique_id=1718857010 instance=ExtResource("8_5vw27")]
 
-[node name="MovingCameraLightHober" parent="." instance=ExtResource("8_5vw27")]
+[node name="MovingCameraLightHober" parent="." unique_id=513396568 instance=ExtResource("8_5vw27")]
 
-[node name="MovingCameraLightAround" parent="." instance=ExtResource("8_5vw27")]
+[node name="MovingCameraLightAround" parent="." unique_id=1490505572 instance=ExtResource("8_5vw27")]
 
-[node name="CabinetDemo" parent="." instance=ExtResource("7_272bh")]
+[node name="CabinetDemo" parent="." unique_id=1475665782 instance=ExtResource("7_272bh")]
 
-[node name="RunDemo" parent="." instance=ExtResource("6_7mycd")]
+[node name="RunDemo" parent="." unique_id=617421671 instance=ExtResource("6_7mycd")]
 
-[node name="TourGlassCabinet" parent="." instance=ExtResource("8_kek77")]
+[node name="TourGlassCabinet" parent="." unique_id=1817866707 instance=ExtResource("8_kek77")]
 
 [connection signal="pressed" from="왼쪽패널/StartTour" to="." method="_on_start_tour_pressed"]
 [connection signal="pressed" from="왼쪽패널/StopTour" to="." method="_on_stop_tour_pressed"]

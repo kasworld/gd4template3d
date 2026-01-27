@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://c8ulltoe1t7qg"]
+[gd_scene format=3 uid="uid://c8ulltoe1t7qg"]
 
 [ext_resource type="Script" uid="uid://cy5hg2iycjtlh" path="res://roulette/roulette_wheel/roulette_wheel.gd" id="1_dbhty"]
 
-[node name="RouletteWheel" type="Node3D"]
+[node name="RouletteWheel" type="Node3D" unique_id=872498084]
 script = ExtResource("1_dbhty")
 
-[node name="칸통" type="Node3D" parent="."]
+[node name="칸통" type="Node3D" parent="." unique_id=250988071]

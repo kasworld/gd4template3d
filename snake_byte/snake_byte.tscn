@@ -1,24 +1,24 @@
-[gd_scene load_steps=3 format=3 uid="uid://dcp4trrnspr0q"]
+[gd_scene format=3 uid="uid://dcp4trrnspr0q"]
 
 [ext_resource type="Script" uid="uid://bl0ir0l2ndush" path="res://snake_byte/snake_byte.gd" id="1_lxyrc"]
 [ext_resource type="PackedScene" uid="uid://dr7etomru4cuy" path="res://snake_byte/walls/walls.tscn" id="2_yqn8k"]
 
-[node name="SnakeByte" type="Node3D"]
+[node name="SnakeByte" type="Node3D" unique_id=1927912052]
 script = ExtResource("1_lxyrc")
 
-[node name="Walls" parent="." instance=ExtResource("2_yqn8k")]
+[node name="Walls" parent="." unique_id=1988332262 instance=ExtResource("2_yqn8k")]
 
-[node name="StageInfo" type="Label3D" parent="."]
+[node name="StageInfo" type="Label3D" parent="." unique_id=1688229879]
 pixel_size = 0.05
 horizontal_alignment = 0
 
-[node name="AppleInfo" type="Label3D" parent="."]
+[node name="AppleInfo" type="Label3D" parent="." unique_id=1907945072]
 pixel_size = 0.05
 horizontal_alignment = 2
 
-[node name="SnakeInfo" type="Label3D" parent="."]
+[node name="SnakeInfo" type="Label3D" parent="." unique_id=934611445]
 pixel_size = 0.05
 
-[node name="AppleContainer" type="Node3D" parent="."]
+[node name="AppleContainer" type="Node3D" parent="." unique_id=547808572]
 
-[node name="PlumContainer" type="Node3D" parent="."]
+[node name="PlumContainer" type="Node3D" parent="." unique_id=1897481357]

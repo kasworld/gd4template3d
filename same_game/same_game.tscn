@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://dhiw0x3resrnx"]
+[gd_scene format=3 uid="uid://dhiw0x3resrnx"]
 
 [ext_resource type="Script" uid="uid://b81gkgnakb1ga" path="res://same_game/same_game.gd" id="1_6k0fh"]
 
-[node name="SameGame" type="Node3D"]
+[node name="SameGame" type="Node3D" unique_id=262382813]
 script = ExtResource("1_6k0fh")
 
-[node name="CO3DContainer" type="Node3D" parent="."]
+[node name="CO3DContainer" type="Node3D" parent="." unique_id=2091797667]

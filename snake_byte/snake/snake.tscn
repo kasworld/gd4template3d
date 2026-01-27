@@ -1,13 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://c7s28rwtmb200"]
+[gd_scene format=3 uid="uid://c7s28rwtmb200"]
 
 [ext_resource type="Script" uid="uid://dbr8gr8183ws5" path="res://snake_byte/snake/snake.gd" id="1_baghe"]
 [ext_resource type="PackedScene" uid="uid://cfnbpemvoy1i6" path="res://multi_mesh_shape/multi_mesh_shape.tscn" id="2_gxkgb"]
 
-[sub_resource type="MultiMesh" id="MultiMesh_oq6yi"]
+[sub_resource type="MultiMesh" id="MultiMesh_ibdc6"]
 resource_local_to_scene = true
 
-[node name="Snake" type="Node3D"]
+[node name="Snake" type="Node3D" unique_id=828306973]
 script = ExtResource("1_baghe")
 
-[node name="Body" parent="." instance=ExtResource("2_gxkgb")]
-multimesh = SubResource("MultiMesh_oq6yi")
+[node name="Body" parent="." unique_id=1288611044 instance=ExtResource("2_gxkgb")]
+multimesh = SubResource("MultiMesh_ibdc6")
