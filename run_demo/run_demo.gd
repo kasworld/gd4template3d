@@ -4,13 +4,9 @@ var glass_cabinet_iter :ListIter # [ GlassCabinet, light iter data]
 var used_glass_cabinet_iter :ListIter
 var empty_glass_cabinet_iter :ListIter
 
-func get_cabinet_demo() -> CabinetDemo:
-	return $CabinetDemo
-
-func init(sz :Vector3, add_camera_dict :Callable ) -> void:
-	$CabinetDemo.init(sz)
+func init(cabinet_list :Array, add_camera_dict :Callable ) -> void:
 	var gc_ani_list := []
-	for gc in $CabinetDemo.glass_cabinet_list:
+	for gc in cabinet_list:
 		gc_ani_list.append([gc, AnimateGradient.new(),AnimateGradient.new()])
 	glass_cabinet_iter = ListIter.new(gc_ani_list, true)
 	setup_demo_to_cabinet(add_camera_dict)
@@ -60,7 +56,6 @@ func setup_demo_to_cabinet(add_camera_dict :Callable) -> void:
 	empty_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_unitered_slice())
 	print_debug("remain glass cabinet %d\ndemo count %s" % [
 		empty_glass_cabinet_iter.get_size(),used_glass_cabinet_iter.get_size() ])
-
 
 func _process(delta: float) -> void:
 	animate_empty_glass_cabinet_light()
