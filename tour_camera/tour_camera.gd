@@ -1,7 +1,10 @@
 extends Node3D
 class_name TourCamera
 
-var animation_queue :Array
+var wait_btw_animation := 1.0
+var animation_dur := 1.0
+
+var animation_queue :Array # [ [ move, rotate, fov ] ]
 var tour_animation :SimpleAnimation
 
 func init() -> TourCamera:
@@ -10,9 +13,51 @@ func init() -> TourCamera:
 	tour_animation.animation_ended.connect(animation_ended)
 	return self
 
+func enqueue(from :Node, to :Node) -> void:
+	var ani_list := [
+		{
+		"Name" : "move",
+		"AniNode" : $Camera3D,
+		"Field" : "position",
+		"From" : from,
+		"To" : to,
+		"DurSec" : animation_dur,
+		},
+		{
+		"Name" : "rotation",
+		"AniNode" : $Camera3D,
+		"Field" : "rotation",
+		"From" : from,
+		"To" : to,
+		"DurSec" : animation_dur,
+		},
+		{
+		"Name" : "fov",
+		"AniNode" : $Camera3D,
+		"Field" : "fov",
+		"From" : from,
+		"To" : to,
+		"DurSec" : animation_dur,
+		},
+		{
+		"Name" : "far",
+		"AniNode" : $Camera3D,
+		"Field" : "far",
+		"From" : from,
+		"To" : to,
+		"DurSec" : animation_dur,
+		},
+	]
+	animation_queue.append(ani_list)
+
 func animation_ended(_st :Node, _ani :Dictionary) -> void:
-	$TimerWait.start(1.0)
+	if tour_animation.is_empty():
+		$TimerWait.start(wait_btw_animation)
 
 func _on_timer_wait_timeout() -> void:
-	var ani = animation_queue.pop_front()
-	tour_animation.a
+	var ani_list = animation_queue.pop_front()
+	for ani in ani_list:
+		tour_animation.add_animation(ani)
+
+func _process(_delta: float) -> void:
+	tour_animation.handle_animation()
