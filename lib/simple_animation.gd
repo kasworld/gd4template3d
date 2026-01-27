@@ -122,29 +122,30 @@ func handle_animation() -> void:
 	var timenow := Time.get_unix_time_from_system()
 	for i in animation_list.size():
 		var ani :Dictionary = animation_list.pop_front()
-		if ani.AniNode == null:
+		if ani.AniNode == null || ani.From == null || ani.To == null:
 			continue
 		var rate :float = (timenow - ani.StartTick) / ani.DurSec
 		if rate >= 1.0:
 			rate = 1.0
-		var fromValue = ani.From
-		if fromValue is Node:
-			if ani.has("SubField"):
-				fromValue = fromValue[ani.Field][ani.SubField]
-			else:
-				fromValue = fromValue[ani.Field]
-		var toValue = ani.To
-		if toValue is Node:
-			if ani.has("SubField"):
-				toValue = toValue[ani.Field][ani.SubField]
-			else:
-				toValue = toValue[ani.Field]
-
-		if ani.has("SubField"):
-			ani.AniNode[ani.Field][ani.SubField] = lerp(fromValue, toValue, rate)
-		else:
-			ani.AniNode[ani.Field] = fromValue.lerp(toValue, rate)
+		update_by_ani(ani, rate)
 		if rate >= 1.0:
 			animation_ended.emit(ani.AniNode, ani)
 		else:
 			animation_list.push_back(ani)
+
+func update_by_ani(ani :Dictionary, rate :float) -> void:
+	var fromValue = get_value_by_ani(ani, "From")
+	var toValue = get_value_by_ani(ani, "To")
+	if ani.has("SubField"):
+		ani.AniNode[ani.Field][ani.SubField] = lerp(fromValue, toValue, rate)
+	else:
+		ani.AniNode[ani.Field] = fromValue.lerp(toValue, rate)
+
+func get_value_by_ani(ani :Dictionary, name :String) -> Variant:
+	var rtn = ani[name]
+	if rtn is Node:
+		if ani.has("SubField"):
+			rtn = rtn[ani.Field][ani.SubField]
+		else:
+			rtn = rtn[ani.Field]
+	return rtn
