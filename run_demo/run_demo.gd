@@ -4,9 +4,57 @@ var glass_cabinet_iter :ListIter # [ GlassCabinet, light iter data]
 var used_glass_cabinet_iter :ListIter
 var empty_glass_cabinet_iter :ListIter
 
+func make_glass_cabinet_row(cabinet_size :Vector3, count :int, row :int) -> Node3D:
+	var rtn := Node3D.new()
+	var unit_rad := 2*PI/ count
+	var radius := cabinet_size.x *count / (PI *2) + cabinet_size.z/2
+	for i in count:
+		var gc :GlassCabinet = preload("res://glass_cabinet/glass_cabinet.tscn").instantiate(
+			).init(cabinet_size)
+		var rad := i * unit_rad
+		gc.position = Vector3(sin(rad)*radius, 0, cos(rad)*radius)
+		gc.set_title_text("%d-%d" % [row+1, i+1]).show_title(true)
+		gc.look_at_from_position(gc.position, Vector3.ZERO, Vector3.UP, true)
+		rtn.add_child(gc)
+	return rtn
+
+var glass_cabinet_row_list :Array[Node3D]
+func make_glass_cabinet(cabinet_size :Vector3) -> void:
+	var gc_ani_list :Array = []
+	var row_count := 2
+	for i in row_count: # glass_cabinet_row
+		var gcr := make_glass_cabinet_row(cabinet_size, 12, i)
+		add_child(gcr)
+		glass_cabinet_row_list.append(gcr)
+		gcr.position.y = cabinet_size.y *(float(i)-float(row_count-1)/2) * 1.05
+		for gc in gcr.get_children():
+			gc_ani_list.append([gc,
+				AnimateGradient.new(),AnimateGradient.new(),
+				])
+	glass_cabinet_iter = ListIter.new(gc_ani_list, true)
+
+func animate_empty_glass_cabinet_light() -> void:
+	var lai :Array = empty_glass_cabinet_iter.get_next()
+	var gc :GlassCabinet = lai[0]
+	for i in lai.slice(1).size():
+		var flags :=  GlassCabinet.SideSubgroupFlags[ GlassCabinet.SideSubgroupFlags.keys()[i] ]
+		var ani_state :AnimateGradient = lai.slice(1)[i]
+		gc.lights.set_light_color(ani_state.get_color(), flags)
+		ani_state.inc_rate(0.1)
+
+func animate_used_glass_cabinet_light() -> void:
+	var lai :Array = used_glass_cabinet_iter.get_next()
+	var gc :GlassCabinet = lai[0]
+	for i in lai.slice(1).size():
+		var flags :=  GlassCabinet.SideSubgroupFlags[ GlassCabinet.SideSubgroupFlags.keys()[i] ]
+		var ani_state :AnimateGradient = lai.slice(1)[i]
+		gc.lights.set_light_color(ani_state.get_color(), flags)
+		ani_state.inc_rate(0.1)
+
 func show_all_cabinet(b :bool = true) -> void:
 	for gcl in glass_cabinet_iter.get_data_array():
 		gcl[0].visible = b
+
 
 func setup_demo_to_cabinet(add_camera_dict :Callable) -> void:
 	var run_demo := func(demo :Callable, text :String) -> void:
@@ -36,51 +84,6 @@ func setup_demo_to_cabinet(add_camera_dict :Callable) -> void:
 	print_debug("remain glass cabinet %d\ndemo count %s" % [
 		empty_glass_cabinet_iter.get_size(),used_glass_cabinet_iter.get_size() ])
 
-func make_glass_cabinet_row(cabinet_size :Vector3, count :int, row :int) -> Node3D:
-	var rtn := Node3D.new()
-	var unit_rad := 2*PI/ count
-	var radius := cabinet_size.x *count / (PI *2) + cabinet_size.z/2
-	for i in count:
-		var gc :GlassCabinet = preload("res://glass_cabinet/glass_cabinet.tscn").instantiate(
-			).init(cabinet_size)
-		var rad := i * unit_rad
-		gc.position = Vector3(sin(rad)*radius, 0, cos(rad)*radius)
-		gc.set_title_text("%d-%d" % [row+1, i+1]).show_title(true)
-		gc.look_at_from_position(gc.position, Vector3.ZERO, Vector3.UP, true)
-		rtn.add_child(gc)
-	return rtn
-
-var glass_cabinet_row_list :Array[Node3D]
-func make_glass_cabinet(cabinet_size :Vector3) -> void:
-	var gc_ani_list :Array = []
-	for i in 2: # glass_cabinet_row
-		var gcr := make_glass_cabinet_row(cabinet_size, 12, i)
-		add_child(gcr)
-		glass_cabinet_row_list.append(gcr)
-		gcr.position.y = cabinet_size.y *(float(i)-0.5) * 1.05
-		for gc in gcr.get_children():
-			gc_ani_list.append([gc,
-				AnimateGradient.new(),AnimateGradient.new(),
-				])
-	glass_cabinet_iter = ListIter.new(gc_ani_list, true)
-
-func animate_empty_glass_cabinet_light() -> void:
-	var lai :Array = empty_glass_cabinet_iter.get_next()
-	var gc :GlassCabinet = lai[0]
-	for i in lai.slice(1).size():
-		var flags :=  GlassCabinet.SideSubgroupFlags[ GlassCabinet.SideSubgroupFlags.keys()[i] ]
-		var ani_state :AnimateGradient = lai.slice(1)[i]
-		gc.lights.set_light_color(ani_state.get_color(), flags)
-		ani_state.inc_rate(0.1)
-
-func animate_used_glass_cabinet_light() -> void:
-	var lai :Array = used_glass_cabinet_iter.get_next()
-	var gc :GlassCabinet = lai[0]
-	for i in lai.slice(1).size():
-		var flags :=  GlassCabinet.SideSubgroupFlags[ GlassCabinet.SideSubgroupFlags.keys()[i] ]
-		var ani_state :AnimateGradient = lai.slice(1)[i]
-		gc.lights.set_light_color(ani_state.get_color(), flags)
-		ani_state.inc_rate(0.1)
 
 func _process(delta: float) -> void:
 	animate_empty_glass_cabinet_light()
@@ -218,6 +221,8 @@ var color_fn :Callable = RandomColor.pure_color
 var ani_dir_data := ListIter.new( [AniDir.Up, AniDir.Down, AniDir.Left , AniDir.Right] )
 var change_count := 0
 func wintertree_animate(delta :float) -> void:
+	if winter_tree == null:
+		return
 	winter_tree.rotate_y(delta)
 	var lines :MultiMeshShape = winter_tree.가지들얻기()
 	var co :Color = color_fn.call(color_fn_args.get_current())
@@ -324,9 +329,9 @@ func tornado_animate() -> void:
 	var t := Time.get_unix_time_from_system()
 	var rad := fposmod(t, PI*2)
 	var unit_rad := 2*PI/4
-	var gc :GlassCabinet = tornado_list[0][0].get_parent()
-	var radius := gc.cabinet_size.z/2
 	for i in tornado_list.size():
+		var gc :GlassCabinet = tornado_list[i][0].get_parent()
+		var radius := gc.cabinet_size.z/2
 		var tt := t+ i
 		tornado_list[i][0].set_transform_all(scale_tornado, shift_tornado_lambda( sin(tt), gc.cabinet_size.x/10) )
 		tornado_list[i][0].set_color_all(tornado_list[i][1].get_color(),tornado_list[i][2].get_color())
@@ -421,6 +426,8 @@ func maze3d_demo(gc :GlassCabinet) -> void:
 	gc.add_child(maze3d)
 var maze_ani_i :int
 func maze3d_animation() -> void:
+	if maze3d == null:
+		return
 	maze_ani_i += 1
 	match maze_ani_i% 60:
 		0:
