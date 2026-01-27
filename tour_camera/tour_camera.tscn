@@ -5,8 +5,4 @@
 [node name="TourCamera" type="Node3D"]
 script = ExtResource("1_5wjrr")
 
-[node name="TimerWait" type="Timer" parent="."]
-
 [node name="Camera3D" type="Camera3D" parent="."]
-
-[connection signal="timeout" from="TimerWait" to="." method="_on_timer_wait_timeout"]

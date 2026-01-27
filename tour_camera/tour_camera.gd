@@ -7,60 +7,81 @@ var animation_dur := 1.0
 var animation_queue :Array # [ [ move, rotate, fov ] ]
 var tour_animation :SimpleAnimation
 
-func init() -> TourCamera:
+func init(gc_list :Array) -> TourCamera:
 	animation_queue = []
 	tour_animation = SimpleAnimation.new()
 	tour_animation.animation_ended.connect(animation_ended)
+	for i in gc_list.size():
+		enqueue(gc_list[i], gc_list[(i+1)%gc_list.size()])
 	return self
+
+func start() -> void:
+	make_current()
+	next()
 
 func make_current() -> void:
 	$Camera3D.current = true
 
-func enqueue(from :Node, to :Node) -> void:
-	var ani_list := [
+func enqueue(from :GlassCabinet, to :GlassCabinet) -> void:
+	animation_queue.append([
 		{
 		"Name" : "move",
-		"AniNode" : $Camera3D,
+		"AniNode" : self,
 		"Field" : "global_position",
-		"From" : from,
-		"To" : to,
+		"From" : from.get_camera_light(),
+		"To" : to.get_camera_light(),
 		"DurSec" : animation_dur,
 		},
 		{
 		"Name" : "rotation",
-		"AniNode" : $Camera3D,
+		"AniNode" : self,
 		"Field" : "global_rotation",
-		"From" : from,
-		"To" : to,
+		"From" : from.get_camera_light(),
+		"To" : to.get_camera_light(),
 		"DurSec" : animation_dur,
 		},
-		#{
-		#"Name" : "fov",
-		#"AniNode" : $Camera3D,
-		#"Field" : "fov",
-		#"From" : from,
-		#"To" : to,
-		#"DurSec" : animation_dur,
-		#},
-		#{
-		#"Name" : "far",
-		#"AniNode" : $Camera3D,
-		#"Field" : "far",
-		#"From" : from,
-		#"To" : to,
-		#"DurSec" : animation_dur,
-		#},
-	]
-	animation_queue.append(ani_list)
+		{
+		"Name" : "fov",
+		"AniNode" : $Camera3D,
+		"Field" : "fov",
+		"From" : from.get_camera_light().get_camera(),
+		"To" : to.get_camera_light().get_camera(),
+		"DurSec" : animation_dur,
+		},
+		{
+		"Name" : "far",
+		"AniNode" : $Camera3D,
+		"Field" : "far",
+		"From" : from.get_camera_light().get_camera(),
+		"To" : to.get_camera_light().get_camera(),
+		"DurSec" : animation_dur,
+		},
+	])
+	# keep following
+	animation_queue.append([
+		{
+		"Name" : "move",
+		"AniNode" : self,
+		"Field" : "global_position",
+		"From" : to.get_camera_light(),
+		"To" : to.get_camera_light(),
+		"DurSec" : wait_btw_animation,
+		},
+		{
+		"Name" : "rotation",
+		"AniNode" : self,
+		"Field" : "global_rotation",
+		"From" : to.get_camera_light(),
+		"To" : to.get_camera_light(),
+		"DurSec" : wait_btw_animation,
+		},
+	])
 
 func animation_ended(_st :Node, _ani :Dictionary) -> void:
 	if tour_animation.is_empty():
-		$TimerWait.start(wait_btw_animation)
+		next()
 
-func _on_timer_wait_timeout() -> void:
-	start()
-
-func start() -> void:
+func next() -> void:
 	var ani_list = animation_queue.pop_front()
 	#print_debug(ani_list)
 	for ani in ani_list:

@@ -145,7 +145,7 @@ func update_by_ani(ani :Dictionary, rate :float) -> void:
 	if ani.has("SubField"):
 		ani.AniNode[ani.Field][ani.SubField] = lerp(fromValue, toValue, rate)
 	else:
-		ani.AniNode[ani.Field] = fromValue.lerp(toValue, rate)
+		ani.AniNode[ani.Field] = lerp(fromValue, toValue, rate)
 
 func get_value_by_ani(ani :Dictionary, name :String) -> Variant:
 	var rtn = ani[name]

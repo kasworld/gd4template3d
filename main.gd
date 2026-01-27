@@ -88,16 +88,10 @@ func _ready() -> void:
 	$RunDemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict)
 	MovingCameraLight.AllLightOn(false)
 
-	#$TourCamera.init()
-	#var oldca = $CabinetDemo.glass_cabinet_list[0].get_camera_light()
-	#for gc in $CabinetDemo.glass_cabinet_list.slice(1):
-		#var ca = gc.get_camera_light()
-		#$TourCamera.enqueue(oldca,ca)
-		#oldca = ca
-	#$TourCamera.make_current()
-	#$TourCamera.start()
+	$TourCamera.init($CabinetDemo.glass_cabinet_list)
+	$TourCamera.start()
 
-	$CenterCameraLight.make_current()
+	#$CenterCameraLight.make_current()
 
 
 
