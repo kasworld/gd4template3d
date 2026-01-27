@@ -9,27 +9,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable ) -> void:
 	for gc in cabinet_list:
 		gc_ani_list.append([gc, AnimateGradient.new(),AnimateGradient.new()])
 	glass_cabinet_iter = ListIter.new(gc_ani_list, true)
-	setup_demo_to_cabinet(add_camera_dict)
 
-func animate_empty_glass_cabinet_light() -> void:
-	var lai :Array = empty_glass_cabinet_iter.get_next()
-	var gc :GlassCabinet = lai[0]
-	for i in lai.slice(1).size():
-		var flags :=  GlassCabinet.SideSubgroupFlags[ GlassCabinet.SideSubgroupFlags.keys()[i] ]
-		var ani_state :AnimateGradient = lai.slice(1)[i]
-		gc.lights.set_light_color(ani_state.get_color(), flags)
-		ani_state.inc_rate(0.1)
-
-func animate_used_glass_cabinet_light() -> void:
-	var lai :Array = used_glass_cabinet_iter.get_next()
-	var gc :GlassCabinet = lai[0]
-	for i in lai.slice(1).size():
-		var flags :=  GlassCabinet.SideSubgroupFlags[ GlassCabinet.SideSubgroupFlags.keys()[i] ]
-		var ani_state :AnimateGradient = lai.slice(1)[i]
-		gc.lights.set_light_color(ani_state.get_color(), flags)
-		ani_state.inc_rate(0.1)
-
-func setup_demo_to_cabinet(add_camera_dict :Callable) -> void:
 	var run_demo := func(demo :Callable, text :String) -> void:
 		var gc :GlassCabinet = glass_cabinet_iter.get_next()[0]
 		demo.call(gc)
@@ -52,10 +32,29 @@ func setup_demo_to_cabinet(add_camera_dict :Callable) -> void:
 	run_demo.call(dialgauge_demo, "dial gauge")
 	run_demo.call(same_game_demo, "same game")
 	run_demo.call(snakebyte_demo, "snakebyte game")
+
 	used_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_itered_slice())
 	empty_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_unitered_slice())
 	print_debug("remain glass cabinet %d\ndemo count %s" % [
 		empty_glass_cabinet_iter.get_size(),used_glass_cabinet_iter.get_size() ])
+
+func animate_empty_glass_cabinet_light() -> void:
+	var lai :Array = empty_glass_cabinet_iter.get_next()
+	var gc :GlassCabinet = lai[0]
+	for i in lai.slice(1).size():
+		var flags :=  GlassCabinet.SideSubgroupFlags[ GlassCabinet.SideSubgroupFlags.keys()[i] ]
+		var ani_state :AnimateGradient = lai.slice(1)[i]
+		gc.lights.set_light_color(ani_state.get_color(), flags)
+		ani_state.inc_rate(0.1)
+
+func animate_used_glass_cabinet_light() -> void:
+	var lai :Array = used_glass_cabinet_iter.get_next()
+	var gc :GlassCabinet = lai[0]
+	for i in lai.slice(1).size():
+		var flags :=  GlassCabinet.SideSubgroupFlags[ GlassCabinet.SideSubgroupFlags.keys()[i] ]
+		var ani_state :AnimateGradient = lai.slice(1)[i]
+		gc.lights.set_light_color(ani_state.get_color(), flags)
+		ani_state.inc_rate(0.1)
 
 func _process(delta: float) -> void:
 	animate_empty_glass_cabinet_light()

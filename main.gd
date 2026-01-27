@@ -85,7 +85,7 @@ func _ready() -> void:
 	add_camera_dict($MovingCameraLightAround, "Around")
 
 	$CabinetDemo.init(WorldSize, 2)
-	$RunDemo.init($CabinetDemo.glass_cabinet_list ,add_camera_dict)
+	$RunDemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict)
 	MovingCameraLight.AllLightOn(false)
 	$CenterCameraLight.make_current()
 
