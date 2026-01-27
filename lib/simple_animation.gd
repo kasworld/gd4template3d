@@ -5,6 +5,10 @@ signal animation_ended(st :Node, ani :Dictionary)
 var animation_list :Array[Dictionary]
 # {Name,  Node, Field(position, rotation, scale), SubField(0,1,2) , From, To , StartTick, DurSec }
 
+func add_animation(ani :Dictionary) -> Dictionary:
+	animation_list.append(ani)
+	return ani
+
 func get_animation_count() -> int:
 	return animation_list.size()
 
@@ -38,7 +42,10 @@ func find_by_Field(field :String) -> Array[Dictionary]:
 	return rtn
 
 func start_move(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
-	var ani := {
+	return add_animation(make_move(name,aniNode,from,to,dur_sec))
+
+func make_move(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
+	return {
 		"Name" : name, # for end signal
 		"AniNode" : aniNode,
 		"Field" : "position",
@@ -47,11 +54,12 @@ func start_move(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec
 		"StartTick" : Time.get_unix_time_from_system(),
 		"DurSec" : dur_sec,
 	}
-	animation_list.append(ani)
-	return ani
 
 func start_move_subfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
-	var ani := {
+	return add_animation( make_move_subfield(name,aniNode, sub_index, from,to, dur_sec) )
+
+func make_move_subfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
+	return {
 		"Name" : name, # for end signal
 		"AniNode" : aniNode,
 		"Field" : "position",
@@ -61,11 +69,12 @@ func start_move_subfield(name :String, aniNode :Node, sub_index :int, from :Vari
 		"StartTick" : Time.get_unix_time_from_system(),
 		"DurSec" : dur_sec,
 	}
-	animation_list.append(ani)
-	return ani
 
 func start_rotate(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
-	var ani := {
+	return add_animation(make_rotate(name,aniNode,from,to,dur_sec))
+
+func make_rotate(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
+	return  {
 		"Name" : name, # for end signal
 		"AniNode" : aniNode,
 		"Field" : "rotation",
@@ -74,11 +83,12 @@ func start_rotate(name :String, aniNode :Node, from :Variant, to: Variant, dur_s
 		"StartTick" : Time.get_unix_time_from_system(),
 		"DurSec" : dur_sec,
 	}
-	animation_list.append(ani)
-	return ani
 
 func start_rotate_subfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
-	var ani := {
+	return add_animation( make_rotate_subfield(name,aniNode, sub_index, from,to, dur_sec) )
+
+func make_rotate_subfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
+	return {
 		"Name" : name, # for end signal
 		"AniNode" : aniNode,
 		"Field" : "rotation",
@@ -88,11 +98,12 @@ func start_rotate_subfield(name :String, aniNode :Node, sub_index :int, from :Va
 		"StartTick" : Time.get_unix_time_from_system(),
 		"DurSec" : dur_sec,
 	}
-	animation_list.append(ani)
-	return ani
 
 func start_scale(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
-	var ani := {
+	return add_animation(make_scale(name,aniNode,from,to,dur_sec))
+
+func make_scale(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
+	return {
 		"Name" : name, # for end signal
 		"AniNode" : aniNode,
 		"Field" : "scale",
@@ -101,11 +112,12 @@ func start_scale(name :String, aniNode :Node, from :Variant, to: Variant, dur_se
 		"StartTick" : Time.get_unix_time_from_system(),
 		"DurSec" : dur_sec,
 	}
-	animation_list.append(ani)
-	return ani
 
 func start_scale_subfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
-	var ani := {
+	return add_animation( make_scale_subfield(name,aniNode, sub_index, from,to, dur_sec) )
+
+func make_scale_subfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
+	return {
 		"Name" : name, # for end signal
 		"AniNode" : aniNode,
 		"Field" : "scale",
@@ -115,8 +127,6 @@ func start_scale_subfield(name :String, aniNode :Node, sub_index :int, from :Var
 		"StartTick" : Time.get_unix_time_from_system(),
 		"DurSec" : dur_sec,
 	}
-	animation_list.append(ani)
-	return ani
 
 func handle_animation() -> void:
 	var timenow := Time.get_unix_time_from_system()
