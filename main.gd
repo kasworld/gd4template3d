@@ -53,10 +53,10 @@ func focus_to_new_MovingCameraLight(newmcl :MovingCameraLight) -> void:
 	newmcl.make_current()
 	if newmcl.get_parent() is GlassCabinet:
 		newmcl.get_parent().set_focus_mode(true)
-		$RunDemo.show_all_cabinet(false)
+		$RunDemo.get_cabinet_demo().show_all_cabinet(false)
 		newmcl.get_parent().visible = true
 	else:
-		$RunDemo.show_all_cabinet(true)
+		$RunDemo.get_cabinet_demo().show_all_cabinet(true)
 
 func _on_카메라변경_pressed() -> void:
 	MovingCameraLight.NextCamera()
@@ -84,8 +84,7 @@ func _ready() -> void:
 	add_camera_dict($MovingCameraLightHober, "Hober")
 	add_camera_dict($MovingCameraLightAround, "Around")
 
-	$RunDemo.make_glass_cabinet(WorldSize)
-	$RunDemo.setup_demo_to_cabinet(add_camera_dict)
+	$RunDemo.init(WorldSize,add_camera_dict)
 	MovingCameraLight.AllLightOn(false)
 	$CenterCameraLight.make_current()
 
