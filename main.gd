@@ -87,7 +87,19 @@ func _ready() -> void:
 	$CabinetDemo.init(WorldSize, 2)
 	$RunDemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict)
 	MovingCameraLight.AllLightOn(false)
+
+	#$TourCamera.init()
+	#var oldca = $CabinetDemo.glass_cabinet_list[0].get_camera_light()
+	#for gc in $CabinetDemo.glass_cabinet_list.slice(1):
+		#var ca = gc.get_camera_light()
+		#$TourCamera.enqueue(oldca,ca)
+		#oldca = ca
+	#$TourCamera.make_current()
+	#$TourCamera.start()
+
 	$CenterCameraLight.make_current()
+
+
 
 func _process(_delta: float) -> void:
 	var now := Time.get_unix_time_from_system()

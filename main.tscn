@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://c6maulcewyhy5"]
+[gd_scene load_steps=15 format=3 uid="uid://c6maulcewyhy5"]
 
 [ext_resource type="Script" uid="uid://bgj25qi5j8dgh" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Texture2D" uid="uid://k1k5bbintag5" path="res://skymap/skymap.hdr" id="3_lquwl"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dylwfbugiuwjp" path="res://run_demo/run_demo.tscn" id="6_7mycd"]
 [ext_resource type="PackedScene" uid="uid://tbrd3angkio6" path="res://cabinet_demo/cabinet_demo.tscn" id="7_272bh"]
 [ext_resource type="PackedScene" uid="uid://ces3a6yv0c5fi" path="res://moving_carmera_light/moving_camera_light.tscn" id="8_5vw27"]
+[ext_resource type="PackedScene" uid="uid://civqmm4724qbj" path="res://tour_camera/tour_camera.tscn" id="8_kek77"]
 
 [sub_resource type="Theme" id="Theme_h2yge"]
 default_font_size = 48
@@ -104,5 +105,7 @@ environment = SubResource("Environment_7mycd")
 [node name="CabinetDemo" parent="." instance=ExtResource("7_272bh")]
 
 [node name="RunDemo" parent="." instance=ExtResource("6_7mycd")]
+
+[node name="TourCamera" parent="." instance=ExtResource("8_kek77")]
 
 [connection signal="item_selected" from="왼쪽패널/SelectCamera" to="." method="_on_select_camera_item_selected"]
