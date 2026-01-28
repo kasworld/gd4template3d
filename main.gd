@@ -87,7 +87,7 @@ func _ready() -> void:
 	$CabinetDemo.init(WorldSize, 2)
 	$RunDemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict)
 	MovingCameraLight.AllLightOn(false)
-	$TourGlassCabinet.init($CabinetDemo.glass_cabinet_list)
+	$TourCamera.init($CabinetDemo.glass_cabinet_list)
 	$CenterCameraLight.make_current()
 
 
@@ -132,7 +132,7 @@ func _on_button_esc_pressed() -> void:
 	get_tree().quit()
 
 func _on_start_tour_pressed() -> void:
-	$TourGlassCabinet.start()
+	$TourCamera.start()
 
 func _on_stop_tour_pressed() -> void:
-	$TourGlassCabinet.stop()
+	$TourCamera.stop()
