@@ -183,7 +183,6 @@ func _process(_delta: float) -> void:
 		process_frame()
 		last_time = now
 
-
 func handle_stepover() -> void:
 	snake_step_after_eat = 0
 	if not is_all_apple_eaten():
@@ -192,7 +191,6 @@ func handle_stepover() -> void:
 		apple_end_count += SnakeByte.AppleIncOnStepOver
 		update_info()
 	snake.dest_body_len += SnakeByte.SankeLenInc
-
 
 func is_snake_alive() -> bool:
 	return snake != null and snake.is_alive
@@ -211,12 +209,21 @@ func can_turn(from :Dir8Lib.Dir, to :Dir8Lib.Dir) -> bool:
 func demo_move_pathfinding() -> void:
 	if not is_snake_alive():
 		return
-	var id_path :Array[Vector2i]
+	var dst_pos :Vector2i
+	var src_pos :Vector2i = snake_head_pos2i()
+	var need_set_src_pos_solid :bool = false
+	if astar_grid.is_point_solid(src_pos):
+		need_set_src_pos_solid = true
+		astar_grid.set_point_solid(src_pos, false)
 	if is_all_apple_eaten():
-		id_path = astar_grid.get_id_path(snake_head_pos2i() , SBWalls.GoalPos, true)
+		dst_pos = SBWalls.GoalPos
 	else :
-		id_path = astar_grid.get_id_path(snake_head_pos2i() , get_next_apple_pos2i(), true)
+		dst_pos = get_next_apple_pos2i()
+	var id_path :Array[Vector2i] = astar_grid.get_id_path(src_pos , dst_pos, true)
+	#print_debug("path to %s -> %s %s" % [src_pos, dst_pos, id_path] )
+	if need_set_src_pos_solid:
+		astar_grid.set_point_solid(src_pos, true)
 	if id_path.size() < 2:
 		return
-	var vt :Vector2i = sign(id_path[1] - snake_head_pos2i())
+	var vt :Vector2i = sign(id_path[1] - src_pos)
 	snake.cmd_queue.append(Dir8Lib.Vt2Dir[vt])
