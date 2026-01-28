@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dj1pdhawsxt6b"]
 
 [ext_resource type="Script" uid="uid://tlc0hcmltb3y" path="res://same_game/same_game_tile/same_game_tile.gd" id="1_55klt"]
+[ext_resource type="FontFile" uid="uid://gdh6qls28unk" path="res://font/HakgyoansimBareondotumR.ttf" id="2_2bp4g"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5k12k"]
 friction = 0.5
@@ -21,7 +22,7 @@ backlight = Color(1, 1, 1, 1)
 resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_njpxk")
 text = "H"
-font_size = 14
+font = ExtResource("2_2bp4g")
 pixel_size = 0.1
 depth = 0.2
 
