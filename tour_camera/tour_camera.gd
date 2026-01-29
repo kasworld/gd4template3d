@@ -42,12 +42,6 @@ func init_by_camera3d_list(mcl_list :Array[Camera3D]) -> TourCamera:
 	animation_route = ListIter.new(route_list,false)
 	return self
 
-func start() -> void:
-	make_current()
-	next()
-
-func stop() -> void:
-	tour_animation.force_end(false)
 
 func make_current() -> void:
 	$Camera3D.current = true
@@ -101,6 +95,15 @@ func route_to_ani_list(from :Camera3D, to :Camera3D) -> Array:
 		}]
 	]
 
+func start(ani_sec :float = animation_dur_sec, wait_sec :float = wait_btw_animation) -> void:
+	animation_dur_sec = ani_sec
+	wait_btw_animation = wait_sec
+	make_current()
+	next()
+
+func stop() -> void:
+	tour_animation.force_end(false)
+
 func animation_ended(_st :Node, _ani :Dictionary) -> void:
 	if tour_animation.is_empty():
 		next()
@@ -112,13 +115,16 @@ func queue_to_animation() -> void:
 	for ani in ani_list:
 		tour_animation.add_animation(ani)
 
+func route_to_queue() -> void:
+	var route = animation_route.get_current()
+	animation_route.next()
+	var ani_list_list := route_to_ani_list(route[0],route[1])
+	for ani_list in ani_list_list:
+		animation_queue.append(ani_list)
+
 func next() -> void:
 	if animation_queue.is_empty():
-		var route = animation_route.get_current()
-		animation_route.next()
-		var ani_list_list := route_to_ani_list(route[0],route[1])
-		for ani_list in ani_list_list:
-			animation_queue.append(ani_list)
+		route_to_queue()
 	queue_to_animation()
 
 func _process(_delta: float) -> void:
