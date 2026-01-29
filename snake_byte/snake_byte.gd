@@ -224,6 +224,36 @@ func demo_move_pathfinding() -> void:
 	if need_set_src_pos_solid:
 		astar_grid.set_point_solid(src_pos, true)
 	if id_path.size() < 2:
+		demo_move()
 		return
 	var vt :Vector2i = sign(id_path[1] - src_pos)
 	snake.cmd_queue.append(Dir8Lib.Vt2Dir[vt])
+
+func demo_move() -> void:
+	if not is_snake_alive():
+		return
+	var diff_vt :Vector2i
+	if is_all_apple_eaten():
+		diff_vt = sign(SBWalls.GoalPos - snake_head_pos2i())
+	else:
+		diff_vt = sign(get_next_apple_pos2i() - snake_head_pos2i())
+	var snake_mvvt := Dir8Lib.Dir2Vt[snake.move_dir]
+	var tryvt := []
+	if diff_vt.x == -1:
+		tryvt = [Vector2i(-1,0),Vector2i(0,1),Vector2i(0,-1),Vector2i(1,0)]
+	elif diff_vt.x == 1:
+		tryvt = [Vector2i(1,0),Vector2i(0,1),Vector2i(0,-1),Vector2i(-1,0)]
+	elif diff_vt.y == -1:
+		tryvt = [Vector2i(0,-1),Vector2i(1,0),Vector2i(-1,0),Vector2i(0,1)]
+	elif diff_vt.y == 1:
+		tryvt = [Vector2i(0,1),Vector2i(1,0),Vector2i(-1,0),Vector2i(0,-1)]
+	else :
+		print_debug("not reach code %s" % [diff_vt])
+
+	for vt in tryvt:
+		if vt == -snake_mvvt:
+			continue
+		var fieldobj = field.get_at(snake_head_pos2i()+vt)
+		if  fieldobj == null or (not is_all_apple_eaten() and fieldobj is SBApple) or (is_all_apple_eaten() and fieldobj is SBGoal) :
+			snake.cmd_queue.append(Dir8Lib.Vt2Dir[vt])
+			break
