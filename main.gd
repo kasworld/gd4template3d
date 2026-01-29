@@ -100,17 +100,17 @@ func _process(_delta: float) -> void:
 
 	label_demo()
 
-func _on_button_fov_up_pressed() -> void:
+func _on_끝내기_pressed() -> void:
+	get_tree().quit()
+func _on_fov_inc_pressed() -> void:
 	MovingCameraLight.GetCurrentCamera().camera_fov_inc()
-
-func _on_button_fov_down_pressed() -> void:
+func _on_fov_dec_pressed() -> void:
 	MovingCameraLight.GetCurrentCamera().camera_fov_dec()
-
 var key2fn = {
-	KEY_ESCAPE:_on_button_esc_pressed,
+	KEY_ESCAPE:_on_끝내기_pressed,
 	KEY_ENTER:_on_카메라변경_pressed,
-	KEY_PAGEUP:_on_button_fov_up_pressed,
-	KEY_PAGEDOWN:_on_button_fov_down_pressed,
+	KEY_PAGEUP:_on_fov_inc_pressed,
+	KEY_PAGEDOWN:_on_fov_dec_pressed,
 }
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed:
@@ -127,9 +127,6 @@ func _unhandled_input(event: InputEvent) -> void:
 				FlyNode3D.fly_node3d($CenterCameraLight, fi)
 	elif event is InputEventMouseButton and event.is_pressed():
 		pass
-
-func _on_button_esc_pressed() -> void:
-	get_tree().quit()
 
 func _on_start_tour_pressed() -> void:
 	$TourCamera.start()
