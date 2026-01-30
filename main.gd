@@ -129,6 +129,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		pass
 
 func _on_start_tour_pressed() -> void:
+	$CabinetDemo.show_all_cabinet(true)
 	$TourCamera.start()
 
 func _on_stop_tour_pressed() -> void:
