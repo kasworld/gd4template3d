@@ -9,6 +9,13 @@ func _init(list :Array, shuffle_flag_a :bool = true) -> void:
 	iter_data = list.duplicate()
 	shuffle()
 
+func get_data(index :int) -> Variant:
+	return iter_data[index % iter_data.size()]
+
+func append_data(list :Array) -> void:
+	iter_data.append_array(list.duplicate())
+	shuffle()
+
 func shuffle() -> ListIter:
 	if shuffle_flag:
 		iter_data.shuffle()
