@@ -21,6 +21,9 @@ func is_new_start() -> bool:
 func reset_cursor() -> void:
 	curser = 0
 
+func get_progress_rate() -> float:
+	return float(curser)/float(iter_data.size()-1)
+
 func get_data_array() -> Array:
 	return iter_data
 
@@ -33,7 +36,7 @@ func next() -> void:
 func get_current() -> Variant:
 	return iter_data[curser]
 
-func get_next() -> Variant:
+func get_current_and_step_next() -> Variant:
 	var rtn = get_current()
 	next()
 	return rtn

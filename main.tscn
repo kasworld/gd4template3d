@@ -37,6 +37,7 @@ glow_normalized = true
 script = ExtResource("1_ig7tw")
 
 [node name="왼쪽패널" type="VBoxContainer" parent="." unique_id=12431008]
+modulate = Color(1, 1, 1, 0.50980395)
 offset_right = 40.0
 offset_bottom = 138.0
 theme = SubResource("Theme_h2yge")

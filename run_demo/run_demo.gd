@@ -11,7 +11,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable ) -> void:
 	glass_cabinet_iter = ListIter.new(gc_ani_list, true)
 
 	var run_demo := func(demo :Callable, text :String) -> void:
-		var gc :GlassCabinet = glass_cabinet_iter.get_next()[0]
+		var gc :GlassCabinet = glass_cabinet_iter.get_current_and_step_next()[0]
 		demo.call(gc)
 		gc.set_title_text(text)
 		add_camera_dict.call(gc.get_camera_light(), text)
@@ -39,7 +39,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable ) -> void:
 		empty_glass_cabinet_iter.get_size(),used_glass_cabinet_iter.get_size() ])
 
 func animate_empty_glass_cabinet_light() -> void:
-	var lai :Array = empty_glass_cabinet_iter.get_next()
+	var lai :Array = empty_glass_cabinet_iter.get_current_and_step_next()
 	var gc :GlassCabinet = lai[0]
 	for i in lai.slice(1).size():
 		var flags :=  GlassCabinet.SideSubgroupFlags[ GlassCabinet.SideSubgroupFlags.keys()[i] ]
@@ -48,7 +48,7 @@ func animate_empty_glass_cabinet_light() -> void:
 		ani_state.inc_rate(0.1)
 
 func animate_used_glass_cabinet_light() -> void:
-	var lai :Array = used_glass_cabinet_iter.get_next()
+	var lai :Array = used_glass_cabinet_iter.get_current_and_step_next()
 	var gc :GlassCabinet = lai[0]
 	for i in lai.slice(1).size():
 		var flags :=  GlassCabinet.SideSubgroupFlags[ GlassCabinet.SideSubgroupFlags.keys()[i] ]
@@ -223,15 +223,15 @@ func wintertree_animate(delta :float) -> void:
 	winter_tree.장식들얻기().set_inst_color( randi_range(0, winter_tree.장식들얻기().multimesh.instance_count-1),  NamedColors.random_color())
 
 	if ani_ended:
-		color_fn_args.get_next()
-		ani_dir_data.get_next()
+		color_fn_args.get_current_and_step_next()
+		ani_dir_data.get_current_and_step_next()
 		change_count = 0
 		color_fn = [RandomColor.pure_color, RandomColor.rate_color, random_color2].pick_random()
 		winter_tree.장식들얻기().set_color_all( NamedColors.random_color())
 
 var named_color_list := ListIter.new(NamedColors.color_list)
 func random_color2(_arg ) -> Color:
-	return named_color_list.get_next()
+	return named_color_list.get_current_and_step_next()
 
 
 var platonic_solid_list :Array = []
