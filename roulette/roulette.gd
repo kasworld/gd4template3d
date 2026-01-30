@@ -47,13 +47,13 @@ func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Arr
 	$"Wheel/BarTree3".rotation.x = PI/2
 	$"Wheel/BarTree3".rotate(Vector3.FORWARD, PI/2)
 
-	$화살표.set_size(반지름/5,깊이/2, 깊이*1.5,0.5)
 
 	var n :int = $Wheel.cell_count얻기()
 	$"Wheel/원판".mesh.radial_segments = n
 	$"Wheel/원판".rotation.x = PI/2
 	$"Wheel/원판".rotate(Vector3.FORWARD, PI/n)
 
+	$화살표.set_size(반지름/5, 깊이*0.25, 깊이*0.5, 0.5)
 	$화살표.rotation = Vector3(0, 0, PI/2)
 	$화살표.position = Vector3(sin(PI/2) *반지름*1.1, cos(PI/2) *반지름*1.1, 0 )
 	return self
