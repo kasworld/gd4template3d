@@ -32,6 +32,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable ) -> void:
 	run_demo.call(dialgauge_demo, "dial gauge")
 	run_demo.call(same_game_demo, "same game")
 	run_demo.call(snakebyte_demo, "snakebyte game")
+	run_demo.call(ladder_demo, "사다리게임")
 
 	used_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_itered_slice())
 	empty_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_unitered_slice())
@@ -77,10 +78,31 @@ func _process(delta: float) -> void:
 	wintertree_animate(delta)
 	dialgauge_animate()
 	maze3d_animation()
+	ladder_animation(delta)
 
 	clock_calendar_animation.handle_animation()
 	platonic_solids_animation.handle_animation()
 	props_animation.handle_animation()
+
+var ladder :사다리게임
+var 길번호 :int
+var 밝은색목록 :ListIter = ListIter.new(NamedColors.filter_light_color_list())
+func ladder_demo(gc :GlassCabinet) -> void:
+	gc.show_wall_box(false)
+	var 참가자정보 :Array
+	for i in 8:
+		참가자정보.append( ["출발%d" % [i+1], 밝은색목록.get_current_and_step_next(), "도착%d" % [i+1] ] )
+	ladder = preload("res://사다리게임/사다리게임.tscn").instantiate(
+		).init(gc.cabinet_size, 참가자정보)
+	gc.add_child(ladder)
+	ladder.사다리풀이그리기()
+	$"Timer길보기".start(3.0)
+
+func _on_timer길보기_timeout() -> void:
+	ladder.길하나보기(길번호)
+	길번호 = (길번호+1) % ladder.참가자정보.size()
+func ladder_animation(delta) -> void:
+	ladder.rotate_y(delta/2)
 
 
 var snake_byte_game :SnakeByte

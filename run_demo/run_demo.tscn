@@ -11,5 +11,8 @@ one_shot = true
 [node name="TimerReel" type="Timer" parent="." unique_id=1732055806]
 one_shot = true
 
+[node name="Timer길보기" type="Timer" parent="." unique_id=960985737]
+
 [connection signal="timeout" from="TimerWheel" to="." method="_on_timer_wheel_timeout"]
 [connection signal="timeout" from="TimerReel" to="." method="_on_timer_reel_timeout"]
+[connection signal="timeout" from="Timer길보기" to="." method="_on_timer길보기_timeout"]
