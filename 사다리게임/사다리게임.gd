@@ -62,8 +62,8 @@ func 위치3D정리하기() -> void:
 		var o = $"세로기둥".get_child(i)
 		o.position = make_pos_by_rad_r_3d(각도, 중심과의거리,0)
 		o.mesh.height = 기둥길이
-		$"출발목록".get_child(i).position = make_pos_by_rad_r_3d(각도, 중심과의거리, 기둥길이/2 + 10)
-		$"도착목록".get_child(i).position = make_pos_by_rad_r_3d(각도, 중심과의거리, -기둥길이/2 - 10)
+		$"출발목록".get_child(i).position = make_pos_by_rad_r_3d(각도, 중심과의거리, 기둥길이/2 )
+		$"도착목록".get_child(i).position = make_pos_by_rad_r_3d(각도, 중심과의거리, -기둥길이/2 )
 	$"문제길".visible = false
 	$"풀이길".visible = false
 
