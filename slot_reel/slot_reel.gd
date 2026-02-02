@@ -8,6 +8,24 @@ var color_text_info_list :Array # [ color , text ]
 var symbol_list :Array[ReelSymbol]
 var symbol각도 :float
 
+func new_symbol(크기 :float, r :float, color_text_info :Array) -> MeshInstance3D:
+	var rtn := MeshInstance3D.new()
+	rtn.mesh = TextMesh.new()
+	rtn.mesh.material = MultiMeshShape.make_color_material()
+	rtn.mesh.text = color_text_info[1]
+	rtn.mesh.pixel_size = 크기/18
+	rtn.mesh.depth = 크기/40
+	rtn.mesh.material.albedo_color = color_text_info[0]
+	rtn.position.z = r
+	return rtn
+
+func get_text_from_symbol(sym :MeshInstance3D) -> String:
+	return sym.mesh.text
+
+static func calc_symbol_ysize(radius :float, count :int) -> float:
+	return 2*PI*radius/count
+
+
 func calc_radius() -> float:
 	return color_text_info_list.size() * symbol크기.y / (2*PI)
 
