@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bgvg5u80d01y8"]
 
 [ext_resource type="Script" uid="uid://stv38su1d42y" path="res://slot_reel/slot_reel.gd" id="1_nwxwk"]
+[ext_resource type="PackedScene" uid="uid://cfnbpemvoy1i6" path="res://multi_mesh_shape/multi_mesh_shape.tscn" id="2_0ub7q"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nwxwk"]
 resource_local_to_scene = true
@@ -11,9 +12,15 @@ material = SubResource("StandardMaterial3D_nwxwk")
 cap_top = false
 cap_bottom = false
 
+[sub_resource type="MultiMesh" id="MultiMesh_d38tk"]
+resource_local_to_scene = true
+
 [node name="SlotReel" type="Node3D" unique_id=1924631216]
 script = ExtResource("1_nwxwk")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=996027698]
+[node name="Reel" type="MeshInstance3D" parent="." unique_id=996027698]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("CylinderMesh_keqho")
+
+[node name="Spoke" parent="." unique_id=211187273 instance=ExtResource("2_0ub7q")]
+multimesh = SubResource("MultiMesh_d38tk")

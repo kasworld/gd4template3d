@@ -8,23 +8,8 @@ var color_text_info_list :Array # [ color , text ]
 var symbol_list :Array[ReelSymbol]
 var symbol각도 :float
 
-func new_symbol(크기 :float, r :float, color_text_info :Array) -> MeshInstance3D:
-	var rtn := MeshInstance3D.new()
-	rtn.mesh = TextMesh.new()
-	rtn.mesh.material = MultiMeshShape.make_color_material()
-	rtn.mesh.text = color_text_info[1]
-	rtn.mesh.pixel_size = 크기/18
-	rtn.mesh.depth = 크기/40
-	rtn.mesh.material.albedo_color = color_text_info[0]
-	rtn.position.z = r
-	return rtn
-
-func get_text_from_symbol(sym :MeshInstance3D) -> String:
-	return sym.mesh.text
-
 static func calc_symbol_ysize(radius :float, count :int) -> float:
 	return 2*PI*radius/count
-
 
 func calc_radius() -> float:
 	return color_text_info_list.size() * symbol크기.y / (2*PI)
@@ -43,19 +28,22 @@ func init(n :int, symbol크기a :Vector2, color_text_info_lista :Array) -> SlotR
 		add_child(k)
 		symbol_list.append(k)
 
-	var spoke :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_집중선(r*0.99, 0.0, 1.0, symbol크기.x*0.2, 8, Color.WHITE)
-	spoke.rotate_y(PI/2)
-	add_child( spoke )
+	$Spoke.init_집중선(r*0.99, 0.0, 1.0, symbol크기.x*0.2, 8, Color.WHITE)
+	$Spoke.rotate_y(PI/2)
 
-	$MeshInstance3D.mesh.material.albedo_color = Color.WHITE
-	$MeshInstance3D.mesh.top_radius = calc_radius()
-	$MeshInstance3D.mesh.bottom_radius = $MeshInstance3D.mesh.top_radius
-	$MeshInstance3D.mesh.height = symbol크기.x
-	$MeshInstance3D.mesh.radial_segments = color_text_info_list.size()
-	$MeshInstance3D.rotation.x = symbol각도/2
-
+	$Reel.mesh.material.albedo_color = Color.WHITE
+	$Reel.mesh.top_radius = calc_radius()
+	$Reel.mesh.bottom_radius = $Reel.mesh.top_radius
+	$Reel.mesh.height = symbol크기.x
+	$Reel.mesh.radial_segments = color_text_info_list.size()
+	$Reel.rotation.x = symbol각도/2
 	return self
+
+func show_Reel(b :bool) -> void:
+	$Reel.visible = b
+
+func show_Spoke(b :bool) -> void:
+	$Spoke.visible = b
 
 func _process(delta: float) -> void:
 	if 회전중인가:

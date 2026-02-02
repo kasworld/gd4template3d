@@ -364,9 +364,9 @@ func _on_timer_wheel_timeout() -> void:
 var slot :Slots
 func slotreel_demo(gc :GlassCabinet) -> void:
 	gc.show_description()
-	var symbol크기 := Vector2(gc.cabinet_size.x/20 ,gc.cabinet_size.y/20)
 	var color_text_into_list := make_color_text_info_list(colorlist_dark, cardlist).duplicate()
-	slot = preload("res://slots/slots.tscn").instantiate().init(5, symbol크기,color_text_into_list)
+	var symbol크기 := Vector2( gc.cabinet_size.x/20, SlotReel.calc_symbol_ysize(gc.cabinet_size.z/2, color_text_into_list.size() ) )
+	slot = preload("res://slots/slots.tscn").instantiate().init(5, symbol크기, color_text_into_list)
 	gc.add_child(slot)
 	slot.rotation_stopped.connect(슬롯멈춤)
 	slot.돌리기시작()
