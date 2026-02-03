@@ -14,6 +14,18 @@ static func calc_symbol_ysize(radius :float, count :int) -> float:
 func calc_radius() -> float:
 	return color_text_info_list.size() * symbol크기.y / (2*PI)
 
+func show_reel(b :bool) -> void:
+	$Reel.visible = b
+
+func show_spoke(b :bool) -> void:
+	$Spoke.visible = b
+
+func set_spoke_color( co :Color) -> void:
+	$Spoke.set_color_all(co)
+
+func set_reel_color( co :Color) -> void:
+	$Reel.mesh.material.albedo_color = co
+
 func init(n :int, symbol크기a :Vector2, color_text_info_lista :Array) -> SlotReel:
 	번호 = n
 	symbol크기 = symbol크기a
@@ -38,18 +50,6 @@ func init(n :int, symbol크기a :Vector2, color_text_info_lista :Array) -> SlotR
 	$Reel.mesh.radial_segments = color_text_info_list.size()
 	$Reel.rotation.x = symbol각도/2
 	return self
-
-func show_reel(b :bool) -> void:
-	$Reel.visible = b
-
-func show_spoke(b :bool) -> void:
-	$Spoke.visible = b
-
-func set_spoke_color( co :Color) -> void:
-	$Spoke.set_color_all(co)
-
-func set_reel_color( co :Color) -> void:
-	$Reel.mesh.material.albedo_color = co
 
 func _process(delta: float) -> void:
 	if 회전중인가:

@@ -22,6 +22,40 @@ func show_bartree(b :bool) -> void:
 	$Wheel/BarTree2.visible = b
 	$Wheel/BarTree1.visible = b
 
+func show_spliters(b :bool) -> void:
+	$Wheel/Spliters.visible = b
+
+func show_arrow(b :bool) -> void:
+	$"화살표".visible = b
+
+func show_label(b :bool) -> void:
+	$IDLabel.visible = b
+
+func set_spliters_color(co :Color) -> void:
+	$Wheel/Spliters.set_color_all(co)
+
+func set_back_color(co :Color) -> void:
+	$"Wheel/원판".mesh.material.albedo_color = co
+
+func set_velvehandle_color(co :Color) -> void:
+	$"Wheel/ValveHandle".색바꾸기(co)
+
+func set_arrow_color(co :Color) -> void:
+	$"화살표".set_color(co)
+
+func set_bartree_color(co1 :Color, co2 :Color) -> void:
+	$"Wheel/BarTree2".set_gradient_color_all(co1, co2)
+	$"Wheel/BarTree1".set_gradient_color_all(co1.inverted(), co2.inverted())
+
+func 색설정하기(원판색 :Color, 장식색 :Color, 화살표색 :Color) -> void:
+	$"Wheel/원판".mesh.material.albedo_color = 원판색
+	$"Wheel/ValveHandle".색바꾸기(장식색)
+	$"화살표".set_color(화살표색)
+	$"Wheel/BarTree2".set_gradient_color_all(장식색, 원판색)
+	$"Wheel/BarTree1".set_gradient_color_all(장식색.inverted(), 원판색.inverted())
+	var count :int = $Wheel.cell_count얻기()
+	$"Wheel/BarTree2".set_visible_count(count)
+	$"Wheel/BarTree1".set_visible_count(count)
 
 func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Array ) -> Roulette:
 	id = ida
@@ -31,18 +65,12 @@ func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Arr
 	$Wheel.init(반지름, 깊이, color_text_info_list)
 	$Wheel.rotation_stopped.connect(결과가결정됨)
 
-	$Wheel.add_child( preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_집중선(반지름, 선시작비, 선끝비, 깊이, color_text_info_list.size(), Color.WHITE ))
+	$Wheel/Spliters.init_집중선(반지름, 선시작비, 선끝비, 깊이, color_text_info_list.size(), Color.WHITE )
 
 	# for debug
 	$IDLabel.text = "%s" % id
 	$IDLabel.outline_size = 반지름/20
 	$IDLabel.pixel_size = 반지름/100
-
-	$"Wheel/원판".mesh.height = 깊이
-	$"Wheel/원판".mesh.bottom_radius = 반지름
-	$"Wheel/원판".mesh.top_radius = 반지름
-	$"Wheel/원판".position.z = -깊이
 
 	$"Wheel/ValveHandle".init(반지름*0.1, 반지름*0.1, 4, Color.WHITE)
 	$"Wheel/ValveHandle".rotation.x = PI/2
@@ -58,7 +86,10 @@ func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Arr
 	$"Wheel/BarTree1".rotation.x = PI/2
 	$"Wheel/BarTree1".rotate(Vector3.FORWARD, PI/2)
 
-
+	$"Wheel/원판".mesh.height = 깊이
+	$"Wheel/원판".mesh.bottom_radius = 반지름
+	$"Wheel/원판".mesh.top_radius = 반지름
+	$"Wheel/원판".position.z = -깊이
 	var n :int = $Wheel.cell_count얻기()
 	$"Wheel/원판".mesh.radial_segments = n
 	$"Wheel/원판".rotation.x = PI/2
@@ -75,15 +106,6 @@ func 결과가결정됨(_rl :RouletteWheel) -> void:
 func 회전중인가() -> bool:
 	return $Wheel.회전중인가
 
-func 색설정하기(원판색 :Color, 장식색 :Color, 화살표색 :Color) -> void:
-	$"Wheel/원판".mesh.material.albedo_color = 원판색
-	$"Wheel/ValveHandle".색바꾸기(장식색)
-	$"화살표".set_color(화살표색)
-	$"Wheel/BarTree2".set_gradient_color_all(장식색, 원판색)
-	$"Wheel/BarTree1".set_gradient_color_all(장식색.inverted(), 원판색.inverted())
-	var count :int = $Wheel.cell_count얻기()
-	$"Wheel/BarTree2".set_visible_count(count)
-	$"Wheel/BarTree1".set_visible_count(count)
 
 func 장식돌리기() -> void:
 	bar_rot = -$"Wheel".rotation_per_second/10

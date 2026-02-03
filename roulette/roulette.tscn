@@ -5,16 +5,20 @@
 [ext_resource type="PackedScene" uid="uid://c8npqlgeyy3xa" path="res://arrow_3d/arrow_3d.tscn" id="2_ed2fd"]
 [ext_resource type="PackedScene" uid="uid://btkkwpk54jqc" path="res://bar_tree/bar_tree.tscn" id="3_phm1c"]
 [ext_resource type="PackedScene" uid="uid://c8ulltoe1t7qg" path="res://roulette/roulette_wheel/roulette_wheel.tscn" id="5_wjn2p"]
+[ext_resource type="PackedScene" uid="uid://cfnbpemvoy1i6" path="res://multi_mesh_shape/multi_mesh_shape.tscn" id="6_cdnmj"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wjn2p"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_cdnmj"]
 material = SubResource("StandardMaterial3D_wjn2p")
 
-[sub_resource type="MultiMesh" id="MultiMesh_wjn2p"]
+[sub_resource type="MultiMesh" id="MultiMesh_cdnmj"]
 resource_local_to_scene = true
 
-[sub_resource type="MultiMesh" id="MultiMesh_cdnmj"]
+[sub_resource type="MultiMesh" id="MultiMesh_jgva4"]
+resource_local_to_scene = true
+
+[sub_resource type="MultiMesh" id="MultiMesh_cyc3i"]
 resource_local_to_scene = true
 
 [node name="Roulette" type="Node3D" unique_id=783119175]
@@ -39,7 +43,10 @@ mesh = SubResource("CylinderMesh_cdnmj")
 visible = false
 
 [node name="BarTree2" parent="Wheel" unique_id=601570340 instance=ExtResource("3_phm1c")]
-multimesh = SubResource("MultiMesh_wjn2p")
+multimesh = SubResource("MultiMesh_cdnmj")
 
 [node name="BarTree1" parent="Wheel" unique_id=384633611 instance=ExtResource("3_phm1c")]
-multimesh = SubResource("MultiMesh_cdnmj")
+multimesh = SubResource("MultiMesh_jgva4")
+
+[node name="Spliters" parent="Wheel" unique_id=211187273 instance=ExtResource("6_cdnmj")]
+multimesh = SubResource("MultiMesh_cyc3i")
