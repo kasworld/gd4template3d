@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://b1a0q4gxh5net"]
+
+[ext_resource type="Script" uid="uid://cln2g1e4fj6it" path="res://윷놀이/말.gd" id="1_edvhi"]
+[ext_resource type="PackedScene" uid="uid://caufs5hrb6jlt" path="res://윷놀이/다각기둥.tscn" id="2_wlm0w"]
+
+[node name="말" type="Node3D" unique_id=398967480]
+script = ExtResource("1_edvhi")
+
+[node name="다각기둥" parent="." unique_id=1686610585 instance=ExtResource("2_wlm0w")]
+
+[node name="번호" type="Label3D" parent="." unique_id=328311164]
+pixel_size = 1.0
+no_depth_test = true

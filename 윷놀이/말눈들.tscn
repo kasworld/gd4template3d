@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://chvddubar1fad"]
+
+[ext_resource type="Script" uid="uid://yinmun2ylmna" path="res://윷놀이/말눈들.gd" id="1_m2ey8"]
+
+[node name="말눈들" type="Node3D" unique_id=2062850302]
+script = ExtResource("1_m2ey8")

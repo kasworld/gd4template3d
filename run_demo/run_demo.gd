@@ -33,6 +33,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable ) -> void:
 	run_demo.call(same_game_demo, "same game")
 	run_demo.call(snakebyte_demo, "snakebyte game")
 	run_demo.call(ladder_demo, "사다리게임")
+	run_demo.call(yutgame_demo, "윷놀이")
 
 	used_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_itered_slice())
 	empty_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_unitered_slice())
@@ -83,6 +84,17 @@ func _process(delta: float) -> void:
 	clock_calendar_animation.handle_animation()
 	platonic_solids_animation.handle_animation()
 	props_animation.handle_animation()
+
+var yutgame :윷놀이
+func yutgame_demo(gc :GlassCabinet) -> void:
+	gc.show_wall_box(false)
+	yutgame = preload("res://윷놀이/윷놀이.tscn").instantiate().init(gc.cabinet_size)
+	gc.add_child(yutgame)
+	yutgame.game_ended.connect(yutgame_ended)
+	yutgame.new_game()
+func yutgame_ended(game :윷놀이) -> void:
+	yutgame.new_game()
+
 
 var ladder :사다리게임
 var 길번호 :int

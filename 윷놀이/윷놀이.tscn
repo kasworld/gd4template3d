@@ -1,0 +1,90 @@
+[gd_scene format=3 uid="uid://dssphq21kra0l"]
+
+[ext_resource type="Script" uid="uid://3gb1lxi6imws" path="res://윷놀이/윷놀이.gd" id="1_4ga8h"]
+[ext_resource type="PackedScene" uid="uid://chvddubar1fad" path="res://윷놀이/말눈들.tscn" id="3_of73k"]
+[ext_resource type="PackedScene" uid="uid://caufs5hrb6jlt" path="res://윷놀이/다각기둥.tscn" id="5_mxqr6"]
+[ext_resource type="PackedScene" uid="uid://sjnpttkqk1qs" path="res://roulette/roulette.tscn" id="6_msrcl"]
+[ext_resource type="PackedScene" uid="uid://h31tcp58dngw" path="res://윷놀이/말통.tscn" id="6_w3qwi"]
+
+[sub_resource type="Animation" id="Animation_a0a0t"]
+resource_name = "말이동"
+tracks/0/type = "position_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("이동용말통")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array()
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_p5hde"]
+_data = {
+&"말이동": SubResource("Animation_a0a0t")
+}
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_j7yrb"]
+resource_local_to_scene = true
+
+[sub_resource type="Animation" id="Animation_mkuig"]
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("말판")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_vtkmd"]
+resource_name = "시작"
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("말판")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 0.5, 1, 0, 0, 1, 0, 1, 1, 0, 0, 0, -1)
+tracks/1/type = "scale_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("말판")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 1, 1)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ha7vo"]
+_data = {
+&"RESET": SubResource("Animation_mkuig"),
+&"시작": SubResource("Animation_vtkmd")
+}
+
+[node name="윷놀이" type="Node3D" unique_id=153465458]
+script = ExtResource("1_4ga8h")
+
+[node name="말판" type="Node3D" parent="." unique_id=391897830]
+
+[node name="말눈들" parent="말판" unique_id=232993502 instance=ExtResource("3_of73k")]
+
+[node name="말이동AnimationPlayer" type="AnimationPlayer" parent="말판" unique_id=839753652]
+libraries/ = SubResource("AnimationLibrary_p5hde")
+playback_auto_capture = false
+
+[node name="원판" parent="말판" unique_id=1960672903 instance=ExtResource("5_mxqr6")]
+mesh = SubResource("CylinderMesh_j7yrb")
+
+[node name="달말통" parent="말판" unique_id=1772135456 instance=ExtResource("6_w3qwi")]
+
+[node name="난말통" parent="말판" unique_id=669088605 instance=ExtResource("6_w3qwi")]
+
+[node name="이동용말통" parent="말판" unique_id=572612760 instance=ExtResource("6_w3qwi")]
+visible = false
+
+[node name="말길들" type="Node3D" parent="말판" unique_id=756809126]
+
+[node name="시작AnimationPlayer" type="AnimationPlayer" parent="." unique_id=869523262]
+libraries/ = SubResource("AnimationLibrary_ha7vo")
+autoplay = &"시작"
+
+[node name="Roulette" parent="." unique_id=783119175 instance=ExtResource("6_msrcl")]
+
+[connection signal="animation_finished" from="말판/말이동AnimationPlayer" to="." method="_on_말이동animation_player_animation_finished"]
+[connection signal="animation_finished" from="시작AnimationPlayer" to="." method="_on_시작animation_player_animation_finished"]

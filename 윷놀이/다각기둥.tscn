@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://caufs5hrb6jlt"]
+
+[ext_resource type="Script" uid="uid://bv16tqg62qgw3" path="res://윷놀이/다각기둥.gd" id="1_jqemy"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_1lkns"]
+resource_local_to_scene = true
+
+[node name="다각기둥" type="MeshInstance3D" unique_id=1388659049]
+mesh = SubResource("CylinderMesh_1lkns")
+script = ExtResource("1_jqemy")

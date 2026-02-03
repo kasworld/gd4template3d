@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://h31tcp58dngw"]
+
+[ext_resource type="Script" uid="uid://cbh6w261t68e0" path="res://윷놀이/말통.gd" id="1_aswxv"]
+[ext_resource type="PackedScene" uid="uid://caufs5hrb6jlt" path="res://윷놀이/다각기둥.tscn" id="2_x4ufe"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_y0oic"]
+resource_local_to_scene = true
+
+[node name="말통" type="Node3D" unique_id=585585903]
+script = ExtResource("1_aswxv")
+
+[node name="모양" parent="." unique_id=833061654 instance=ExtResource("2_x4ufe")]
+mesh = SubResource("CylinderMesh_y0oic")
+
+[node name="말들" type="Node3D" parent="." unique_id=902034147]
+
+[node name="설명" type="Label3D" parent="." unique_id=1016952497]
+pixel_size = 1.0
+no_depth_test = true

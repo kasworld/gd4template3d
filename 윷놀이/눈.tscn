@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bhosco58mu0c"]
+
+[ext_resource type="Script" uid="uid://dlhqj08hhhiw4" path="res://윷놀이/눈.gd" id="1_ayhlg"]
+[ext_resource type="PackedScene" uid="uid://h31tcp58dngw" path="res://윷놀이/말통.tscn" id="2_wi061"]
+
+[node name="눈" type="Node3D" unique_id=1139689369]
+script = ExtResource("1_ayhlg")
+
+[node name="말통" parent="." unique_id=517303106 instance=ExtResource("2_wi061")]
