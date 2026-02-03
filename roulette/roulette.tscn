@@ -41,5 +41,5 @@ visible = false
 [node name="BarTree2" parent="Wheel" unique_id=601570340 instance=ExtResource("3_phm1c")]
 multimesh = SubResource("MultiMesh_wjn2p")
 
-[node name="BarTree3" parent="Wheel" unique_id=384633611 instance=ExtResource("3_phm1c")]
+[node name="BarTree1" parent="Wheel" unique_id=384633611 instance=ExtResource("3_phm1c")]
 multimesh = SubResource("MultiMesh_cdnmj")

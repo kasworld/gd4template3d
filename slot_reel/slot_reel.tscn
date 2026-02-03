@@ -12,7 +12,7 @@ material = SubResource("StandardMaterial3D_nwxwk")
 cap_top = false
 cap_bottom = false
 
-[sub_resource type="MultiMesh" id="MultiMesh_d38tk"]
+[sub_resource type="MultiMesh" id="MultiMesh_0ub7q"]
 resource_local_to_scene = true
 
 [node name="SlotReel" type="Node3D" unique_id=1924631216]
@@ -23,4 +23,4 @@ transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0
 mesh = SubResource("CylinderMesh_keqho")
 
 [node name="Spoke" parent="." unique_id=211187273 instance=ExtResource("2_0ub7q")]
-multimesh = SubResource("MultiMesh_d38tk")
+multimesh = SubResource("MultiMesh_0ub7q")

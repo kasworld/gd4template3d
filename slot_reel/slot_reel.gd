@@ -45,6 +45,12 @@ func show_Reel(b :bool) -> void:
 func show_Spoke(b :bool) -> void:
 	$Spoke.visible = b
 
+func set_Spoke_color( co :Color) -> void:
+	$Spoke.set_color_all(co)
+
+func set_Reel_color( co :Color) -> void:
+	$Reel.mesh.material.albedo_color = co
+
 func _process(delta: float) -> void:
 	if 회전중인가:
 		돌리기(delta)
