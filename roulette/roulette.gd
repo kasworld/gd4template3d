@@ -47,6 +47,9 @@ func set_bartree_color(co1 :Color, co2 :Color) -> void:
 	$"Wheel/BarTree2".set_gradient_color_all(co1, co2)
 	$"Wheel/BarTree1".set_gradient_color_all(co1.inverted(), co2.inverted())
 
+func set_all_text_color(co :Color) -> void:
+	$Wheel.set_all_text_color(co)
+
 func 색설정하기(원판색 :Color, 장식색 :Color, 화살표색 :Color) -> void:
 	$"Wheel/원판".mesh.material.albedo_color = 원판색
 	$"Wheel/ValveHandle".색바꾸기(장식색)

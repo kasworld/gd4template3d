@@ -3,6 +3,10 @@ class_name RouletteWheel
 
 signal rotation_stopped(rl :RouletteWheel)
 
+func set_all_text_color(co :Color) -> void:
+	for n in $"칸통".get_children():
+		n.set_color(co)
+
 var 반지름 :float
 var 깊이 :float
 var cell_list :Array[RouletteCell]
