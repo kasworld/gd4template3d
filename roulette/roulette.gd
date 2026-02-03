@@ -88,18 +88,20 @@ func 색설정하기(원판색 :Color, 장식색 :Color, 화살표색 :Color) ->
 func 장식돌리기() -> void:
 	bar_rot = -$"Wheel".rotation_per_second/10
 
-# spd : 초당 회전수
-func 돌리기시작(spd :float) -> void:
-	$"Wheel".돌리기시작(spd)
-	bar_rot = -spd/10
+## rps : 초당 회전수
+func start_rotation(rps :float) -> void:
+	$"Wheel".start_rotation(rps)
+	bar_rot = -rps/10
+
+## accel < 1.0
+func set_acceleration(accel :float=0.5) -> void:
+	$"Wheel".set_acceleration(accel)
 
 var bar_rot := 0.1
 func _process(_delta: float) -> void:
 	$"Wheel/BarTree2".rotate_tree_bar_y(bar_rot)
 	$"Wheel/BarTree1".rotate_tree_bar_y(bar_rot)
 
-func 멈추기시작(accel :float=0.5) -> void:
-	$"Wheel".멈추기시작(accel)
 
 func 선택된cell강조상태켜기() -> void:
 	var 선택칸 = 선택된cell얻기()

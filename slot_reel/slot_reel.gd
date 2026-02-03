@@ -39,16 +39,16 @@ func init(n :int, symbol크기a :Vector2, color_text_info_lista :Array) -> SlotR
 	$Reel.rotation.x = symbol각도/2
 	return self
 
-func show_Reel(b :bool) -> void:
+func show_reel(b :bool) -> void:
 	$Reel.visible = b
 
-func show_Spoke(b :bool) -> void:
+func show_spoke(b :bool) -> void:
 	$Spoke.visible = b
 
-func set_Spoke_color( co :Color) -> void:
+func set_spoke_color( co :Color) -> void:
 	$Spoke.set_color_all(co)
 
-func set_Reel_color( co :Color) -> void:
+func set_reel_color( co :Color) -> void:
 	$Reel.mesh.material.albedo_color = co
 
 func _process(delta: float) -> void:
@@ -67,12 +67,13 @@ func 돌리기(dur_sec :float = 1.0) -> void:
 		rotation_per_second = 0.0
 		rotation_stopped.emit(self)
 
-# spd : 초당 회전수
-func 돌리기시작(spd :float) -> void:
-	rotation_per_second = spd
+## rps : 초당 회전수
+func start_rotation(rps :float) -> void:
+	rotation_per_second = rps
 	회전중인가 = true
 
-func 멈추기시작(accel :float=0.5) -> void:
+## accel < 1.0
+func set_acceleration(accel :float=0.5) -> void:
 	assert(accel < 1.0)
 	acceleration = accel
 

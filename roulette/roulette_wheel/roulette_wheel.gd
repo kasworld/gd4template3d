@@ -39,12 +39,13 @@ func 돌리기(dur_sec :float = 1.0) -> void:
 func debug_str() -> String:
 	return "%f %f %f" % [ rad_to_deg(rotation.z), rad_to_deg(cell각도), 중심각차이율(rotation.z) ]
 
-# spd : 초당 회전수
-func 돌리기시작(spd :float) -> void:
-	rotation_per_second = spd
+## rps : 초당 회전수
+func start_rotation(rps :float) -> void:
+	rotation_per_second = rps
 	회전중인가 = true
 
-func 멈추기시작(accel :float=0.5) -> void:
+## accel < 1.0
+func set_acceleration(accel :float=0.5) -> void:
 	assert(accel < 1.0)
 	acceleration = accel
 

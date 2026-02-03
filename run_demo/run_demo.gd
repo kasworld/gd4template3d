@@ -354,7 +354,7 @@ func wheel돌리기() -> void:
 	var rot = randfn(2*PI, PI/2)
 	if randi_range(0,1) == 0:
 		rot = -rot
-	roulette.돌리기시작.call_deferred(rot)
+	roulette.start_rotation.call_deferred(rot)
 func wheel결과가결정됨(rl :Roulette) -> void:
 	rl.get_parent().set_description_text(rl.선택된cell얻기().글내용얻기())
 	$TimerWheel.start()
@@ -369,7 +369,7 @@ func slotreel_demo(gc :GlassCabinet) -> void:
 	slot = preload("res://slots/slots.tscn").instantiate().init(5, symbol크기, color_text_into_list)
 	gc.add_child(slot)
 	slot.rotation_stopped.connect(슬롯멈춤)
-	slot.돌리기시작()
+	slot.start_rotation()
 func 슬롯멈춤(sl :Slots) -> void:
 	var symbol들 := sl.선택된symbol들얻기()
 	var 결과 := ""
@@ -378,7 +378,7 @@ func 슬롯멈춤(sl :Slots) -> void:
 	sl.get_parent().set_description_text(결과)
 	$TimerReel.start()
 func _on_timer_reel_timeout() -> void:
-	slot.돌리기시작()
+	slot.start_rotation()
 
 
 var wavegauge_box :WaveGauge

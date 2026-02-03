@@ -41,9 +41,14 @@ func 선택된symbol들얻기() -> Array:
 		rtn.append(n.선택된symbol얻기())
 	return rtn
 
-func 돌리기시작() -> void:
+func start_rotation() -> void:
 	for r in reel_list:
 		var rot = randfn(2*PI, PI/2)
 		if randi_range(0,1) == 0:
 			rot = -rot
-		r.돌리기시작(rot)
+		r.start_rotation(rot)
+
+## accel < 1.0
+func set_acceleration(accel :float=0.5) -> void:
+	for r in reel_list:
+		r.set_acceleration(accel)
