@@ -17,7 +17,7 @@ var color_list := [
 ]
 
 var cabinet_size :Vector3
-var game_size := Vector2(16,9)
+var game_size := Vector2i(16,9)
 var tile_size :Vector3
 
 func pos2d_to_pos3d( x :int, y :int) -> Vector3:

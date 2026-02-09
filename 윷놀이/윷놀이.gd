@@ -142,8 +142,8 @@ func calc_way_pos(i :int) -> Vector3:
 	return Vector3(cos(rd)*r, sin(rd)*r, -r*4)
 
 func calc_way_show_pos() -> Vector3:
-	var 판반지름 = min(cabinet_size.x,cabinet_size.y)/2
-	var r = 판반지름 * 0.03
+	#var 판반지름 = min(cabinet_size.x,cabinet_size.y)/2
+	#var r = 판반지름 * 0.03
 	return Vector3(0,0,0)
 
 func roulette_rotation_stopped(_rl :Roulette) -> void:
@@ -216,6 +216,6 @@ func _on_말이동animation_player_animation_finished(anim_name: StringName) -> 
 	if anim_name == "말이동":
 		이동애니메이션후처리하기()
 
-func _on_시작animation_player_animation_finished(anim_name: StringName) -> void:
+func _on_시작animation_player_animation_finished(_anim_name: StringName) -> void:
 	if 윷놀이.자동진행:
 		윷던지기()

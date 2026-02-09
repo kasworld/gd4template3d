@@ -28,7 +28,7 @@ func init(h :float, w :float, y_count :int, w_branch_density :float = PI, line_w
 		var y := y_step * yi
 		var rate := 1.0 - y/h
 		var r :float= calc_radius_by_y(y, h, w, stage_count)
-		branch_list.append_array(make_lines(y, y_step, r * w_branch_density, 10*rate, r))
+		branch_list.append_array(make_lines(y, y_step, int(r * w_branch_density), 10.0*rate, r))
 	var bmesh := PrismMesh.new()
 	bmesh.material = MultiMeshShape.make_color_material(1.0)
 	bmesh.size = Vector3(1,0.3,1)

@@ -92,7 +92,7 @@ func yutgame_demo(gc :GlassCabinet) -> void:
 	gc.add_child(yutgame)
 	yutgame.game_ended.connect(yutgame_ended)
 	yutgame.new_game()
-func yutgame_ended(game :윷놀이) -> void:
+func yutgame_ended(_game :윷놀이) -> void:
 	yutgame.new_game()
 
 
