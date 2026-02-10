@@ -96,7 +96,7 @@ func run_1_demo(demo :Callable, text :String) -> void:
 	var gc :GlassCabinet = $CabinetDemo.glass_cabinet_list[0]
 	gc.set_title_text(text)
 	add_camera_dict.call(gc.get_camera_light(), text)
-	same_game_demo(gc)
+	demo.call(gc)
 	focus_to_new_MovingCameraLight(gc.get_camera_light())
 
 var samegame :SameGame
