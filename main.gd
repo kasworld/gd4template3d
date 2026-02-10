@@ -86,18 +86,12 @@ func _ready() -> void:
 
 	$CabinetDemo.init(WorldSize, 2)
 
-	run_all_demo()
-	#run_1_demo(same_game_demo, "samegame")
+	#run_all_demo()
+	run_1_demo(same_game_demo, "samegame")
 
 	MovingCameraLight.AllLightOn(false)
 	$TourCamera.init_by_glass_cabinet_list($CabinetDemo.glass_cabinet_list)
 
-func run_1_demo(demo :Callable, text :String) -> void:
-	var gc :GlassCabinet = $CabinetDemo.glass_cabinet_list[0]
-	gc.set_title_text(text)
-	add_camera_dict.call(gc.get_camera_light(), text)
-	demo.call(gc)
-	focus_to_new_MovingCameraLight(gc.get_camera_light())
 
 var samegame :SameGame
 func same_game_demo(gc :GlassCabinet) -> void:
@@ -107,14 +101,18 @@ func same_game_demo(gc :GlassCabinet) -> void:
 	gc.add_child(samegame)
 	samegame.game_ended.connect(samegame_ended)
 	samegame.score_changed.connect(update_samegame_score_label)
-
 func samegame_ended(_game :SameGame) -> void:
 	samegame.new_game()
-
 func update_samegame_score_label(점수 :float) -> void:
 	samegame.get_parent().set_description_text("현재점수 %d" % 점수 )
 
 
+func run_1_demo(demo :Callable, text :String) -> void:
+	var gc :GlassCabinet = $CabinetDemo.glass_cabinet_list[0]
+	gc.set_title_text(text)
+	add_camera_dict.call(gc.get_camera_light(), text)
+	demo.call(gc)
+	focus_to_new_MovingCameraLight(gc.get_camera_light())
 
 func run_all_demo() -> void:
 	var rundemo = preload("res://run_demo/run_demo.tscn").instantiate()

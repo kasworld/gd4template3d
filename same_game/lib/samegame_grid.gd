@@ -27,6 +27,14 @@ func count_data() -> int:
 				rtn +=1
 	return rtn
 
+func get_data_pos_list() -> Dictionary[Vector2i, CollisionObject3D]:
+	var rtn :Dictionary[Vector2i, CollisionObject3D] = {}
+	for x in grid_size.x:
+		for y in grid_size.y:
+			if grid_data[x][y] != null:
+				rtn[Vector2i(x,y)] = grid_data[x][y]
+	return rtn
+
 func fill_down() -> void:
 	for x in grid_size.x:
 		for y in grid_size.y-1:
