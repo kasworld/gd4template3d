@@ -4,7 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://k1k5bbintag5" path="res://skymap/skymap.hdr" id="3_lquwl"]
 [ext_resource type="PackedScene" uid="uid://dl14flc0fkeyt" path="res://axis_arrow_3d/axis_arrow_3d.tscn" id="5_7mycd"]
 [ext_resource type="PackedScene" uid="uid://c6cct2gj2a3im" path="res://timed_message/timed_message.tscn" id="5_lquwl"]
-[ext_resource type="PackedScene" uid="uid://dylwfbugiuwjp" path="res://run_demo/run_demo.tscn" id="6_7mycd"]
 [ext_resource type="PackedScene" uid="uid://tbrd3angkio6" path="res://cabinet_demo/cabinet_demo.tscn" id="7_272bh"]
 [ext_resource type="PackedScene" uid="uid://ces3a6yv0c5fi" path="res://moving_carmera_light/moving_camera_light.tscn" id="8_5vw27"]
 [ext_resource type="PackedScene" uid="uid://civqmm4724qbj" path="res://tour_camera/tour_camera.tscn" id="8_kek77"]
@@ -128,8 +127,6 @@ environment = SubResource("Environment_7mycd")
 [node name="MovingCameraLightAround" parent="." unique_id=1490505572 instance=ExtResource("8_5vw27")]
 
 [node name="CabinetDemo" parent="." unique_id=1475665782 instance=ExtResource("7_272bh")]
-
-[node name="RunDemo" parent="." unique_id=617421671 instance=ExtResource("6_7mycd")]
 
 [node name="TourCamera" parent="." unique_id=1817866707 instance=ExtResource("8_kek77")]
 

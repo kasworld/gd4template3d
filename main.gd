@@ -85,7 +85,9 @@ func _ready() -> void:
 	add_camera_dict($MovingCameraLightAround, "Around")
 
 	$CabinetDemo.init(WorldSize, 2)
-	$RunDemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict)
+	var rundemo = preload("res://run_demo/run_demo.tscn").instantiate()
+	add_child(rundemo)
+	rundemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict)
 	MovingCameraLight.AllLightOn(false)
 	$TourCamera.init_by_glass_cabinet_list($CabinetDemo.glass_cabinet_list)
 	$CenterCameraLight.make_current()
