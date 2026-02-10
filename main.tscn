@@ -13,7 +13,7 @@ default_font_size = 48
 
 [sub_resource type="SystemFont" id="SystemFont_bejao"]
 
-[sub_resource type="Theme" id="Theme_5vw27"]
+[sub_resource type="Theme" id="Theme_272bh"]
 resource_local_to_scene = true
 default_font = SubResource("SystemFont_bejao")
 
@@ -93,7 +93,7 @@ autowrap_mode = 3
 
 [node name="TimedMessage" parent="." unique_id=1248603664 instance=ExtResource("5_lquwl")]
 self_modulate = Color(1, 1, 1, 0.498039)
-theme = SubResource("Theme_5vw27")
+theme = SubResource("Theme_272bh")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=955085543]
 visible = false
