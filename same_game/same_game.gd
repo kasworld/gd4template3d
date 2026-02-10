@@ -34,13 +34,13 @@ func pos3d_to_pos2d( pos :Vector3 ) -> Vector2i:
 var char_list := ["♥","♣","♠","♦","★","☆"]
 var co3d_grid :SamegameGrid # [x][y]
 var 점수 :int
+var auto_play :bool = true
 
 func init(sz :Vector3) -> SameGame:
 	cabinet_size = sz
 	tile_size = Vector3(cabinet_size.x / game_size.x, cabinet_size.y / game_size.y, cabinet_size.y / game_size.y )
 	SameGameTile.tile_size = tile_size
 	SameGameTile.calc_pos_in_grid = pos3d_to_pos2d
-	new_game()
 	return self
 
 func new_game() -> void:

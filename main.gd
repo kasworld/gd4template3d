@@ -101,6 +101,7 @@ func same_game_demo(gc :GlassCabinet) -> void:
 	gc.add_child(samegame)
 	samegame.game_ended.connect(samegame_ended)
 	samegame.score_changed.connect(update_samegame_score_label)
+	samegame.new_game()
 func samegame_ended(_game :SameGame) -> void:
 	samegame.new_game()
 func update_samegame_score_label(점수 :float) -> void:
