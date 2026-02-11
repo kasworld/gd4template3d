@@ -3,36 +3,29 @@ class_name BSObj
 
 enum Type {Ship, Bullet, Homming, Shield}
 
+var mask_dict := {
+	Type.Ship :    BitFlag.FromPosList2(Type.Ship,Type.Bullet,Type.Homming,Type.Shield),
+	Type.Bullet :  BitFlag.FromPosList2(Type.Ship,Type.Bullet,             Type.Shield),
+	Type.Homming : BitFlag.FromPosList2(Type.Ship,            Type.Homming,Type.Shield),
+	Type.Shield :  BitFlag.FromPosList2(Type.Ship,Type.Bullet,Type.Homming,Type.Shield),
+}
+
 var type :Type
 var alive :bool
 var team :BattleShooterTeam
 
-func _init(t :Type) -> void:
+func _init(t :Type, tm :BattleShooterTeam) -> void:
+	team = tm
 	type = t
-	collision_layer = 0
-	collision_mask = 0
-	set_collision_layer_value(t, true)
+	collision_layer = BitFlag.ByPos(type)
+	collision_mask = mask_dict[type]
 	match type:
 		Type.Ship:
-			set_collision_mask_value(Type.Ship, true)
-			set_collision_mask_value(Type.Bullet, true)
-			set_collision_mask_value(Type.Homming, true)
-			set_collision_mask_value(Type.Shield, true)
 			$MeshInstance3D.mesh = SphereMesh.new()
 		Type.Bullet:
-			set_collision_mask_value(Type.Ship, true)
-			set_collision_mask_value(Type.Bullet, true)
-			set_collision_mask_value(Type.Shield, true)
 			$MeshInstance3D.mesh = CapsuleMesh.new()
 		Type.Homming:
-			set_collision_mask_value(Type.Ship, true)
-			set_collision_mask_value(Type.Homming, true)
-			set_collision_mask_value(Type.Shield, true)
 			$MeshInstance3D.mesh = TorusMesh.new()
 		Type.Shield:
-			set_collision_mask_value(Type.Ship, true)
-			set_collision_mask_value(Type.Bullet, true)
-			set_collision_mask_value(Type.Homming, true)
-			set_collision_mask_value(Type.Shield, true)
 			$MeshInstance3D.mesh = SphereMesh.new()
 	$MeshInstance3D.mesh.material = MultiMeshShape.make_color_material()
