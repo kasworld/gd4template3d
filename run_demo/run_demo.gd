@@ -146,6 +146,7 @@ func end_demo_start_game() -> void:
 
 
 var samegame :SameGame
+var samegame_level :int
 func same_game_demo(gc :GlassCabinet) -> void:
 	gc.show_description()
 	samegame = preload("res://same_game/same_game.tscn").instantiate(
@@ -153,12 +154,13 @@ func same_game_demo(gc :GlassCabinet) -> void:
 	gc.add_child(samegame)
 	samegame.game_ended.connect(samegame_ended)
 	samegame.score_changed.connect(update_samegame_score_label)
-
+	samegame.new_game(samegame_level)
 func samegame_ended(_game :SameGame) -> void:
-	samegame.new_game()
-
+	samegame_level += 1
+	samegame.new_game(samegame_level)
 func update_samegame_score_label(점수 :float) -> void:
 	samegame.get_parent().set_description_text("현재점수 %d" % 점수 )
+
 
 func make_rand_range(v :float, l :float) -> Array:
 	var r1 := randf_range(v,v+l)

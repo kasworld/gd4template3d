@@ -4,7 +4,6 @@ class_name SameGame
 signal score_changed(점수 :float)
 signal game_ended(game :SameGame)
 
-const MaxBallType := 6
 var color_list := [
 	Color.RED,
 	Color.GREEN,
@@ -15,7 +14,9 @@ var color_list := [
 	Color.WHITE,
 	Color.BLACK,
 ]
+var char_list := ["♥","♣","♠","♦","★","☆"]
 
+var game_level :int
 var cabinet_size :Vector3
 var game_size := Vector2i(16,9)
 var tile_size :Vector3
@@ -31,7 +32,6 @@ func pos3d_to_pos2d( pos :Vector3 ) -> Vector2i:
 		snappedi( (pos.y + cabinet_size.y/2 - tile_size.y/2) / tile_size.y ,1 ),
 	)
 
-var char_list := ["♥","♣","♠","♦","★","☆"]
 var co3d_grid :SamegameGrid # [x][y]
 var 점수 :int
 
@@ -42,7 +42,10 @@ func init(sz :Vector3) -> SameGame:
 	SameGameTile.calc_pos_in_grid = pos3d_to_pos2d
 	return self
 
-func new_game() -> void:
+func new_game(lv:int) -> void:
+	color_list.shuffle()
+	char_list.shuffle()
+	game_level = lv % char_list.size()
 	점수 = 0
 	score_changed.emit(점수)
 	for n in $CO3DContainer.get_children():
@@ -89,7 +92,7 @@ func add_co3d() -> void:
 	co3d_grid = SamegameGrid.new( game_size.x , game_size.y )
 	for x :int in game_size.x:
 		for y :int in game_size.y:
-			var co3d_num = randi_range(0,MaxBallType-1)
+			var co3d_num = randi_range(0,game_level+1)
 			var b = preload("res://same_game/same_game_tile/same_game_tile.tscn").instantiate().set_type_num(co3d_num
 				).set_char(char_list[co3d_num]
 				).set_color( color_list[co3d_num] )
