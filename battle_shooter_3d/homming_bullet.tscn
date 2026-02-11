@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://dgj16v1u82a43"]
+
+[ext_resource type="Script" uid="uid://cyxwltmwr8ooe" path="res://battle_shooter_3d/homming_bullet.gd" id="1_lrrkj"]
+
+[sub_resource type="TorusMesh" id="TorusMesh_lrrkj"]
+
+[node name="HommingBullet" type="Area3D" unique_id=321365015]
+script = ExtResource("1_lrrkj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=307905101]
+mesh = SubResource("TorusMesh_lrrkj")

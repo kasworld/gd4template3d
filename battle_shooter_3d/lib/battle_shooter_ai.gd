@@ -1,0 +1,141 @@
+class_name BattleShooterAI
+
+static func connect_if_not(sg :Signal, fn :Callable):
+	if not sg.is_connected(fn):
+		sg.connect(fn)
+
+static func calc_aim_vector2(
+	src_pos :Vector3,
+	src_speed :float,
+	dst_pos :Vector3, dst_vel :Vector3 ) -> Vector3:
+
+	var vt := dst_pos - src_pos
+	var dst_speed := dst_vel.length()
+	if dst_speed == 0 :
+		return vt
+	var a2 := vt.angle_to(dst_vel)
+	var a1 := asin(dst_speed/src_speed * sin(a2))
+	var rtn := vt.rotated(Vector3.FORWARD, a1)
+	return rtn
+
+static func rand_per_sec(delta :float, per_sec :float) -> bool:
+	return randf() < per_sec*delta
+
+static func not_null_and_alive(o :Area3D) -> bool:
+	return o != null and o.alive
+
+static func find_other_team_ship(ship_list :Array, t :BattleShooterTeam) -> Ship:
+	if ship_list.size() == 0:
+		return null
+	var dst :Ship
+	var try := 10
+	while try > 0 :
+		dst = ship_list.pick_random()
+		if dst != null and dst is Ship and dst.alive and dst.team != t:
+			return dst
+		try -= 1
+	return null
+
+# larger is danger
+static func calc_danger_level(me :Ship, dst :Area3D) -> float:
+	var delta := 1.0/60.0
+	var l1 := dst.global_position.distance_squared_to(me.global_position)
+	var l2 :float = (dst.global_position + dst.velocity *delta).distance_squared_to(me.global_position + me.velocity *delta)
+	if l1 > l2 : # approaching
+		return 100000.0/l1
+	else:
+		return 0
+
+static func find_danger_objs(me:Ship, node_list :Array[Node]) -> Dictionary:
+	var rtn := {
+		"All":[null, 0.0],
+		"Ship":[null, 0.0],
+		"Bullet":[null, 0.0],
+		"Homming":[null, 0.0],
+	}
+	if not me.alive:
+		return rtn
+	for o in node_list:
+		if me.team == o.team:
+			continue
+		if not me.alive:
+			continue
+		var dval := BattleShooterAI.calc_danger_level(me, o)
+		if dval > rtn.All[1]:
+			rtn.All = [o, dval]
+		if o is Ship:
+			if dval > rtn.Ship[1]:
+				rtn.Ship = [o, dval]
+		elif o is Bullet:
+			if dval > rtn.Bullet[1]:
+				rtn.Bullet = [o, dval]
+		elif o is HommingBullet:
+			if dval > rtn.Homming[1]:
+				rtn.Homming = [o, dval]
+	return rtn
+
+static func accel_to_evade(vp_size:Vector3, pos: Vector3, velocity :Vector3, o :Area3D) -> Vector3:
+	if not BattleShooterAI.not_null_and_alive(o):
+		return velocity
+	if pos.distance_squared_to(vp_size/2) < (vp_size/4).length_squared(): # evade to backward
+		velocity = (pos - o.global_position).normalized()*BattleShooter.ShipSpeed
+		velocity = velocity.rotated(Vector3.FORWARD, (randf()-0.5)*PI/8)
+		velocity = velocity.limit_length(BattleShooter.ShipSpeed)
+	else: # evade to center
+		velocity = to_center(pos, o.global_position, vp_size/2) * BattleShooter.ShipSpeed
+		velocity = velocity.rotated(Vector3.FORWARD, (randf()-0.5)*PI/8)
+		velocity = velocity.limit_length(BattleShooter.ShipSpeed)
+	return velocity
+
+static func to_center(p1 :Vector3, p2 :Vector3, center :Vector3) -> Vector3:
+	var vt := p1.direction_to(p2)
+	var ot := vt.rotated(Vector3.FORWARD, PI/2)
+	if p1.direction_to(center).dot(ot) > 0:
+		return ot # face to center?
+	else:
+		return -ot
+
+static func do_fire_bullet(from_pos :Vector3, team :BattleShooterTeam, delta :float, danger_dict :Dictionary, ship_list :Array) -> Vector3:
+#	var danger_dict = {
+#		"All":[null, 0.0],
+#		"Ship":[null, 0.0],
+#		"Bullet":[null, 0.0],
+#		"Homming":[null, 0.0],
+#	}
+	if not BattleShooterAI.rand_per_sec(delta, 5.0):
+		return Vector3.ZERO
+	var dst :Area3D
+	if danger_dict.Ship[1] > danger_dict.Bullet[1]:
+		dst = danger_dict.Ship[0]
+	else:
+		dst = danger_dict.Bullet[0]
+	if dst == null:
+		dst = find_other_team_ship(ship_list, team)
+	if dst == null:
+		return Vector3.ZERO
+	var v := BattleShooterAI.calc_aim_vector2(from_pos, BattleShooter.BulletSpeed, dst.global_position, dst.velocity )
+	return v
+
+static func do_fire_homming(team :BattleShooterTeam, delta :float, danger_dict :Dictionary, ship_list :Array) -> Area3D:
+#	var danger_dict = {
+#		"All":[null, 0.0],
+#		"Ship":[null, 0.0],
+#		"Bullet":[null, 0.0],
+#		"Homming":[null, 0.0],
+#	}
+	if not BattleShooterAI.rand_per_sec(delta, 2.0):
+		return null
+
+	var dst :Area3D
+	if danger_dict.Ship[1] > danger_dict.Homming[1]:
+		dst = danger_dict.Ship[0]
+	else:
+		dst = danger_dict.Homming[0]
+	if dst == null:
+		dst = find_other_team_ship(ship_list, team)
+	return dst
+
+static func do_add_shield(delta :float) -> bool:
+	if not BattleShooterAI.rand_per_sec(delta, 2.0):
+		return false
+	return true

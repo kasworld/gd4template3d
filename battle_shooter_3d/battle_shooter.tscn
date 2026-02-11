@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://c5884yanynl4l"]
+
+[ext_resource type="Script" uid="uid://cpr7p75dsdl70" path="res://battle_shooter_3d/battle_shooter.gd" id="1_cmed5"]
+
+[node name="BattleShooter" type="Node3D" unique_id=1131240540]
+script = ExtResource("1_cmed5")
