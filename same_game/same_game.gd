@@ -34,7 +34,6 @@ func pos3d_to_pos2d( pos :Vector3 ) -> Vector2i:
 var char_list := ["♥","♣","♠","♦","★","☆"]
 var co3d_grid :SamegameGrid # [x][y]
 var 점수 :int
-var auto_play :bool = true
 
 func init(sz :Vector3) -> SameGame:
 	cabinet_size = sz
@@ -58,7 +57,32 @@ func fix_gridco3d_pos_all() -> void:
 			if co3d != null:
 				move_ani.start_move("move", co3d, co3d.position, pos2d_to_pos3d(x,y) , 0.5)
 
+var auto_play :bool = true
+var auto_play_selected :CollisionObject3D
+var auto_play_last_time :float
+const auto_play_step_dur_sec := 1.0
+func set_auto_play(b :bool) -> void:
+	auto_play = b
+func auto_play_select_animate_tile() -> void:
+	var data_dict := co3d_grid.get_pos_to_data_dict()
+	if data_dict.is_empty():
+		return
+	auto_play_selected = data_dict.values().pick_random()
+	co3d_mouse_entered(auto_play_selected)
+func auto_play_selected_tile() -> void:
+	assert(auto_play_selected != null)
+	co3d_mouse_pressed(auto_play_selected)
+	auto_play_selected = null
+
+
 func _process(_delta: float) -> void:
+	var now := Time.get_unix_time_from_system()
+	if (now-auto_play_last_time)> auto_play_step_dur_sec and auto_play:
+		auto_play_last_time = now
+		if auto_play_selected == null:
+			auto_play_select_animate_tile()
+		else:
+			auto_play_selected_tile()
 	move_ani.handle_animation()
 
 func add_co3d() -> void:
