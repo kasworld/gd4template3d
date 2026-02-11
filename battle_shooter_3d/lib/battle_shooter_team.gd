@@ -14,7 +14,7 @@ enum Stat {
 	KILL_HOMMING,
 }
 
-static func stat_string(k :Stat)->String:
+static func stat_string(k :Stat) -> String:
 	return Stat.keys()[k]
 
 var color :Color
@@ -24,38 +24,38 @@ var name_label :Label
 var labels :Dictionary # key string -> Label at HUD
 var label_settings :LabelSettings
 
-func calc_tomake_ball()->int:
+func calc_tomake_ball() -> int:
 	return get_stat(Stat.SHIP_MAX) - get_stat(Stat.SHIP_NOW)
 
-func inc_ball_count():
+func inc_ball_count() -> void:
 	inc_stat(Stat.SHIP_NOW)
 
-func dec_ball_count():
+func dec_ball_count() -> void:
 	dec_stat(Stat.SHIP_NOW)
 
-func set_ball_count_limit(v :int):
+func set_ball_count_limit(v :int) -> void:
 	set_stat(Stat.SHIP_MAX, v)
 
-func set_stat(k :Stat, v :int):
+func set_stat(k :Stat, v :int) -> void:
 	var ks := BattleShooterTeam.stat_string(k)
 	stats[ks] =  v
 	labels[ks].text = str(stats[ks])
 
-func get_stat(k :Stat)->int:
+func get_stat(k :Stat) -> int:
 	var ks := BattleShooterTeam.stat_string(k)
 	return stats[ks]
 
-func inc_stat(k :Stat):
+func inc_stat(k :Stat) -> void:
 	var ks := BattleShooterTeam.stat_string(k)
 	stats[ks] +=  1
 	labels[ks].text = str(stats[ks])
 
-func dec_stat(k :Stat):
+func dec_stat(k :Stat) -> void:
 	var ks := BattleShooterTeam.stat_string(k)
 	stats[ks] -=  1
 	labels[ks].text = str(stats[ks])
 
-func _init(ci :int, ball_per_team :int):
+func _init(ci :int, ball_per_team :int) -> void:
 	color = NamedColors.iter_color(ci)
 	name = NamedColors.color_to_name[ci][1]
 
@@ -69,14 +69,14 @@ func _init(ci :int, ball_per_team :int):
 		labels[k] = make_label(str(stats[k]))
 	set_ball_count_limit(ball_per_team)
 
-func make_label(s :String)->Label:
+func make_label(s :String) -> Label:
 	var lb := Label.new()
 	lb.text = s
 	lb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	lb.label_settings = label_settings
 	return lb
 
-static func make_colorteam_list(team_count :int, ball_per_team :int)->Array[BattleShooterTeam]:
+static func make_team_list(team_count :int, ball_per_team :int) -> Array[BattleShooterTeam]:
 	var in_use_index := {}
 	var rtn :Array[BattleShooterTeam] = []
 	var color_count := NamedColors.color_list.size()

@@ -1,6 +1,6 @@
 class_name BattleShooterAI
 
-static func connect_if_not(sg :Signal, fn :Callable):
+static func connect_if_not(sg :Signal, fn :Callable) -> void:
 	if not sg.is_connected(fn):
 		sg.connect(fn)
 
