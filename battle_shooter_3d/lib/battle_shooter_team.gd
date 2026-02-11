@@ -27,13 +27,13 @@ var label_settings :LabelSettings
 func calc_tomake_ball() -> int:
 	return get_stat(Stat.SHIP_MAX) - get_stat(Stat.SHIP_NOW)
 
-func inc_ball_count() -> void:
+func inc_ship_count() -> void:
 	inc_stat(Stat.SHIP_NOW)
 
-func dec_ball_count() -> void:
+func dec_ship_count() -> void:
 	dec_stat(Stat.SHIP_NOW)
 
-func set_ball_count_limit(v :int) -> void:
+func set_ship_count_limit(v :int) -> void:
 	set_stat(Stat.SHIP_MAX, v)
 
 func set_stat(k :Stat, v :int) -> void:
@@ -67,7 +67,7 @@ func _init(ci :int, ball_per_team :int) -> void:
 	for k in Stat.keys():
 		stats[k] = 0
 		labels[k] = make_label(str(stats[k]))
-	set_ball_count_limit(ball_per_team)
+	set_ship_count_limit(ball_per_team)
 
 func make_label(s :String) -> Label:
 	var lb := Label.new()
