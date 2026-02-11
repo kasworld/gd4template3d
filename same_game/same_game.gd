@@ -45,7 +45,7 @@ func init(sz :Vector3) -> SameGame:
 func new_game(lv:int) -> void:
 	color_list.shuffle()
 	char_list.shuffle()
-	game_level = lv % char_list.size()
+	game_level = lv
 	점수 = 0
 	score_changed.emit(점수)
 	for n in $CO3DContainer.get_children():
@@ -90,9 +90,10 @@ func _process(_delta: float) -> void:
 
 func add_co3d() -> void:
 	co3d_grid = SamegameGrid.new( game_size.x , game_size.y )
+	var tile_type_count :int = (game_level % char_list.size())+1
 	for x :int in game_size.x:
 		for y :int in game_size.y:
-			var co3d_num = randi_range(0,game_level+1)
+			var co3d_num = randi_range(0,tile_type_count)
 			var b = preload("res://same_game/same_game_tile/same_game_tile.tscn").instantiate().set_type_num(co3d_num
 				).set_char(char_list[co3d_num]
 				).set_color( color_list[co3d_num] )

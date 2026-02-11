@@ -86,8 +86,8 @@ func _ready() -> void:
 
 	$CabinetDemo.init(WorldSize, 2)
 
-	#run_all_demo()
-	run_1_demo(same_game_demo, "samegame")
+	run_all_demo()
+	#run_1_demo(same_game_demo, "samegame")
 
 	MovingCameraLight.AllLightOn(false)
 	$TourCamera.init_by_glass_cabinet_list($CabinetDemo.glass_cabinet_list)
