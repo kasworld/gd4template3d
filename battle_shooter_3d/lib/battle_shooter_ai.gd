@@ -24,20 +24,20 @@ static func rand_per_sec(delta :float, per_sec :float) -> bool:
 static func not_null_and_alive(o :Area3D) -> bool:
 	return o != null and o.alive
 
-static func find_other_team_ship(ship_list :Array, t :BattleShooterTeam) -> Ship:
+static func find_other_team_ship(ship_list :Array[BSObj], t :BattleShooterTeam) -> BSObj: # Ship
 	if ship_list.size() == 0:
 		return null
-	var dst :Ship
+	var dst :BSObj # Ship
 	var try := 10
 	while try > 0 :
 		dst = ship_list.pick_random()
-		if dst != null and dst is Ship and dst.alive and dst.team != t:
+		if dst != null and dst.type == BSObj.Type.Ship and dst.alive and dst.team != t:
 			return dst
 		try -= 1
 	return null
 
 # larger is danger
-static func calc_danger_level(me :Ship, dst :Area3D) -> float:
+static func calc_danger_level(me :BSObj, dst :Area3D) -> float:
 	var delta := 1.0/60.0
 	var l1 := dst.global_position.distance_squared_to(me.global_position)
 	var l2 :float = (dst.global_position + dst.velocity *delta).distance_squared_to(me.global_position + me.velocity *delta)
@@ -46,7 +46,7 @@ static func calc_danger_level(me :Ship, dst :Area3D) -> float:
 	else:
 		return 0
 
-static func find_danger_objs(me:Ship, node_list :Array[Node]) -> Dictionary:
+static func find_danger_objs(me :BSObj, node_list :Array[BSObj]) -> Dictionary:
 	var rtn := {
 		"All":[null, 0.0],
 		"Ship":[null, 0.0],
@@ -63,13 +63,13 @@ static func find_danger_objs(me:Ship, node_list :Array[Node]) -> Dictionary:
 		var dval := BattleShooterAI.calc_danger_level(me, o)
 		if dval > rtn.All[1]:
 			rtn.All = [o, dval]
-		if o is Ship:
+		if o.type == BSObj.Type.Ship:
 			if dval > rtn.Ship[1]:
 				rtn.Ship = [o, dval]
-		elif o is Bullet:
+		elif o.type == BSObj.Type.Bullet:
 			if dval > rtn.Bullet[1]:
 				rtn.Bullet = [o, dval]
-		elif o is HommingBullet:
+		elif o.type == BSObj.Type.Homming:
 			if dval > rtn.Homming[1]:
 				rtn.Homming = [o, dval]
 	return rtn

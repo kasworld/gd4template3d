@@ -4,6 +4,8 @@ class_name BSObj
 enum Type {Ship, Bullet, Homming, Shield}
 
 var type :Type
+var alive :bool
+var team :BattleShooterTeam
 
 func _init(t :Type) -> void:
 	type = t
