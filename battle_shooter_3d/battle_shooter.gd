@@ -1,6 +1,11 @@
 extends Node3D
 class_name BattleShooter
 
+# initial value
+static var TeamCount :int = 3
+static var ShipPerTeam :int = 1
+static var ShieldCount :int = 2
+
 static var ColorList := ListIter.new( NamedColors.color_list, true )
 static func MakeTeamList(team_count :int, ship_per_team :int) -> Array[BattleShooterTeam]:
 	var rtn :Array[BattleShooterTeam] = []
@@ -30,23 +35,16 @@ static func ClearZ(vt :Vector3) -> Vector3:
 static func Make2D(vt3 :Vector3) -> Vector2:
 	return Vector2(vt3.x, vt3.y)
 
-# initial value
-static var TeamCount :int = 3
-static var ShipPerTeam :int = 1
-static var ShieldCount :int = 2
-
 static var Boundary :AABB
-
-
 var octtree :OctTree
 
 func init(sz :Vector3) -> BattleShooter:
 	Boundary = AABB(-sz/2,sz)
-	#octtree = OctTree.new(Boundary, 100)
 	var teams := MakeTeamList(TeamCount, ShipPerTeam)
 	for t in teams:
 		var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
 			).init(BSObj.Type.Ship, t)
 		add_child(ship)
 		ship.position = RandPosInAABB(Boundary)
+	#octtree = OctTree.new(Boundary, 100)
 	return self
