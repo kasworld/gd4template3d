@@ -1,6 +1,9 @@
 extends Area3D
 class_name BSObj
 
+signal life_ended(me :BSObj)
+signal explode_ended(me :BSObj)
+
 enum Type {Ship, Bullet, Homming, Shield}
 
 ## by cabinetsize
@@ -36,6 +39,7 @@ var mask_dict := {
 var type :Type
 var alive :bool
 var team :BattleShooterTeam
+var animation_explode := SimpleAnimation.new()
 
 func init(t :Type, tm :BattleShooterTeam) -> BSObj:
 	team = tm
@@ -47,18 +51,27 @@ func init(t :Type, tm :BattleShooterTeam) -> BSObj:
 			$MeshInstance3D.mesh = SphereMesh.new()
 			$MeshInstance3D.mesh.radius = BattleShooter.CabinetSize.x * SizeRate[type]
 			$MeshInstance3D.mesh.height = BattleShooter.CabinetSize.x * SizeRate[type] *2
+			$CollisionShape3D.shape = SphereShape3D.new()
+			$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 		Type.Bullet:
 			$MeshInstance3D.mesh = CapsuleMesh.new()
 			$MeshInstance3D.mesh.radius = BattleShooter.CabinetSize.x * SizeRate[type]
 			$MeshInstance3D.mesh.height = BattleShooter.CabinetSize.x * SizeRate[type] *2
+			$CollisionShape3D.shape = CapsuleShape3D.new()
+			$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
+			$CollisionShape3D.shape.height = $MeshInstance3D.mesh.height
 		Type.Homming:
 			$MeshInstance3D.mesh = TorusMesh.new()
 			$MeshInstance3D.mesh.inner_radius = BattleShooter.CabinetSize.x * SizeRate[type] /2
 			$MeshInstance3D.mesh.outer_radius = BattleShooter.CabinetSize.x * SizeRate[type]
+			$CollisionShape3D.shape = SphereShape3D.new()
+			$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.outer_radius
 		Type.Shield:
 			$MeshInstance3D.mesh = SphereMesh.new()
 			$MeshInstance3D.mesh.radius = BattleShooter.CabinetSize.x * SizeRate[type]
 			$MeshInstance3D.mesh.height = BattleShooter.CabinetSize.x * SizeRate[type] *2
+			$CollisionShape3D.shape = SphereShape3D.new()
+			$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 	$MeshInstance3D.mesh.material = MultiMeshShape.make_color_material()
 	$MeshInstance3D.mesh.material.albedo_color = team.color
 	return self

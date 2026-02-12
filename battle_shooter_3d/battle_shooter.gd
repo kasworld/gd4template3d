@@ -19,11 +19,19 @@ static var CabinetSize :Vector3
 static func Make2D(vt3 :Vector3) -> Vector2:
 	return Vector2(vt3.x, vt3.y)
 
+var octtree :OctTree
 
 func init(sz :Vector3) -> BattleShooter:
 	CabinetSize = sz
+	octtree = OctTree.new(AABB(-CabinetSize/2,CabinetSize), 100)
 	var teams := make_team_list(TeamCount, ShipPerTeam)
-	var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
-		).init(BSObj.Type.Ship, teams[0])
-	add_child(ship)
+	for t in teams:
+		var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
+			).init(BSObj.Type.Ship, t)
+		add_child(ship)
+		ship.position = Vector3(
+			randf_range(-CabinetSize.x/2,CabinetSize.x/2),
+			randf_range(-CabinetSize.y/2,CabinetSize.y/2),
+			0,
+			)
 	return self

@@ -6,3 +6,5 @@
 script = ExtResource("1_rxnmq")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1901603332]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=290334384]
