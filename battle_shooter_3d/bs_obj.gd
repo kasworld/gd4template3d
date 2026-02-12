@@ -48,39 +48,37 @@ func init(t :Type, tm :BattleShooterTeam) -> BSObj:
 	type = t
 	collision_layer = BitFlag.ByPos(type)
 	collision_mask = mask_dict[type]
+	var ref_len := BattleShooter.Boundary.size.length()
 	match type:
 		Type.Ship:
 			$MeshInstance3D.mesh = SphereMesh.new()
-			$MeshInstance3D.mesh.radius = BattleShooter.CabinetSize.x * SizeRate[type]
-			$MeshInstance3D.mesh.height = BattleShooter.CabinetSize.x * SizeRate[type] *2
+			$MeshInstance3D.mesh.radius = ref_len * SizeRate[type]
+			$MeshInstance3D.mesh.height = ref_len * SizeRate[type] *2
 			$CollisionShape3D.shape = SphereShape3D.new()
 			$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 			bounce_radius = $MeshInstance3D.mesh.radius
 		Type.Bullet:
 			$MeshInstance3D.mesh = CapsuleMesh.new()
-			$MeshInstance3D.mesh.radius = BattleShooter.CabinetSize.x * SizeRate[type]
-			$MeshInstance3D.mesh.height = BattleShooter.CabinetSize.x * SizeRate[type] *2
+			$MeshInstance3D.mesh.radius = ref_len * SizeRate[type]
+			$MeshInstance3D.mesh.height = ref_len * SizeRate[type] *2
 			$CollisionShape3D.shape = CapsuleShape3D.new()
 			$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 			$CollisionShape3D.shape.height = $MeshInstance3D.mesh.height
 		Type.Homming:
 			$MeshInstance3D.mesh = TorusMesh.new()
-			$MeshInstance3D.mesh.inner_radius = BattleShooter.CabinetSize.x * SizeRate[type] /2
-			$MeshInstance3D.mesh.outer_radius = BattleShooter.CabinetSize.x * SizeRate[type]
+			$MeshInstance3D.mesh.inner_radius = ref_len * SizeRate[type] /2
+			$MeshInstance3D.mesh.outer_radius = ref_len * SizeRate[type]
 			$CollisionShape3D.shape = SphereShape3D.new()
 			$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.outer_radius
 		Type.Shield:
 			$MeshInstance3D.mesh = SphereMesh.new()
-			$MeshInstance3D.mesh.radius = BattleShooter.CabinetSize.x * SizeRate[type]
-			$MeshInstance3D.mesh.height = BattleShooter.CabinetSize.x * SizeRate[type] *2
+			$MeshInstance3D.mesh.radius = ref_len * SizeRate[type]
+			$MeshInstance3D.mesh.height = ref_len * SizeRate[type] *2
 			$CollisionShape3D.shape = SphereShape3D.new()
 			$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 	$MeshInstance3D.mesh.material = MultiMeshShape.make_color_material()
 	$MeshInstance3D.mesh.material.albedo_color = team.color
-	velocity = Vector3(
-		randf_range(-BattleShooter.CabinetSize.x/2*SpeedRate[type],BattleShooter.CabinetSize.x/2*SpeedRate[type]),
-		randf_range(-BattleShooter.CabinetSize.y/2*SpeedRate[type],BattleShooter.CabinetSize.y/2*SpeedRate[type]),
-		0)
+	velocity = BattleShooter.RandVelocityInAABB(BattleShooter.Boundary)*SpeedRate[type]
 	return self
 
 func _physics_process(delta: float) -> void:
