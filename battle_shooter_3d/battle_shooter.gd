@@ -2,7 +2,7 @@ extends Node3D
 class_name BattleShooter
 
 # initial value
-static var TeamCount :int = 3
+static var TeamCount :int = 300
 static var ShipPerTeam :int = 1
 static var ShieldCount :int = 2
 
@@ -43,7 +43,7 @@ func init(sz :Vector3) -> BattleShooter:
 	var teams := MakeTeamList(TeamCount, ShipPerTeam)
 	for t in teams:
 		var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
-			).init(BSObj.Type.Ship, t)
+			).init_ship(t)
 		add_child(ship)
 		ship.position = RandPosInAABB(Boundary)
 	#octtree = OctTree.new(Boundary, 100)
