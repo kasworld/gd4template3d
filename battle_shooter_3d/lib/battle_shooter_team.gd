@@ -17,14 +17,6 @@ enum Stat {
 static func stat_string(k :Stat) -> String:
 	return Stat.keys()[k]
 
-static var ColorList := ListIter.new( NamedColors.color_list, true )
-
-static func make_team_list(team_count :int, ship_per_team :int) -> Array[BattleShooterTeam]:
-	var rtn :Array[BattleShooterTeam] = []
-	for t in team_count:
-		var ct := BattleShooterTeam.new(ColorList.get_current_and_step_next(), ship_per_team)
-		rtn.append(ct)
-	return rtn
 
 var color :Color
 var name :String

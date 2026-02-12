@@ -1,6 +1,13 @@
 extends Node3D
 class_name BattleShooter
 
+static var ColorList := ListIter.new( NamedColors.color_list, true )
+static func make_team_list(team_count :int, ship_per_team :int) -> Array[BattleShooterTeam]:
+	var rtn :Array[BattleShooterTeam] = []
+	for t in team_count:
+		var ct := BattleShooterTeam.new(ColorList.get_current_and_step_next(), ship_per_team)
+		rtn.append(ct)
+	return rtn
 
 # initial value
 static var TeamCount :int = 3
@@ -15,4 +22,8 @@ static func Make2D(vt3 :Vector3) -> Vector2:
 
 func init(sz :Vector3) -> BattleShooter:
 	CabinetSize = sz
+	var teams := make_team_list(TeamCount, ShipPerTeam)
+	var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
+		).init(BSObj.Type.Ship, teams[0])
+	add_child(ship)
 	return self

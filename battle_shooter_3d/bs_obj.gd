@@ -6,9 +6,9 @@ enum Type {Ship, Bullet, Homming, Shield}
 ## by cabinetsize
 static var SizeRate := {
 	Type.Ship :    0.01,
-	Type.Bullet :  0.01,
+	Type.Bullet :  0.005,
 	Type.Homming : 0.01,
-	Type.Shield :  0.01,
+	Type.Shield :  0.005,
 }
 
 ## by cabinetsize
@@ -37,7 +37,7 @@ var type :Type
 var alive :bool
 var team :BattleShooterTeam
 
-func _init(t :Type, tm :BattleShooterTeam) -> void:
+func init(t :Type, tm :BattleShooterTeam) -> BSObj:
 	team = tm
 	type = t
 	collision_layer = BitFlag.ByPos(type)
@@ -46,6 +46,7 @@ func _init(t :Type, tm :BattleShooterTeam) -> void:
 		Type.Ship:
 			$MeshInstance3D.mesh = SphereMesh.new()
 			$MeshInstance3D.mesh.radius = BattleShooter.CabinetSize.x * SizeRate[type]
+			$MeshInstance3D.mesh.height = BattleShooter.CabinetSize.x * SizeRate[type] *2
 		Type.Bullet:
 			$MeshInstance3D.mesh = CapsuleMesh.new()
 			$MeshInstance3D.mesh.radius = BattleShooter.CabinetSize.x * SizeRate[type]
@@ -57,5 +58,7 @@ func _init(t :Type, tm :BattleShooterTeam) -> void:
 		Type.Shield:
 			$MeshInstance3D.mesh = SphereMesh.new()
 			$MeshInstance3D.mesh.radius = BattleShooter.CabinetSize.x * SizeRate[type]
+			$MeshInstance3D.mesh.height = BattleShooter.CabinetSize.x * SizeRate[type] *2
 	$MeshInstance3D.mesh.material = MultiMeshShape.make_color_material()
 	$MeshInstance3D.mesh.material.albedo_color = team.color
+	return self
