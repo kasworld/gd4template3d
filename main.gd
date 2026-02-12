@@ -86,28 +86,19 @@ func _ready() -> void:
 
 	$CabinetDemo.init(WorldSize, 2)
 
-	run_all_demo()
-	#run_1_demo(same_game_demo, "samegame")
+	#run_all_demo()
+	run_1_demo(battle_shooter_demo, "battle shooter")
 
 	MovingCameraLight.AllLightOn(false)
 	$TourCamera.init_by_glass_cabinet_list($CabinetDemo.glass_cabinet_list)
 
 
-var samegame :SameGame
-var samegame_level :int
-func same_game_demo(gc :GlassCabinet) -> void:
+var battleshooter :BattleShooter
+func battle_shooter_demo(gc :GlassCabinet) -> void:
 	gc.show_description()
-	samegame = preload("res://same_game/same_game.tscn").instantiate(
+	battleshooter = preload("res://battle_shooter_3d/battle_shooter.tscn").instantiate(
 		).init(gc.cabinet_size)
-	gc.add_child(samegame)
-	samegame.game_ended.connect(samegame_ended)
-	samegame.score_changed.connect(update_samegame_score_label)
-	samegame.new_game(samegame_level)
-func samegame_ended(_game :SameGame) -> void:
-	samegame_level += 1
-	samegame.new_game(samegame_level)
-func update_samegame_score_label(점수 :float) -> void:
-	samegame.get_parent().set_description_text("현재점수 %d" % 점수 )
+	gc.add_child(battleshooter)
 
 
 func run_1_demo(demo :Callable, text :String) -> void:
