@@ -4,10 +4,9 @@ static func connect_if_not(sg :Signal, fn :Callable) -> void:
 	if not sg.is_connected(fn):
 		sg.connect(fn)
 
-static func calc_aim_vector2(
-	src_pos :Vector3,
-	src_speed :float,
-	dst_pos :Vector3, dst_vel :Vector3 ) -> Vector3:
+static func calc_aim_vector3(
+		src_pos :Vector3, src_speed :float,
+		dst_pos :Vector3, dst_vel :Vector3 ) -> Vector3:
 
 	var vt := dst_pos - src_pos
 	var dst_speed := dst_vel.length()
@@ -113,7 +112,7 @@ static func do_fire_bullet(from_pos :Vector3, team :BattleShooterTeam, delta :fl
 		dst = find_other_team_ship(ship_list, team)
 	if dst == null:
 		return Vector3.ZERO
-	var v := BattleShooterAI.calc_aim_vector2(from_pos, BattleShooter.BulletSpeed, dst.global_position, dst.velocity )
+	var v := BattleShooterAI.calc_aim_vector3(from_pos, BattleShooter.BulletSpeed, dst.global_position, dst.velocity )
 	return v
 
 static func do_fire_homming(team :BattleShooterTeam, delta :float, danger_dict :Dictionary, ship_list :Array) -> Area3D:
