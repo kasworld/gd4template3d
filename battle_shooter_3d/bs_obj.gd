@@ -16,10 +16,10 @@ static var SizeRate := {
 
 ## by cabinetsize
 static var SpeedRate := {
-	Type.Ship :    0.1,
-	Type.Bullet :  0.1,
-	Type.Homming : 0.1,
-	Type.Shield :  0.1,
+	Type.Ship :    0.5,
+	Type.Bullet :  0.5,
+	Type.Homming : 0.5,
+	Type.Shield :  0.5,
 }
 
 static var LifeSec := {
@@ -40,6 +40,8 @@ var type :Type
 var alive :bool
 var team :BattleShooterTeam
 var animation_explode := SimpleAnimation.new()
+var velocity :Vector3
+var bounce_radius :float
 
 func init(t :Type, tm :BattleShooterTeam) -> BSObj:
 	team = tm
@@ -53,6 +55,7 @@ func init(t :Type, tm :BattleShooterTeam) -> BSObj:
 			$MeshInstance3D.mesh.height = BattleShooter.CabinetSize.x * SizeRate[type] *2
 			$CollisionShape3D.shape = SphereShape3D.new()
 			$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
+			bounce_radius = $MeshInstance3D.mesh.radius
 		Type.Bullet:
 			$MeshInstance3D.mesh = CapsuleMesh.new()
 			$MeshInstance3D.mesh.radius = BattleShooter.CabinetSize.x * SizeRate[type]
@@ -74,4 +77,20 @@ func init(t :Type, tm :BattleShooterTeam) -> BSObj:
 			$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 	$MeshInstance3D.mesh.material = MultiMeshShape.make_color_material()
 	$MeshInstance3D.mesh.material.albedo_color = team.color
+	velocity = Vector3(
+		randf_range(-BattleShooter.CabinetSize.x/2*SpeedRate[type],BattleShooter.CabinetSize.x/2*SpeedRate[type]),
+		randf_range(-BattleShooter.CabinetSize.y/2*SpeedRate[type],BattleShooter.CabinetSize.y/2*SpeedRate[type]),
+		0)
 	return self
+
+func _physics_process(delta: float) -> void:
+	if type != Type.Ship:
+		return
+	position += velocity * delta
+	var bn := Bounce.v3f(position,BattleShooter.Boundary,bounce_radius)
+	position = bn.pos
+	for i in 3:
+		# change vel on bounce
+		if bn.bounced[i] != 0 :
+			velocity[i] = -bn.bounced[i] * abs(velocity[i])
+	#$DirSprite.position = Vector2.RIGHT.rotated(velocity.angle())*20
