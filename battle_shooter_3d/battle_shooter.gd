@@ -2,8 +2,8 @@ extends Node3D
 class_name BattleShooter
 
 # initial value
-static var TeamCount :int = 3
-static var ShipPerTeam :int = 10
+static var TeamCount :int = 30
+static var ShipPerTeam :int = 1
 static var ShieldCount :int = 2
 
 static var ColorList := ListIter.new( NamedColors.color_list, true )
@@ -52,13 +52,13 @@ func life_ended(me :BSObj, other :BSObj) -> void:
 	pass
 func explode_ended(me :BSObj) -> void:
 	var t_num := me.team_number
-	remove_child.call_deferred(me)
+	remove_child(me)
 	me.queue_free()
 	match me.type:
 		BSObj.Type.Ship:
+			TeamList[t_num].dec_ship_count()
 			#print_debug(me.team)
 			new_ship(t_num)
-			TeamList[t_num].dec_ship_count()
 		_ :
 			pass
 
