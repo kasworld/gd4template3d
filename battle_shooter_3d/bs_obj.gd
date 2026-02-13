@@ -124,6 +124,8 @@ func init_homming(t_num :int) -> BSObj:
 
 
 func end_life(other :BSObj) -> void:
+	if not alive:
+		return
 	alive = false
 	collision_layer = 0
 	collision_mask = 0
