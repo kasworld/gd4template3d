@@ -42,9 +42,21 @@ func init(sz :Vector3) -> BattleShooter:
 	Boundary = AABB(-sz/2,sz)
 	var teams := MakeTeamList(TeamCount, ShipPerTeam)
 	for t in teams:
-		var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
-			).init_ship(t)
-		add_child(ship)
-		ship.position = RandPosInAABB(Boundary)
+		new_ship(t)
 	#octtree = OctTree.new(Boundary, 100)
 	return self
+
+func life_ended(me :BSObj, other :BSObj) -> void:
+	pass
+func explode_ended(me :BSObj) -> void:
+	new_ship(me.team)
+	me.queue_free()
+
+func new_ship(t :BattleShooterTeam) -> BSObj:
+	var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
+		).init_ship(t)
+	add_child(ship)
+	ship.life_ended.connect(life_ended)
+	ship.explode_ended.connect(explode_ended)
+	ship.position = RandPosInAABB(Boundary)
+	return ship

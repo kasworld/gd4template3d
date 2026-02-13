@@ -55,6 +55,7 @@ func init1() -> void:
 	$MeshInstance3D.mesh.material.albedo_color = team.color
 	velocity = BattleShooter.RandVelocityInAABB(BattleShooter.Boundary)*SpeedRate[type]
 	animation_explode.animation_ended.connect(animation_ended)
+	alive = true
 
 func init_ship(tm :BattleShooterTeam) -> BSObj:
 	init0(Type.Ship,tm)
@@ -103,30 +104,34 @@ func init_shield(tm :BattleShooterTeam) -> BSObj:
 	return self
 
 func end_life(other :BSObj) -> void:
+	alive = false
 	collision_layer = 0
 	collision_mask = 0
-	animation_explode.start_scale("explode1", self, Vector3(1,1,1), Vector3(2,2,2), 0.2)
 	life_ended.emit(self, other)
+	if type == Type.Ship:
+		animation_explode.start_scale("ship_explode1", self, Vector3(1,1,1), Vector3(2,2,2), 0.2)
 
 func animation_ended(_st :Node, ani :Dictionary) -> void:
-	if ani.Name == "explode1":
-		animation_explode.start_scale("explode2", self, Vector3(2,2,2), Vector3(0.1,0.1,0.1), 0.2)
-	else:
-		explode_ended.emit(self)
+	match ani.Name:
+		"ship_explode1":
+			animation_explode.start_scale("ship_explode2", self, Vector3(2,2,2), Vector3(0.1,0.1,0.1), 0.2)
+		_ :
+			explode_ended.emit(self)
 
 func _process(_delta: float) -> void:
 	animation_explode.handle_animation()
 
 func _physics_process(delta: float) -> void:
-	if type != Type.Ship:
-		return
 	position += velocity * delta
-	var bn := Bounce.v3f(position,BattleShooter.Boundary,bounce_radius)
-	position = bn.pos
-	for i in 3:
-		# change vel on bounce
-		if bn.bounced[i] != 0 :
-			velocity[i] = -bn.bounced[i] * abs(velocity[i])
+	if not alive:
+		velocity *= 0.99
+	if type == Type.Ship:
+		var bn := Bounce.v3f(position,BattleShooter.Boundary,bounce_radius)
+		position = bn.pos
+		for i in 3:
+			# change vel on bounce
+			if bn.bounced[i] != 0 :
+				velocity[i] = -bn.bounced[i] * abs(velocity[i])
 	#$DirSprite.position = Vector2.RIGHT.rotated(velocity.angle())*20
 
 func _on_area_entered(area: Area3D) -> void:
