@@ -79,6 +79,10 @@ func new_shield(t :BattleShooterTeam) -> BSObj:
 	shield.life_ended.connect(shield_life_ended)
 	shield.explode_ended.connect(shield_explode_ended)
 	return shield
+func shield_life_ended(me :BSObj, other :BSObj) -> void:
+	pass
+func shield_explode_ended(me :BSObj) -> void:
+	me.queue_free()
 
 var shield_rotate_dir :float
 func init_shield(tm :BattleShooterTeam) -> BSObj:
@@ -94,12 +98,6 @@ func init_shield(tm :BattleShooterTeam) -> BSObj:
 	var shield_orbit_r :float = ref_len * SizeRate[Type.Ship] *2
 	position = Vector3(shield_orbit_r, 0,0)
 	return self
-
-func shield_life_ended(me :BSObj, other :BSObj) -> void:
-	pass
-func shield_explode_ended(me :BSObj) -> void:
-	me.queue_free()
-
 
 func init_bullet(tm :BattleShooterTeam) -> BSObj:
 	init0(Type.Bullet,tm)
@@ -133,15 +131,17 @@ func end_life(other :BSObj) -> void:
 	match type:
 		Type.Ship:
 			animation_explode.start_scale("ship_explode1", $MeshInstance3D, Vector3(1,1,1), Vector3(2,2,2), 0.2)
-			for s in shield_list:
-				s.end_life(null)
+			#for s in shield_list:
+				#s.end_life(null)
 		Type.Shield:
-			pass
+			animation_explode.start_scale("shield_explode1", $MeshInstance3D, Vector3(1,1,1), Vector3(2,2,2), 0.2)
 
 func animation_ended(_st :Node, ani :Dictionary) -> void:
 	match ani.Name:
 		"ship_explode1":
 			animation_explode.start_scale("ship_explode2", $MeshInstance3D, Vector3(2,2,2), Vector3(0.1,0.1,0.1), 0.2)
+		"shield_explode1":
+			animation_explode.start_scale("shield_explode2", $MeshInstance3D, Vector3(2,2,2), Vector3(0.1,0.1,0.1), 0.2)
 		_ :
 			explode_ended.emit(self)
 

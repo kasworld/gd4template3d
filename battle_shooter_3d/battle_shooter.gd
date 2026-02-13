@@ -53,13 +53,14 @@ func life_ended(me :BSObj, other :BSObj) -> void:
 func explode_ended(me :BSObj) -> void:
 	match me.type:
 		BSObj.Type.Ship:
-			print_debug(me.team)
-			new_ship(me.team)
+			#print_debug(me.team)
+			new_ship.call_deferred(me.team)
 			me.team.dec_ship_count()
 	me.queue_free()
 
 func new_ship(t :BattleShooterTeam) -> BSObj:
 	if t.calc_tomake_ship() <= 0:
+		print_debug("skip new ship %s" % t)
 		return
 	t.inc_ship_count()
 	var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
