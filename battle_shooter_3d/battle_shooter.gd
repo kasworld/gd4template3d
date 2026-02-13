@@ -2,11 +2,12 @@ extends Node3D
 class_name BattleShooter
 
 # initial value
-static var TeamCount :int = 30
-static var ShipPerTeam :int = 1
+static var TeamCount :int = 3
+static var ShipPerTeam :int = 10
 static var ShieldCount :int = 2
 
 static var ColorList := ListIter.new( NamedColors.color_list, true )
+var teams :Array[BattleShooterTeam]
 static func MakeTeamList(team_count :int, ship_per_team :int) -> Array[BattleShooterTeam]:
 	var rtn :Array[BattleShooterTeam] = []
 	for t in team_count:
@@ -40,22 +41,29 @@ var octtree :OctTree
 
 func init(sz :Vector3) -> BattleShooter:
 	Boundary = AABB(-sz/2,sz)
-	var teams := MakeTeamList(TeamCount, ShipPerTeam)
+	teams = MakeTeamList(TeamCount, ShipPerTeam)
 	for t in teams:
-		new_ship(t)
+		for i in ShipPerTeam:
+			new_ship(t)
 	#octtree = OctTree.new(Boundary, 100)
 	return self
 
 func life_ended(me :BSObj, other :BSObj) -> void:
 	pass
 func explode_ended(me :BSObj) -> void:
-	new_ship(me.team)
+	match me.type:
+		BSObj.Type.Ship:
+			print_debug(me.team)
+			if me.team.calc_tomake_ship() > 0:
+				new_ship(me.team)
+			me.team.dec_ship_count()
 	me.queue_free()
 
 func new_ship(t :BattleShooterTeam) -> BSObj:
 	var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
 		).init_ship(t)
 	add_child(ship)
+	t.inc_ship_count()
 	ship.life_ended.connect(life_ended)
 	ship.explode_ended.connect(explode_ended)
 	ship.position = RandPosInAABB(Boundary)
