@@ -2,7 +2,7 @@ extends Node3D
 class_name BattleShooter
 
 # initial value
-static var TeamCount :int = 300
+static var TeamCount :int = 30
 static var ShipPerTeam :int = 1
 static var ShieldCount :int = 2
 

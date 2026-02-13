@@ -1,7 +1,7 @@
 extends Area3D
 class_name BSObj
 
-signal life_ended(me :BSObj)
+signal life_ended(me :BSObj, other :BSObj)
 signal explode_ended(me :BSObj)
 
 enum Type {Ship, Bullet, Homming, Shield}
@@ -54,6 +54,7 @@ func init1() -> void:
 	$MeshInstance3D.mesh.material = MultiMeshShape.make_color_material()
 	$MeshInstance3D.mesh.material.albedo_color = team.color
 	velocity = BattleShooter.RandVelocityInAABB(BattleShooter.Boundary)*SpeedRate[type]
+	animation_explode.animation_ended.connect(animation_ended)
 
 func init_ship(tm :BattleShooterTeam) -> BSObj:
 	init0(Type.Ship,tm)
@@ -101,6 +102,20 @@ func init_shield(tm :BattleShooterTeam) -> BSObj:
 	init1()
 	return self
 
+func end_life(other :BSObj) -> void:
+	collision_layer = 0
+	collision_mask = 0
+	animation_explode.start_scale("explode1", self, Vector3(1,1,1), Vector3(2,2,2), 0.2)
+	life_ended.emit(self, other)
+
+func animation_ended(_st :Node, ani :Dictionary) -> void:
+	if ani.Name == "explode1":
+		animation_explode.start_scale("explode2", self, Vector3(2,2,2), Vector3(0.1,0.1,0.1), 0.2)
+	else:
+		explode_ended.emit(self)
+
+func _process(_delta: float) -> void:
+	animation_explode.handle_animation()
 
 func _physics_process(delta: float) -> void:
 	if type != Type.Ship:
@@ -113,3 +128,9 @@ func _physics_process(delta: float) -> void:
 		if bn.bounced[i] != 0 :
 			velocity[i] = -bn.bounced[i] * abs(velocity[i])
 	#$DirSprite.position = Vector2.RIGHT.rotated(velocity.angle())*20
+
+func _on_area_entered(area: Area3D) -> void:
+	assert(area is BSObj)
+	if area.team == team:
+		return
+	end_life(area as BSObj)
