@@ -68,8 +68,8 @@ func init_ship(tm :BattleShooterTeam) -> BSObj:
 	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 	bounce_radius = $MeshInstance3D.mesh.radius
 	init1()
-	#for i in BattleShooter.ShieldCount:
-		#shield_list.append(new_shield(tm))
+	for i in BattleShooter.ShieldCount:
+		shield_list.append(new_shield(tm))
 	return self
 
 func new_shield(t :BattleShooterTeam) -> BSObj:
