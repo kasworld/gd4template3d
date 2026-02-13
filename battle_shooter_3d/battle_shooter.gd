@@ -7,7 +7,7 @@ static var ShipPerTeam :int = 10
 static var ShieldCount :int = 2
 
 static var ColorList := ListIter.new( NamedColors.color_list, true )
-var teams :Array[BattleShooterTeam]
+static var TeamList :Array[BattleShooterTeam]
 static func MakeTeamList(team_count :int, ship_per_team :int) -> Array[BattleShooterTeam]:
 	var rtn :Array[BattleShooterTeam] = []
 	for t in team_count:
@@ -41,31 +41,35 @@ var octtree :OctTree
 
 func init(sz :Vector3) -> BattleShooter:
 	Boundary = AABB(-sz/2,sz)
-	teams = MakeTeamList(TeamCount, ShipPerTeam)
-	for t in teams:
+	TeamList = MakeTeamList(TeamCount, ShipPerTeam)
+	for t_num in TeamList.size():
 		for i in ShipPerTeam:
-			new_ship(t)
+			new_ship(t_num)
 	#octtree = OctTree.new(Boundary, 100)
 	return self
 
 func life_ended(me :BSObj, other :BSObj) -> void:
 	pass
 func explode_ended(me :BSObj) -> void:
+	var t_num := me.team_number
+	remove_child.call_deferred(me)
+	me.queue_free()
 	match me.type:
 		BSObj.Type.Ship:
 			#print_debug(me.team)
-			new_ship.call_deferred(me.team)
-			me.team.dec_ship_count()
-	me.queue_free()
+			new_ship(t_num)
+			TeamList[t_num].dec_ship_count()
+		_ :
+			pass
 
-func new_ship(t :BattleShooterTeam) -> BSObj:
-	if t.calc_tomake_ship() <= 0:
-		print_debug("skip new ship %s" % t)
+func new_ship(t_num :int) -> BSObj:
+	if TeamList[t_num].calc_tomake_ship() <= 0:
+		print_debug("skip new ship %s" % TeamList[t_num])
 		return
-	t.inc_ship_count()
-	var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
-		).init_ship(t)
+	TeamList[t_num].inc_ship_count()
+	var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate()
 	add_child(ship)
+	ship.init_ship(t_num)
 	ship.life_ended.connect(life_ended)
 	ship.explode_ended.connect(explode_ended)
 	ship.position = RandPosInAABB(Boundary)
