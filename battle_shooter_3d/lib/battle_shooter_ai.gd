@@ -23,14 +23,14 @@ static func rand_per_sec(delta :float, per_sec :float) -> bool:
 static func not_null_and_alive(o :Area3D) -> bool:
 	return o != null and o.alive
 
-static func find_other_team_ship(ship_list :Array[BSObj], t :BattleShooterTeam) -> BSObj: # Ship
+static func find_other_team_ship(ship_list :Array[BSObj], t_num :int) -> BSObj: # Ship
 	if ship_list.size() == 0:
 		return null
 	var dst :BSObj # Ship
 	var try := 10
 	while try > 0 :
 		dst = ship_list.pick_random()
-		if dst != null and dst.type == BSObj.Type.Ship and dst.alive and dst.team != t:
+		if dst != null and dst.type == BSObj.Type.Ship and dst.alive and dst.team_number != t_num:
 			return dst
 		try -= 1
 	return null
@@ -76,14 +76,15 @@ static func find_danger_objs(me :BSObj, node_list :Array[BSObj]) -> Dictionary:
 static func accel_to_evade(world_size:Vector3, pos: Vector3, velocity :Vector3, o :Area3D) -> Vector3:
 	if not BattleShooterAI.not_null_and_alive(o):
 		return velocity
+	var max_speed := BSObj.CalcRefSpeed(BSObj.Type.Ship)
 	if pos.distance_squared_to(world_size/2) < (world_size/4).length_squared(): # evade to backward
-		velocity = (pos - o.global_position).normalized()*BattleShooter.ShipSpeed
+		velocity = (pos - o.global_position).normalized()*max_speed
 		velocity = velocity.rotated(Vector3.FORWARD, (randf()-0.5)*PI/8)
-		velocity = velocity.limit_length(BattleShooter.ShipSpeed)
+		velocity = velocity.limit_length(max_speed)
 	else: # evade to center
-		velocity = to_center(pos, o.global_position, world_size/2) * BattleShooter.ShipSpeed
+		velocity = to_center(pos, o.global_position, world_size/2) * max_speed
 		velocity = velocity.rotated(Vector3.FORWARD, (randf()-0.5)*PI/8)
-		velocity = velocity.limit_length(BattleShooter.ShipSpeed)
+		velocity = velocity.limit_length(max_speed)
 	return velocity
 
 static func to_center(p1 :Vector3, p2 :Vector3, center :Vector3) -> Vector3:
@@ -94,7 +95,7 @@ static func to_center(p1 :Vector3, p2 :Vector3, center :Vector3) -> Vector3:
 	else:
 		return -ot
 
-static func do_fire_bullet(from_pos :Vector3, team :BattleShooterTeam, delta :float, danger_dict :Dictionary, ship_list :Array) -> Vector3:
+static func do_fire_bullet(from_pos :Vector3, t_num :int, delta :float, danger_dict :Dictionary, ship_list :Array) -> Vector3:
 #	var danger_dict = {
 #		"All":[null, 0.0],
 #		"Ship":[null, 0.0],
@@ -109,13 +110,13 @@ static func do_fire_bullet(from_pos :Vector3, team :BattleShooterTeam, delta :fl
 	else:
 		dst = danger_dict.Bullet[0]
 	if dst == null:
-		dst = find_other_team_ship(ship_list, team)
+		dst = find_other_team_ship(ship_list, t_num)
 	if dst == null:
 		return Vector3.ZERO
-	var v := BattleShooterAI.calc_aim_vector3(from_pos, BattleShooter.BulletSpeed, dst.global_position, dst.velocity )
+	var v := BattleShooterAI.calc_aim_vector3(from_pos, BSObj.CalcRefSpeed(BSObj.Type.Bullet), dst.global_position, dst.velocity )
 	return v
 
-static func do_fire_homming(team :BattleShooterTeam, delta :float, danger_dict :Dictionary, ship_list :Array) -> Area3D:
+static func do_fire_homming(t_num :int, delta :float, danger_dict :Dictionary, ship_list :Array) -> Area3D:
 #	var danger_dict = {
 #		"All":[null, 0.0],
 #		"Ship":[null, 0.0],
@@ -131,7 +132,7 @@ static func do_fire_homming(team :BattleShooterTeam, delta :float, danger_dict :
 	else:
 		dst = danger_dict.Homming[0]
 	if dst == null:
-		dst = find_other_team_ship(ship_list, team)
+		dst = find_other_team_ship(ship_list, t_num)
 	return dst
 
 static func do_add_shield(delta :float) -> bool:
