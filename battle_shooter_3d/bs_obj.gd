@@ -10,7 +10,7 @@ signal explode_ended(me :BSObj)
 enum Type {Ship, Bullet, Homming, Shield}
 
 ## by cabinetsize
-static var SizeRate :Dictionary[Type,float] = {
+const SizeRate :Dictionary[Type,float] = {
 	Type.Ship :    0.01,
 	Type.Bullet :  0.005,
 	Type.Homming : 0.01,
@@ -22,7 +22,7 @@ static func CalcRefSize(t :Type) -> float:
 	return ref_len * SizeRate[t]
 
 ## by cabinetsize
-static var SpeedRate :Dictionary[Type,float]= {
+const SpeedRate :Dictionary[Type,float]= {
 	Type.Ship :    0.5,
 	Type.Bullet :  0.5,
 	Type.Homming : 0.5,
@@ -33,15 +33,14 @@ static func CalcRefSpeed(t :Type) -> float:
 	var ref_len := BattleShooter.Boundary.size.length()
 	return ref_len * SpeedRate[t]
 
-
-static var LifeSec :Dictionary[Type,float]= {
+const LifeSec :Dictionary[Type,float]= {
 	Type.Ship :    10.0,
 	Type.Bullet :  10.0,
 	Type.Homming : 10.0,
 	Type.Shield :  10.0,
 }
 
-var mask_dict :Dictionary[Type,int] = {
+static var MaskDict :Dictionary[Type,int] = {
 	Type.Ship :    BitFlag.FromPosList2(Type.Ship,Type.Bullet,Type.Homming,Type.Shield),
 	Type.Bullet :  BitFlag.FromPosList2(Type.Ship,Type.Bullet,             Type.Shield),
 	Type.Homming : BitFlag.FromPosList2(Type.Ship,            Type.Homming,Type.Shield),
@@ -140,7 +139,7 @@ func begin_life() -> void:
 	spawn_ended.emit(self)
 	alive = true
 	collision_layer = BitFlag.ByPos(type)
-	collision_mask = mask_dict[type]
+	collision_mask = MaskDict[type]
 	set_deferred("monitoring", true)
 	set_deferred("monitorable", true)
 
