@@ -43,8 +43,6 @@ var animation_explode := SimpleAnimation.new()
 var velocity :Vector3
 var bounce_radius :float
 
-
-
 func init_ship(t_num :int) -> BSObj:
 	init0(Type.Ship,t_num)
 	var ref_len := BattleShooter.Boundary.size.length()
@@ -55,6 +53,7 @@ func init_ship(t_num :int) -> BSObj:
 	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 	bounce_radius = $MeshInstance3D.mesh.radius
 	init1()
+	animation_explode.start_scale("ship_spawn", $MeshInstance3D, Vector3(0.1,0.1,0.1), Vector3(1,1,1), 0.2)
 	for i in BattleShooter.ShieldCount:
 		new_shield(t_num)
 	return self
@@ -82,6 +81,7 @@ func init_shield(t_num :int) -> BSObj:
 	$CollisionShape3D.shape = SphereShape3D.new()
 	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 	init1()
+	animation_explode.start_scale("shield_spawn", $MeshInstance3D, Vector3(0.1,0.1,0.1), Vector3(1,1,1), 0.2)
 	shield_rotate_dir = randfn(-PI,PI)
 	var shield_orbit_r :float = ref_len * SizeRate[Type.Ship] *2
 	position = Vector3(shield_orbit_r, 0,0)
@@ -119,7 +119,7 @@ func init1() -> void:
 	$MeshInstance3D.mesh.material.albedo_color = BattleShooter.TeamList[team_number].color
 	velocity = BattleShooter.RandVelocityInAABB(BattleShooter.Boundary)*SpeedRate[type]
 	animation_explode.animation_ended.connect(animation_ended)
-	begin_life()
+	#begin_life()
 
 ## end spawn animation
 func begin_life() -> void:
@@ -141,22 +141,20 @@ func end_life(other :BSObj) -> void:
 	life_ended.emit(self, other)
 	match type:
 		Type.Ship:
-			#animation_explode.start_scale("ship_explode1", $MeshInstance3D, Vector3(1,1,1), Vector3(2,2,2), 0.2)
-			animation_explode.start_scale("ship_explode2", $MeshInstance3D, Vector3(1,1,1), Vector3(0.1,0.1,0.1), 0.2)
+			animation_explode.start_scale("ship_explode", $MeshInstance3D, Vector3(1,1,1), Vector3(0.1,0.1,0.1), 0.2)
 			#for s in shield_list:
 				#s.end_life(null)
 		Type.Shield:
-			#animation_explode.start_scale("shield_explode1", $MeshInstance3D, Vector3(1,1,1), Vector3(2,2,2), 0.2)
-			animation_explode.start_scale("shield_explode2", $MeshInstance3D, Vector3(1,1,1), Vector3(0.1,0.1,0.1), 0.2)
+			animation_explode.start_scale("shield_explode", $MeshInstance3D, Vector3(1,1,1), Vector3(0.1,0.1,0.1), 0.2)
 
 func animation_ended(_st :Node, ani :Dictionary) -> void:
 	match ani.Name:
-		#"ship_explode1":
-			#animation_explode.start_scale("ship_explode2", $MeshInstance3D, Vector3(2,2,2), Vector3(0.1,0.1,0.1), 0.2)
-		#"shield_explode1":
-			#animation_explode.start_scale("shield_explode2", $MeshInstance3D, Vector3(2,2,2), Vector3(0.1,0.1,0.1), 0.2)
-		_ :
+		"ship_spawn","shield_spawn" :
+			begin_life.call_deferred()
+		"ship_explode", "shield_explode":
 			explode_ended.emit(self)
+		_ :
+			print_debug("unhandled end animation %s", ani )
 
 func _process(_delta: float) -> void:
 	animation_explode.handle_animation()
@@ -181,4 +179,4 @@ func _on_area_entered(area: Area3D) -> void:
 	assert(area is BSObj)
 	if area.team_number == team_number:
 		return
-	end_life(area as BSObj)
+	end_life.call_deferred(area as BSObj)
