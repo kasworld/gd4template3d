@@ -149,16 +149,18 @@ func end_life(other :BSObj) -> void:
 	match type:
 		Type.Ship:
 			animation_explode.start_scale("ship_explode", $MeshInstance3D, Vector3(1,1,1), Vector3(0.1,0.1,0.1), AniDurSec)
-			#for s in shield_list:
-				#s.end_life(null)
 		Type.Shield:
 			animation_explode.start_scale("shield_explode", $MeshInstance3D, Vector3(1,1,1), Vector3(0.1,0.1,0.1), AniDurSec)
+		Type.Bullet:
+			animation_explode.start_scale("bullet_explode", $MeshInstance3D, Vector3(1,1,1), Vector3(0.1,0.1,0.1), AniDurSec)
+		Type.Homming:
+			animation_explode.start_scale("homming_explode", $MeshInstance3D, Vector3(1,1,1), Vector3(0.1,0.1,0.1), AniDurSec)
 
 func animation_ended(_st :Node, ani :Dictionary) -> void:
 	match ani.Name:
-		"ship_spawn","shield_spawn" :
+		"ship_spawn","shield_spawn","bullet_spawn","homming_spawn" :
 			begin_life.call_deferred()
-		"ship_explode", "shield_explode":
+		"ship_explode","shield_explode","bullet_explode","homming_explode":
 			explode_ended.emit(self)
 		_ :
 			print_debug("unhandled end animation %s", ani )
@@ -180,6 +182,14 @@ func _physics_process(delta: float) -> void:
 					velocity[i] = -bn.bounced[i] * abs(velocity[i])
 		Type.Shield:
 			position = position.rotated(Vector3.FORWARD, delta*shield_rotate_dir)
+		Type.Bullet:
+			position += velocity * delta
+			if not BattleShooter.Boundary.has_point(position):
+				end_life.call_deferred(self)
+		Type.Homming:
+			position += velocity * delta
+
+
 	#$DirSprite.position = Vector2.RIGHT.rotated(velocity.angle())*20
 
 func _on_area_entered(area: Area3D) -> void:
