@@ -17,6 +17,10 @@ static var SizeRate :Dictionary[Type,float] = {
 	Type.Shield :  0.005,
 }
 
+func calc_ref_size(t :Type = type) -> float:
+	var ref_len := BattleShooter.Boundary.size.length()
+	return ref_len * SizeRate[t]
+
 ## by cabinetsize
 static var SpeedRate :Dictionary[Type,float]= {
 	Type.Ship :    0.5,
@@ -24,6 +28,11 @@ static var SpeedRate :Dictionary[Type,float]= {
 	Type.Homming : 0.5,
 	Type.Shield :  0.5,
 }
+
+func calc_ref_speed(t :Type = type) -> float:
+	var ref_len := BattleShooter.Boundary.size.length()
+	return ref_len * SpeedRate[t]
+
 
 static var LifeSec :Dictionary[Type,float]= {
 	Type.Ship :    10.0,
@@ -48,10 +57,9 @@ var bounce_radius :float
 
 func init_ship(t_num :int) -> BSObj:
 	init0(Type.Ship,t_num)
-	var ref_len := BattleShooter.Boundary.size.length()
 	$MeshInstance3D.mesh = SphereMesh.new()
-	$MeshInstance3D.mesh.radius = ref_len * SizeRate[type]
-	$MeshInstance3D.mesh.height = ref_len * SizeRate[type] *2
+	$MeshInstance3D.mesh.radius = calc_ref_size()
+	$MeshInstance3D.mesh.height = calc_ref_size() *2
 	$CollisionShape3D.shape = SphereShape3D.new()
 	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 	bounce_radius = $MeshInstance3D.mesh.radius
@@ -81,25 +89,23 @@ func shield_explode_ended(me :BSObj) -> void:
 var shield_rotate_dir :float
 func init_shield(t_num :int) -> BSObj:
 	init0(Type.Shield,t_num)
-	var ref_len := BattleShooter.Boundary.size.length()
 	$MeshInstance3D.mesh = SphereMesh.new()
-	$MeshInstance3D.mesh.radius = ref_len * SizeRate[type]
-	$MeshInstance3D.mesh.height = ref_len * SizeRate[type] *2
+	$MeshInstance3D.mesh.radius = calc_ref_size()
+	$MeshInstance3D.mesh.height = calc_ref_size() *2
 	$CollisionShape3D.shape = SphereShape3D.new()
 	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 	init1()
 	animation_explode.start_scale("shield_spawn", $MeshInstance3D, Vector3(0.1,0.1,0.1), Vector3(1,1,1), AniDurSec)
 	shield_rotate_dir = randfn(-PI,PI)
-	var shield_orbit_r :float = ref_len * SizeRate[Type.Ship] *2
+	var shield_orbit_r :float = calc_ref_size(Type.Ship) *2
 	position = Vector3(shield_orbit_r, 0,0)
 	return self
 
 func init_bullet(t_num :int) -> BSObj:
 	init0(Type.Bullet,t_num)
-	var ref_len := BattleShooter.Boundary.size.length()
 	$MeshInstance3D.mesh = CapsuleMesh.new()
-	$MeshInstance3D.mesh.radius = ref_len * SizeRate[type]
-	$MeshInstance3D.mesh.height = ref_len * SizeRate[type] *2
+	$MeshInstance3D.mesh.radius = calc_ref_size()
+	$MeshInstance3D.mesh.height = calc_ref_size() *2
 	$CollisionShape3D.shape = CapsuleShape3D.new()
 	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 	$CollisionShape3D.shape.height = $MeshInstance3D.mesh.height
@@ -108,10 +114,9 @@ func init_bullet(t_num :int) -> BSObj:
 
 func init_homming(t_num :int) -> BSObj:
 	init0(Type.Homming,t_num)
-	var ref_len := BattleShooter.Boundary.size.length()
 	$MeshInstance3D.mesh = TorusMesh.new()
-	$MeshInstance3D.mesh.inner_radius = ref_len * SizeRate[type] /2
-	$MeshInstance3D.mesh.outer_radius = ref_len * SizeRate[type]
+	$MeshInstance3D.mesh.inner_radius = calc_ref_size() /2
+	$MeshInstance3D.mesh.outer_radius = calc_ref_size()
 	$CollisionShape3D.shape = SphereShape3D.new()
 	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.outer_radius
 	init1()
