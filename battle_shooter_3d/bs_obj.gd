@@ -1,6 +1,8 @@
 extends Area3D
 class_name BSObj
 
+const AniDurSec := 0.2
+
 signal life_ended(me :BSObj, other :BSObj)
 signal explode_ended(me :BSObj)
 
@@ -53,7 +55,7 @@ func init_ship(t_num :int) -> BSObj:
 	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 	bounce_radius = $MeshInstance3D.mesh.radius
 	init1()
-	animation_explode.start_scale("ship_spawn", $MeshInstance3D, Vector3(0.1,0.1,0.1), Vector3(1,1,1), 0.2)
+	animation_explode.start_scale("ship_spawn", $MeshInstance3D, Vector3(0.1,0.1,0.1), Vector3(1,1,1), AniDurSec)
 	for i in BattleShooter.ShieldCount:
 		new_shield(t_num)
 	return self
@@ -81,7 +83,7 @@ func init_shield(t_num :int) -> BSObj:
 	$CollisionShape3D.shape = SphereShape3D.new()
 	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 	init1()
-	animation_explode.start_scale("shield_spawn", $MeshInstance3D, Vector3(0.1,0.1,0.1), Vector3(1,1,1), 0.2)
+	animation_explode.start_scale("shield_spawn", $MeshInstance3D, Vector3(0.1,0.1,0.1), Vector3(1,1,1), AniDurSec)
 	shield_rotate_dir = randfn(-PI,PI)
 	var shield_orbit_r :float = ref_len * SizeRate[Type.Ship] *2
 	position = Vector3(shield_orbit_r, 0,0)
@@ -141,11 +143,11 @@ func end_life(other :BSObj) -> void:
 	life_ended.emit(self, other)
 	match type:
 		Type.Ship:
-			animation_explode.start_scale("ship_explode", $MeshInstance3D, Vector3(1,1,1), Vector3(0.1,0.1,0.1), 0.2)
+			animation_explode.start_scale("ship_explode", $MeshInstance3D, Vector3(1,1,1), Vector3(0.1,0.1,0.1), AniDurSec)
 			#for s in shield_list:
 				#s.end_life(null)
 		Type.Shield:
-			animation_explode.start_scale("shield_explode", $MeshInstance3D, Vector3(1,1,1), Vector3(0.1,0.1,0.1), 0.2)
+			animation_explode.start_scale("shield_explode", $MeshInstance3D, Vector3(1,1,1), Vector3(0.1,0.1,0.1), AniDurSec)
 
 func animation_ended(_st :Node, ani :Dictionary) -> void:
 	match ani.Name:

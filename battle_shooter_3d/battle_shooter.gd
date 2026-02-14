@@ -19,14 +19,16 @@ static func RandPosInAABB(aabb :AABB) -> Vector3:
 	return Vector3(
 		randf_range(aabb.position.x, aabb.end.x),
 		randf_range(aabb.position.y, aabb.end.y),
-		0,
+		randf_range(aabb.position.z, aabb.end.z),
+		#0,
 	)
 
 static func RandVelocityInAABB(aabb :AABB) -> Vector3:
 	return Vector3(
 		randf_range(-aabb.size.x/2, aabb.size.x/2),
 		randf_range(-aabb.size.y/2, aabb.size.y/2),
-		0,
+		randf_range(-aabb.size.z/2, aabb.size.z/2),
+		#0,
 	)
 
 static func ClearZ(vt :Vector3) -> Vector3:
