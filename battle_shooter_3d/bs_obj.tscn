@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://d2pn41051t8yr" path="res://battle_shooter_3d/bs_obj.gd" id="1_rxnmq"]
 
 [node name="BSObj" type="Area3D" unique_id=1678512857]
+monitoring = false
+monitorable = false
 script = ExtResource("1_rxnmq")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1901603332]

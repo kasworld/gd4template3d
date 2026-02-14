@@ -44,18 +44,6 @@ var velocity :Vector3
 var bounce_radius :float
 
 
-func init0(t :Type, t_num :int) -> void:
-	team_number = t_num
-	type = t
-	collision_layer = BitFlag.ByPos(type)
-	collision_mask = mask_dict[type]
-
-func init1() -> void:
-	$MeshInstance3D.mesh.material = MultiMeshShape.make_color_material()
-	$MeshInstance3D.mesh.material.albedo_color = BattleShooter.TeamList[team_number].color
-	velocity = BattleShooter.RandVelocityInAABB(BattleShooter.Boundary)*SpeedRate[type]
-	animation_explode.animation_ended.connect(animation_ended)
-	alive = true
 
 func init_ship(t_num :int) -> BSObj:
 	init0(Type.Ship,t_num)
@@ -122,28 +110,51 @@ func init_homming(t_num :int) -> BSObj:
 	init1()
 	return self
 
+func init0(t :Type, t_num :int) -> void:
+	team_number = t_num
+	type = t
 
+func init1() -> void:
+	$MeshInstance3D.mesh.material = MultiMeshShape.make_color_material()
+	$MeshInstance3D.mesh.material.albedo_color = BattleShooter.TeamList[team_number].color
+	velocity = BattleShooter.RandVelocityInAABB(BattleShooter.Boundary)*SpeedRate[type]
+	animation_explode.animation_ended.connect(animation_ended)
+	begin_life()
+
+## end spawn animation
+func begin_life() -> void:
+	alive = true
+	collision_layer = BitFlag.ByPos(type)
+	collision_mask = mask_dict[type]
+	set_deferred("monitoring", true)
+	set_deferred("monitorable", true)
+
+## start explode animation
 func end_life(other :BSObj) -> void:
 	if not alive:
 		return
 	alive = false
 	collision_layer = 0
 	collision_mask = 0
+	set_deferred("monitoring", false)
+	set_deferred("monitorable", false)
 	life_ended.emit(self, other)
 	match type:
 		Type.Ship:
-			animation_explode.start_scale("ship_explode1", $MeshInstance3D, Vector3(1,1,1), Vector3(2,2,2), 0.2)
+			#animation_explode.start_scale("ship_explode1", $MeshInstance3D, Vector3(1,1,1), Vector3(2,2,2), 0.2)
+			animation_explode.start_scale("ship_explode2", $MeshInstance3D, Vector3(1,1,1), Vector3(0.1,0.1,0.1), 0.2)
 			#for s in shield_list:
 				#s.end_life(null)
 		Type.Shield:
-			animation_explode.start_scale("shield_explode1", $MeshInstance3D, Vector3(1,1,1), Vector3(2,2,2), 0.2)
+			#animation_explode.start_scale("shield_explode1", $MeshInstance3D, Vector3(1,1,1), Vector3(2,2,2), 0.2)
+			animation_explode.start_scale("shield_explode2", $MeshInstance3D, Vector3(1,1,1), Vector3(0.1,0.1,0.1), 0.2)
 
 func animation_ended(_st :Node, ani :Dictionary) -> void:
 	match ani.Name:
-		"ship_explode1":
-			animation_explode.start_scale("ship_explode2", $MeshInstance3D, Vector3(2,2,2), Vector3(0.1,0.1,0.1), 0.2)
-		"shield_explode1":
-			animation_explode.start_scale("shield_explode2", $MeshInstance3D, Vector3(2,2,2), Vector3(0.1,0.1,0.1), 0.2)
+		#"ship_explode1":
+			#animation_explode.start_scale("ship_explode2", $MeshInstance3D, Vector3(2,2,2), Vector3(0.1,0.1,0.1), 0.2)
+		#"shield_explode1":
+			#animation_explode.start_scale("shield_explode2", $MeshInstance3D, Vector3(2,2,2), Vector3(0.1,0.1,0.1), 0.2)
 		_ :
 			explode_ended.emit(self)
 
