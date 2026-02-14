@@ -3,6 +3,7 @@ class_name BSObj
 
 const AniDurSec := 0.2
 
+signal spawn_ended(me :BSObj)
 signal life_ended(me :BSObj, other :BSObj)
 signal explode_ended(me :BSObj)
 
@@ -64,9 +65,12 @@ func new_shield(t_num :int) -> BSObj:
 	var shield :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
 		).init_shield(t_num)
 	add_child(shield)
+	shield.spawn_ended.connect(shield_spawn_ended)
 	shield.life_ended.connect(shield_life_ended)
 	shield.explode_ended.connect(shield_explode_ended)
 	return shield
+func shield_spawn_ended(me :BSObj) -> void:
+	pass
 func shield_life_ended(me :BSObj, other :BSObj) -> void:
 	pass
 func shield_explode_ended(me :BSObj) -> void:
@@ -125,6 +129,7 @@ func init1() -> void:
 
 ## end spawn animation
 func begin_life() -> void:
+	spawn_ended.emit(self)
 	alive = true
 	collision_layer = BitFlag.ByPos(type)
 	collision_mask = mask_dict[type]
@@ -163,7 +168,7 @@ func _process(_delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
 	if not alive:
-		velocity *= 0.99
+		return
 	match type:
 		Type.Ship:
 			position += velocity * delta

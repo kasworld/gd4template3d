@@ -16,20 +16,18 @@ static func MakeTeamList(team_count :int, ship_per_team :int) -> Array[BattleSho
 	return rtn
 
 static func RandPosInAABB(aabb :AABB) -> Vector3:
-	return Vector3(
+	return ClearZ(Vector3(
 		randf_range(aabb.position.x, aabb.end.x),
 		randf_range(aabb.position.y, aabb.end.y),
 		randf_range(aabb.position.z, aabb.end.z),
-		#0,
-	)
+	))
 
 static func RandVelocityInAABB(aabb :AABB) -> Vector3:
-	return Vector3(
+	return ClearZ(Vector3(
 		randf_range(-aabb.size.x/2, aabb.size.x/2),
 		randf_range(-aabb.size.y/2, aabb.size.y/2),
 		randf_range(-aabb.size.z/2, aabb.size.z/2),
-		#0,
-	)
+	))
 
 static func ClearZ(vt :Vector3) -> Vector3:
 	vt.z = 0
@@ -50,6 +48,23 @@ func init(sz :Vector3) -> BattleShooter:
 	#octtree = OctTree.new(Boundary, 100)
 	return self
 
+
+func new_ship(t_num :int) -> BSObj:
+	if TeamList[t_num].calc_tomake_ship() <= 0:
+		print_debug("skip new ship %s" % TeamList[t_num])
+		return
+	TeamList[t_num].inc_ship_count()
+	var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate()
+	add_child(ship)
+	ship.init_ship(t_num)
+	ship.spawn_ended.connect(spawn_ended)
+	ship.life_ended.connect(life_ended)
+	ship.explode_ended.connect(explode_ended)
+	ship.position = RandPosInAABB(Boundary)
+	return ship
+
+func spawn_ended(me :BSObj) -> void:
+	pass
 func life_ended(me :BSObj, other :BSObj) -> void:
 	pass
 func explode_ended(me :BSObj) -> void:
@@ -63,16 +78,3 @@ func explode_ended(me :BSObj) -> void:
 			new_ship(t_num)
 		_ :
 			pass
-
-func new_ship(t_num :int) -> BSObj:
-	if TeamList[t_num].calc_tomake_ship() <= 0:
-		print_debug("skip new ship %s" % TeamList[t_num])
-		return
-	TeamList[t_num].inc_ship_count()
-	var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate()
-	add_child(ship)
-	ship.init_ship(t_num)
-	ship.life_ended.connect(life_ended)
-	ship.explode_ended.connect(explode_ended)
-	ship.position = RandPosInAABB(Boundary)
-	return ship

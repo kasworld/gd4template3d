@@ -97,7 +97,6 @@ var battleshooter :BattleShooter
 func battle_shooter_demo(gc :GlassCabinet) -> void:
 	gc.show_description()
 	var sz := gc.cabinet_size
-	sz.z = 10.0
 	battleshooter = preload("res://battle_shooter_3d/battle_shooter.tscn").instantiate(
 		).init(sz)
 	gc.add_child(battleshooter)
