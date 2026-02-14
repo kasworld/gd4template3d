@@ -63,9 +63,9 @@ func new_ship(t_num :int) -> BSObj:
 	ship.position = RandPosInAABB(Boundary)
 	return ship
 
-func spawn_ended(me :BSObj) -> void:
+func spawn_ended(_me :BSObj) -> void:
 	pass
-func life_ended(me :BSObj, other :BSObj) -> void:
+func life_ended(_me :BSObj, _other :BSObj) -> void:
 	pass
 func explode_ended(me :BSObj) -> void:
 	var t_num := me.team_number

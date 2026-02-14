@@ -56,6 +56,7 @@ func init_ship(t_num :int) -> BSObj:
 	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 	bounce_radius = $MeshInstance3D.mesh.radius
 	init1()
+	velocity = BattleShooter.RandVelocityInAABB(BattleShooter.Boundary)*SpeedRate[type]
 	animation_explode.start_scale("ship_spawn", $MeshInstance3D, Vector3(0.1,0.1,0.1), Vector3(1,1,1), AniDurSec)
 	for i in BattleShooter.ShieldCount:
 		new_shield(t_num)
@@ -69,9 +70,9 @@ func new_shield(t_num :int) -> BSObj:
 	shield.life_ended.connect(shield_life_ended)
 	shield.explode_ended.connect(shield_explode_ended)
 	return shield
-func shield_spawn_ended(me :BSObj) -> void:
+func shield_spawn_ended(_me :BSObj) -> void:
 	pass
-func shield_life_ended(me :BSObj, other :BSObj) -> void:
+func shield_life_ended(_me :BSObj, _other :BSObj) -> void:
 	pass
 func shield_explode_ended(me :BSObj) -> void:
 	remove_child.call_deferred(me)
@@ -123,9 +124,7 @@ func init0(t :Type, t_num :int) -> void:
 func init1() -> void:
 	$MeshInstance3D.mesh.material = MultiMeshShape.make_color_material()
 	$MeshInstance3D.mesh.material.albedo_color = BattleShooter.TeamList[team_number].color
-	velocity = BattleShooter.RandVelocityInAABB(BattleShooter.Boundary)*SpeedRate[type]
 	animation_explode.animation_ended.connect(animation_ended)
-	#begin_life()
 
 ## end spawn animation
 func begin_life() -> void:
