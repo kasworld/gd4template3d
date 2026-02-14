@@ -55,6 +55,10 @@ var animation_explode := SimpleAnimation.new()
 var velocity :Vector3
 var bounce_radius :float
 
+func _to_string() -> String:
+	var rtn := "team:%s type:%s alive:%s" % [team_number, Type.keys()[type], alive]
+	return rtn
+
 func init_ship(t_num :int) -> BSObj:
 	init0(Type.Ship,t_num)
 	$MeshInstance3D.mesh = SphereMesh.new()

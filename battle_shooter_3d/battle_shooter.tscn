@@ -4,3 +4,9 @@
 
 [node name="BattleShooter" type="Node3D" unique_id=1131240540]
 script = ExtResource("1_cmed5")
+
+[node name="ShipContainer" type="Node3D" parent="." unique_id=98917821]
+
+[node name="BulletContainer" type="Node3D" parent="." unique_id=267357713]
+
+[node name="HommingContainer" type="Node3D" parent="." unique_id=2123305753]

@@ -55,7 +55,7 @@ func new_ship(t_num :int) -> BSObj:
 		return
 	TeamList[t_num].inc_ship_count()
 	var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate()
-	add_child(ship)
+	$ShipContainer.add_child(ship)
 	ship.init_ship(t_num)
 	ship.spawn_ended.connect(spawn_ended)
 	ship.life_ended.connect(life_ended)
@@ -69,7 +69,16 @@ func life_ended(_me :BSObj, _other :BSObj) -> void:
 	pass
 func explode_ended(me :BSObj) -> void:
 	var t_num := me.team_number
-	remove_child(me)
+	match me.type:
+		BSObj.Type.Ship:
+			$ShipContainer.remove_child(me)
+		BSObj.Type.Bullet:
+			$BulletContainer.remove_child(me)
+		BSObj.Type.Homming:
+			$HommingContainer.remove_child(me)
+		_ :
+			print_debug("unhandled obj %s" % me)
+		# shield handle in BSObj
 	me.queue_free()
 	match me.type:
 		BSObj.Type.Ship:
