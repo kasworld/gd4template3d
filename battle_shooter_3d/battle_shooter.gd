@@ -48,8 +48,10 @@ func build_octtree()->void:
 	for o in $HommingContainer.get_children():
 		octtree.insert(o.position, o)
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	build_octtree()
+	#for ship in $ShipContainer.get_children():
+		#ship.ship_ai_act(delta, self)
 
 func get_ship_list()->Array:
 	return $ShipContainer.get_children()

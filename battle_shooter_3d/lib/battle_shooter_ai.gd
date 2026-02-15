@@ -95,7 +95,7 @@ static func to_center(p1 :Vector3, p2 :Vector3, center :Vector3) -> Vector3:
 	else:
 		return -ot
 
-static func do_fire_bullet(from_pos :Vector3, t_num :int, delta :float, danger_dict :Dictionary, ship_list :Array) -> Vector3:
+static func do_fire_bullet(from_pos :Vector3, t_num :int, delta :float, danger_dict :Dictionary, ship_list :Array[BSObj]) -> Vector3:
 #	var danger_dict = {
 #		"All":[null, 0.0],
 #		"Ship":[null, 0.0],
@@ -116,7 +116,7 @@ static func do_fire_bullet(from_pos :Vector3, t_num :int, delta :float, danger_d
 	var v := BattleShooterAI.calc_aim_vector3(from_pos, BSObj.CalcRefSpeed(BSObj.Type.Bullet), dst.global_position, dst.velocity )
 	return v
 
-static func do_fire_homming(t_num :int, delta :float, danger_dict :Dictionary, ship_list :Array) -> Area3D:
+static func do_fire_homming(t_num :int, delta :float, danger_dict :Dictionary, ship_list :Array[BSObj]) -> Area3D:
 #	var danger_dict = {
 #		"All":[null, 0.0],
 #		"Ship":[null, 0.0],

@@ -2,7 +2,7 @@ class_name OctTree
 
 var boundary: AABB
 var children :Array[OctTree] # [0]-[3]: NW, NE, SW, SE
-var points :Dictionary[Vector3, Variant]
+var points :Dictionary[Vector3, BSObj]
 var max_depth :int
 var capacity :int
 var depth :int
@@ -15,7 +15,7 @@ func _init(boundary_a :AABB, capacity_a :int, max_depth_a :int = 0, depth_a :int
 	children = []
 	points = {}
 
-func insert(position :Vector3, value :Node = null) -> bool:
+func insert(position :Vector3, value :BSObj = null) -> bool:
 	if not contains(position):
 		return false
 	if children.is_empty() and not is_at_capacity():
@@ -27,9 +27,7 @@ func insert(position :Vector3, value :Node = null) -> bool:
 			return true
 	return false
 
-func search_region(region: AABB, return_values=false, matches=null) -> Array:
-	if matches == null:
-		matches = []
+func search_region(region: AABB, return_values=false, matches:Array[BSObj]=[]) -> Array[BSObj]:
 	if not overlaps(region):
 		return matches
 	for point in points.keys():
@@ -42,12 +40,12 @@ func search_region(region: AABB, return_values=false, matches=null) -> Array:
 		child.search_region(region, return_values, matches)
 	return matches
 
-func search(position: Vector3, size: Vector3, return_values=false, matches=null) -> Array:
+func search(position: Vector3, size: Vector3, return_values=false, matches:Array[BSObj]=[]) -> Array[BSObj]:
 	var region := AABB(position - size/2 , size)
 	var p_list := search_region(region, return_values, matches)
-	var rtn :Array[Node] = []
+	var rtn :Array[BSObj] = []
 	for p in p_list:
-		rtn.append(points[p])
+		rtn.append(points[p.position])
 	return rtn
 
 func overlaps(region: AABB) -> bool:
