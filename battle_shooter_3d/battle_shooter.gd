@@ -48,20 +48,39 @@ func init(sz :Vector3) -> BattleShooter:
 	#octtree = OctTree.new(Boundary, 100)
 	return self
 
-
 func new_ship(t_num :int) -> BSObj:
 	if TeamList[t_num].calc_tomake_ship() <= 0:
 		print_debug("skip new ship %s" % TeamList[t_num])
 		return
 	TeamList[t_num].inc_ship_count()
-	var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate()
+	var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate().init_ship(t_num)
 	$ShipContainer.add_child(ship)
-	ship.init_ship(t_num)
 	ship.spawn_ended.connect(spawn_ended)
 	ship.life_ended.connect(life_ended)
 	ship.explode_ended.connect(explode_ended)
 	ship.position = RandPosInAABB(Boundary)
 	return ship
+
+func new_bullet(t_num :int, shippos :Vector3, velocity :Vector3) -> BSObj:
+	var bullet :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate().init_bullet(t_num)
+	$BulletContainer.add_child(bullet)
+	bullet.spawn_ended.connect(spawn_ended)
+	bullet.life_ended.connect(life_ended)
+	bullet.explode_ended.connect(explode_ended)
+	bullet.position = shippos + velocity * BSObj.CalcRefSpeed(BSObj.Type.Bullet)
+	bullet.velocity = velocity
+	return bullet
+
+func new_homming(t_num :int, shippos :Vector3, velocity :Vector3) -> BSObj:
+	var homming :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate().init_homming(t_num)
+	$HommingContainer.add_child(homming)
+	homming.spawn_ended.connect(spawn_ended)
+	homming.life_ended.connect(life_ended)
+	homming.explode_ended.connect(explode_ended)
+	homming.position = shippos + velocity * BSObj.CalcRefSpeed(BSObj.Type.Homming)
+	homming.velocity = velocity
+	return homming
+
 
 func spawn_ended(_me :BSObj) -> void:
 	pass
