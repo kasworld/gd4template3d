@@ -75,7 +75,7 @@ func init_ship(t_num :int) -> BSObj:
 
 func new_shield(t_num :int) -> BSObj:
 	var shield :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
-		).init_shield(t_num)
+		).init_shield(self)
 	add_child(shield)
 	shield.spawn_ended.connect(shield_spawn_ended)
 	shield.life_ended.connect(shield_life_ended)
@@ -90,19 +90,22 @@ func shield_explode_ended(me :BSObj) -> void:
 	me.queue_free()
 
 var shield_rotate_dir :float
-func init_shield(t_num :int) -> BSObj:
-	init0(Type.Shield,t_num)
+func init_shield(src_ship :BSObj) -> BSObj:
+	init0(Type.Shield,src_ship.team_number)
 	$MeshInstance3D.mesh = SphereMesh.new()
 	$MeshInstance3D.mesh.radius = CalcRefSize(type)
 	$MeshInstance3D.mesh.height = CalcRefSize(type) *2
 	$CollisionShape3D.shape = SphereShape3D.new()
 	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 	init1()
+	src_ship.life_ended.connect(shield_src_ship_life_end)
 	animation_explode.start_scale("shield_spawn", $MeshInstance3D, Vector3(0.1,0.1,0.1), Vector3(1,1,1), AniDurSec)
 	shield_rotate_dir = randfn(-PI,PI)
 	var shield_orbit_r :float = CalcRefSize(Type.Ship) *2
 	position = Vector3(shield_orbit_r, 0,0)
 	return self
+func shield_src_ship_life_end(_src_ship :BSObj, _other :BSObj) -> void:
+	end_life(null)
 
 func init_bullet(t_num :int, velocity_a :Vector3) -> BSObj:
 	init0(Type.Bullet,t_num)
@@ -130,8 +133,8 @@ func init_homming(t_num :int, dstobj :BSObj) -> BSObj:
 	velocity = position.direction_to(homming_dst.position) * CalcRefSpeed(Type.Homming)
 	return self
 
-func homming_dst_life_end(me :BSObj, other :BSObj) -> void:
-	me.end_life(null)
+func homming_dst_life_end(_dst_ship :BSObj, _other :BSObj) -> void:
+	end_life(null)
 
 func init0(t :Type, t_num :int) -> void:
 	team_number = t_num
