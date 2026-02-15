@@ -1,6 +1,6 @@
 class_name BattleShooterTeam
 
-var stats = {
+var stats :Dictionary[String,int] = {
 	ShipNow = 0,
 	ShipMax = 0,
 	Accel = 0,

@@ -70,10 +70,10 @@ func init_ship(t_num :int) -> BSObj:
 	velocity = BattleShooter.RandVelocityInAABB(BattleShooter.Boundary)*SpeedRate[type]
 	animation_explode.start_scale("ship_spawn", $MeshInstance3D, Vector3(0.1,0.1,0.1), Vector3(1,1,1), AniDurSec)
 	for i in BattleShooter.ShieldCount:
-		new_shield(t_num)
+		new_shield()
 	return self
 
-func new_shield(t_num :int) -> BSObj:
+func new_shield() -> BSObj:
 	var shield :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
 		).init_shield(self)
 	add_child(shield)
