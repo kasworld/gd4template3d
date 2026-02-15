@@ -38,6 +38,21 @@ static func Make2D(vt3 :Vector3) -> Vector2:
 
 static var Boundary :AABB
 var octtree :OctTree
+func build_octtree()->void:
+	var count := $ShipContainer.get_child_count() + $BulletContainer.get_child_count() + $HommingContainer.get_child_count()
+	octtree = OctTree.new(Boundary, count)
+	for o in $ShipContainer.get_children():
+		octtree.insert(o.position, o)
+	for o in $BulletContainer.get_children():
+		octtree.insert(o.position, o)
+	for o in $HommingContainer.get_children():
+		octtree.insert(o.position, o)
+
+func _process(_delta: float) -> void:
+	build_octtree()
+
+func get_ship_list()->Array:
+	return $ShipContainer.get_children()
 
 func init(sz :Vector3) -> BattleShooter:
 	Boundary = AABB(-sz/2,sz)
@@ -45,7 +60,6 @@ func init(sz :Vector3) -> BattleShooter:
 	for t_num in TeamList.size():
 		for i in ShipPerTeam:
 			new_ship(t_num)
-	#octtree = OctTree.new(Boundary, 100)
 	return self
 
 func new_ship(t_num :int) -> BSObj:
