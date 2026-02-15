@@ -104,7 +104,7 @@ func init_shield(t_num :int) -> BSObj:
 	position = Vector3(shield_orbit_r, 0,0)
 	return self
 
-func init_bullet(t_num :int) -> BSObj:
+func init_bullet(t_num :int, velocity_a :Vector3) -> BSObj:
 	init0(Type.Bullet,t_num)
 	$MeshInstance3D.mesh = CapsuleMesh.new()
 	$MeshInstance3D.mesh.radius = CalcRefSize(type)
@@ -113,9 +113,11 @@ func init_bullet(t_num :int) -> BSObj:
 	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 	$CollisionShape3D.shape.height = $MeshInstance3D.mesh.height
 	init1()
+	velocity = velocity_a
 	return self
 
-func init_homming(t_num :int) -> BSObj:
+var homming_dst :BSObj
+func init_homming(t_num :int, dstobj :BSObj) -> BSObj:
 	init0(Type.Homming,t_num)
 	$MeshInstance3D.mesh = TorusMesh.new()
 	$MeshInstance3D.mesh.inner_radius = CalcRefSize(type) /2
@@ -123,7 +125,13 @@ func init_homming(t_num :int) -> BSObj:
 	$CollisionShape3D.shape = SphereShape3D.new()
 	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.outer_radius
 	init1()
+	homming_dst = dstobj
+	homming_dst.life_ended.connect(homming_dst_life_end)
+	velocity = position.direction_to(homming_dst.position) * CalcRefSpeed(Type.Homming)
 	return self
+
+func homming_dst_life_end(me :BSObj, other :BSObj) -> void:
+	me.end_life(null)
 
 func init0(t :Type, t_num :int) -> void:
 	team_number = t_num
@@ -195,6 +203,7 @@ func _physics_process(delta: float) -> void:
 				end_life.call_deferred(self)
 		Type.Homming:
 			position += velocity * delta
+			velocity = position.direction_to(homming_dst.position) * CalcRefSpeed(Type.Homming)
 
 
 	#$DirSprite.position = Vector2.RIGHT.rotated(velocity.angle())*20

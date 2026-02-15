@@ -53,7 +53,8 @@ func new_ship(t_num :int) -> BSObj:
 		print_debug("skip new ship %s" % TeamList[t_num])
 		return
 	TeamList[t_num].inc_ship_count()
-	var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate().init_ship(t_num)
+	var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
+		).init_ship(t_num)
 	$ShipContainer.add_child(ship)
 	ship.spawn_ended.connect(spawn_ended)
 	ship.life_ended.connect(life_ended)
@@ -61,24 +62,26 @@ func new_ship(t_num :int) -> BSObj:
 	ship.position = RandPosInAABB(Boundary)
 	return ship
 
-func new_bullet(t_num :int, shippos :Vector3, velocity :Vector3) -> BSObj:
-	var bullet :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate().init_bullet(t_num)
+func new_bullet(src_ship :BSObj, velocity :Vector3) -> BSObj:
+	var bullet :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
+		).init_bullet(src_ship.team_number, velocity)
 	$BulletContainer.add_child(bullet)
 	bullet.spawn_ended.connect(spawn_ended)
 	bullet.life_ended.connect(life_ended)
 	bullet.explode_ended.connect(explode_ended)
-	bullet.position = shippos + velocity * BSObj.CalcRefSpeed(BSObj.Type.Bullet)
-	bullet.velocity = velocity
+	var dir := velocity.normalized()
+	bullet.position = src_ship.position + dir * BSObj.CalcRefSize(BSObj.Type.Ship)*2
 	return bullet
 
-func new_homming(t_num :int, shippos :Vector3, velocity :Vector3) -> BSObj:
-	var homming :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate().init_homming(t_num)
+func new_homming(src_ship :BSObj, dstobj :BSObj) -> BSObj:
+	var homming :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
+		).init_homming(src_ship.team_number, dstobj)
 	$HommingContainer.add_child(homming)
 	homming.spawn_ended.connect(spawn_ended)
 	homming.life_ended.connect(life_ended)
 	homming.explode_ended.connect(explode_ended)
-	homming.position = shippos + velocity * BSObj.CalcRefSpeed(BSObj.Type.Homming)
-	homming.velocity = velocity
+	var dir := src_ship.position.direction_to(dstobj.position)
+	homming.position = src_ship.position + dir * BSObj.CalcRefSize(BSObj.Type.Ship)*2
 	return homming
 
 
