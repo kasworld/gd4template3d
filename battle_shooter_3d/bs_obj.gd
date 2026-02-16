@@ -76,7 +76,7 @@ func init_ship(t_num :int) -> BSObj:
 func new_shield() -> BSObj:
 	var shield :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
 		).init_shield(self)
-	add_child(shield)
+	$ShieldContainer.add_child(shield)
 	#shield.spawn_ended.connect(shield_spawn_ended)
 	#shield.life_ended.connect(shield_life_ended)
 	shield.explode_ended.connect(shield_explode_ended)
@@ -86,7 +86,7 @@ func new_shield() -> BSObj:
 #func shield_life_ended(_me :BSObj, _other :BSObj) -> void:
 	#pass
 func shield_explode_ended(me :BSObj) -> void:
-	remove_child.call_deferred(me)
+	$ShieldContainer.remove_child.call_deferred(me)
 	me.queue_free()
 
 var shield_rotate_dir :float
@@ -219,7 +219,7 @@ func ship_ai_act(delta: float, game :BattleShooter) -> void:
 	if dst != null :
 		game.new_homming(self, dst)
 
-	if BattleShooterAI.do_add_shield(delta):
+	if $ShieldContainer.get_child_count() < BattleShooter.ShieldCount and BattleShooterAI.do_add_shield(delta):
 		new_shield()
 
 func _process(delta: float) -> void:

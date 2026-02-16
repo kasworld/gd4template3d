@@ -4,18 +4,6 @@ static func connect_if_not(sg :Signal, fn :Callable) -> void:
 	if not sg.is_connected(fn):
 		sg.connect(fn)
 
-static func calc_aim_vector3(
-		src_pos :Vector3, src_speed :float,
-		dst_pos :Vector3, dst_vel :Vector3 ) -> Vector3:
-
-	var vt := dst_pos - src_pos
-	var dst_speed := dst_vel.length()
-	if dst_speed == 0 :
-		return vt
-	var a2 := vt.angle_to(dst_vel)
-	var a1 := asin(dst_speed/src_speed * sin(a2))
-	var rtn := vt.rotated(Vector3.BACK, a1)
-	return rtn
 
 static func rand_per_sec(delta :float, per_sec :float) -> bool:
 	return randf() < per_sec*delta
@@ -115,6 +103,18 @@ static func do_fire_bullet(from_pos :Vector3, t_num :int, delta :float, danger_d
 		return Vector3.ZERO
 	var v := BattleShooterAI.calc_aim_vector3(from_pos, BSObj.CalcRefSpeed(BSObj.Type.Bullet), dst.global_position, dst.velocity )
 	return v
+
+static func calc_aim_vector3(src_pos :Vector3, src_speed :float, dst_pos :Vector3, dst_vel :Vector3 ) -> Vector3:
+	var vt := dst_pos - src_pos
+	var dst_speed := dst_vel.length()
+	if dst_speed == 0 :
+		return vt
+	var axis := vt.cross(dst_vel).normalized()
+	var a2 := vt.signed_angle_to(dst_vel, axis)
+	var a1 := asin(dst_speed/src_speed * sin(a2))
+	var rtn := vt.rotated(axis, a1).normalized() * src_speed
+	return rtn
+
 
 static func do_fire_homming(t_num :int, delta :float, danger_dict :Dictionary, ship_list :Array[BSObj]) -> Area3D:
 #	var danger_dict = {
