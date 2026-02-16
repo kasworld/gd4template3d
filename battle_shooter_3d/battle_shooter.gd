@@ -72,8 +72,8 @@ func new_ship(t_num :int) -> BSObj:
 	var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
 		).init_ship(t_num)
 	$ShipContainer.add_child(ship)
-	ship.spawn_ended.connect(spawn_ended)
-	ship.life_ended.connect(life_ended)
+	#ship.spawn_ended.connect(spawn_ended)
+	#ship.life_ended.connect(life_ended)
 	ship.explode_ended.connect(explode_ended)
 	ship.position = RandPosInAABB(Boundary)
 	return ship
@@ -82,8 +82,8 @@ func new_bullet(src_ship :BSObj, velocity :Vector3) -> BSObj:
 	var bullet :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
 		).init_bullet(src_ship.team_number, velocity)
 	$BulletContainer.add_child(bullet)
-	bullet.spawn_ended.connect(spawn_ended)
-	bullet.life_ended.connect(life_ended)
+	#bullet.spawn_ended.connect(spawn_ended)
+	#bullet.life_ended.connect(life_ended)
 	bullet.explode_ended.connect(explode_ended)
 	var dir := velocity.normalized()
 	bullet.position = src_ship.position + dir * BSObj.CalcRefSize(BSObj.Type.Ship)*2
@@ -93,8 +93,8 @@ func new_homming(src_ship :BSObj, dstobj :BSObj) -> BSObj:
 	var homming :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
 		).init_homming(src_ship.team_number, dstobj)
 	$HommingContainer.add_child(homming)
-	homming.spawn_ended.connect(spawn_ended)
-	homming.life_ended.connect(life_ended)
+	#homming.spawn_ended.connect(spawn_ended)
+	#homming.life_ended.connect(life_ended)
 	homming.explode_ended.connect(explode_ended)
 	var dir := src_ship.position.direction_to(dstobj.position)
 	homming.position = src_ship.position + dir * BSObj.CalcRefSize(BSObj.Type.Ship)*2
