@@ -2,7 +2,7 @@ extends Node3D
 class_name BattleShooter
 
 # initial value
-static var TeamCount :int = 30
+static var TeamCount :int = 3
 static var ShipPerTeam :int = 1
 static var ShieldCount :int = 2
 
@@ -50,8 +50,8 @@ func build_octtree()->void:
 
 func _process(delta: float) -> void:
 	build_octtree()
-	#for ship in $ShipContainer.get_children():
-		#ship.ship_ai_act(delta, self)
+	for ship in $ShipContainer.get_children():
+		ship.ship_ai_act(delta, self)
 
 func get_ship_list()->Array:
 	return $ShipContainer.get_children()

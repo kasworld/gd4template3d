@@ -55,7 +55,7 @@ static func find_danger_objs(me :BSObj, node_list :Array[BSObj]) -> Dictionary:
 	if not me.alive:
 		return rtn
 	for o in node_list:
-		if me.team == o.team:
+		if me.team_number == o.team_number:
 			continue
 		if not me.alive:
 			continue

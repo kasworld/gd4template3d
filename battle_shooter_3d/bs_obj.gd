@@ -183,8 +183,9 @@ func animation_ended(_st :Node, ani :Dictionary) -> void:
 		_ :
 			print_debug("unhandled end animation %s", ani )
 
+## called from BattleShooter
 func ship_ai_act(delta: float, game :BattleShooter) -> void:
-	var node_list :Array[BSObj] = game.octtree.search(position, BattleShooter.Boundary.size/4)
+	var node_list := game.octtree.search(position, BattleShooter.Boundary.size/4)
 	var danger_dict := BattleShooterAI.find_danger_objs(self,node_list)
 #	var danger_dict = {
 #		"All":[null, 0.0],
@@ -197,17 +198,21 @@ func ship_ai_act(delta: float, game :BattleShooter) -> void:
 	var oldv := velocity
 	velocity = BattleShooterAI.accel_to_evade(BattleShooter.Boundary.size, position, velocity, danger_dict.All[0])
 	var team := BattleShooter.TeamList[team_number]
-	var get_ship_list = game.get_ship_list
 	if oldv != velocity:
-		team.inc_stat(team.stats.Accel)
+		team.stats.Accel +=1
 
-	var v := BattleShooterAI.do_fire_bullet(position, team_number, delta, danger_dict, get_ship_list.call())
+	#var get_ship_list = game.get_ship_list
+	var ship_list :Array[BSObj] = []
+	for n in game.get_ship_list():
+		ship_list.append(n)
+
+	var v := BattleShooterAI.do_fire_bullet(position, team_number, delta, danger_dict, ship_list)
 	if v != Vector3.ZERO:
-		game.fire_bullet(team, position, v)
+		game.new_bullet(self, v)
 
-	var dst := BattleShooterAI.do_fire_homming(team_number, delta, danger_dict, get_ship_list.call())
+	var dst := BattleShooterAI.do_fire_homming(team_number, delta, danger_dict, ship_list)
 	if dst != null :
-		game.fire_homming(team, position, dst)
+		game.new_homming(self, dst)
 
 	if BattleShooterAI.do_add_shield(delta):
 		new_shield()
