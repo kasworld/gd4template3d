@@ -23,10 +23,10 @@ static func CalcRefSize(t :Type) -> float:
 
 ## by cabinetsize
 const SpeedRate :Dictionary[Type,float]= {
-	Type.Ship :    0.5,
+	Type.Ship :    0.3,
 	Type.Bullet :  0.5,
-	Type.Homming : 0.5,
-	Type.Shield :  0.5,
+	Type.Homming : 0.3,
+	Type.Shield :  0.01,
 }
 
 static func CalcRefSpeed(t :Type) -> float:
@@ -100,7 +100,7 @@ func init_shield(src_ship :BSObj) -> BSObj:
 	init1()
 	src_ship.life_ended.connect(shield_src_ship_life_end)
 	animation_bsobj.start_scale("shield_spawn", $MeshInstance3D, Vector3(0.1,0.1,0.1), Vector3(1,1,1), AniDurSec)
-	shield_rotate_dir = randfn(-PI,PI)
+	shield_rotate_dir = randfn(-PI,PI) *CalcRefSpeed(type)
 	var shield_orbit_r :float = CalcRefSize(Type.Ship) *2
 	position = Vector3(shield_orbit_r, 0,0)
 	return self
@@ -112,11 +112,12 @@ func init_bullet(t_num :int, velocity_a :Vector3) -> BSObj:
 	$MeshInstance3D.mesh = CapsuleMesh.new()
 	$MeshInstance3D.mesh.radius = CalcRefSize(type)
 	$MeshInstance3D.mesh.height = CalcRefSize(type) *2
+	$MeshInstance3D.rotation.x = PI/2
 	$CollisionShape3D.shape = CapsuleShape3D.new()
 	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 	$CollisionShape3D.shape.height = $MeshInstance3D.mesh.height
 	init1()
-	velocity = velocity_a
+	velocity = velocity_a.normalized() * CalcRefSpeed(type)
 	animation_bsobj.start_scale("bullet_spawn", $MeshInstance3D, Vector3(0.1,0.1,0.1), Vector3(1,1,1), AniDurSec)
 	return self
 
@@ -126,6 +127,7 @@ func init_homming(t_num :int, dstobj :BSObj) -> BSObj:
 	$MeshInstance3D.mesh = TorusMesh.new()
 	$MeshInstance3D.mesh.inner_radius = CalcRefSize(type) /2
 	$MeshInstance3D.mesh.outer_radius = CalcRefSize(type)
+	$MeshInstance3D.rotation.x = PI/2
 	$CollisionShape3D.shape = SphereShape3D.new()
 	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.outer_radius
 	init1()
@@ -136,6 +138,7 @@ func init_homming(t_num :int, dstobj :BSObj) -> BSObj:
 	return self
 
 func homming_dst_life_end(_dst_ship :BSObj, _other :BSObj) -> void:
+	homming_dst = null
 	end_life(null)
 
 func init0(t :Type, t_num :int) -> void:
@@ -241,8 +244,11 @@ func _physics_process(delta: float) -> void:
 			if not BattleShooter.Boundary.has_point(position):
 				end_life.call_deferred(self)
 		Type.Homming:
-			position += velocity * delta
-			velocity = position.direction_to(homming_dst.position) * CalcRefSpeed(Type.Homming)
+			if homming_dst != null:
+				position += velocity * delta
+				velocity = position.direction_to(homming_dst.position).normalized() * CalcRefSpeed(Type.Homming)
+			else:
+				end_life(null)
 
 
 	#$DirSprite.position = Vector2.RIGHT.rotated(velocity.angle())*20

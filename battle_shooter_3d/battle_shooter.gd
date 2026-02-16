@@ -30,7 +30,7 @@ static func RandVelocityInAABB(aabb :AABB) -> Vector3:
 	))
 
 static func ClearZ(vt :Vector3) -> Vector3:
-	vt.z = 0
+	#vt.z = 0
 	return vt
 
 static func Make2D(vt3 :Vector3) -> Vector2:

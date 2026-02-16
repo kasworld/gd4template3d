@@ -14,7 +14,7 @@ static func calc_aim_vector3(
 		return vt
 	var a2 := vt.angle_to(dst_vel)
 	var a1 := asin(dst_speed/src_speed * sin(a2))
-	var rtn := vt.rotated(Vector3.FORWARD, a1)
+	var rtn := vt.rotated(Vector3.BACK, a1)
 	return rtn
 
 static func rand_per_sec(delta :float, per_sec :float) -> bool:
@@ -79,17 +79,17 @@ static func accel_to_evade(world_size:Vector3, pos: Vector3, velocity :Vector3, 
 	var max_speed := BSObj.CalcRefSpeed(BSObj.Type.Ship)
 	if pos.distance_squared_to(world_size/2) < (world_size/4).length_squared(): # evade to backward
 		velocity = (pos - o.global_position).normalized()*max_speed
-		velocity = velocity.rotated(Vector3.FORWARD, (randf()-0.5)*PI/8)
+		velocity = velocity.rotated(Vector3.BACK, (randf()-0.5)*PI/8)
 		velocity = velocity.limit_length(max_speed)
 	else: # evade to center
 		velocity = to_center(pos, o.global_position, world_size/2) * max_speed
-		velocity = velocity.rotated(Vector3.FORWARD, (randf()-0.5)*PI/8)
+		velocity = velocity.rotated(Vector3.BACK, (randf()-0.5)*PI/8)
 		velocity = velocity.limit_length(max_speed)
 	return velocity
 
 static func to_center(p1 :Vector3, p2 :Vector3, center :Vector3) -> Vector3:
 	var vt := p1.direction_to(p2)
-	var ot := vt.rotated(Vector3.FORWARD, PI/2)
+	var ot := vt.rotated(Vector3.BACK, PI/2)
 	if p1.direction_to(center).dot(ot) > 0:
 		return ot # face to center?
 	else:
