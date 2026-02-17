@@ -12,7 +12,7 @@ enum Type {Ship, Bullet, Homming, Shield}
 ## by cabinetsize
 const SizeRate :Dictionary[Type,float] = {
 	Type.Ship :    0.01,
-	Type.Bullet :  0.003,
+	Type.Bullet :  0.008,
 	Type.Homming : 0.008,
 	Type.Shield :  0.005,
 }
@@ -24,7 +24,7 @@ static func CalcRefSize(t :Type) -> float:
 ## by cabinetsize
 const SpeedRate :Dictionary[Type,float]= {
 	Type.Ship :    0.3,
-	Type.Bullet :  0.05,
+	Type.Bullet :  0.5,
 	Type.Homming : 0.3,
 	Type.Shield :  0.01,
 }
@@ -110,8 +110,8 @@ func shield_src_ship_life_end(_src_ship :BSObj, _other :BSObj) -> void:
 func init_bullet(t_num :int, velocity_a :Vector3) -> BSObj:
 	init0(Type.Bullet,t_num)
 	$MeshInstance3D.mesh = CapsuleMesh.new()
-	$MeshInstance3D.mesh.radius = CalcRefSize(type)
-	$MeshInstance3D.mesh.height = CalcRefSize(type) *4
+	$MeshInstance3D.mesh.radius = CalcRefSize(type) * 0.2
+	$MeshInstance3D.mesh.height = CalcRefSize(type)
 	$MeshInstance3D.rotation.x = PI/2
 	$CollisionShape3D.shape = CapsuleShape3D.new()
 	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
@@ -247,6 +247,7 @@ func _physics_process(delta: float) -> void:
 				end_life.call_deferred(self)
 		Type.Homming:
 			if homming_dst != null:
+				$MeshInstance3D.rotate(velocity.normalized(), delta*10)
 				position += velocity * delta
 				velocity = position.direction_to(homming_dst.position).normalized() * CalcRefSpeed(Type.Homming)
 			else:
