@@ -12,8 +12,8 @@ enum Type {Ship, Bullet, Homming, Shield}
 ## by cabinetsize
 const SizeRate :Dictionary[Type,float] = {
 	Type.Ship :    0.01,
-	Type.Bullet :  0.005,
-	Type.Homming : 0.01,
+	Type.Bullet :  0.003,
+	Type.Homming : 0.008,
 	Type.Shield :  0.005,
 }
 
@@ -24,7 +24,7 @@ static func CalcRefSize(t :Type) -> float:
 ## by cabinetsize
 const SpeedRate :Dictionary[Type,float]= {
 	Type.Ship :    0.3,
-	Type.Bullet :  0.5,
+	Type.Bullet :  0.05,
 	Type.Homming : 0.3,
 	Type.Shield :  0.01,
 }
@@ -111,13 +111,14 @@ func init_bullet(t_num :int, velocity_a :Vector3) -> BSObj:
 	init0(Type.Bullet,t_num)
 	$MeshInstance3D.mesh = CapsuleMesh.new()
 	$MeshInstance3D.mesh.radius = CalcRefSize(type)
-	$MeshInstance3D.mesh.height = CalcRefSize(type) *2
+	$MeshInstance3D.mesh.height = CalcRefSize(type) *4
 	$MeshInstance3D.rotation.x = PI/2
 	$CollisionShape3D.shape = CapsuleShape3D.new()
 	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 	$CollisionShape3D.shape.height = $MeshInstance3D.mesh.height
 	init1()
 	velocity = velocity_a.normalized() * CalcRefSpeed(type)
+	look_at_from_position(position, position + velocity_a )
 	animation_bsobj.start_scale("bullet_spawn", $MeshInstance3D, Vector3(0.1,0.1,0.1), Vector3(1,1,1), AniDurSec)
 	return self
 
@@ -125,7 +126,7 @@ var homming_dst :BSObj
 func init_homming(t_num :int, dstobj :BSObj) -> BSObj:
 	init0(Type.Homming,t_num)
 	$MeshInstance3D.mesh = TorusMesh.new()
-	$MeshInstance3D.mesh.inner_radius = CalcRefSize(type) /2
+	$MeshInstance3D.mesh.inner_radius = CalcRefSize(type) *0.8
 	$MeshInstance3D.mesh.outer_radius = CalcRefSize(type)
 	$MeshInstance3D.rotation.x = PI/2
 	$CollisionShape3D.shape = SphereShape3D.new()
@@ -240,6 +241,7 @@ func _physics_process(delta: float) -> void:
 		Type.Shield:
 			position = position.rotated(Vector3.FORWARD, delta*shield_rotate_dir)
 		Type.Bullet:
+			#rotation = velocity
 			position += velocity * delta
 			if not BattleShooter.Boundary.has_point(position):
 				end_life.call_deferred(self)
