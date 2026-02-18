@@ -29,8 +29,13 @@ static func RandVelocityInAABB(aabb :AABB) -> Vector3:
 		randf_range(-aabb.size.z/2, aabb.size.z/2),
 	))
 
+static func RandVector3(l :float) -> Vector3:
+	return ClearZ(Vector3(
+		randf(),randf(),randf()
+	)).normalized() * l
+
 static func ClearZ(vt :Vector3) -> Vector3:
-	#vt.z = 0
+	vt.z = 0
 	return vt
 
 static func Make2D(vt3 :Vector3) -> Vector2:

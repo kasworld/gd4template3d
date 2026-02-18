@@ -67,7 +67,7 @@ func init_ship(t_num :int) -> BSObj:
 	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
 	bounce_radius = $MeshInstance3D.mesh.radius
 	init1()
-	velocity = BattleShooter.RandVelocityInAABB(BattleShooter.Boundary)*SpeedRate[type]
+	velocity = BattleShooter.RandVector3(CalcRefSpeed(type))
 	animation_bsobj.start_scale("ship_spawn", $MeshInstance3D, Vector3(0.1,0.1,0.1), Vector3(1,1,1), AniDurSec)
 	for i in BattleShooter.ShieldCount:
 		new_shield()

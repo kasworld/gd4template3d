@@ -64,20 +64,22 @@ static func find_danger_objs(me :BSObj, node_list :Array[BSObj]) -> Dictionary:
 static func accel_to_evade(world_size:Vector3, pos: Vector3, velocity :Vector3, o :Area3D) -> Vector3:
 	if not BattleShooterAI.not_null_and_alive(o):
 		return velocity
+	var axis := pos.cross(o.position).normalized()
 	var max_speed := BSObj.CalcRefSpeed(BSObj.Type.Ship)
 	if pos.distance_squared_to(world_size/2) < (world_size/4).length_squared(): # evade to backward
 		velocity = (pos - o.global_position).normalized()*max_speed
-		velocity = velocity.rotated(Vector3.BACK, (randf()-0.5)*PI/8)
+		velocity = velocity.rotated(axis, (randf()-0.5)*PI/8)
 		velocity = velocity.limit_length(max_speed)
 	else: # evade to center
 		velocity = to_center(pos, o.global_position, world_size/2) * max_speed
-		velocity = velocity.rotated(Vector3.BACK, (randf()-0.5)*PI/8)
+		velocity = velocity.rotated(axis, (randf()-0.5)*PI/8)
 		velocity = velocity.limit_length(max_speed)
 	return velocity
 
 static func to_center(p1 :Vector3, p2 :Vector3, center :Vector3) -> Vector3:
+	var axis := p1.cross(p2).normalized()
 	var vt := p1.direction_to(p2)
-	var ot := vt.rotated(Vector3.BACK, PI/2)
+	var ot := vt.rotated(axis, PI/2)
 	if p1.direction_to(center).dot(ot) > 0:
 		return ot # face to center?
 	else:
@@ -105,11 +107,11 @@ static func do_fire_bullet(from_pos :Vector3, t_num :int, delta :float, danger_d
 	return v
 
 static func calc_aim_vector3(src_pos :Vector3, src_speed :float, dst_pos :Vector3, dst_vel :Vector3 ) -> Vector3:
+	var axis := src_pos.cross(dst_pos).normalized()
 	var vt := dst_pos - src_pos
 	var dst_speed := dst_vel.length()
 	if dst_speed == 0 :
 		return vt
-	var axis := vt.cross(dst_vel).normalized()
 	var a2 := vt.signed_angle_to(dst_vel, axis)
 	var a1 := asin(dst_speed/src_speed * sin(a2))
 	var rtn := vt.rotated(axis, a1).normalized() * src_speed
