@@ -412,17 +412,25 @@ func wirenet_wavegauge_demo(gc :GlassCabinet) -> void:
 		).init(Vector3(gc.cabinet_size.x,gc.cabinet_size.y,gc.cabinet_size.z/20), Vector3i(grid_size.x,grid_size.y,1), WaveGauge.color_list, 0.1, 1.0 )
 	gc.add_child(wavegauge_plane)
 
+
 var maze3d :Maze3D
+var maze3d_setting :Maze3DSetting
+var wall_info_all :Array
 var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ReducedWithPillar
 func maze3d_demo(gc :GlassCabinet) -> void:
-	var ms := Maze3DSetting.new_default()
-	ms.MazeSize = Vector2i(16,9)
-	ms.LaneW = gc.cabinet_size.x/ms.MazeSize.x-0.1
-	ms.StoryH = ms.LaneW
-	ms.WallThick = ms.LaneW *0.1
-	ms.MakeSubWallRate = 0.1
+	maze3d_setting = Maze3DSetting.new_default()
+	maze3d_setting.MazeSize = Vector2i(16,9)
+	maze3d_setting.LaneW = gc.cabinet_size.x/maze3d_setting.MazeSize.x-0.1
+	maze3d_setting.StoryH = maze3d_setting.LaneW
+	maze3d_setting.WallThick = maze3d_setting.LaneW *0.1
+	maze3d_setting.MakeSubWallRate = 0.1
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
-		).init_with_color( ms, Callable(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color() )
+		).init_with_color( maze3d_setting, Callable(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color() )
+	wall_info_all = []
+	for y in maze3d_setting.MazeSize.y:
+		wall_info_all.append([])
+		for x in maze3d_setting.MazeSize.x:
+			wall_info_all[y].append( make_cell_wallinfo(x,y) )
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(true,false)
 	gc.add_child(maze3d)
@@ -431,18 +439,21 @@ func maze3d_animation() -> void:
 	if maze3d == null:
 		return
 	maze_ani_i += 1
-	match maze_ani_i% 60:
-		0:
-			view_walls = Maze3D.wallview_next(view_walls)
-			maze3d.set_wallpillar_view_mode(view_walls)
-		#12:
-			#maze3d.view_floor_ceiling(false,false)
-		#24:
-			#maze3d.view_floor_ceiling(true,false)
-		#36:
-			#maze3d.view_floor_ceiling(false,true)
-		#48:
-			#maze3d.view_floor_ceiling(true,true)
+	if maze_ani_i% 60 == 0:
+		view_walls = Maze3D.wallview_next(view_walls)
+		maze3d.set_wallpillar_view_mode(view_walls)
+
+func make_cell_wallinfo(x:int, y:int) -> Array:
+	var axis_wall :Array = maze3d.maze_cells.make_wallinfo_for_bounce(x,y)
+	var aabb := maze3d_setting.CalcCellBox(Vector2i(x,y))
+	return [aabb, axis_wall]
+# wallinfo [aabb , axis_wall [3][2]bool ]
+func bounce_cell(oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
+	var pos2d := maze3d_setting.storeypos2mazepos(oldpos)
+	var wallinfo :Array = wall_info_all[pos2d.y][pos2d.x]
+	var aabb :AABB= wallinfo[0]
+	var axis_wall :Array = wallinfo[1]
+	return Bounce.v3f_wall(pos, aabb, axis_wall,radius)
 
 
 var trailmesh_radius :float
