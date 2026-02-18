@@ -416,7 +416,6 @@ func wirenet_wavegauge_demo(gc :GlassCabinet) -> void:
 var maze3d :Maze3D
 var maze3d_setting :Maze3DSetting
 var maze_balls :Array
-var wall_info_all :Array
 var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ReducedWithPillar
 func maze3d_demo(gc :GlassCabinet) -> void:
 	maze3d_setting = Maze3DSetting.new_default()
@@ -427,7 +426,7 @@ func maze3d_demo(gc :GlassCabinet) -> void:
 	maze3d_setting.MakeSubWallRate = 0.1
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_with_color( maze3d_setting, Callable(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color() )
-	wall_info_all = make_wallinfo()
+	maze3d.make_bounce_wall_info()
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(true,false)
 	gc.add_child(maze3d)
@@ -453,34 +452,12 @@ func maze3d_animation(delta :float) -> void:
 	for mb in maze_balls:
 		var oldpos :Vector3 = mb.position
 		var newpos :Vector3 = oldpos + mb.velocity * delta
-		var bn = bounce_cell(oldpos, newpos, mb.mesh.radius)
+		var bn = maze3d.bounce_cell(oldpos, newpos, mb.mesh.radius)
 		for i in 3:
 			# change vel on bounce
 			if bn.bounced[i] != 0 :
 				mb.velocity[i] = -randf_range(speed_min, speed_max)*bn.bounced[i]
 		mb.position = bn.pos
-
-# wallinfo [aabb , axis_wall [3][2]bool ]
-func make_wallinfo() -> Array:
-	var rtn := []
-	rtn.resize(maze3d_setting.MazeSize.y)
-	for y in maze3d_setting.MazeSize.y:
-		rtn[y] = []
-		rtn[y].resize(maze3d_setting.MazeSize.x)
-		for x in maze3d_setting.MazeSize.x:
-			rtn[y][x] = [
-				maze3d_setting.CalcCellBoxXY(x,y), # AABB
-				maze3d.maze_cells.make_wallinfo_for_bounce(x,y), # axis_wall [3:xyz][2]bool
-			]
-	return rtn
-func bounce_cell(oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
-	var pos2d := maze3d_setting.storeypos2mazepos(oldpos)
-	#var aabb :AABB = maze3d_setting.CalcCellBox(pos2d)
-	#var axis_wall :Array = maze3d.maze_cells.make_wallinfo_for_bounce(pos2d.x,pos2d.y)
-	var wallinfo :Array = wall_info_all[pos2d.y][pos2d.x]
-	var aabb :AABB = wallinfo[0]
-	var axis_wall :Array = wallinfo[1]
-	return Bounce.v3f_wall(pos, aabb, axis_wall, radius)
 
 
 var trailmesh_radius :float
