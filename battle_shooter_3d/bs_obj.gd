@@ -23,10 +23,10 @@ static func CalcRefSize(t :Type) -> float:
 
 ## by cabinetsize
 const SpeedRate :Dictionary[Type,float]= {
-	Type.Ship :    0.3,
-	Type.Bullet :  0.5,
-	Type.Homming : 0.3,
-	Type.Shield :  0.01,
+	Type.Ship :    0.1,
+	Type.Bullet :  0.2,
+	Type.Homming : 0.1,
+	Type.Shield :  0.005,
 }
 
 static func CalcRefSpeed(t :Type) -> float:
@@ -202,7 +202,7 @@ func ship_ai_act(delta: float, game :BattleShooter) -> void:
 	#$DangerPointerContainer.update_danger_dict(self, danger_dict)
 
 	var oldv := velocity
-	velocity = BattleShooterAI.accel_to_evade(BattleShooter.Boundary.size, position, velocity, danger_dict.All[0])
+	velocity = BattleShooterAI.accel_to_evade(BattleShooter.Boundary, position, velocity, danger_dict.All[0])
 	var team := BattleShooter.TeamList[team_number]
 	if oldv != velocity:
 		team.stats.Accel +=1
@@ -231,6 +231,7 @@ func _physics_process(delta: float) -> void:
 		return
 	match type:
 		Type.Ship:
+			velocity = BattleShooter.ClearZ(velocity)
 			position += velocity * delta
 			var bn := Bounce.v3f(position,BattleShooter.Boundary,bounce_radius)
 			position = bn.pos

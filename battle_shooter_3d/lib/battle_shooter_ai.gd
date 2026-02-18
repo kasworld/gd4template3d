@@ -61,17 +61,17 @@ static func find_danger_objs(me :BSObj, node_list :Array[BSObj]) -> Dictionary:
 				rtn.Homming = [o, dval]
 	return rtn
 
-static func accel_to_evade(world_size:Vector3, pos: Vector3, velocity :Vector3, o :Area3D) -> Vector3:
+static func accel_to_evade(aabb:AABB, pos: Vector3, velocity :Vector3, o :Area3D) -> Vector3:
 	if not BattleShooterAI.not_null_and_alive(o):
 		return velocity
 	var axis := pos.cross(o.position).normalized()
 	var max_speed := BSObj.CalcRefSpeed(BSObj.Type.Ship)
-	if pos.distance_squared_to(world_size/2) < (world_size/4).length_squared(): # evade to backward
+	if pos.distance_squared_to(aabb.get_center()) < (aabb.size/4).length_squared(): # evade to backward
 		velocity = (pos - o.global_position).normalized()*max_speed
 		velocity = velocity.rotated(axis, (randf()-0.5)*PI/8)
 		velocity = velocity.limit_length(max_speed)
 	else: # evade to center
-		velocity = to_center(pos, o.global_position, world_size/2) * max_speed
+		velocity = to_center(pos, o.global_position, aabb.get_center()) * max_speed
 		velocity = velocity.rotated(axis, (randf()-0.5)*PI/8)
 		velocity = velocity.limit_length(max_speed)
 	return velocity
