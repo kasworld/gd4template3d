@@ -81,3 +81,9 @@ func CalcCellBox(pos :Vector2i) -> AABB:
 		Vector3(LaneW -WallThick, StoryH, LaneW -WallThick)
 		)
 	return rtn
+
+func CalcCellBoxXY(x :int, y :int) -> AABB:
+	return AABB(
+		Vector3(LaneW*x +WallThick/2, 0, LaneW*y +WallThick/2) -CalcSizeV3()/2,
+		Vector3(LaneW -WallThick, StoryH, LaneW -WallThick)
+		)
