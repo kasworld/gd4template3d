@@ -427,11 +427,7 @@ func maze3d_demo(gc :GlassCabinet) -> void:
 	maze3d_setting.MakeSubWallRate = 0.1
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_with_color( maze3d_setting, Callable(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color() )
-	wall_info_all = []
-	for y in maze3d_setting.MazeSize.y:
-		wall_info_all.append([])
-		for x in maze3d_setting.MazeSize.x:
-			wall_info_all[y].append( make_cell_wallinfo(x,y) )
+	make_wallinfo()
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(true,false)
 	gc.add_child(maze3d)
@@ -462,11 +458,17 @@ func maze3d_animation(delta :float) -> void:
 			if bn.bounced[i] != 0 :
 				mb.velocity[i] = -randf_range(speed_min, speed_max)*bn.bounced[i]
 		mb.position = bn.pos
+# wallinfo [aabb , axis_wall [3][2]bool ]
+func make_wallinfo() -> void:
+	wall_info_all = []
+	for y in maze3d_setting.MazeSize.y:
+		wall_info_all.append([])
+		for x in maze3d_setting.MazeSize.x:
+			wall_info_all[y].append( make_cell_wallinfo(x,y) )
 func make_cell_wallinfo(x:int, y:int) -> Array:
 	var axis_wall :Array = maze3d.maze_cells.make_wallinfo_for_bounce(x,y)
 	var aabb := maze3d_setting.CalcCellBox(Vector2i(x,y))
 	return [aabb, axis_wall]
-# wallinfo [aabb , axis_wall [3][2]bool ]
 func bounce_cell(oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	var pos2d := maze3d_setting.storeypos2mazepos(oldpos)
 	var wallinfo :Array = wall_info_all[pos2d.y][pos2d.x]
