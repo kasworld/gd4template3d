@@ -78,7 +78,7 @@ func _process(delta: float) -> void:
 	tornado_animate()
 	wintertree_animate(delta)
 	dialgauge_animate()
-	maze3d_animation()
+	maze3d_animation(delta)
 	ladder_animation(delta)
 
 	clock_calendar_animation.handle_animation()
@@ -415,6 +415,7 @@ func wirenet_wavegauge_demo(gc :GlassCabinet) -> void:
 
 var maze3d :Maze3D
 var maze3d_setting :Maze3DSetting
+var maze_balls :Array
 var wall_info_all :Array
 var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ReducedWithPillar
 func maze3d_demo(gc :GlassCabinet) -> void:
@@ -434,15 +435,33 @@ func maze3d_demo(gc :GlassCabinet) -> void:
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(true,false)
 	gc.add_child(maze3d)
+	for i in 10:
+		var mb :MazeBall = preload("res://maze_3d/maze_ball/MazeBall.tscn").instantiate(
+			).init(NamedColors.random_color(), maze3d_setting.LaneW/20)
+		maze3d.add_child(mb)
+		maze_balls.append(mb)
+		var pos2d := maze3d_setting.rand_pos_2i()
+		mb.position = maze3d_setting.mazepos2storeypos(pos2d, maze3d_setting.StoryH/2)
+
 var maze_ani_i :int
-func maze3d_animation() -> void:
+func maze3d_animation(delta :float) -> void:
 	if maze3d == null:
 		return
 	maze_ani_i += 1
 	if maze_ani_i% 60 == 0:
 		view_walls = Maze3D.wallview_next(view_walls)
 		maze3d.set_wallpillar_view_mode(view_walls)
-
+	var speed_min :float = maze3d_setting.LaneW
+	var speed_max :float = speed_min * 2
+	for mb in maze_balls:
+		var oldpos :Vector3 = mb.position
+		var newpos :Vector3 = oldpos + mb.velocity * delta
+		var bn = bounce_cell(oldpos,newpos,mb.mesh.radius)
+		for i in 3:
+			# change vel on bounce
+			if bn.bounced[i] != 0 :
+				mb.velocity[i] = -randf_range(speed_min, speed_max)*bn.bounced[i]
+		mb.position = bn.pos
 func make_cell_wallinfo(x:int, y:int) -> Array:
 	var axis_wall :Array = maze3d.maze_cells.make_wallinfo_for_bounce(x,y)
 	var aabb := maze3d_setting.CalcCellBox(Vector2i(x,y))
