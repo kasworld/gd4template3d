@@ -1,14 +1,9 @@
 class_name BattleShooterAI
 
-static func connect_if_not(sg :Signal, fn :Callable) -> void:
-	if not sg.is_connected(fn):
-		sg.connect(fn)
-
-
 static func rand_per_sec(delta :float, per_sec :float) -> bool:
 	return randf() < per_sec*delta
 
-static func not_null_and_alive(o :Area3D) -> bool:
+static func not_null_and_alive(o :BSObj) -> bool:
 	return o != null and o.alive
 
 static func find_other_team_ship(ship_list :Array[BSObj], t_num :int) -> BSObj: # Ship
@@ -22,10 +17,10 @@ static func find_other_team_ship(ship_list :Array[BSObj], t_num :int) -> BSObj: 
 	return null
 
 # larger is danger
-static func calc_danger_level(me :BSObj, dst :Area3D) -> float:
+static func calc_danger_level(me :BSObj, dst :BSObj) -> float:
 	var delta := 1.0/60.0
-	var l1 := dst.global_position.distance_squared_to(me.global_position)
-	var l2 :float = (dst.global_position + dst.velocity *delta).distance_squared_to(me.global_position + me.velocity *delta)
+	var l1 := dst.position.distance_squared_to(me.position)
+	var l2 :float = (dst.position + dst.velocity *delta).distance_squared_to(me.position + me.velocity *delta)
 	if l1 > l2 : # approaching
 		return 100000.0/l1
 	else:
@@ -59,17 +54,17 @@ static func find_danger_objs(me :BSObj, node_list :Array[BSObj]) -> Dictionary:
 				rtn.Homming = [o, dval]
 	return rtn
 
-static func accel_to_evade(aabb:AABB, pos: Vector3, velocity :Vector3, o :Area3D) -> Vector3:
-	if not BattleShooterAI.not_null_and_alive(o):
+static func accel_to_evade(aabb:AABB, src_pos: Vector3, velocity :Vector3, dst_obj :BSObj) -> Vector3:
+	if not BattleShooterAI.not_null_and_alive(dst_obj):
 		return velocity
-	var axis := pos.cross(o.position).normalized()
+	var axis := src_pos.cross(dst_obj.position).normalized()
 	var max_speed := BSObj.CalcRefSpeed(BSObj.Type.Ship)
-	if pos.distance_squared_to(aabb.get_center()) < (aabb.size/4).length_squared(): # evade to backward
-		velocity = (pos - o.global_position).normalized()*max_speed
+	if src_pos.distance_squared_to(aabb.get_center()) < (aabb.size/4).length_squared(): # evade to backward
+		velocity = dst_obj.position.direction_to(src_pos)*max_speed
 		velocity = velocity.rotated(axis, (randf()-0.5)*PI/8)
 		velocity = velocity.limit_length(max_speed)
 	else: # evade to center
-		velocity = to_center(pos, o.global_position, aabb.get_center()) * max_speed
+		velocity = to_center(src_pos, dst_obj.position, aabb.get_center()) * max_speed
 		velocity = velocity.rotated(axis, (randf()-0.5)*PI/8)
 		velocity = velocity.limit_length(max_speed)
 	return velocity
@@ -92,7 +87,7 @@ static func do_fire_bullet(from_pos :Vector3, t_num :int, delta :float, danger_d
 #	}
 	if not BattleShooterAI.rand_per_sec(delta, 5.0):
 		return Vector3.ZERO
-	var dst :Area3D
+	var dst :BSObj
 	if danger_dict.Ship[1] > danger_dict.Bullet[1]:
 		dst = danger_dict.Ship[0]
 	else:
@@ -101,7 +96,7 @@ static func do_fire_bullet(from_pos :Vector3, t_num :int, delta :float, danger_d
 		dst = find_other_team_ship(ship_list, t_num)
 	if dst == null:
 		return Vector3.ZERO
-	var v := BattleShooterAI.calc_aim_vector3(from_pos, BSObj.CalcRefSpeed(BSObj.Type.Bullet), dst.global_position, dst.velocity )
+	var v := BattleShooterAI.calc_aim_vector3(from_pos, BSObj.CalcRefSpeed(BSObj.Type.Bullet), dst.position, dst.velocity )
 	return v
 
 static func calc_aim_vector3(src_pos :Vector3, src_speed :float, dst_pos :Vector3, dst_vel :Vector3 ) -> Vector3:
@@ -116,7 +111,7 @@ static func calc_aim_vector3(src_pos :Vector3, src_speed :float, dst_pos :Vector
 	return rtn
 
 
-static func do_fire_homming(t_num :int, delta :float, danger_dict :Dictionary, ship_list :Array[BSObj]) -> Area3D:
+static func do_fire_homming(t_num :int, delta :float, danger_dict :Dictionary, ship_list :Array[BSObj]) -> BSObj:
 #	var danger_dict = {
 #		"All":[null, 0.0],
 #		"Ship":[null, 0.0],
@@ -126,7 +121,7 @@ static func do_fire_homming(t_num :int, delta :float, danger_dict :Dictionary, s
 	if not BattleShooterAI.rand_per_sec(delta, 2.0):
 		return null
 
-	var dst :Area3D
+	var dst :BSObj
 	if danger_dict.Ship[1] > danger_dict.Homming[1]:
 		dst = danger_dict.Ship[0]
 	else:
