@@ -14,13 +14,11 @@ static func not_null_and_alive(o :Area3D) -> bool:
 static func find_other_team_ship(ship_list :Array[BSObj], t_num :int) -> BSObj: # Ship
 	if ship_list.size() == 0:
 		return null
-	var dst :BSObj # Ship
-	var try := 10
-	while try > 0 :
-		dst = ship_list.pick_random()
+	var shuffled := ship_list.duplicate()
+	shuffled.shuffle()
+	for dst in shuffled:
 		if dst != null and dst.type == BSObj.Type.Ship and dst.alive and dst.team_number != t_num:
 			return dst
-		try -= 1
 	return null
 
 # larger is danger

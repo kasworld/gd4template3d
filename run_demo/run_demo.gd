@@ -430,7 +430,7 @@ func maze3d_demo(gc :GlassCabinet) -> void:
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(true,false)
 	gc.add_child(maze3d)
-	for i in 10:
+	for i in 100:
 		var mb :MazeBall = preload("res://maze_3d/maze_ball/MazeBall.tscn").instantiate(
 			).init(NamedColors.random_color(), maze3d_setting.WallThick)
 		maze3d.add_child(mb)
