@@ -15,25 +15,26 @@ func init(cabinet_list :Array, add_camera_dict :Callable ) -> void:
 		demo.call(gc)
 		gc.set_title_text(text)
 		add_camera_dict.call(gc.get_camera_light(), text)
-	run_demo.call(bartree_demo, "bartree")
-	run_demo.call(clock_calendar_demo, "clock calender")
-	run_demo.call(orbit_demo, "orbit")
-	run_demo.call(line2d_demo, "moveline2d")
-	run_demo.call(meshtrail_demo, "meshtrail")
-	run_demo.call(maze3d_demo, "maze3d")
-	run_demo.call(slotreel_demo, "slotreel")
-	run_demo.call(wheel_demo, "roulettewheel" )
-	run_demo.call(props_demo, "props")
-	run_demo.call(wirenet_wavegauge_demo, "wirenet,wavegauge")
-	run_demo.call(wavegauge_demo, "wavegauge")
-	run_demo.call(tornado_demo, "tornado")
-	run_demo.call(platonic_solids_demo, "platonic solids")
-	run_demo.call(winter_tree_demo, "winter tree")
-	run_demo.call(dialgauge_demo, "dial gauge")
-	run_demo.call(same_game_demo, "same game")
-	run_demo.call(snakebyte_demo, "snakebyte game")
+	run_demo.call(bartree_demo, "BarTree")
+	run_demo.call(clock_calendar_demo, "Clock Calender")
+	run_demo.call(orbit_demo, "Orbit")
+	run_demo.call(line2d_demo, "MoveLine2d")
+	run_demo.call(meshtrail_demo, "MeshTrail")
+	run_demo.call(maze3d_demo, "Maze3D")
+	run_demo.call(slotreel_demo, "SlotReel")
+	run_demo.call(wheel_demo, "RouletteWheel" )
+	run_demo.call(props_demo, "Props")
+	run_demo.call(wirenet_wavegauge_demo, "WireNet,WaveGauge")
+	run_demo.call(wavegauge_demo, "WaveGauge")
+	run_demo.call(tornado_demo, "Tornado")
+	run_demo.call(platonic_solids_demo, "Platonic Solids")
+	run_demo.call(winter_tree_demo, "Winter Tree")
+	run_demo.call(dialgauge_demo, "Dial Gauge")
+	run_demo.call(same_game_demo, "Same Game")
+	run_demo.call(snakebyte_demo, "Snakebyte Game")
 	run_demo.call(ladder_demo, "사다리게임")
 	run_demo.call(yutgame_demo, "윷놀이")
+	run_demo.call(battle_shooter_demo, "Battle Shooter")
 
 	used_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_itered_slice())
 	empty_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_unitered_slice())
@@ -84,6 +85,15 @@ func _process(delta: float) -> void:
 	clock_calendar_animation.handle_animation()
 	platonic_solids_animation.handle_animation()
 	props_animation.handle_animation()
+
+var battleshooter :BattleShooter
+func battle_shooter_demo(gc :GlassCabinet) -> void:
+	gc.show_description()
+	var sz := gc.cabinet_size
+	battleshooter = preload("res://battle_shooter_3d/battle_shooter.tscn").instantiate(
+		).init(sz)
+	gc.add_child(battleshooter)
+
 
 var yutgame :윷놀이
 func yutgame_demo(gc :GlassCabinet) -> void:
