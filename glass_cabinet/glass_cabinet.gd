@@ -19,18 +19,22 @@ static func MakeSubgroupFlagsByPos(axis :int, axis_sign :int) -> int:
 	return rtn
 
 static var SideSubgroupFlags :Dictionary[String,int] = {
-		"x+" : MakeSubgroupFlagsByPos(0,+1),
-		"x-" : MakeSubgroupFlagsByPos(0,-1),
-		"y+" : MakeSubgroupFlagsByPos(1,+1),
-		"y-" : MakeSubgroupFlagsByPos(1,-1),
-		"z+" : MakeSubgroupFlagsByPos(2,+1),
-		"z-" : MakeSubgroupFlagsByPos(2,-1),
+		"x+" : MakeSubgroupFlagsByPos(Vector3.Axis.AXIS_X,+1),
+		"x-" : MakeSubgroupFlagsByPos(Vector3.Axis.AXIS_X,-1),
+		"y+" : MakeSubgroupFlagsByPos(Vector3.Axis.AXIS_Y,+1),
+		"y-" : MakeSubgroupFlagsByPos(Vector3.Axis.AXIS_Y,-1),
+		"z+" : MakeSubgroupFlagsByPos(Vector3.Axis.AXIS_Z,+1),
+		"z-" : MakeSubgroupFlagsByPos(Vector3.Axis.AXIS_Z,-1),
 	}
 
 static func _static_init():
 	pass
 
+static var BitFlagAllLight :int = BitFlag.MakeFilledFlags(PlatonicSolids.CubePoints.size())
 var lights :SpotLightGroup
+func get_light_group() -> SpotLightGroup:
+	return lights
+
 var cabinet_size :Vector3
 func calc_pos_by_grid(x :int, y :int, x_grid:int, y_grid:int) -> Vector3:
 	var xunit := cabinet_size.x/x_grid
@@ -59,6 +63,7 @@ func init(cabinet_size_a :Vector3) -> GlassCabinet:
 	)
 	add_spot_lights()
 	lights = SpotLightGroup.new($LightContainer)
+
 	return self
 
 func add_spot_lights() -> GlassCabinet:
