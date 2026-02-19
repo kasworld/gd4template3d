@@ -10,7 +10,7 @@ func get_focus_mode() -> bool:
 	return focus_mode
 
 ## axis : x:0, y:1, z:2, axis_sign : 1,0,-1
-static func MakeSubgroupFlagsByPos(axis :int, axis_sign :int) -> int:
+static func MakeGroupFlags(axis :int, axis_sign :int) -> int:
 	var pos_list := PlatonicSolids.CubePoints
 	var rtn := 0
 	for i in pos_list.size():
@@ -18,13 +18,13 @@ static func MakeSubgroupFlagsByPos(axis :int, axis_sign :int) -> int:
 			rtn = BitFlag.SetByPos(i,rtn)
 	return rtn
 
-static var SideSubgroupFlags :Dictionary[String,int] = {
-		"x+" : MakeSubgroupFlagsByPos(Vector3.Axis.AXIS_X,+1),
-		"x-" : MakeSubgroupFlagsByPos(Vector3.Axis.AXIS_X,-1),
-		"y+" : MakeSubgroupFlagsByPos(Vector3.Axis.AXIS_Y,+1),
-		"y-" : MakeSubgroupFlagsByPos(Vector3.Axis.AXIS_Y,-1),
-		"z+" : MakeSubgroupFlagsByPos(Vector3.Axis.AXIS_Z,+1),
-		"z-" : MakeSubgroupFlagsByPos(Vector3.Axis.AXIS_Z,-1),
+static var GroupFlags :Dictionary[String,int] = {
+		"x+" : MakeGroupFlags(Vector3.Axis.AXIS_X,+1),
+		"x-" : MakeGroupFlags(Vector3.Axis.AXIS_X,-1),
+		"y+" : MakeGroupFlags(Vector3.Axis.AXIS_Y,+1),
+		"y-" : MakeGroupFlags(Vector3.Axis.AXIS_Y,-1),
+		"z+" : MakeGroupFlags(Vector3.Axis.AXIS_Z,+1),
+		"z-" : MakeGroupFlags(Vector3.Axis.AXIS_Z,-1),
 	}
 
 static func _static_init():

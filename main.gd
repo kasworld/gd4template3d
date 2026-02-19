@@ -86,8 +86,8 @@ func _ready() -> void:
 
 	$CabinetDemo.init(WorldSize, 2)
 
-	#run_all_demo()
-	run_1_demo(battle_shooter_demo, "battle shooter")
+	run_all_demo()
+	#run_1_demo(battle_shooter_demo, "battle shooter")
 
 	MovingCameraLight.AllLightOn(false)
 	$TourCamera.init_by_glass_cabinet_list($CabinetDemo.glass_cabinet_list)
@@ -96,7 +96,8 @@ func _ready() -> void:
 var battleshooter :BattleShooter
 func battle_shooter_demo(gc :GlassCabinet) -> void:
 	gc.show_description()
-	gc.get_light_group().set_light_shadow(true, GlassCabinet.BitFlagAllLight)
+	gc.get_light_group().set_light_shadow_all(GlassCabinet.GroupFlags["y+"] & GlassCabinet.GroupFlags["z+"])
+	#gc.get_light_group().set_light_shadow(true, GlassCabinet.BitFlagAllLight)
 	var sz := gc.cabinet_size
 	battleshooter = preload("res://battle_shooter_3d/battle_shooter.tscn").instantiate(
 		).init(sz)
