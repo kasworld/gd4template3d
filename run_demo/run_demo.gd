@@ -88,7 +88,7 @@ func _process(delta: float) -> void:
 
 var battleshooter :BattleShooter
 func battle_shooter_demo(gc :GlassCabinet) -> void:
-	gc.get_light_group().set_light_shadow(true, GlassCabinet.BitFlagAllLight)
+	#gc.get_light_group().set_light_shadow(true, GlassCabinet.BitFlagAllLight)
 	gc.show_description()
 	var sz := gc.cabinet_size
 	battleshooter = preload("res://battle_shooter_3d/battle_shooter.tscn").instantiate(

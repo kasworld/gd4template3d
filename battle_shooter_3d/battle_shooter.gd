@@ -3,8 +3,8 @@ class_name BattleShooter
 
 # initial value
 static var TeamCount :int = 3
-static var ShipPerTeam :int = 1
-static var ShieldCount :int = 2
+static var ShipPerTeam :int = 2
+static var ShieldCount :int = 6
 
 static var ColorList := ListIter.new( NamedColors.color_list, true )
 static var TeamList :Array[BattleShooterTeam]

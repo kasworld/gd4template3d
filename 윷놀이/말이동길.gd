@@ -102,7 +102,7 @@ func init(w: float, co :Color, es :Array[눈], 시작눈 :int, mirror :bool = fa
 # 에러인 경우 [] 들 돌려준다.
 func 말이동과정찾기(현재말눈번호:int, 이동거리:int)->Array[int]:
 	if 이동거리 < 1 or 이동거리 > 5 :
-		print_debug("잘못된 이동거리 ", 이동거리)
+		#print_debug("잘못된 이동거리 ", 이동거리)
 		return []
 	if 현재말눈번호 < -1 or 현재말눈번호 > 28 :
 		print_debug("잘못된 현재말눈번호 ", 현재말눈번호)
