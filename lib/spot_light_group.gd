@@ -35,6 +35,20 @@ func set_bool_by_flag(flags :int, field:String) -> void:
 	for i in light_list.size():
 		light_list[i][field] = BitFlag.TestByPos(i, flags)
 
+## bool field only
+func make_flags_from_bool_field(field :String) -> int:
+	var rtn := 0
+	for i in light_list.size():
+		BitFlag.SetByPos(i, light_list[i][field])
+	return rtn
+
+## not bool field
+func make_array_from_field(field :String) -> Array:
+	var rtn := []
+	for lt in light_list:
+		rtn.append(lt[field])
+	return rtn
+
 
 ## flag bit == 1 , set light_energy
 func set_light_energy(v :float, flags :int) -> void:
@@ -73,19 +87,10 @@ func set_light_shadow_all(flags :int) -> void:
 
 
 func get_light_on_all() -> int:
-	var rtn := 0
-	for i in light_list.size():
-		BitFlag.SetByPos(i, light_list[i].visible)
-	return rtn
+	return make_flags_from_bool_field("visible")
 
 func get_light_shadow_all() -> int:
-	var rtn := 0
-	for i in light_list.size():
-		BitFlag.SetByPos(i, light_list[i].shadow_enabled)
-	return rtn
+	return make_flags_from_bool_field("shadow_enabled")
 
-func get_light_color_all() -> Array[Color]:
-	var rtn :Array[Color] = []
-	for lt in light_list:
-		rtn.append(lt.light_color)
-	return rtn
+func get_light_color_all() -> Array:
+	return make_array_from_field("light_color")
