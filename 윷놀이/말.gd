@@ -48,7 +48,7 @@ func 편얻기() -> YutTeam:
 func 같은편인가(m :말) -> bool:
 	return 속한편 == m.편얻기()
 
-func 마지막눈번호()->int:
+func 마지막눈번호() -> int:
 	return 지나온눈번호들[-1]
 
 func 난말로만들기() -> void:
