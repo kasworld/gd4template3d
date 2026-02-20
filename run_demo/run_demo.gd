@@ -588,7 +588,7 @@ func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
 		a30)
 	var 궤도mat1 := StandardMaterial3D.new()
 	궤도mat1.albedo_color = NamedColors.random_color()
-	var 구mat2
+	var 구mat2 :StandardMaterial3D
 	match i:
 		0,1,2,3:
 			구mat2 = [

@@ -11,8 +11,8 @@ var 바깥길 :Array[int]
 var 첫지름길 :Array[int]
 var 둘째지름길 :Array[int]
 var 세째지름길 :Array[int]
-var 놓을길시작 : Vector3
-var 나는길끝 : Vector3
+var 놓을길시작 :Vector3
+var 나는길끝 :Vector3
 
 func _to_string() -> String:
 	return "%s\n%s\n%s\n%s\n" %[바깥길,첫지름길,둘째지름길,세째지름길]

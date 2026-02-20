@@ -74,7 +74,7 @@ func 각도로cell얻기(rad :float) -> RouletteCell:
 	return cell얻기( 각도로cell번호얻기(rad) )
 
 func 각도로cell번호얻기(rad :float) -> int:
-	var 현재각도 = fposmod(-rad, 2*PI)
+	var 현재각도 := fposmod(-rad, 2*PI)
 	return ceili( (현재각도-cell각도/2) / cell각도 ) % cell_list.size()
 
 func cell중심각도(cell번호 :int) -> float:

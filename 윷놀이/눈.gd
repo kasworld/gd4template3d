@@ -43,7 +43,7 @@ func 말잡기시도(놓을말들 :Array) -> Array[말]:
 	if 놓을말들.is_empty() :
 		print_debug("문제:놓을말들이 비어있습니다.", 번호)
 		return []
-	var 잡을말들 : Array[말]
+	var 잡을말들 :Array[말]
 	var 있던말들 := 말보기()
 	if not 있던말들.is_empty() and not 있던말들[0].같은편인가(놓을말들[0]):
 		# 말을 잡을 수 있다.

@@ -129,7 +129,7 @@ func _process(_delta: float) -> void:
 
 
 func 선택된cell강조상태켜기() -> void:
-	var 선택칸 = 선택된cell얻기()
+	var 선택칸 := 선택된cell얻기()
 	if 선택칸 != null:
 		선택칸.강조상태켜기()
 

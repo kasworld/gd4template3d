@@ -27,7 +27,7 @@ func calc_radius() -> float:
 	return reel_list[0].calc_radius()
 
 func 결과가결정됨( _rl :SlotReel) -> void:
-	var 모두멈추었나 = true
+	var 모두멈추었나 := true
 	for n in reel_list:
 		if n.회전중인가:
 			모두멈추었나 = false

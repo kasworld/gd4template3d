@@ -86,7 +86,7 @@ func 중심각차이율(rad :float) -> float:
 	return 1- abs(각도차이 / symbol각도 - 0.5) *2
 
 func 선택된symbol번호() -> int:
-	var 현재각도 = fposmod(-rotation.x, 2*PI)
+	var 현재각도 := fposmod(-rotation.x, 2*PI)
 	return ceili( (현재각도-symbol각도/2) / symbol각도 ) % symbol_list.size()
 
 func 선택된symbol얻기() -> ReelSymbol:
