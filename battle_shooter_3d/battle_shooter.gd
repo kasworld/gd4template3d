@@ -1,14 +1,28 @@
 extends Node3D
 class_name BattleShooter
 
+static var ColorList1 := ListIter.new([
+	Color.RED,
+	Color.GREEN,
+	Color.BLUE,
+	Color.YELLOW,
+	Color.CYAN,
+	Color.MAGENTA,
+	Color.WHITE,
+	Color.BLACK,
+])
+static var ColorList2 := ListIter.new( NamedColors.color_list, true )
+
 # initial value
 static var TeamCount :int = 3
 static var ShipPerTeam :int = 2
 static var ShieldCount :int = 6
 
-static var ColorList := ListIter.new( NamedColors.color_list, true )
 static var TeamList :Array[BattleShooterTeam]
 static func MakeTeamList(team_count :int, ship_per_team :int) -> Array[BattleShooterTeam]:
+	var ColorList := ColorList2
+	if team_count <= ColorList1.get_size():
+		ColorList = ColorList1
 	var rtn :Array[BattleShooterTeam] = []
 	for t in team_count:
 		var ct := BattleShooterTeam.new(ColorList.get_current_and_step_next(), ship_per_team)
