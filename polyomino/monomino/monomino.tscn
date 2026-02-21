@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://dwh8pcmquu1tf"]
+
+[ext_resource type="Script" uid="uid://bt05wo72apo0u" path="res://polyomino/monomino/monomino.gd" id="1_pir6i"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v18m8"]
+resource_local_to_scene = true
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.49803922)
+clearcoat_enabled = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_jmmxj"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_v18m8")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jmmxj"]
+resource_local_to_scene = true
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.49803922)
+emission = Color(1, 1, 1, 1)
+clearcoat_enabled = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_rdrsu"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_jmmxj")
+size = Vector3(0.75, 0.75, 0.75)
+
+[node name="Monomino" type="Node3D" unique_id=1514730095]
+script = ExtResource("1_pir6i")
+
+[node name="OuterCube" type="MeshInstance3D" parent="." unique_id=1149308372]
+mesh = SubResource("BoxMesh_jmmxj")
+
+[node name="InnerCube" type="MeshInstance3D" parent="." unique_id=1033559469]
+mesh = SubResource("BoxMesh_rdrsu")

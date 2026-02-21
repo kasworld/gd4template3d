@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://0vbp4rs7d5p2"]
+
+[ext_resource type="Script" uid="uid://caw8qjt7dhpc6" path="res://polyomino/tetromino/tetromino.gd" id="1_wr668"]
+
+[node name="Tetromino" type="Node3D" unique_id=1836831842]
+script = ExtResource("1_wr668")
