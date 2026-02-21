@@ -30,8 +30,8 @@ const TypeToColor = {
 	Type.L: Color.ORANGE,
 }
 
-func init(t :Type, l :float) -> Tetromino:
-	for p in Geo[t][0]:
+func init(t :Type, rot :int,  l :float) -> Tetromino:
+	for p in Geo[t][rot%Geo[t].size()]:
 		var mm :Monomino = preload("res://polyomino/monomino/monomino.tscn").instantiate(
 			).init(l*0.95 , Color(TypeToColor[t],0.5))
 		mm.position = Vector3(p[0]*l,p[1]*l,0) #+ Vector3(-l,l,0)

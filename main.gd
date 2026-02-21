@@ -100,21 +100,20 @@ func tetromino_demo(gc :GlassCabinet) -> void:
 	gc.show_axis_arrow()
 	#gc.get_light_group().set_light_shadow_all(GlassCabinet.GroupFlags["y+"] & GlassCabinet.GroupFlags["z+"])
 	#gc.get_light_group().set_light_shadow(true, GlassCabinet.BitFlagAllLight)
+	var grid_size := Vector2i(16,9)*2
+	var wirenet :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
+		).init_wire_net(Vector2(gc.cabinet_size.x,gc.cabinet_size.y), Vector2i(grid_size.x,grid_size.y), gc.cabinet_size.x/grid_size.x/10, NamedColors.random_color())
+	gc.add_child(wirenet)
 	var sz := gc.cabinet_size
-	var unit_x := gc.cabinet_size.x/Tetromino.Type.size()
-	var unit_y := gc.cabinet_size.y/Tetromino.Type.size()
-	for t in Tetromino.Type.size():
-		var tetromino :Tetromino = preload("res://polyomino/tetromino/Tetromino.tscn").instantiate(
-			).init(t, sz.length()/40)
-		gc.add_child(tetromino)
-		tetromino.position = Vector3( t * unit_x - gc.cabinet_size.x/2, 0, 0)
-		tetromino_list.append(tetromino)
-	for t in Tetromino.Type.size():
-		var tetromino :Tetromino = preload("res://polyomino/tetromino/Tetromino.tscn").instantiate(
-			).init(t, sz.length()/40)
-		gc.add_child(tetromino)
-		tetromino.position = Vector3( 0,  t * unit_y - gc.cabinet_size.y/2, 0)
-		tetromino_list.append(tetromino)
+	var unit_x := 5 * gc.cabinet_size.x/grid_size.x
+	var unit_y := 5 * gc.cabinet_size.y/grid_size.y
+	for x in Tetromino.Type.size():
+		for y in 4:
+			var tetromino :Tetromino = preload("res://polyomino/tetromino/Tetromino.tscn").instantiate(
+				).init(x,y, gc.cabinet_size.x / grid_size.x)
+			gc.add_child(tetromino)
+			tetromino.position = Vector3( x * unit_x - gc.cabinet_size.x/2, y * unit_y - gc.cabinet_size.y/2, 0)
+			tetromino_list.append(tetromino)
 
 
 func run_1_demo(demo :Callable, text :String) -> void:
