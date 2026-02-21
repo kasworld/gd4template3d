@@ -115,6 +115,9 @@ func tetromino_demo(gc :GlassCabinet) -> void:
 			tetromino.position = Vector3( x * unit_x - gc.cabinet_size.x/2, y * unit_y - gc.cabinet_size.y/2, 0)
 			tetromino_list.append(tetromino)
 
+func tetromino_animation() -> void:
+	var tet :Tetromino = tetromino_list.pick_random()
+	tet.animate_to(randi_range(0, Tetromino.Type.size()-1), randi_range(0,4-1))
 
 func run_1_demo(demo :Callable, text :String) -> void:
 	var gc :GlassCabinet = $CabinetDemo.glass_cabinet_list[0]
@@ -137,6 +140,7 @@ func _process(_delta: float) -> void:
 		$MovingCameraLightAround.move_wave_around_y(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
 
 	label_demo()
+	tetromino_animation()
 
 func _on_끝내기_pressed() -> void:
 	get_tree().quit()

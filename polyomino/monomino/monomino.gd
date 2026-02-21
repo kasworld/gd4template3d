@@ -1,6 +1,11 @@
 extends Node3D
 class_name Monomino
 
+var color :Color :
+	set(co):
+		set_color(co,co)
+
+
 func init(l :float, co :Color) -> Monomino:
 	set_color(co, co)
 	set_size(l, l*0.75)
