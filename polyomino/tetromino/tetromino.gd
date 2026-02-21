@@ -34,6 +34,6 @@ func init(t :Type, l :float) -> Tetromino:
 	for p in Geo[t][0]:
 		var mm :Monomino = preload("res://polyomino/monomino/monomino.tscn").instantiate(
 			).init(l*0.95 , Color(TypeToColor[t],0.5))
-		mm.position = Vector3(p[0]*l,p[1]*l,0)
+		mm.position = Vector3(p[0]*l,p[1]*l,0) #+ Vector3(-l,l,0)
 		add_child(mm)
 	return self
