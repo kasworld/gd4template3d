@@ -35,6 +35,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable ) -> void:
 	run_demo.call(ladder_demo, "사다리게임")
 	run_demo.call(yutgame_demo, "윷놀이")
 	run_demo.call(battle_shooter_demo, "Battle Shooter")
+	run_demo.call(tetromino_demo, "Tetromino")
 
 	used_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_itered_slice())
 	empty_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_unitered_slice())
@@ -81,10 +82,39 @@ func _process(delta: float) -> void:
 	dialgauge_animate()
 	maze3d_animation(delta)
 	ladder_animation(delta)
+	tetromino_animation()
 
 	clock_calendar_animation.handle_animation()
 	platonic_solids_animation.handle_animation()
 	props_animation.handle_animation()
+
+
+var tetromino_list :Array
+func tetromino_demo(gc :GlassCabinet) -> void:
+	gc.show_description()
+	gc.show_wall_box(false)
+	#gc.show_axis_arrow()
+	#gc.get_light_group().set_light_shadow_all(GlassCabinet.GroupFlags["y+"] & GlassCabinet.GroupFlags["z+"])
+	#gc.get_light_group().set_light_shadow(true, GlassCabinet.BitFlagAllLight)
+	var grid_size := Vector2i(16,9)*2
+	#var wirenet :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
+		#).init_wire_net(Vector2(gc.cabinet_size.x,gc.cabinet_size.y), Vector2i(grid_size.x,grid_size.y), gc.cabinet_size.x/grid_size.x/10, NamedColors.random_color())
+	#gc.add_child(wirenet)
+	var unit_x := 5 * gc.cabinet_size.x/grid_size.x
+	var unit_y := 5 * gc.cabinet_size.y/grid_size.y
+	for x in Tetromino.Type.size():
+		for y in 4:
+			var tetromino :Tetromino = preload("res://polyomino/tetromino/Tetromino.tscn").instantiate(
+				).init(x,y, gc.cabinet_size.x / grid_size.x)
+			gc.add_child(tetromino)
+			tetromino.position = Vector3( x * unit_x - gc.cabinet_size.x/2, y * unit_y - gc.cabinet_size.y/2, 0)
+			tetromino_list.append(tetromino)
+
+func tetromino_animation() -> void:
+	var tet :Tetromino = tetromino_list.pick_random()
+	if tet.animation.is_empty():
+		tet.animate_to(randi_range(0, Tetromino.Type.size()-1), randi_range(0,4-1))
+
 
 var battleshooter :BattleShooter
 func battle_shooter_demo(gc :GlassCabinet) -> void:

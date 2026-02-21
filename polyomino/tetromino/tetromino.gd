@@ -59,8 +59,7 @@ func init(t :Type, rot :int,  l :float) -> Tetromino:
 const AniSec := 0.5
 func animate_to(t :Type, rot :int) -> void:
 	if not animation.is_empty():
-		return
-		#animation.force_end(false)
+		animation.force_end(false)
 	var old_color := make_type_color(tetromino_type)
 	tetromino_type = t
 	tetromino_rot = rot

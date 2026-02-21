@@ -86,8 +86,8 @@ func _ready() -> void:
 
 	$CabinetDemo.init(WorldSize, 2)
 
-	#run_all_demo()
-	run_1_demo(tetromino_demo, "Tetromino")
+	run_all_demo()
+	#run_1_demo(tetromino_demo, "Tetromino")
 
 	MovingCameraLight.AllLightOn(false)
 	$TourCamera.init_by_glass_cabinet_list($CabinetDemo.glass_cabinet_list)
@@ -97,14 +97,13 @@ var tetromino_list :Array
 func tetromino_demo(gc :GlassCabinet) -> void:
 	gc.show_description()
 	gc.show_wall_box(false)
-	gc.show_axis_arrow()
+	#gc.show_axis_arrow()
 	#gc.get_light_group().set_light_shadow_all(GlassCabinet.GroupFlags["y+"] & GlassCabinet.GroupFlags["z+"])
 	#gc.get_light_group().set_light_shadow(true, GlassCabinet.BitFlagAllLight)
 	var grid_size := Vector2i(16,9)*2
 	var wirenet :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).init_wire_net(Vector2(gc.cabinet_size.x,gc.cabinet_size.y), Vector2i(grid_size.x,grid_size.y), gc.cabinet_size.x/grid_size.x/10, NamedColors.random_color())
 	gc.add_child(wirenet)
-	var sz := gc.cabinet_size
 	var unit_x := 5 * gc.cabinet_size.x/grid_size.x
 	var unit_y := 5 * gc.cabinet_size.y/grid_size.y
 	for x in Tetromino.Type.size():
@@ -117,7 +116,8 @@ func tetromino_demo(gc :GlassCabinet) -> void:
 
 func tetromino_animation() -> void:
 	var tet :Tetromino = tetromino_list.pick_random()
-	tet.animate_to(randi_range(0, Tetromino.Type.size()-1), randi_range(0,4-1))
+	if tet.animation.is_empty():
+		tet.animate_to(randi_range(0, Tetromino.Type.size()-1), randi_range(0,4-1))
 
 func run_1_demo(demo :Callable, text :String) -> void:
 	var gc :GlassCabinet = $CabinetDemo.glass_cabinet_list[0]
@@ -140,7 +140,7 @@ func _process(_delta: float) -> void:
 		$MovingCameraLightAround.move_wave_around_y(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
 
 	label_demo()
-	tetromino_animation()
+	#tetromino_animation()
 
 func _on_끝내기_pressed() -> void:
 	get_tree().quit()
