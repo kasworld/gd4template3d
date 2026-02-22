@@ -24,8 +24,8 @@ func init(cabinet_list :Array, add_camera_dict :Callable ) -> void:
 	run_demo.call(slotreel_demo, "SlotReel")
 	run_demo.call(wheel_demo, "RouletteWheel" )
 	run_demo.call(props_demo, "Props")
-	run_demo.call(wirenet_wavegauge_demo, "WireNet,WaveGauge")
-	run_demo.call(wavegauge_demo, "WaveGauge")
+	run_demo.call(wavegauge_plane_demo, "WaveGaugePlane")
+	run_demo.call(wavegauge_box_demo, "WaveGaugeBox")
 	run_demo.call(tornado_demo, "Tornado")
 	run_demo.call(platonic_solids_demo, "Platonic Solids")
 	run_demo.call(winter_tree_demo, "Winter Tree")
@@ -64,21 +64,18 @@ func _process(delta: float) -> void:
 	animate_empty_glass_cabinet_light()
 	#animate_used_glass_cabinet_light()
 
-	var now := Time.get_unix_time_from_system()
-	if wavegauge_box !=null:
-		wavegauge_box.animate_wave(now)
-	if wavegauge_plane !=null:
-		wavegauge_plane.animate_wave(now)
-	roulette_animate()
+	wavegauge_box_animate(delta)
+	wavegauge_plane_animate(delta)
+	roulette_animate(delta)
 	bartree_animate(delta)
 	orbitsphere_animate(delta)
 	meshtrail_animate(delta)
-	tornado_animate()
+	tornado_animate(delta)
 	wintertree_animate(delta)
-	dialgauge_animate()
-	maze3d_animation(delta)
-	ladder_animation(delta)
-	tetromino_animation()
+	dialgauge_animate(delta)
+	maze3d_animate(delta)
+	ladder_animate(delta)
+	tetromino_animate(delta)
 
 	clock_calendar_animation.handle_animation()
 	platonic_solids_animation.handle_animation()
@@ -106,7 +103,7 @@ func tetromino_demo(gc :GlassCabinet) -> void:
 			tetromino.position = Vector3( x * unit_x - gc.cabinet_size.x/2, y * unit_y - gc.cabinet_size.y/2, 0)
 			tetromino_list.append(tetromino)
 
-func tetromino_animation() -> void:
+func tetromino_animate(_delta :float) -> void:
 	if not tetromino_list:
 		return
 	var tet :Tetromino = tetromino_list.pick_random()
@@ -152,7 +149,7 @@ func ladder_demo(gc :GlassCabinet) -> void:
 func _on_timer길보기_timeout() -> void:
 	ladder.길하나보기(길번호)
 	길번호 = (길번호+1) % ladder.참가자정보.size()
-func ladder_animation(delta) -> void:
+func ladder_animate(delta) -> void:
 	if not ladder:
 		return
 	ladder.rotate_y(delta/2)
@@ -238,7 +235,7 @@ func dialgauge_demo(gc :GlassCabinet) -> void:
 	dg.position = gc.calc_pos_by_grid(1,2,3,3)
 	gc.add_child(dg)
 	dialgauge_list.append([dg, dg.value_range_mid()])
-func dialgauge_animate() -> void:
+func dialgauge_animate(_delta :float) -> void:
 	for dg in dialgauge_list:
 		dg[1] += randfn(0,1)*dg[0].value_range_len()/100
 		dg[1] = dg[0].clamp_value(dg[1])
@@ -368,7 +365,7 @@ func shift_tornado_lambda(t :float, shift :float) -> Callable:
 		var period := 5
 		return Vector3(cos(rate*period), 0, sin(rate*period)) * t * shift
 
-func tornado_animate() -> void:
+func tornado_animate(_delta :float) -> void:
 	var t := Time.get_unix_time_from_system()
 	var rad := fposmod(t, PI*2)
 	var unit_rad := 2*PI/4
@@ -415,7 +412,7 @@ func wheel결과가결정됨(rl :Roulette) -> void:
 	$TimerWheel.start()
 func _on_timer_wheel_timeout() -> void:
 	wheel돌리기()
-func roulette_animate() -> void:
+func roulette_animate(_delta :float) -> void:
 	if not roulette:
 		return
 	roulette.장식돌리기()
@@ -443,14 +440,21 @@ func _on_timer_reel_timeout() -> void:
 
 
 var wavegauge_box :WaveGauge
-func wavegauge_demo(gc :GlassCabinet) -> void:
+func wavegauge_box_demo(gc :GlassCabinet) -> void:
 	wavegauge_box = preload("res://wave_gauge/wave_gauge.tscn").instantiate(
 		).init(Vector3(gc.cabinet_size.x-1,gc.cabinet_size.y-1,gc.cabinet_size.z-1), Vector3i(32,32,32), WaveGauge.color_list, 0.1, 1.0 )
 	gc.add_child(wavegauge_box)
+func wavegauge_box_animate(_delta :float) -> void:
+	if not wavegauge_box:
+		return
+	var now := Time.get_unix_time_from_system()
+	wavegauge_box.animate_wave(now)
+
+
 
 var wirenet :MultiMeshShape
 var wavegauge_plane :WaveGauge
-func wirenet_wavegauge_demo(gc :GlassCabinet) -> void:
+func wavegauge_plane_demo(gc :GlassCabinet) -> void:
 	var grid_size := Vector2i(16,9)*2
 	wirenet = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).init_wire_net(Vector2(gc.cabinet_size.x,gc.cabinet_size.y), Vector2i(grid_size.x,grid_size.y), gc.cabinet_size.x/grid_size.x/10, NamedColors.random_color())
@@ -458,6 +462,11 @@ func wirenet_wavegauge_demo(gc :GlassCabinet) -> void:
 	wavegauge_plane = preload("res://wave_gauge/wave_gauge.tscn").instantiate(
 		).init(Vector3(gc.cabinet_size.x,gc.cabinet_size.y,gc.cabinet_size.z/20), Vector3i(grid_size.x,grid_size.y,1), WaveGauge.color_list, 0.1, 1.0 )
 	gc.add_child(wavegauge_plane)
+func wavegauge_plane_animate(_delta :float) -> void:
+	if not wavegauge_plane:
+		return
+	var now := Time.get_unix_time_from_system()
+	wavegauge_plane.animate_wave(now)
 
 
 var maze3d :Maze3D
@@ -489,7 +498,7 @@ func maze3d_demo(gc :GlassCabinet) -> void:
 		mb.position = maze3d_setting.mazepos2storeypos(pos2d, maze3d_setting.StoryH/2)
 
 var maze_ani_i :int
-func maze3d_animation(delta :float) -> void:
+func maze3d_animate(delta :float) -> void:
 	if maze3d == null:
 		return
 	maze_ani_i += 1
