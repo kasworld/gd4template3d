@@ -67,6 +67,18 @@ func _on_카메라변경_pressed() -> void:
 	if info != null :
 		$"왼쪽패널/SelectCamera".select(info[1])
 
+var animate_func :Callable
+func _process(delta: float) -> void:
+	var now := Time.get_unix_time_from_system()
+	if $MovingCameraLightHober.is_current_camera():
+		$MovingCameraLightHober.move_hober_around_z(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
+	elif $MovingCameraLightAround.is_current_camera():
+		$MovingCameraLightAround.move_wave_around_y(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
+
+	label_demo()
+	if not animate_func.is_null():
+		animate_func.call(delta)
+
 func _ready() -> void:
 	on_viewport_size_changed()
 	get_viewport().size_changed.connect(on_viewport_size_changed)
@@ -86,15 +98,29 @@ func _ready() -> void:
 
 	$CabinetDemo.init(WorldSize, 2)
 
-	run_all_demo()
-	#run_1_demo(tetromino_demo, "Tetromino")
+	var run_1_demo := func(demo :Callable, text :String) -> void:
+		var gc :GlassCabinet = $CabinetDemo.glass_cabinet_list[0]
+		gc.set_title_text(text)
+		add_camera_dict.call(gc.get_camera_light(), text)
+		animate_func = demo.call(gc)
+		focus_to_new_MovingCameraLight(gc.get_camera_light())
+
+	var single :bool
+	#single = true
+	if single :
+		run_1_demo.call(tetromino_demo, "Tetromino")
+	else:
+		var rundemo = preload("res://run_demo/run_demo.tscn").instantiate()
+		add_child(rundemo)
+		rundemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict)
+		$CenterCameraLight.make_current()
 
 	MovingCameraLight.AllLightOn(false)
 	$TourCamera.init_by_glass_cabinet_list($CabinetDemo.glass_cabinet_list)
 
 
 var tetromino_list :Array
-func tetromino_demo(gc :GlassCabinet) -> void:
+func tetromino_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
 	gc.show_wall_box(false)
 	#gc.show_axis_arrow()
@@ -113,34 +139,11 @@ func tetromino_demo(gc :GlassCabinet) -> void:
 			gc.add_child(tetromino)
 			tetromino.position = Vector3( x * unit_x - gc.cabinet_size.x/2, y * unit_y - gc.cabinet_size.y/2, 0)
 			tetromino_list.append(tetromino)
+	return func(_delta :float) -> void:
+		var tet :Tetromino = tetromino_list.pick_random()
+		if tet.animation.is_empty():
+			tet.animate_to(randi_range(0, Tetromino.Type.size()-1), randi_range(0,4-1))
 
-func tetromino_animation() -> void:
-	var tet :Tetromino = tetromino_list.pick_random()
-	if tet.animation.is_empty():
-		tet.animate_to(randi_range(0, Tetromino.Type.size()-1), randi_range(0,4-1))
-
-func run_1_demo(demo :Callable, text :String) -> void:
-	var gc :GlassCabinet = $CabinetDemo.glass_cabinet_list[0]
-	gc.set_title_text(text)
-	add_camera_dict.call(gc.get_camera_light(), text)
-	demo.call(gc)
-	focus_to_new_MovingCameraLight(gc.get_camera_light())
-
-func run_all_demo() -> void:
-	var rundemo = preload("res://run_demo/run_demo.tscn").instantiate()
-	add_child(rundemo)
-	rundemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict)
-	$CenterCameraLight.make_current()
-
-func _process(_delta: float) -> void:
-	var now := Time.get_unix_time_from_system()
-	if $MovingCameraLightHober.is_current_camera():
-		$MovingCameraLightHober.move_hober_around_z(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
-	elif $MovingCameraLightAround.is_current_camera():
-		$MovingCameraLightAround.move_wave_around_y(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
-
-	label_demo()
-	#tetromino_animation()
 
 func _on_끝내기_pressed() -> void:
 	get_tree().quit()
