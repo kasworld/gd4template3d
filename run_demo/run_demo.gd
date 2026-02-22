@@ -99,8 +99,6 @@ func tetromino_demo(gc :GlassCabinet) -> Callable:
 			tetromino_list.append(tetromino)
 	return tetromino_animate
 func tetromino_animate(_delta :float) -> void:
-	if not tetromino_list:
-		return
 	var tet :Tetromino = tetromino_list.pick_random()
 	if tet.animation.is_empty():
 		tet.animate_to(randi_range(0, Tetromino.Type.size()-1), randi_range(0,4-1))
@@ -147,8 +145,6 @@ func _on_timer길보기_timeout() -> void:
 	ladder.길하나보기(길번호)
 	길번호 = (길번호+1) % ladder.참가자정보.size()
 func ladder_animate(delta) -> void:
-	if not ladder:
-		return
 	ladder.rotate_y(delta/2)
 
 
@@ -262,8 +258,6 @@ var color_fn :Callable = RandomColor.pure_color
 var ani_dir_data := ListIter.new( [AniDir.Up, AniDir.Down, AniDir.Left , AniDir.Right] )
 var change_count := 0
 func wintertree_animate(delta :float) -> void:
-	if winter_tree == null:
-		return
 	winter_tree.rotate_y(delta)
 	var lines :MultiMeshShape = winter_tree.가지들얻기()
 	var co :Color = color_fn.call(color_fn_args.get_current())
@@ -416,8 +410,6 @@ func wheel결과가결정됨(rl :Roulette) -> void:
 func _on_timer_wheel_timeout() -> void:
 	wheel돌리기()
 func roulette_animate(_delta :float) -> void:
-	if not roulette:
-		return
 	roulette.장식돌리기()
 	roulette.선택된cell강조상태켜기()
 
@@ -450,11 +442,8 @@ func wavegauge_box_demo(gc :GlassCabinet) -> Callable:
 	gc.add_child(wavegauge_box)
 	return wavegauge_box_animate
 func wavegauge_box_animate(_delta :float) -> void:
-	if not wavegauge_box:
-		return
 	var now := Time.get_unix_time_from_system()
 	wavegauge_box.animate_wave(now)
-
 
 
 var wirenet :MultiMeshShape
@@ -469,8 +458,6 @@ func wavegauge_plane_demo(gc :GlassCabinet) -> Callable:
 	gc.add_child(wavegauge_plane)
 	return wavegauge_plane_animate
 func wavegauge_plane_animate(_delta :float) -> void:
-	if not wavegauge_plane:
-		return
 	var now := Time.get_unix_time_from_system()
 	wavegauge_plane.animate_wave(now)
 
@@ -505,8 +492,6 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	return maze3d_animate
 var maze_ani_i :int
 func maze3d_animate(delta :float) -> void:
-	if maze3d == null:
-		return
 	maze_ani_i += 1
 	if maze_ani_i% 60 == 0:
 		view_walls = Maze3D.wallview_next(view_walls)
@@ -538,7 +523,7 @@ func meshtrail_demo(gc :GlassCabinet) -> Callable:
 	mesh.size = Vector3(trailmesh_radius*3, trailmesh_radius /5, trailmesh_radius/5)
 	for i in 10:
 		make_meshtrail(gc, i %4, mesh, 100, bound_aabb.get_center())
-	return Callable()
+	return meshtrail_animate
 func make_meshtrail(gc :GlassCabinet, mt_type:int, mesh :Mesh, count :int, pos :Vector3 ) -> void:
 	var mt = preload("res://mesh_trail/mesh_trail.tscn").instantiate(
 		).init_with_color_mesh(mesh, count, true, pos,
