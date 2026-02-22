@@ -72,10 +72,6 @@ func _process(delta: float) -> void:
 	for fn in animate_func_list:
 		fn.call(delta)
 
-	clock_calendar_animation.handle_animation()
-	platonic_solids_animation.handle_animation()
-	props_animation.handle_animation()
-
 
 var tetromino_list :Array
 func tetromino_demo(gc :GlassCabinet) -> Callable:
@@ -97,11 +93,10 @@ func tetromino_demo(gc :GlassCabinet) -> Callable:
 			gc.add_child(tetromino)
 			tetromino.position = Vector3( x * unit_x - gc.cabinet_size.x/2, y * unit_y - gc.cabinet_size.y/2, 0)
 			tetromino_list.append(tetromino)
-	return tetromino_animate
-func tetromino_animate(_delta :float) -> void:
-	var tet :Tetromino = tetromino_list.pick_random()
-	if tet.animation.is_empty():
-		tet.animate_to(randi_range(0, Tetromino.Type.size()-1), randi_range(0,4-1))
+	return func(_delta :float) -> void:
+		var tet :Tetromino = tetromino_list.pick_random()
+		if tet.animation.is_empty():
+			tet.animate_to(randi_range(0, Tetromino.Type.size()-1), randi_range(0,4-1))
 
 
 var battleshooter :BattleShooter
@@ -140,12 +135,11 @@ func ladder_demo(gc :GlassCabinet) -> Callable:
 	gc.add_child(ladder)
 	ladder.사다리풀이그리기()
 	$"Timer길보기".start(3.0)
-	return ladder_animate
+	return func(delta) -> void:
+		ladder.rotate_y(delta/2)
 func _on_timer길보기_timeout() -> void:
 	ladder.길하나보기(길번호)
 	길번호 = (길번호+1) % ladder.참가자정보.size()
-func ladder_animate(delta) -> void:
-	ladder.rotate_y(delta/2)
 
 
 var snake_byte_game :SnakeByte
@@ -230,12 +224,11 @@ func dialgauge_demo(gc :GlassCabinet) -> Callable:
 	dg.position = gc.calc_pos_by_grid(1,2,3,3)
 	gc.add_child(dg)
 	dialgauge_list.append([dg, dg.value_range_mid()])
-	return dialgauge_animate
-func dialgauge_animate(_delta :float) -> void:
-	for dg in dialgauge_list:
-		dg[1] += randfn(0,1)*dg[0].value_range_len()/100
-		dg[1] = dg[0].clamp_value(dg[1])
-		dg[0].set_needle_value(dg[1])
+	return func (_delta :float) -> void:
+		for dig in dialgauge_list:
+			dig[1] += randfn(0,1)*dig[0].value_range_len()/100
+			dig[1] = dig[0].clamp_value(dig[1])
+			dig[0].set_needle_value(dig[1])
 
 
 func winter_tree_demo(gc :GlassCabinet) -> Callable:
@@ -331,7 +324,8 @@ func platonic_solids_demo(gc :GlassCabinet) -> Callable:
 		ws.position = gc.calc_pos_by_grid(ll[2][0],ll[2][1], 4,3)
 	platonic_solids_animation.animation_ended.connect(platonic_solids_animation_ended)
 	start_platonic_solids_animation()
-	return Callable()
+	return func(_delta:float):
+		platonic_solids_animation.handle_animation()
 
 var platonic_solids_animation := SimpleAnimation.new()
 func platonic_solids_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
@@ -398,7 +392,9 @@ func wheel_demo(gc :GlassCabinet) -> Callable:
 	roulette.rotation_stopped.connect(wheel결과가결정됨)
 	gc.add_child(roulette)
 	wheel돌리기()
-	return roulette_animate
+	return func (_delta :float) -> void:
+		roulette.장식돌리기()
+		roulette.선택된cell강조상태켜기()
 func wheel돌리기() -> void:
 	var rot = randfn(2*PI, PI/2)
 	if randi_range(0,1) == 0:
@@ -409,9 +405,6 @@ func wheel결과가결정됨(rl :Roulette) -> void:
 	$TimerWheel.start()
 func _on_timer_wheel_timeout() -> void:
 	wheel돌리기()
-func roulette_animate(_delta :float) -> void:
-	roulette.장식돌리기()
-	roulette.선택된cell강조상태켜기()
 
 
 var slot :Slots
@@ -440,10 +433,8 @@ func wavegauge_box_demo(gc :GlassCabinet) -> Callable:
 	wavegauge_box = preload("res://wave_gauge/wave_gauge.tscn").instantiate(
 		).init(Vector3(gc.cabinet_size.x-1,gc.cabinet_size.y-1,gc.cabinet_size.z-1), Vector3i(32,32,32), WaveGauge.color_list, 0.1, 1.0 )
 	gc.add_child(wavegauge_box)
-	return wavegauge_box_animate
-func wavegauge_box_animate(_delta :float) -> void:
-	var now := Time.get_unix_time_from_system()
-	wavegauge_box.animate_wave(now)
+	return func(_delta :float) -> void:
+		wavegauge_box.animate_wave(Time.get_unix_time_from_system())
 
 
 var wirenet :MultiMeshShape
@@ -456,10 +447,8 @@ func wavegauge_plane_demo(gc :GlassCabinet) -> Callable:
 	wavegauge_plane = preload("res://wave_gauge/wave_gauge.tscn").instantiate(
 		).init(Vector3(gc.cabinet_size.x,gc.cabinet_size.y,gc.cabinet_size.z/20), Vector3i(grid_size.x,grid_size.y,1), WaveGauge.color_list, 0.1, 1.0 )
 	gc.add_child(wavegauge_plane)
-	return wavegauge_plane_animate
-func wavegauge_plane_animate(_delta :float) -> void:
-	var now := Time.get_unix_time_from_system()
-	wavegauge_plane.animate_wave(now)
+	return func (_delta :float) -> void:
+		wavegauge_plane.animate_wave(Time.get_unix_time_from_system())
 
 
 var maze3d :Maze3D
@@ -510,9 +499,6 @@ func maze3d_animate(delta :float) -> void:
 
 
 var trailmesh_radius :float
-func meshtrail_animate(delta :float) -> void:
-	for mt in meshtrail_list:
-		mt.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
 var meshtrail_list :Array
 var bound_aabb :AABB
 func meshtrail_demo(gc :GlassCabinet) -> Callable:
@@ -523,7 +509,9 @@ func meshtrail_demo(gc :GlassCabinet) -> Callable:
 	mesh.size = Vector3(trailmesh_radius*3, trailmesh_radius /5, trailmesh_radius/5)
 	for i in 10:
 		make_meshtrail(gc, i %4, mesh, 100, bound_aabb.get_center())
-	return meshtrail_animate
+	return func (delta :float) -> void:
+		for mt in meshtrail_list:
+			mt.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
 func make_meshtrail(gc :GlassCabinet, mt_type:int, mesh :Mesh, count :int, pos :Vector3 ) -> void:
 	var mt = preload("res://mesh_trail/mesh_trail.tscn").instantiate(
 		).init_with_color_mesh(mesh, count, true, pos,
@@ -573,7 +561,8 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	prop_list.append(prop)
 	props_animation.animation_ended.connect(props_animation_ended)
 	start_props_animation()
-	return Callable()
+	return func(_delta:float):
+		props_animation.handle_animation()
 
 var props_animation := SimpleAnimation.new()
 func props_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
@@ -615,7 +604,10 @@ func orbit_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_wall_box(false)
 	for i in 9:
 		add_orbitsphere(gc, i, 9)
-	return orbitsphere_animate
+	return func (delta :float) -> void:
+		var now := Time.get_unix_time_from_system()
+		for os in orbitsphere_list:
+			os.animate_rotate(now, delta)
 func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
 	var rate := float(count -i)/float(count) * 0.5 + 0.5
 	var diagonal_length := gc.cabinet_size.length()/2.5 * rate
@@ -644,10 +636,6 @@ func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
 		).구재질설정(구mat2).궤도재질설정(궤도mat1)
 	gc.add_child(os)
 	orbitsphere_list.append(os)
-func orbitsphere_animate(delta :float) -> void:
-	var now := Time.get_unix_time_from_system()
-	for os in orbitsphere_list:
-		os.animate_rotate(now, delta)
 
 
 var clock_calendar_animation := SimpleAnimation.new()
@@ -682,7 +670,9 @@ func clock_calendar_demo(gc :GlassCabinet) -> Callable:
 	reset_clock_calendar_pos()
 	clock_calendar_animation.animation_ended.connect(clock_calendar_animation_ended)
 	start_clock_calendar_animation()
-	return Callable()
+	return func(_delta:float):
+		clock_calendar_animation.handle_animation()
+
 
 var bartree_scene = preload("res://bar_tree/bar_tree.tscn")
 var bartree_list :Array
@@ -690,7 +680,9 @@ func bartree_demo(gc :GlassCabinet) -> Callable:
 	var tree_size := Vector3(gc.cabinet_size.z/3, gc.cabinet_size.y, gc.cabinet_size.z / 30)
 	make_tree3(randi_range(1,7), gc, tree_size, randi_range(20,100), Vector3(-gc.cabinet_size.x/4,-gc.cabinet_size.y/2,0), false)
 	make_tree3(randi_range(1,7), gc, tree_size, randi_range(20,100), Vector3(gc.cabinet_size.x/4,-gc.cabinet_size.y/2,0), true)
-	return bartree_animate
+	return func (delta :float) -> void:
+		for bt in bartree_list:
+			bt.rotate_tree_bar_y(delta*10)
 func make_tree3(make_flag:int, gc :GlassCabinet, tree_size :Vector3, bar_count :int, pos :Vector3, use_mat :bool) -> void:
 	if make_flag & (1<<0) != 0: # add left side
 		make_sub_tree(gc, tree_size, bar_count, 2.0, pos, use_mat)
@@ -717,6 +709,3 @@ func make_sub_tree(gc :GlassCabinet, tree_size :Vector3, bar_count :int, shift :
 		t.init_bartree_with_color(NamedColors.random_color(), NamedColors.random_color(), bar_count)
 	t.init_bartree_transform(tree_size, shift)
 	bartree_list.append(t)
-func bartree_animate(delta :float) -> void:
-	for bt in bartree_list:
-		bt.rotate_tree_bar_y(delta*10)
