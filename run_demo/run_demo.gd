@@ -4,6 +4,8 @@ var glass_cabinet_iter :ListIter # [ GlassCabinet, light iter data]
 var used_glass_cabinet_iter :ListIter
 var empty_glass_cabinet_iter :ListIter
 
+
+var animate_func_list :Array[Callable] = []
 func init(cabinet_list :Array, add_camera_dict :Callable ) -> void:
 	var gc_ani_list := []
 	for gc in cabinet_list:
@@ -12,9 +14,12 @@ func init(cabinet_list :Array, add_camera_dict :Callable ) -> void:
 
 	var run_demo := func(demo :Callable, text :String) -> void:
 		var gc :GlassCabinet = glass_cabinet_iter.get_current_and_step_next()[0]
-		demo.call(gc)
+		var ani_fn :Callable = demo.call(gc)
+		if not ani_fn.is_null():
+			animate_func_list.append(ani_fn)
 		gc.set_title_text(text)
 		add_camera_dict.call(gc.get_camera_light(), text)
+
 	run_demo.call(bartree_demo, "BarTree")
 	run_demo.call(clock_calendar_demo, "Clock Calender")
 	run_demo.call(orbit_demo, "Orbit")
@@ -64,18 +69,8 @@ func _process(delta: float) -> void:
 	animate_empty_glass_cabinet_light()
 	#animate_used_glass_cabinet_light()
 
-	wavegauge_box_animate(delta)
-	wavegauge_plane_animate(delta)
-	roulette_animate(delta)
-	bartree_animate(delta)
-	orbitsphere_animate(delta)
-	meshtrail_animate(delta)
-	tornado_animate(delta)
-	wintertree_animate(delta)
-	dialgauge_animate(delta)
-	maze3d_animate(delta)
-	ladder_animate(delta)
-	tetromino_animate(delta)
+	for fn in animate_func_list:
+		fn.call(delta)
 
 	clock_calendar_animation.handle_animation()
 	platonic_solids_animation.handle_animation()
@@ -83,7 +78,7 @@ func _process(delta: float) -> void:
 
 
 var tetromino_list :Array
-func tetromino_demo(gc :GlassCabinet) -> void:
+func tetromino_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
 	gc.show_wall_box(false)
 	#gc.show_axis_arrow()
@@ -102,7 +97,7 @@ func tetromino_demo(gc :GlassCabinet) -> void:
 			gc.add_child(tetromino)
 			tetromino.position = Vector3( x * unit_x - gc.cabinet_size.x/2, y * unit_y - gc.cabinet_size.y/2, 0)
 			tetromino_list.append(tetromino)
-
+	return tetromino_animate
 func tetromino_animate(_delta :float) -> void:
 	if not tetromino_list:
 		return
@@ -112,22 +107,24 @@ func tetromino_animate(_delta :float) -> void:
 
 
 var battleshooter :BattleShooter
-func battle_shooter_demo(gc :GlassCabinet) -> void:
+func battle_shooter_demo(gc :GlassCabinet) -> Callable:
 	#gc.get_light_group().set_light_shadow(true, GlassCabinet.BitFlagAllLight)
 	gc.show_description()
 	var sz := gc.cabinet_size
 	battleshooter = preload("res://battle_shooter_3d/battle_shooter.tscn").instantiate(
 		).init(sz)
 	gc.add_child(battleshooter)
+	return Callable()
 
 
 var yutgame :윷놀이
-func yutgame_demo(gc :GlassCabinet) -> void:
+func yutgame_demo(gc :GlassCabinet) -> Callable:
 	gc.show_wall_box(false)
 	yutgame = preload("res://윷놀이/윷놀이.tscn").instantiate().init(gc.cabinet_size)
 	gc.add_child(yutgame)
 	yutgame.game_ended.connect(yutgame_ended)
 	yutgame.new_game()
+	return Callable()
 func yutgame_ended(_game :윷놀이) -> void:
 	yutgame.new_game()
 
@@ -135,7 +132,7 @@ func yutgame_ended(_game :윷놀이) -> void:
 var ladder :사다리게임
 var 길번호 :int
 var 밝은색목록 :ListIter = ListIter.new(NamedColors.filter_light_color_list())
-func ladder_demo(gc :GlassCabinet) -> void:
+func ladder_demo(gc :GlassCabinet) -> Callable:
 	gc.show_wall_box(false)
 	var 참가자정보 :Array
 	for i in 8:
@@ -145,7 +142,7 @@ func ladder_demo(gc :GlassCabinet) -> void:
 	gc.add_child(ladder)
 	ladder.사다리풀이그리기()
 	$"Timer길보기".start(3.0)
-
+	return ladder_animate
 func _on_timer길보기_timeout() -> void:
 	ladder.길하나보기(길번호)
 	길번호 = (길번호+1) % ladder.참가자정보.size()
@@ -157,7 +154,7 @@ func ladder_animate(delta) -> void:
 
 var snake_byte_game :SnakeByte
 var game_info :Dictionary
-func snakebyte_demo(gc :GlassCabinet) -> void:
+func snakebyte_demo(gc :GlassCabinet) -> Callable:
 	#gc.get_camera_light().get_light().visible = false
 	gc.show_wall_box(false)
 	#gc.lights.set_light_energy(10, BitFlag.MakeFilledFlags( $GlassCabinet.lights.get_size() ))
@@ -167,6 +164,7 @@ func snakebyte_demo(gc :GlassCabinet) -> void:
 	snake_byte_game.game_ended.connect(game_ended)
 	snake_byte_game.score_changed.connect(score_changed)
 	new_snakebytegame(true)
+	return Callable()
 func new_snakebytegame(demo_mode :bool) -> void:
 	game_info = {
 		"score" : 0,
@@ -185,7 +183,7 @@ func end_demo_start_game() -> void:
 
 var samegame :SameGame
 var samegame_level :int
-func same_game_demo(gc :GlassCabinet) -> void:
+func same_game_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
 	samegame = preload("res://same_game/same_game.tscn").instantiate(
 		).init(gc.cabinet_size)
@@ -193,6 +191,7 @@ func same_game_demo(gc :GlassCabinet) -> void:
 	samegame.game_ended.connect(samegame_ended)
 	samegame.score_changed.connect(update_samegame_score_label)
 	samegame.new_game(samegame_level)
+	return Callable()
 func samegame_ended(_game :SameGame) -> void:
 	samegame_level += 1
 	samegame.new_game(samegame_level)
@@ -215,7 +214,7 @@ func new_dialgauge(radius :float, cabinet_size :Vector3) -> DialGauge:
 			DialGauge.BarAlign.In, 12, NamedColors.random_color()
 		)
 var dialgauge_list :Array
-func dialgauge_demo(gc :GlassCabinet) -> void:
+func dialgauge_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_wall_box(false)
 	var radius := gc.cabinet_size.x/5
 	var dg = new_dialgauge(radius, gc.cabinet_size)
@@ -235,6 +234,7 @@ func dialgauge_demo(gc :GlassCabinet) -> void:
 	dg.position = gc.calc_pos_by_grid(1,2,3,3)
 	gc.add_child(dg)
 	dialgauge_list.append([dg, dg.value_range_mid()])
+	return dialgauge_animate
 func dialgauge_animate(_delta :float) -> void:
 	for dg in dialgauge_list:
 		dg[1] += randfn(0,1)*dg[0].value_range_len()/100
@@ -242,7 +242,7 @@ func dialgauge_animate(_delta :float) -> void:
 		dg[0].set_needle_value(dg[1])
 
 
-func winter_tree_demo(gc :GlassCabinet) -> void:
+func winter_tree_demo(gc :GlassCabinet) -> Callable:
 	var bmesh := PrismMesh.new()
 	bmesh.size = Vector3(1,0.3,1)
 	winter_tree = preload("res://winter_tree/winter_tree.tscn").instantiate(
@@ -252,6 +252,7 @@ func winter_tree_demo(gc :GlassCabinet) -> void:
 	#$"왼쪽패널/LabelTree".text = "branch count %d" % [ winter_tree.가지들얻기().multimesh.instance_count ]
 	winter_tree.position.y = -gc.cabinet_size.y/2
 	winter_tree_inst_index = winter_tree.make_index_array()
+	return wintertree_animate
 
 var winter_tree :WinterTree
 enum AniDir { Up, Down, Left , Right }
@@ -309,7 +310,7 @@ func random_color2(_arg ) -> Color:
 
 
 var platonic_solid_list :Array = []
-func platonic_solids_demo(gc :GlassCabinet) -> void:
+func platonic_solids_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_wall_box(false)
 	for ll in [
 		[4, 0.5,  [2, 0], 0, 3 ],
@@ -336,6 +337,7 @@ func platonic_solids_demo(gc :GlassCabinet) -> void:
 		ws.position = gc.calc_pos_by_grid(ll[2][0],ll[2][1], 4,3)
 	platonic_solids_animation.animation_ended.connect(platonic_solids_animation_ended)
 	start_platonic_solids_animation()
+	return Callable()
 
 var platonic_solids_animation := SimpleAnimation.new()
 func platonic_solids_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
@@ -350,14 +352,14 @@ func start_platonic_solids_animation() -> void:
 
 
 var tornado_list :Array # [ tornado , AnimateGradient , AnimateGradient ]
-func tornado_demo(gc :GlassCabinet) -> void:
+func tornado_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_wall_box(false)
 	for i in 4:
 		var tb = preload("res://tornado/tornado.tscn").instantiate(
 			).init_sample(gc.cabinet_size.x/2, gc.cabinet_size.y*0.3, 0.5, NamedColors.random_color(),NamedColors.random_color())
 		gc.add_child(tb)
 		tornado_list.append([tb, AnimateGradient.new(), AnimateGradient.new()])
-
+	return tornado_animate
 func scale_tornado(rate):
 	return Vector3(rate,1,rate)*rate
 func shift_tornado_lambda(t :float, shift :float) -> Callable:
@@ -390,7 +392,7 @@ func make_color_text_info_list(colist :Array, cdlist :Array) -> Array:
 	return rtn
 
 var roulette :Roulette
-func wheel_demo(gc :GlassCabinet) -> void:
+func wheel_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
 	var color_text_into_list := make_color_text_info_list(
 		colorlist_light, cardlist,
@@ -402,6 +404,7 @@ func wheel_demo(gc :GlassCabinet) -> void:
 	roulette.rotation_stopped.connect(wheel결과가결정됨)
 	gc.add_child(roulette)
 	wheel돌리기()
+	return roulette_animate
 func wheel돌리기() -> void:
 	var rot = randfn(2*PI, PI/2)
 	if randi_range(0,1) == 0:
@@ -420,7 +423,7 @@ func roulette_animate(_delta :float) -> void:
 
 
 var slot :Slots
-func slotreel_demo(gc :GlassCabinet) -> void:
+func slotreel_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
 	var color_text_into_list := make_color_text_info_list(colorlist_dark, cardlist).duplicate()
 	var symbol크기 := Vector2( gc.cabinet_size.x/20, SlotReel.calc_symbol_ysize(gc.cabinet_size.z/2, color_text_into_list.size() ) )
@@ -428,6 +431,7 @@ func slotreel_demo(gc :GlassCabinet) -> void:
 	gc.add_child(slot)
 	slot.rotation_stopped.connect(슬롯멈춤)
 	slot.start_rotation()
+	return Callable()
 func 슬롯멈춤(sl :Slots) -> void:
 	var symbol들 := sl.선택된symbol들얻기()
 	var 결과 := ""
@@ -440,10 +444,11 @@ func _on_timer_reel_timeout() -> void:
 
 
 var wavegauge_box :WaveGauge
-func wavegauge_box_demo(gc :GlassCabinet) -> void:
+func wavegauge_box_demo(gc :GlassCabinet) -> Callable:
 	wavegauge_box = preload("res://wave_gauge/wave_gauge.tscn").instantiate(
 		).init(Vector3(gc.cabinet_size.x-1,gc.cabinet_size.y-1,gc.cabinet_size.z-1), Vector3i(32,32,32), WaveGauge.color_list, 0.1, 1.0 )
 	gc.add_child(wavegauge_box)
+	return wavegauge_box_animate
 func wavegauge_box_animate(_delta :float) -> void:
 	if not wavegauge_box:
 		return
@@ -454,7 +459,7 @@ func wavegauge_box_animate(_delta :float) -> void:
 
 var wirenet :MultiMeshShape
 var wavegauge_plane :WaveGauge
-func wavegauge_plane_demo(gc :GlassCabinet) -> void:
+func wavegauge_plane_demo(gc :GlassCabinet) -> Callable:
 	var grid_size := Vector2i(16,9)*2
 	wirenet = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).init_wire_net(Vector2(gc.cabinet_size.x,gc.cabinet_size.y), Vector2i(grid_size.x,grid_size.y), gc.cabinet_size.x/grid_size.x/10, NamedColors.random_color())
@@ -462,6 +467,7 @@ func wavegauge_plane_demo(gc :GlassCabinet) -> void:
 	wavegauge_plane = preload("res://wave_gauge/wave_gauge.tscn").instantiate(
 		).init(Vector3(gc.cabinet_size.x,gc.cabinet_size.y,gc.cabinet_size.z/20), Vector3i(grid_size.x,grid_size.y,1), WaveGauge.color_list, 0.1, 1.0 )
 	gc.add_child(wavegauge_plane)
+	return wavegauge_plane_animate
 func wavegauge_plane_animate(_delta :float) -> void:
 	if not wavegauge_plane:
 		return
@@ -473,7 +479,7 @@ var maze3d :Maze3D
 var maze3d_setting :Maze3DSetting
 var maze_balls :Array
 var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ReducedWithPillar
-func maze3d_demo(gc :GlassCabinet) -> void:
+func maze3d_demo(gc :GlassCabinet) -> Callable:
 	#gc.get_light_group().set_light_shadow_all(GlassCabinet.GroupFlags["y+"] )
 	#gc.get_light_group().set_light_shadow_all(GlassCabinet.GroupFlags["y+"] & GlassCabinet.GroupFlags["z+"])
 	#gc.get_light_group().set_light_shadow(true, GlassCabinet.BitFlagAllLight)
@@ -496,7 +502,7 @@ func maze3d_demo(gc :GlassCabinet) -> void:
 		maze_balls.append(mb)
 		var pos2d := maze3d_setting.rand_pos_2i()
 		mb.position = maze3d_setting.mazepos2storeypos(pos2d, maze3d_setting.StoryH/2)
-
+	return maze3d_animate
 var maze_ani_i :int
 func maze3d_animate(delta :float) -> void:
 	if maze3d == null:
@@ -505,7 +511,6 @@ func maze3d_animate(delta :float) -> void:
 	if maze_ani_i% 60 == 0:
 		view_walls = Maze3D.wallview_next(view_walls)
 		maze3d.set_wallpillar_view_mode(view_walls)
-
 	var speed_min :float = maze3d_setting.LaneW
 	var speed_max :float = speed_min * 2
 	for mb in maze_balls:
@@ -525,7 +530,7 @@ func meshtrail_animate(delta :float) -> void:
 		mt.move_trail(delta, bounce_fn, trailmesh_radius, 4*PI,)
 var meshtrail_list :Array
 var bound_aabb :AABB
-func meshtrail_demo(gc :GlassCabinet) -> void:
+func meshtrail_demo(gc :GlassCabinet) -> Callable:
 	trailmesh_radius = gc.cabinet_size.length()/100
 	bound_aabb = AABB( -gc.cabinet_size/2, gc.cabinet_size)
 	var mesh := BoxMesh.new()
@@ -533,6 +538,7 @@ func meshtrail_demo(gc :GlassCabinet) -> void:
 	mesh.size = Vector3(trailmesh_radius*3, trailmesh_radius /5, trailmesh_radius/5)
 	for i in 10:
 		make_meshtrail(gc, i %4, mesh, 100, bound_aabb.get_center())
+	return Callable()
 func make_meshtrail(gc :GlassCabinet, mt_type:int, mesh :Mesh, count :int, pos :Vector3 ) -> void:
 	var mt = preload("res://mesh_trail/mesh_trail.tscn").instantiate(
 		).init_with_color_mesh(mesh, count, true, pos,
@@ -558,7 +564,7 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	return Bounce.v3f(pos, bound_aabb, radius)
 
 var prop_list :Array
-func props_demo(gc :GlassCabinet) -> void:
+func props_demo(gc :GlassCabinet) -> Callable:
 	gc.show_axis_arrow()
 	var prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
 		).set_color(NamedColors.random_color()).set_size( gc.cabinet_size.x/5, gc.cabinet_size.x/100, gc.cabinet_size.x/25,0.3)
@@ -580,9 +586,9 @@ func props_demo(gc :GlassCabinet) -> void:
 	prop.position = gc.calc_pos_by_grid(1,1,2,2)
 	gc.add_child(prop)
 	prop_list.append(prop)
-
 	props_animation.animation_ended.connect(props_animation_ended)
 	start_props_animation()
+	return Callable()
 
 var props_animation := SimpleAnimation.new()
 func props_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
@@ -595,7 +601,7 @@ func start_props_animation() -> void:
 		props_animation.start_rotate_subfield(
 			"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
 
-func line2d_demo(gc :GlassCabinet) -> void:
+func line2d_demo(gc :GlassCabinet) -> Callable:
 	gc.show_wall_box(false)
 	var size_pixel := Vector2i(2048,2048)
 	var ml2d = preload("res://move_line_2d/move_line_2d.tscn").instantiate()
@@ -617,12 +623,14 @@ func line2d_demo(gc :GlassCabinet) -> void:
 	#ml2dmi.rotation.x = -PI/4
 	gc.add_child(svp)
 	gc.add_child(ml2dmi)
+	return Callable()
 
 var orbitsphere_list :Array
-func orbit_demo(gc :GlassCabinet) -> void:
+func orbit_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_wall_box(false)
 	for i in 9:
 		add_orbitsphere(gc, i, 9)
+	return orbitsphere_animate
 func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
 	var rate := float(count -i)/float(count) * 0.5 + 0.5
 	var diagonal_length := gc.cabinet_size.length()/2.5 * rate
@@ -657,7 +665,6 @@ func orbitsphere_animate(delta :float) -> void:
 		os.animate_rotate(now, delta)
 
 
-
 var clock_calendar_animation := SimpleAnimation.new()
 func clock_calendar_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
 	if clock_calendar_animation.is_empty():
@@ -678,7 +685,7 @@ func start_clock_calendar_animation():
 
 var calendar :Calendar3D
 var clock :AnalogClock3D
-func clock_calendar_demo(gc :GlassCabinet) -> void:
+func clock_calendar_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_wall_box(false)
 	calendar = preload("res://calendar_3d/calendar_3d.tscn").instantiate(
 		).init(gc.cabinet_size.x/2, gc.cabinet_size.y, gc.cabinet_size.z/10, gc.cabinet_size.y/2.0/6 , true )
@@ -690,13 +697,15 @@ func clock_calendar_demo(gc :GlassCabinet) -> void:
 	reset_clock_calendar_pos()
 	clock_calendar_animation.animation_ended.connect(clock_calendar_animation_ended)
 	start_clock_calendar_animation()
+	return Callable()
 
 var bartree_scene = preload("res://bar_tree/bar_tree.tscn")
 var bartree_list :Array
-func bartree_demo(gc :GlassCabinet) -> void:
+func bartree_demo(gc :GlassCabinet) -> Callable:
 	var tree_size := Vector3(gc.cabinet_size.z/3, gc.cabinet_size.y, gc.cabinet_size.z / 30)
 	make_tree3(randi_range(1,7), gc, tree_size, randi_range(20,100), Vector3(-gc.cabinet_size.x/4,-gc.cabinet_size.y/2,0), false)
 	make_tree3(randi_range(1,7), gc, tree_size, randi_range(20,100), Vector3(gc.cabinet_size.x/4,-gc.cabinet_size.y/2,0), true)
+	return bartree_animate
 func make_tree3(make_flag:int, gc :GlassCabinet, tree_size :Vector3, bar_count :int, pos :Vector3, use_mat :bool) -> void:
 	if make_flag & (1<<0) != 0: # add left side
 		make_sub_tree(gc, tree_size, bar_count, 2.0, pos, use_mat)
