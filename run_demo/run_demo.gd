@@ -69,13 +69,9 @@ func _process(delta: float) -> void:
 		wavegauge_box.animate_wave(now)
 	if wavegauge_plane !=null:
 		wavegauge_plane.animate_wave(now)
-	if roulette !=null:
-		roulette.장식돌리기()
-		roulette.선택된cell강조상태켜기()
-	for bt in bartree_list:
-		bt.rotate_tree_bar_y(delta*10)
-	for os in orbitsphere_list:
-		os.animate_rotate(now, delta)
+	roulette_animate()
+	bartree_animate(delta)
+	orbitsphere_animate(delta)
 	meshtrail_animate(delta)
 	tornado_animate()
 	wintertree_animate(delta)
@@ -111,6 +107,8 @@ func tetromino_demo(gc :GlassCabinet) -> void:
 			tetromino_list.append(tetromino)
 
 func tetromino_animation() -> void:
+	if not tetromino_list:
+		return
 	var tet :Tetromino = tetromino_list.pick_random()
 	if tet.animation.is_empty():
 		tet.animate_to(randi_range(0, Tetromino.Type.size()-1), randi_range(0,4-1))
@@ -155,6 +153,8 @@ func _on_timer길보기_timeout() -> void:
 	ladder.길하나보기(길번호)
 	길번호 = (길번호+1) % ladder.참가자정보.size()
 func ladder_animation(delta) -> void:
+	if not ladder:
+		return
 	ladder.rotate_y(delta/2)
 
 
@@ -415,6 +415,12 @@ func wheel결과가결정됨(rl :Roulette) -> void:
 	$TimerWheel.start()
 func _on_timer_wheel_timeout() -> void:
 	wheel돌리기()
+func roulette_animate() -> void:
+	if not roulette:
+		return
+	roulette.장식돌리기()
+	roulette.선택된cell강조상태켜기()
+
 
 var slot :Slots
 func slotreel_demo(gc :GlassCabinet) -> void:
@@ -636,6 +642,12 @@ func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
 		).구재질설정(구mat2).궤도재질설정(궤도mat1)
 	gc.add_child(os)
 	orbitsphere_list.append(os)
+func orbitsphere_animate(delta :float) -> void:
+	var now := Time.get_unix_time_from_system()
+	for os in orbitsphere_list:
+		os.animate_rotate(now, delta)
+
+
 
 var clock_calendar_animation := SimpleAnimation.new()
 func clock_calendar_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
@@ -702,3 +714,6 @@ func make_sub_tree(gc :GlassCabinet, tree_size :Vector3, bar_count :int, shift :
 		t.init_bartree_with_color(NamedColors.random_color(), NamedColors.random_color(), bar_count)
 	t.init_bartree_transform(tree_size, shift)
 	bartree_list.append(t)
+func bartree_animate(delta :float) -> void:
+	for bt in bartree_list:
+		bt.rotate_tree_bar_y(delta*10)
