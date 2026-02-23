@@ -15,7 +15,7 @@ static var ColorList2 := ListIter.new( NamedColors.color_list, true )
 
 # initial value
 static var TeamCount :int = 3
-static var ShipPerTeam :int = 2
+static var ShipPerTeam :int = 20
 static var ShieldCount :int = 6
 
 static var TeamList :Array[BattleShooterTeam]
@@ -57,10 +57,13 @@ static func Make2D(vt3 :Vector3) -> Vector2:
 
 static var Boundary :AABB
 var octree :Octree
-var octree_count :int
+#var octree_count :int
+var octree_search_size :Vector3
 func build_octree()->void:
-	octree_count = $ShipContainer.get_child_count() + $BulletContainer.get_child_count() + $HommingContainer.get_child_count()
-	octree = Octree.new(Boundary, max(2,octree_count/10) )
+	var octree_count := $ShipContainer.get_child_count() + $BulletContainer.get_child_count() + $HommingContainer.get_child_count()
+	octree = Octree.new(Boundary, max(2,sqrt(octree_count)) )
+	octree_search_size = Boundary.size / sqrt(octree_count) + Vector3.ONE *BSObj.CalcRefSize(BSObj.Type.Ship) *2
+	#print_debug(octree_count, " ", octree_search_size)
 	for o in $ShipContainer.get_children():
 		octree.insert(o.position, o)
 	for o in $BulletContainer.get_children():

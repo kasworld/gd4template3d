@@ -191,7 +191,7 @@ func animation_ended(_st :Node, ani :Dictionary) -> void:
 
 ## called from BattleShooter
 func ship_ai_act(delta: float, game :BattleShooter) -> void:
-	var node_list := game.octree.search(position, BattleShooter.Boundary.size/ sqrt(game.octree_count))
+	var node_list := game.octree.search(position, game.octree_search_size)
 	var danger_dict := BattleShooterAI.find_danger_objs(self,node_list)
 #	var danger_dict = {
 #		"All":[null, 0.0],
