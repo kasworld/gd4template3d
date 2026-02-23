@@ -1,7 +1,7 @@
-class_name OctTree
+class_name Octree
 
 var boundary: AABB
-var children :Array[OctTree] # [0]-[3]: NW, NE, SW, SE
+var children :Array[Octree] # [0]-[3]: NW, NE, SW, SE
 var pos_to_obj :Dictionary[Vector3, Variant]
 var max_depth :int
 var capacity :int
@@ -61,21 +61,21 @@ func is_at_capacity() -> bool:
 func subdivide() -> bool:
 	if children.is_empty() and (max_depth <= 0 or depth < max_depth):
 		children = [
-			OctTree.new(AABB(boundary.position + Vector3(0                , boundary.size.y/2, boundary.size.z/2), boundary.size/2),
+			Octree.new(AABB(boundary.position + Vector3(0                , boundary.size.y/2, boundary.size.z/2), boundary.size/2),
 				capacity, max_depth, depth + 1),
-			OctTree.new(AABB(boundary.position + Vector3(0                , 0                , boundary.size.z/2), boundary.size/2),
+			Octree.new(AABB(boundary.position + Vector3(0                , 0                , boundary.size.z/2), boundary.size/2),
 				capacity, max_depth, depth + 1),
-			OctTree.new(AABB(boundary.position + Vector3(0                , boundary.size.y/2, 0                ), boundary.size/2),
+			Octree.new(AABB(boundary.position + Vector3(0                , boundary.size.y/2, 0                ), boundary.size/2),
 				capacity, max_depth, depth + 1),
-			OctTree.new(AABB(boundary.position + Vector3(0                , 0                , 0                ), boundary.size/2),
+			Octree.new(AABB(boundary.position + Vector3(0                , 0                , 0                ), boundary.size/2),
 				capacity, max_depth, depth + 1),
-			OctTree.new(AABB(boundary.position + Vector3(boundary.size.x/2, boundary.size.y/2, boundary.size.z/2), boundary.size/2),
+			Octree.new(AABB(boundary.position + Vector3(boundary.size.x/2, boundary.size.y/2, boundary.size.z/2), boundary.size/2),
 				capacity, max_depth, depth + 1),
-			OctTree.new(AABB(boundary.position + Vector3(boundary.size.x/2, 0                , boundary.size.z/2), boundary.size/2),
+			Octree.new(AABB(boundary.position + Vector3(boundary.size.x/2, 0                , boundary.size.z/2), boundary.size/2),
 				capacity, max_depth, depth + 1),
-			OctTree.new(AABB(boundary.position + Vector3(boundary.size.x/2, boundary.size.y/2, 0                ), boundary.size/2),
+			Octree.new(AABB(boundary.position + Vector3(boundary.size.x/2, boundary.size.y/2, 0                ), boundary.size/2),
 				capacity, max_depth, depth + 1),
-			OctTree.new(AABB(boundary.position + Vector3(boundary.size.x/2, 0                , 0                ), boundary.size/2),
+			Octree.new(AABB(boundary.position + Vector3(boundary.size.x/2, 0                , 0                ), boundary.size/2),
 				capacity, max_depth, depth + 1),
 		]
 		var point_positions := pos_to_obj.keys()

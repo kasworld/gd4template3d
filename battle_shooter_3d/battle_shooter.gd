@@ -56,19 +56,19 @@ static func Make2D(vt3 :Vector3) -> Vector2:
 	return Vector2(vt3.x, vt3.y)
 
 static var Boundary :AABB
-var octtree :OctTree
-func build_octtree()->void:
+var octree :Octree
+func build_octree()->void:
 	var count := $ShipContainer.get_child_count() + $BulletContainer.get_child_count() + $HommingContainer.get_child_count()
-	octtree = OctTree.new(Boundary, count)
+	octree = Octree.new(Boundary, count)
 	for o in $ShipContainer.get_children():
-		octtree.insert(o.position, o)
+		octree.insert(o.position, o)
 	for o in $BulletContainer.get_children():
-		octtree.insert(o.position, o)
+		octree.insert(o.position, o)
 	for o in $HommingContainer.get_children():
-		octtree.insert(o.position, o)
+		octree.insert(o.position, o)
 
 func _process(delta: float) -> void:
-	build_octtree()
+	build_octree()
 	for ship in $ShipContainer.get_children():
 		ship.ship_ai_act(delta, self)
 
