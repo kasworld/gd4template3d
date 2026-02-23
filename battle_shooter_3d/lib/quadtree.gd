@@ -7,6 +7,15 @@ var max_depth :int
 var capacity :int
 var depth :int
 
+func overlaps(region: Rect2) -> bool:
+	return region.intersects(boundary, true)
+
+func contains(position: Vector2) -> bool:
+	return boundary.has_point(position)
+
+func is_at_capacity() -> bool:
+	return points.size() >= capacity
+
 func _init(boundary_a :Rect2, capacity_a :int, max_depth_a :int = 0, depth_a :int = 0) -> void:
 	boundary = boundary_a
 	max_depth = max_depth_a
@@ -27,48 +36,32 @@ func insert(position :Vector2, value :Node = null) -> bool:
 			return true
 	return false
 
-func search_region(region: Rect2, return_values=false, matches=null) -> Array:
+func search_region(region: Rect2, matches=null) -> Array:
 	if matches == null:
 		matches = []
 	if not overlaps(region):
 		return matches
 	for point in points.keys():
 		if region.has_point(point):
-			if return_values: # are we returning the positions or the objects at those positions?
-				matches.append(points[point])
-			else:
-				matches.append(point)
+			matches.append(points[point])
 	for child in children:
-		child.search_region(region, return_values, matches)
+		child.search_region(region, matches)
 	return matches
 
-func search(position: Vector2, width: float, height: float, return_values=false, matches=null) -> Array:
+func search(position: Vector2, width: float, height: float, matches=null) -> Array:
 	var region := Rect2(position - Vector2(width/2, height/2), Vector2(width, height))
-	var p_list := search_region(region, return_values, matches)
-	var rtn :Array[Node] = []
-	for p in p_list:
-		rtn.append(points[p])
-	return rtn
-
-func overlaps(region: Rect2) -> bool:
-	return region.intersects(boundary, true)
-
-func contains(position: Vector2) -> bool:
-	return boundary.has_point(position)
-
-func is_at_capacity() -> bool:
-	return points.size() >= capacity
+	return search_region(region, matches)
 
 func subdivide() -> bool:
 	if children.is_empty() and (max_depth <= 0 or depth < max_depth):
 		children = [
-			QuadTree.new(Rect2(boundary.position, boundary.size/2),
+			QuadTree.new(Rect2(boundary.position + Vector2(0,                 0                ), boundary.size/2),
 				capacity, max_depth, depth + 1),
-			QuadTree.new(Rect2(boundary.position.x + boundary.size.x/2, boundary.position.y, boundary.size.x/2, boundary.size.y/2),
+			QuadTree.new(Rect2(boundary.position + Vector2(boundary.size.x/2, 0                ), boundary.size/2),
 				capacity, max_depth, depth + 1),
-			QuadTree.new(Rect2(boundary.position.x, boundary.position.y + boundary.size.y/2, boundary.size.x/2, boundary.size.y/2),
+			QuadTree.new(Rect2(boundary.position + Vector2(0,                 boundary.size.y/2), boundary.size/2),
 				capacity, max_depth, depth + 1),
-			QuadTree.new(Rect2(boundary.position.x + boundary.size.x/2, boundary.position.y + boundary.size.y/2, boundary.size.x/2, boundary.size.y/2),
+			QuadTree.new(Rect2(boundary.position + Vector2(boundary.size.x/2, boundary.size.y/2), boundary.size/2),
 				capacity, max_depth, depth + 1),
 		]
 		var point_positions := points.keys()
