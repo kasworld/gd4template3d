@@ -57,9 +57,10 @@ static func Make2D(vt3 :Vector3) -> Vector2:
 
 static var Boundary :AABB
 var octree :Octree
+var octree_count :int
 func build_octree()->void:
-	var count := $ShipContainer.get_child_count() + $BulletContainer.get_child_count() + $HommingContainer.get_child_count()
-	octree = Octree.new(Boundary, count)
+	octree_count = $ShipContainer.get_child_count() + $BulletContainer.get_child_count() + $HommingContainer.get_child_count()
+	octree = Octree.new(Boundary, max(2,octree_count/10) )
 	for o in $ShipContainer.get_children():
 		octree.insert(o.position, o)
 	for o in $BulletContainer.get_children():
