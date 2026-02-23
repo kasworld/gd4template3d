@@ -36,9 +36,7 @@ func insert(position :Vector2, value :Node = null) -> bool:
 			return true
 	return false
 
-func search_region(region: Rect2, matches=null) -> Array:
-	if matches == null:
-		matches = []
+func search_region(region: Rect2, matches:Array[Node]=[]) -> Array[Node]:
 	if not overlaps(region):
 		return matches
 	for point in points.keys():
@@ -48,7 +46,7 @@ func search_region(region: Rect2, matches=null) -> Array:
 		child.search_region(region, matches)
 	return matches
 
-func search(position: Vector2, width: float, height: float, matches=null) -> Array:
+func search(position: Vector2, width: float, height: float, matches:Array[Node]=[]) -> Array[Node]:
 	var region := Rect2(position - Vector2(width/2, height/2), Vector2(width, height))
 	return search_region(region, matches)
 
