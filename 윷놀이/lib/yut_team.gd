@@ -107,6 +107,8 @@ func 쓸말고르기(yutset :YutSet) -> 말:
 	return null
 
 func 말이동정보만들기(yutset :YutSet, m :말) -> 말들이동정보:
+	if yutset.result_value == 0: # 낙 처리
+		return 말들이동정보.new()
 	if m == null :
 		return 말들이동정보.new()
 	if m.난말인가() :
