@@ -223,7 +223,7 @@ func ship_ai_act(delta: float, game :BattleShooter) -> void:
 	if $ShieldContainer.get_child_count() < BattleShooter.ShieldCount and BattleShooterAI.do_add_shield(delta):
 		new_shield()
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	animation_bsobj.handle_animation()
 
 func _physics_process(delta: float) -> void:

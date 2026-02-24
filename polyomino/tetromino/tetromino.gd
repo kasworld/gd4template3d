@@ -7,7 +7,7 @@ func type_to_string(t :Type) -> String:
 	return Type.keys()[t]
 
 static func rand_type() -> Type:
-	return randi_range(0, Type.size() )
+	return randi_range(0, Type.size() ) as Type
 
 const Geo := {
 	# type, geo rotation
