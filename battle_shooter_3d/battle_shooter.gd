@@ -15,8 +15,8 @@ static var ColorList2 := ListIter.new( NamedColors.color_list, true )
 
 # initial value
 static var TeamCount :int = 3
-static var ShipPerTeam :int = 20
-static var ShieldCount :int = 6
+static var ShipPerTeam :int = 2
+static var ShieldCount :int = 2
 
 static var TeamList :Array[BattleShooterTeam]
 static func MakeTeamList(team_count :int, ship_per_team :int) -> Array[BattleShooterTeam]:

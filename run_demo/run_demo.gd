@@ -29,7 +29,6 @@ func init(cabinet_list :Array, add_camera_dict :Callable ) -> void:
 	run_demo.call(slotreel_demo, "SlotReel")
 	run_demo.call(wheel_demo, "RouletteWheel" )
 	run_demo.call(props_demo, "Props")
-	run_demo.call(wavegauge_plane_demo, "WaveGaugePlane")
 	run_demo.call(wavegauge_box_demo, "WaveGaugeBox")
 	run_demo.call(tornado_demo, "Tornado")
 	run_demo.call(platonic_solids_demo, "Platonic Solids")
@@ -68,7 +67,6 @@ func animate_used_glass_cabinet_light() -> void:
 func _process(delta: float) -> void:
 	animate_empty_glass_cabinet_light()
 	#animate_used_glass_cabinet_light()
-
 	for fn in animate_func_list:
 		fn.call(delta)
 
@@ -437,20 +435,6 @@ func wavegauge_box_demo(gc :GlassCabinet) -> Callable:
 		wavegauge_box.animate_wave(Time.get_unix_time_from_system())
 
 
-var wirenet :MultiMeshShape
-var wavegauge_plane :WaveGauge
-func wavegauge_plane_demo(gc :GlassCabinet) -> Callable:
-	var grid_size := Vector2i(16,9)*2
-	wirenet = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_wire_net(Vector2(gc.cabinet_size.x,gc.cabinet_size.y), Vector2i(grid_size.x,grid_size.y), gc.cabinet_size.x/grid_size.x/10, NamedColors.random_color())
-	gc.add_child(wirenet)
-	wavegauge_plane = preload("res://wave_gauge/wave_gauge.tscn").instantiate(
-		).init(Vector3(gc.cabinet_size.x,gc.cabinet_size.y,gc.cabinet_size.z/20), Vector3i(grid_size.x,grid_size.y,1), WaveGauge.color_list, 0.1, 1.0 )
-	gc.add_child(wavegauge_plane)
-	return func (_delta :float) -> void:
-		wavegauge_plane.animate_wave(Time.get_unix_time_from_system())
-
-
 var maze3d :Maze3D
 var maze3d_setting :Maze3DSetting
 var maze_balls :Array
@@ -538,27 +522,30 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 
 var prop_list :Array
 func props_demo(gc :GlassCabinet) -> Callable:
-	gc.show_axis_arrow()
+	var afterfn := func(pr, x,y):
+		pr.position = gc.calc_pos_by_grid(x,y,3,2)
+		gc.add_child(pr)
+		prop_list.append(pr)
+
 	var prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
 		).set_color(NamedColors.random_color()).set_size( gc.cabinet_size.x/5, gc.cabinet_size.x/100, gc.cabinet_size.x/25,0.3)
-	prop.position = gc.calc_pos_by_grid(0,0,2,2)
-	gc.add_child(prop)
-	prop_list.append(prop)
+	afterfn.call(prop,0,0)
 	prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
 		).set_color(NamedColors.random_color()).set_size( gc.cabinet_size.x/5, gc.cabinet_size.x/70, gc.cabinet_size.x/25)
-	prop.position = gc.calc_pos_by_grid(1,0,2,2)
-	gc.add_child(prop)
-	prop_list.append(prop)
+	afterfn.call(prop,1,0)
 	prop = preload("res://valve_handle/valve_handle.tscn").instantiate(
 		).init(gc.cabinet_size.x/20, gc.cabinet_size.x/10, 8, NamedColors.random_color())
-	prop.position = gc.calc_pos_by_grid(0,1,2,2)
-	gc.add_child(prop)
-	prop_list.append(prop)
+	afterfn.call(prop,0,1)
 	prop = preload("res://valve_handle/valve_handle.tscn").instantiate(
-		).init(gc.cabinet_size.x/10, gc.cabinet_size.x/20, 4, NamedColors.random_color())
-	prop.position = gc.calc_pos_by_grid(1,1,2,2)
-	gc.add_child(prop)
-	prop_list.append(prop)
+		).init(gc.cabinet_size.x/20, gc.cabinet_size.x/20, 4, NamedColors.random_color())
+	afterfn.call(prop,1,1)
+	var grid_size := Vector2i(16,9)
+	prop = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
+		).init_wire_net(Vector2(gc.cabinet_size.x,gc.cabinet_size.y)/4, grid_size, gc.cabinet_size.x/grid_size.x/20, NamedColors.random_color())
+	afterfn.call(prop,2,0)
+	prop = preload("res://axis_arrow_3d/axis_arrow_3d.tscn").instantiate(
+		).set_colors().set_size(gc.cabinet_size.length()/10)
+	afterfn.call(prop,2,1)
 	props_animation.animation_ended.connect(props_animation_ended)
 	start_props_animation()
 	return func(_delta:float):

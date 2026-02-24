@@ -106,7 +106,7 @@ func _ready() -> void:
 		focus_to_new_MovingCameraLight(gc.get_camera_light())
 
 	var single :bool
-	single = true
+	#single = true
 	if single :
 		run_1_demo.call(battle_shooter_demo, "BattleShooter")
 	else:
