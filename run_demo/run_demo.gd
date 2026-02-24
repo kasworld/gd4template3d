@@ -94,7 +94,7 @@ func tetromino_demo(gc :GlassCabinet) -> Callable:
 	return func(_delta :float) -> void:
 		var tet :Tetromino = tetromino_list.pick_random()
 		if tet.animation.is_empty():
-			tet.animate_to(randi_range(0, Tetromino.Type.size()-1), randi_range(0,4-1))
+			tet.animate_to(tet.tetromino_type, (tet.tetromino_rot+1)%4)
 
 
 var battleshooter :BattleShooter
