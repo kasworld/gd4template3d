@@ -1,4 +1,5 @@
 extends Node3D
+class_name RunDemo
 
 var glass_cabinet_iter :ListIter # [ GlassCabinet, light iter data]
 var used_glass_cabinet_iter :ListIter
