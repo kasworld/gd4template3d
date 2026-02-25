@@ -7,7 +7,7 @@ var empty_glass_cabinet_iter :ListIter
 
 
 var animate_func_list :Array[Callable] = []
-func init(cabinet_list :Array, add_camera_dict :Callable, run :Array =[]) -> void:
+func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> void:
 	var gc_ani_list := []
 	for gc in cabinet_list:
 		gc_ani_list.append([gc, AnimateGradient.new(),AnimateGradient.new()])
@@ -21,29 +21,32 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run :Array =[]) -> voi
 		gc.set_title_text(text)
 		add_camera_dict.call(gc.get_camera_light(), text)
 
-	if not run.is_empty():
+	var run_all := [
+		[bartree_demo, "BarTree"],
+		[clock_calendar_demo, "Clock Calender"],
+		[orbit_demo, "Orbit"],
+		[line2d_demo, "MoveLine2d"],
+		[meshtrail_demo, "MeshTrail"],
+		[maze3d_demo, "Maze3D"],
+		[slotreel_demo, "SlotReel"],
+		[wheel_demo, "RouletteWheel" ],
+		[props_demo, "Props"],
+		[wavegauge_box_demo, "WaveGaugeBox"],
+		[tornado_demo, "Tornado"],
+		[platonic_solids_demo, "Platonic Solids"],
+		[winter_tree_demo, "Winter Tree"],
+		[dialgauge_demo, "Dial Gauge"],
+		[same_game_demo, "Same Game"],
+		[snakebyte_demo, "Snakebyte Game"],
+		[ladder_demo, "사다리게임"],
+		[yutgame_demo, "윷놀이"],
+		[battle_shooter_demo, "Battle Shooter"],
+		[tetromino_demo, "Tetromino"],
+	]
+	if not run1.is_empty():
+		run_all = [ run1 ]
+	for run in run_all:
 		run_demo.call(run[0], run[1])
-	else:
-		run_demo.call(bartree_demo, "BarTree")
-		run_demo.call(clock_calendar_demo, "Clock Calender")
-		run_demo.call(orbit_demo, "Orbit")
-		run_demo.call(line2d_demo, "MoveLine2d")
-		run_demo.call(meshtrail_demo, "MeshTrail")
-		run_demo.call(maze3d_demo, "Maze3D")
-		run_demo.call(slotreel_demo, "SlotReel")
-		run_demo.call(wheel_demo, "RouletteWheel" )
-		run_demo.call(props_demo, "Props")
-		run_demo.call(wavegauge_box_demo, "WaveGaugeBox")
-		run_demo.call(tornado_demo, "Tornado")
-		run_demo.call(platonic_solids_demo, "Platonic Solids")
-		run_demo.call(winter_tree_demo, "Winter Tree")
-		run_demo.call(dialgauge_demo, "Dial Gauge")
-		run_demo.call(same_game_demo, "Same Game")
-		run_demo.call(snakebyte_demo, "Snakebyte Game")
-		run_demo.call(ladder_demo, "사다리게임")
-		run_demo.call(yutgame_demo, "윷놀이")
-		run_demo.call(battle_shooter_demo, "Battle Shooter")
-		run_demo.call(tetromino_demo, "Tetromino")
 
 	used_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_itered_slice())
 	empty_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_unitered_slice())

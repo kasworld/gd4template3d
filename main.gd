@@ -100,11 +100,11 @@ func _ready() -> void:
 
 	var rundemo :RunDemo = preload("res://run_demo/run_demo.tscn").instantiate()
 	add_child(rundemo)
-	var single :bool
 
-	single = true
-	if single :
-		rundemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict, [tetromino_demo, "tet"])
+	var run1 := []
+	#run1 = [tetromino_demo, "tet"]
+	if not run1.is_empty() :
+		rundemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict, run1)
 		var gc :GlassCabinet = rundemo.used_glass_cabinet_iter.get_current()[0]
 		focus_to_new_MovingCameraLight(gc.get_camera_light())
 	else:
