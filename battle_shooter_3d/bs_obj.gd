@@ -12,9 +12,9 @@ enum Type {Ship, Bullet, Homming, Shield}
 ## by cabinetsize
 const SizeRate :Dictionary[Type,float] = {
 	Type.Ship :    0.01,
-	Type.Bullet :  0.008,
+	Type.Bullet :  0.003,
 	Type.Homming : 0.008,
-	Type.Shield :  0.005,
+	Type.Shield :  0.006,
 }
 
 static func CalcRefSize(t :Type) -> float:
@@ -60,12 +60,11 @@ func _to_string() -> String:
 
 func init_ship(t_num :int) -> BSObj:
 	init0(Type.Ship,t_num)
-	$MeshInstance3D.mesh = SphereMesh.new()
-	$MeshInstance3D.mesh.radius = CalcRefSize(type)
-	$MeshInstance3D.mesh.height = CalcRefSize(type) *2
-	$CollisionShape3D.shape = SphereShape3D.new()
-	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
-	bounce_radius = $MeshInstance3D.mesh.radius
+	$MeshInstance3D.mesh = BoxMesh.new()
+	$MeshInstance3D.mesh.size = Vector3(CalcRefSize(type),CalcRefSize(type),CalcRefSize(type))
+	$CollisionShape3D.shape = BoxShape3D.new()
+	$CollisionShape3D.shape.size = $MeshInstance3D.mesh.size
+	bounce_radius = CalcRefSize(type)
 	init1()
 	velocity = BattleShooter.RandVector3(CalcRefSpeed(type))
 	animation_bsobj.start_scale("ship_spawn", $MeshInstance3D, Vector3(0.1,0.1,0.1), Vector3(1,1,1), AniDurSec)
@@ -92,11 +91,10 @@ func shield_explode_ended(me :BSObj) -> void:
 var shield_rotate_dir :float
 func init_shield(src_ship :BSObj) -> BSObj:
 	init0(Type.Shield,src_ship.team_number)
-	$MeshInstance3D.mesh = SphereMesh.new()
-	$MeshInstance3D.mesh.radius = CalcRefSize(type)
-	$MeshInstance3D.mesh.height = CalcRefSize(type) *2
-	$CollisionShape3D.shape = SphereShape3D.new()
-	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
+	$MeshInstance3D.mesh = BoxMesh.new()
+	$MeshInstance3D.mesh.size = Vector3(CalcRefSize(type),CalcRefSize(type),CalcRefSize(type))
+	$CollisionShape3D.shape = BoxShape3D.new()
+	$CollisionShape3D.shape.size = $MeshInstance3D.mesh.size
 	init1()
 	src_ship.life_ended.connect(shield_src_ship_life_end)
 	animation_bsobj.start_scale("shield_spawn", $MeshInstance3D, Vector3(0.1,0.1,0.1), Vector3(1,1,1), AniDurSec)
@@ -109,13 +107,10 @@ func shield_src_ship_life_end(_src_ship :BSObj, _other :BSObj) -> void:
 
 func init_bullet(t_num :int, velocity_a :Vector3) -> BSObj:
 	init0(Type.Bullet,t_num)
-	$MeshInstance3D.mesh = CapsuleMesh.new()
-	$MeshInstance3D.mesh.radius = CalcRefSize(type) * 0.2
-	$MeshInstance3D.mesh.height = CalcRefSize(type)
-	$MeshInstance3D.rotation.x = PI/2
-	$CollisionShape3D.shape = CapsuleShape3D.new()
-	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.radius
-	$CollisionShape3D.shape.height = $MeshInstance3D.mesh.height
+	$MeshInstance3D.mesh = BoxMesh.new()
+	$MeshInstance3D.mesh.size = Vector3(CalcRefSize(type),CalcRefSize(type),CalcRefSize(type)*3)
+	$CollisionShape3D.shape = BoxShape3D.new()
+	$CollisionShape3D.shape.size = $MeshInstance3D.mesh.size
 	init1()
 	velocity = velocity_a.normalized() * CalcRefSpeed(type)
 	look_at_from_position(position, position + velocity_a )
@@ -125,12 +120,10 @@ func init_bullet(t_num :int, velocity_a :Vector3) -> BSObj:
 var homming_dst :BSObj
 func init_homming(t_num :int, dstobj :BSObj) -> BSObj:
 	init0(Type.Homming,t_num)
-	$MeshInstance3D.mesh = TorusMesh.new()
-	$MeshInstance3D.mesh.inner_radius = CalcRefSize(type) *0.8
-	$MeshInstance3D.mesh.outer_radius = CalcRefSize(type)
-	$MeshInstance3D.rotation.x = PI/2
-	$CollisionShape3D.shape = SphereShape3D.new()
-	$CollisionShape3D.shape.radius = $MeshInstance3D.mesh.outer_radius
+	$MeshInstance3D.mesh = BoxMesh.new()
+	$MeshInstance3D.mesh.size = Vector3(CalcRefSize(type),CalcRefSize(type),CalcRefSize(type)/2)
+	$CollisionShape3D.shape = BoxShape3D.new()
+	$CollisionShape3D.shape.size = $MeshInstance3D.mesh.size
 	init1()
 	homming_dst = dstobj
 	homming_dst.life_ended.connect(homming_dst_life_end)
@@ -232,6 +225,7 @@ func _physics_process(delta: float) -> void:
 	match type:
 		Type.Ship:
 			velocity = BattleShooter.ClearZ(velocity)
+			$MeshInstance3D.rotate(velocity.normalized(), delta*10)
 			position += velocity * delta
 			var bn := Bounce.v3f(position,BattleShooter.Boundary,bounce_radius)
 			position = bn.pos
@@ -240,9 +234,10 @@ func _physics_process(delta: float) -> void:
 				if bn.bounced[i] != 0 :
 					velocity[i] = -bn.bounced[i] * abs(velocity[i])
 		Type.Shield:
+			$MeshInstance3D.rotate_z(delta*shield_rotate_dir)
 			position = position.rotated(Vector3.FORWARD, delta*shield_rotate_dir)
 		Type.Bullet:
-			#rotation = velocity
+			$MeshInstance3D.rotate_z(delta*10)
 			position += velocity * delta
 			if not BattleShooter.Boundary.has_point(position):
 				end_life.call_deferred(self)
