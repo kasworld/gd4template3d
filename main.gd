@@ -98,20 +98,16 @@ func _ready() -> void:
 
 	$CabinetDemo.init(WorldSize, 2)
 
-	var run_1_demo := func(demo :Callable, text :String) -> void:
-		var gc :GlassCabinet = $CabinetDemo.glass_cabinet_list[0]
-		gc.set_title_text(text)
-		add_camera_dict.call(gc.get_camera_light(), text)
-		animate_func = demo.call(gc)
-		focus_to_new_MovingCameraLight(gc.get_camera_light())
-
+	var rundemo :RunDemo = preload("res://run_demo/run_demo.tscn").instantiate()
+	add_child(rundemo)
 	var single :bool
+
 	single = true
 	if single :
-		run_1_demo.call(tetromino_demo, "tet")
+		rundemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict, [tetromino_demo, "tet"])
+		var gc :GlassCabinet = rundemo.used_glass_cabinet_iter.get_current()[0]
+		focus_to_new_MovingCameraLight(gc.get_camera_light())
 	else:
-		var rundemo = preload("res://run_demo/run_demo.tscn").instantiate()
-		add_child(rundemo)
 		rundemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict)
 		$CenterCameraLight.make_current()
 

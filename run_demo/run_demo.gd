@@ -7,7 +7,7 @@ var empty_glass_cabinet_iter :ListIter
 
 
 var animate_func_list :Array[Callable] = []
-func init(cabinet_list :Array, add_camera_dict :Callable ) -> void:
+func init(cabinet_list :Array, add_camera_dict :Callable, run :Array =[]) -> void:
 	var gc_ani_list := []
 	for gc in cabinet_list:
 		gc_ani_list.append([gc, AnimateGradient.new(),AnimateGradient.new()])
@@ -21,26 +21,29 @@ func init(cabinet_list :Array, add_camera_dict :Callable ) -> void:
 		gc.set_title_text(text)
 		add_camera_dict.call(gc.get_camera_light(), text)
 
-	run_demo.call(bartree_demo, "BarTree")
-	run_demo.call(clock_calendar_demo, "Clock Calender")
-	run_demo.call(orbit_demo, "Orbit")
-	run_demo.call(line2d_demo, "MoveLine2d")
-	run_demo.call(meshtrail_demo, "MeshTrail")
-	run_demo.call(maze3d_demo, "Maze3D")
-	run_demo.call(slotreel_demo, "SlotReel")
-	run_demo.call(wheel_demo, "RouletteWheel" )
-	run_demo.call(props_demo, "Props")
-	run_demo.call(wavegauge_box_demo, "WaveGaugeBox")
-	run_demo.call(tornado_demo, "Tornado")
-	run_demo.call(platonic_solids_demo, "Platonic Solids")
-	run_demo.call(winter_tree_demo, "Winter Tree")
-	run_demo.call(dialgauge_demo, "Dial Gauge")
-	run_demo.call(same_game_demo, "Same Game")
-	run_demo.call(snakebyte_demo, "Snakebyte Game")
-	run_demo.call(ladder_demo, "사다리게임")
-	run_demo.call(yutgame_demo, "윷놀이")
-	run_demo.call(battle_shooter_demo, "Battle Shooter")
-	run_demo.call(tetromino_demo, "Tetromino")
+	if not run.is_empty():
+		run_demo.call(run[0], run[1])
+	else:
+		run_demo.call(bartree_demo, "BarTree")
+		run_demo.call(clock_calendar_demo, "Clock Calender")
+		run_demo.call(orbit_demo, "Orbit")
+		run_demo.call(line2d_demo, "MoveLine2d")
+		run_demo.call(meshtrail_demo, "MeshTrail")
+		run_demo.call(maze3d_demo, "Maze3D")
+		run_demo.call(slotreel_demo, "SlotReel")
+		run_demo.call(wheel_demo, "RouletteWheel" )
+		run_demo.call(props_demo, "Props")
+		run_demo.call(wavegauge_box_demo, "WaveGaugeBox")
+		run_demo.call(tornado_demo, "Tornado")
+		run_demo.call(platonic_solids_demo, "Platonic Solids")
+		run_demo.call(winter_tree_demo, "Winter Tree")
+		run_demo.call(dialgauge_demo, "Dial Gauge")
+		run_demo.call(same_game_demo, "Same Game")
+		run_demo.call(snakebyte_demo, "Snakebyte Game")
+		run_demo.call(ladder_demo, "사다리게임")
+		run_demo.call(yutgame_demo, "윷놀이")
+		run_demo.call(battle_shooter_demo, "Battle Shooter")
+		run_demo.call(tetromino_demo, "Tetromino")
 
 	used_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_itered_slice())
 	empty_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_unitered_slice())
@@ -48,6 +51,8 @@ func init(cabinet_list :Array, add_camera_dict :Callable ) -> void:
 		empty_glass_cabinet_iter.get_size(),used_glass_cabinet_iter.get_size() ])
 
 func animate_empty_glass_cabinet_light() -> void:
+	if not empty_glass_cabinet_iter:
+		return
 	var lai :Array = empty_glass_cabinet_iter.get_current_and_step_next()
 	var gc :GlassCabinet = lai[0]
 	for i in lai.slice(1).size():
@@ -57,6 +62,8 @@ func animate_empty_glass_cabinet_light() -> void:
 		ani_state.inc_rate(0.1)
 
 func animate_used_glass_cabinet_light() -> void:
+	if not used_glass_cabinet_iter:
+		return
 	var lai :Array = used_glass_cabinet_iter.get_current_and_step_next()
 	var gc :GlassCabinet = lai[0]
 	for i in lai.slice(1).size():
