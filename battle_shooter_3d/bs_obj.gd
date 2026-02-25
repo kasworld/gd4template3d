@@ -12,7 +12,7 @@ enum Type {Ship, Bullet, Homming, Shield}
 ## by cabinetsize
 const SizeRate :Dictionary[Type,float] = {
 	Type.Ship :    0.01,
-	Type.Bullet :  0.003,
+	Type.Bullet :  0.002,
 	Type.Homming : 0.008,
 	Type.Shield :  0.006,
 }
@@ -121,7 +121,7 @@ var homming_dst :BSObj
 func init_homming(t_num :int, dstobj :BSObj) -> BSObj:
 	init0(Type.Homming,t_num)
 	$MeshInstance3D.mesh = BoxMesh.new()
-	$MeshInstance3D.mesh.size = Vector3(CalcRefSize(type),CalcRefSize(type),CalcRefSize(type)/2)
+	$MeshInstance3D.mesh.size = Vector3(CalcRefSize(type),CalcRefSize(type),CalcRefSize(type)/4)
 	$CollisionShape3D.shape = BoxShape3D.new()
 	$CollisionShape3D.shape.size = $MeshInstance3D.mesh.size
 	init1()
