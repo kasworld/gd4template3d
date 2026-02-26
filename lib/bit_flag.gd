@@ -61,5 +61,6 @@ static func SetArray_bool_by_flag(list: Array, flags :int, field:String) -> void
 static func GetArray_flags_from_bool_field(list: Array, field :String) -> int:
 	var rtn := 0
 	for i in list.size():
-		SetByPos(i, list[i][field])
+		if list[i][field]:
+			rtn |= 1<<i
 	return rtn
