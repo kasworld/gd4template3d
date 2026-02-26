@@ -59,22 +59,17 @@ static var Boundary :AABB
 var octree :Octree
 var octree_search_size :Vector3
 func build_octree()->void:
-	var o_list:Array[BSObj] = []
+	octree = Octree.new(Boundary, TeamCount * ShipPerTeam )
+	octree_search_size = Boundary.size / sqrt(TeamCount * ShipPerTeam) + Vector3.ONE *BSObj.CalcRefSize(BSObj.Type.Ship) *2
 	for o in $ShipContainer.get_children():
 		if o.alive:
-			o_list.append(o)
+			octree.insert(o.position, o)
 	for o in $BulletContainer.get_children():
 		if o.alive:
-			o_list.append(o)
+			octree.insert(o.position, o)
 	for o in $HommingContainer.get_children():
 		if o.alive:
-			o_list.append(o)
-	var octree_count := o_list.size()
-	octree = Octree.new(Boundary, max(2,sqrt(octree_count)) )
-	octree_search_size = Boundary.size / sqrt(octree_count) + Vector3.ONE *BSObj.CalcRefSize(BSObj.Type.Ship) *2
-	#print_debug(octree_count, " ", octree_search_size)
-	for o in o_list:
-		octree.insert(o.position, o)
+			octree.insert(o.position, o)
 
 func _process(delta: float) -> void:
 	build_octree()
