@@ -474,7 +474,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	return maze3d_animate
 var maze_ani_i :int
 func maze3d_animate(delta :float) -> void:
-	maze3d.rotation.x = deg_to_rad(float(maze_ani_i))
+	maze3d.rotation.x = sin(deg_to_rad(maze_ani_i)) * PI + PI + PI/4
 	maze_ani_i += 1
 	if maze_ani_i% 60 == 0:
 		view_walls = Maze3D.wallview_next(view_walls)
