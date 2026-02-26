@@ -62,8 +62,8 @@ func init_ship(t_num :int) -> BSObj:
 	init0(Type.Ship,t_num)
 	$MeshInstance3D.mesh = BoxMesh.new()
 	$MeshInstance3D.mesh.size = Vector3(CalcRefSize(type),CalcRefSize(type),CalcRefSize(type))
-	$CollisionShape3D.shape = BoxShape3D.new()
-	$CollisionShape3D.shape.size = $MeshInstance3D.mesh.size
+	$CollisionShape3D.shape = SphereShape3D.new()
+	$CollisionShape3D.shape.radius = CalcRefSize(type)
 	bounce_radius = CalcRefSize(type)
 	init1()
 	velocity = BattleShooter.RandVector3(CalcRefSpeed(type))
@@ -93,8 +93,8 @@ func init_shield(src_ship :BSObj) -> BSObj:
 	init0(Type.Shield,src_ship.team_number)
 	$MeshInstance3D.mesh = BoxMesh.new()
 	$MeshInstance3D.mesh.size = Vector3(CalcRefSize(type),CalcRefSize(type),CalcRefSize(type))
-	$CollisionShape3D.shape = BoxShape3D.new()
-	$CollisionShape3D.shape.size = $MeshInstance3D.mesh.size
+	$CollisionShape3D.shape = SphereShape3D.new()
+	$CollisionShape3D.shape.radius = CalcRefSize(type)
 	init1()
 	src_ship.life_ended.connect(shield_src_ship_life_end)
 	animation_bsobj.start_scale("shield_spawn", $MeshInstance3D, Vector3(0.1,0.1,0.1), Vector3(1,1,1), AniDurSec)
@@ -109,8 +109,8 @@ func init_bullet(t_num :int, velocity_a :Vector3) -> BSObj:
 	init0(Type.Bullet,t_num)
 	$MeshInstance3D.mesh = BoxMesh.new()
 	$MeshInstance3D.mesh.size = Vector3(CalcRefSize(type),CalcRefSize(type),CalcRefSize(type)*3)
-	$CollisionShape3D.shape = BoxShape3D.new()
-	$CollisionShape3D.shape.size = $MeshInstance3D.mesh.size
+	$CollisionShape3D.shape = SphereShape3D.new()
+	$CollisionShape3D.shape.radius = CalcRefSize(type)
 	init1()
 	velocity = velocity_a.normalized() * CalcRefSpeed(type)
 	look_at_from_position(position, position + velocity_a )
@@ -122,8 +122,8 @@ func init_homming(t_num :int, dstobj :BSObj) -> BSObj:
 	init0(Type.Homming,t_num)
 	$MeshInstance3D.mesh = BoxMesh.new()
 	$MeshInstance3D.mesh.size = Vector3(CalcRefSize(type),CalcRefSize(type),CalcRefSize(type)/4)
-	$CollisionShape3D.shape = BoxShape3D.new()
-	$CollisionShape3D.shape.size = $MeshInstance3D.mesh.size
+	$CollisionShape3D.shape = SphereShape3D.new()
+	$CollisionShape3D.shape.radius = CalcRefSize(type)
 	init1()
 	homming_dst = dstobj
 	homming_dst.life_ended.connect(homming_dst_life_end)
