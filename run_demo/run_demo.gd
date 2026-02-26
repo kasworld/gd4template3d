@@ -105,8 +105,15 @@ func tetromino_demo(gc :GlassCabinet) -> Callable:
 	return func(_delta :float) -> void:
 		var tet :Tetromino = tetromino_list.pick_random()
 		if tet.animation.is_empty():
-			tet.animate_to(tet.tetromino_type, (tet.tetromino_rot+1)%4)
-
+			match randi_range(0,3):
+				0: # rotate
+					tet.animate_to(tet.tetromino_type, (tet.tetromino_rot+1)%4)
+				1:
+					tet.rotate_to_dir(Vector2.RIGHT)
+				2:
+					tet.rotate_to_dir(Vector2.DOWN)
+				3:
+					tet.rotate_to_dir(Vector2.LEFT)
 
 var battleshooter :BattleShooter
 func battle_shooter_demo(gc :GlassCabinet) -> Callable:
@@ -344,7 +351,7 @@ func start_platonic_solids_animation() -> void:
 	for ps in platonic_solid_list:
 		var diff :float = [PI/2,-PI/2].pick_random()
 		var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-		platonic_solids_animation.start_rotate_subfield(
+		platonic_solids_animation.start_rotation_subfield(
 			"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
 
 
@@ -560,7 +567,7 @@ func start_props_animation() -> void:
 	for ps in prop_list:
 		var diff :float = [PI/2,-PI/2].pick_random()
 		var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-		props_animation.start_rotate_subfield(
+		props_animation.start_rotation_subfield(
 			"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
 
 func line2d_demo(gc :GlassCabinet) -> Callable:
@@ -638,9 +645,9 @@ func reset_clock_calendar_pos()->void:
 func start_clock_calendar_animation():
 	const ani_speed :float = 3
 	clock_calendar_animation.start_move("clock",clock, clock_calendar_pos_list[0], clock_calendar_pos_list[1], ani_speed)
-	clock_calendar_animation.start_rotate_subfield("clock",clock, Vector3.Axis.AXIS_Y, clock_calendar_rot_args[0][0] , clock_calendar_rot_args[0][1], ani_speed)
+	clock_calendar_animation.start_rotation_subfield("clock",clock, Vector3.Axis.AXIS_Y, clock_calendar_rot_args[0][0] , clock_calendar_rot_args[0][1], ani_speed)
 	clock_calendar_animation.start_move("clock",calendar, clock_calendar_pos_list[1], clock_calendar_pos_list[0], ani_speed)
-	clock_calendar_animation.start_rotate_subfield("clock",calendar, Vector3.Axis.AXIS_Y, clock_calendar_rot_args[1][0], clock_calendar_rot_args[1][1], ani_speed)
+	clock_calendar_animation.start_rotation_subfield("clock",calendar, Vector3.Axis.AXIS_Y, clock_calendar_rot_args[1][0], clock_calendar_rot_args[1][1], ani_speed)
 	clock_calendar_pos_list = [clock_calendar_pos_list[1], clock_calendar_pos_list[0]]
 	clock_calendar_rot_args = [clock_calendar_rot_args[1], clock_calendar_rot_args[0]]
 

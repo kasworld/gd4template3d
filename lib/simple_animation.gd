@@ -70,10 +70,10 @@ func make_move_subfield(name :String, aniNode :Node, sub_index :int, from :Varia
 		"DurSec" : dur_sec,
 	}
 
-func start_rotate(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
-	return add_animation(make_rotate(name,aniNode,from,to,dur_sec))
+func start_rotation(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
+	return add_animation(make_rotation(name,aniNode,from,to,dur_sec))
 
-func make_rotate(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
+func make_rotation(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
 	return  {
 		"Name" : name, # for end signal
 		"AniNode" : aniNode,
@@ -83,10 +83,10 @@ func make_rotate(name :String, aniNode :Node, from :Variant, to: Variant, dur_se
 		"DurSec" : dur_sec,
 	}
 
-func start_rotate_subfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
-	return add_animation( make_rotate_subfield(name,aniNode, sub_index, from,to, dur_sec) )
+func start_rotation_subfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
+	return add_animation( make_rotation_subfield(name,aniNode, sub_index, from,to, dur_sec) )
 
-func make_rotate_subfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
+func make_rotation_subfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
 	return {
 		"Name" : name, # for end signal
 		"AniNode" : aniNode,
