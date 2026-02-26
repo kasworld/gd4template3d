@@ -9,16 +9,21 @@ func set_focus_mode(b :bool) -> void:
 func get_focus_mode() -> bool:
 	return focus_mode
 
-
-
-
 var cabinet_size :Vector3
 func calc_pos_by_grid(x :int, y :int, x_grid:int, y_grid:int) -> Vector3:
-	var xunit := cabinet_size.x/x_grid
-	var yunit := cabinet_size.y/y_grid
-	var posadj := Vector3(+xunit/2 - cabinet_size.x/2, +yunit/2-cabinet_size.y/2, 0)
-	var pos := Vector3(xunit * x  , yunit * y , 0) + posadj
-	return pos
+	return calc_pos_by_grid_2d(Vector2i(x,y), Vector2i(x_grid,y_grid))
+
+func calc_unit_by_grid_2d(grid:Vector2i) -> Vector2:
+	return Vector2(cabinet_size.x/grid.x, cabinet_size.y/grid.y)
+func calc_pos_adj_by_grid_2d(unit :Vector2) -> Vector3:
+	return Vector3(+unit.x/2 - cabinet_size.x/2, +unit.y/2-cabinet_size.y/2, 0)
+func calc_pos_by_unit(pos :Vector2i, unit :Vector2, posadj :Vector3) -> Vector3:
+	return Vector3(unit.x * pos.x, unit.y * pos.y, 0) + posadj
+func calc_pos_by_grid_2d(pos :Vector2i, grid:Vector2i) -> Vector3:
+	var unit := calc_unit_by_grid_2d(grid)
+	var posadj := calc_pos_adj_by_grid_2d(unit)
+	return Vector3(unit.x * pos.x, unit.y * pos.y, 0) + posadj
+
 
 func calc_fill_h_len_by_fov() -> float:
 	var hfov :float = $FixedCameraLight.camera_fov.get_value()

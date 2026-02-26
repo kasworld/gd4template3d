@@ -86,34 +86,28 @@ var tetromino_list :Array
 func tetromino_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
 	gc.show_wall_box(false)
-	#gc.show_axis_arrow()
-	#gc.set_light_shadow_all(GlassCabinet.GroupFlags["y+"] & GlassCabinet.GroupFlags["z+"])
-	#gc.set_light_shadow(true, GlassCabinet.BitFlagAllLight)
 	var grid_size := Vector2i(16,9)*2
-	#var wirenet :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		#).init_wire_net(Vector2(gc.cabinet_size.x,gc.cabinet_size.y), Vector2i(grid_size.x,grid_size.y), gc.cabinet_size.x/grid_size.x/10, NamedColors.random_color())
-	#gc.add_child(wirenet)
-	var unit_x := 5 * gc.cabinet_size.x/grid_size.x
-	var unit_y := 5 * gc.cabinet_size.y/grid_size.y
-	for x in Tetromino.Type.size():
-		for y in 4:
-			var tetromino :Tetromino = preload("res://polyomino/tetromino/Tetromino.tscn").instantiate(
-				).init(x,y, gc.cabinet_size.x / grid_size.x)
-			gc.add_child(tetromino)
-			tetromino.position = Vector3( x * unit_x - gc.cabinet_size.x/2, y * unit_y - gc.cabinet_size.y/2, 0)
-			tetromino_list.append(tetromino)
+	for t in Tetromino.Type.size():
+		var pos := gc.calc_pos_by_grid_2d(
+			Vector2i(randi_range(0, grid_size.x-1),randi_range(0, grid_size.y-1) ),
+			grid_size)
+		var tetromino :Tetromino = preload("res://polyomino/tetromino/Tetromino.tscn").instantiate(
+			).init(t, 0, gc.cabinet_size.x / grid_size.x)
+		gc.add_child(tetromino)
+		tetromino.position = pos
+		tetromino_list.append(tetromino)
 	return func(_delta :float) -> void:
 		var tet :Tetromino = tetromino_list.pick_random()
 		if tet.animation.is_empty():
-			match randi_range(0,3):
-				0: # rotate
+			var n := randi_range(0,5)
+			match n:
+				0,1,2,3:
+					tet.rotate_to_dir( [Vector2.UP, Vector2.DOWN,Vector2.LEFT, Vector2.RIGHT][n])
+				4:
 					tet.animate_to(tet.tetromino_type, (tet.tetromino_rot+1)%4)
-				1:
-					tet.rotate_to_dir(Vector2.RIGHT)
-				2:
-					tet.rotate_to_dir(Vector2.DOWN)
-				3:
-					tet.rotate_to_dir(Vector2.LEFT)
+				5:
+					tet.animate_to(tet.tetromino_type, (tet.tetromino_rot+4-1)%4)
+
 
 var battleshooter :BattleShooter
 func battle_shooter_demo(gc :GlassCabinet) -> Callable:
