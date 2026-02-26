@@ -468,11 +468,9 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	gc.add_child(maze3d)
 	for i in 100:
 		var mb :MazeBall = preload("res://maze_3d/maze_ball/maze_ball.tscn").instantiate(
-			).init(NamedColors.random_color(), maze3d_setting.WallThick*2)
+			).init(NamedColors.random_color(), maze3d)
 		maze3d.add_child(mb)
 		maze_balls.append(mb)
-		var pos2d := maze3d_setting.rand_pos_2i()
-		mb.position = maze3d_setting.mazepos2storeypos(pos2d, maze3d_setting.StoryH/2)
 	return maze3d_animate
 var maze_ani_i :int
 func maze3d_animate(delta :float) -> void:
@@ -480,19 +478,8 @@ func maze3d_animate(delta :float) -> void:
 	if maze_ani_i% 60 == 0:
 		view_walls = Maze3D.wallview_next(view_walls)
 		maze3d.set_wallpillar_view_mode(view_walls)
-	var speed_min :float = maze3d_setting.LaneW
-	var speed_max :float = speed_min * 2
 	for mb in maze_balls:
-		var oldpos :Vector3 = mb.position
-		var newpos :Vector3 = oldpos + mb.velocity * delta
-		var bn = maze3d.bounce_cell(oldpos, newpos, mb.radius)
-		for i in 3:
-			# change vel on bounce
-			if bn.bounced[i] != 0 :
-				mb.velocity[i] = -randf_range(speed_min, speed_max)*bn.bounced[i]
-		mb.position = bn.pos
-		mb.rotate(mb.velocity.normalized(), delta*10)
-
+		mb.bounce(delta)
 
 
 var trailmesh_radius :float
