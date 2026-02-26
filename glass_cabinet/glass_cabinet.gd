@@ -9,31 +9,8 @@ func set_focus_mode(b :bool) -> void:
 func get_focus_mode() -> bool:
 	return focus_mode
 
-## axis : x:0, y:1, z:2, axis_sign : 1,0,-1
-static func MakeGroupFlags(axis :int, axis_sign :int) -> int:
-	var pos_list := PlatonicSolids.CubePoints
-	var rtn := 0
-	for i in pos_list.size():
-		if sign(pos_list[i][axis]) == sign(axis_sign) :
-			rtn = BitFlag.SetByPos(i,rtn)
-	return rtn
 
-static var GroupFlags :Dictionary[String,int] = {
-		"x+" : MakeGroupFlags(Vector3.Axis.AXIS_X,+1),
-		"x-" : MakeGroupFlags(Vector3.Axis.AXIS_X,-1),
-		"y+" : MakeGroupFlags(Vector3.Axis.AXIS_Y,+1),
-		"y-" : MakeGroupFlags(Vector3.Axis.AXIS_Y,-1),
-		"z+" : MakeGroupFlags(Vector3.Axis.AXIS_Z,+1),
-		"z-" : MakeGroupFlags(Vector3.Axis.AXIS_Z,-1),
-	}
 
-static func _static_init():
-	pass
-
-static var BitFlagAllLight :int = BitFlag.MakeFilledFlags(PlatonicSolids.CubePoints.size())
-var lights :SpotLightGroup
-func get_light_group() -> SpotLightGroup:
-	return lights
 
 var cabinet_size :Vector3
 func calc_pos_by_grid(x :int, y :int, x_grid:int, y_grid:int) -> Vector3:
@@ -62,8 +39,6 @@ func init(cabinet_size_a :Vector3) -> GlassCabinet:
 		cabinet_size.length()/200, Color.WHITE,
 	)
 	add_spot_lights()
-	lights = SpotLightGroup.new($LightContainer)
-
 	return self
 
 func add_spot_lights() -> GlassCabinet:
@@ -77,6 +52,7 @@ func add_spot_lights() -> GlassCabinet:
 		sl.light_energy = 100
 		#sl.shadow_enabled = true
 		#sl.light_color = Color.RED
+		light_list.append(sl)
 	return self
 
 #const CubePoints := [
@@ -149,3 +125,85 @@ func _unhandled_input(event: InputEvent) -> void:
 			var fi = FlyNode3D.Key2Info.get(event.keycode)
 			if fi != null:
 				FlyNode3D.fly_node3d($FixedCameraLight, fi)
+
+
+
+## light list functions
+
+## axis : x:0, y:1, z:2, axis_sign : 1,0,-1
+static func MakeGroupFlags(axis :int, axis_sign :int) -> int:
+	var pos_list := PlatonicSolids.CubePoints
+	var rtn := 0
+	for i in pos_list.size():
+		if sign(pos_list[i][axis]) == sign(axis_sign) :
+			rtn = BitFlag.SetByPos(i,rtn)
+	return rtn
+
+static var GroupFlags :Dictionary[String,int] = {
+		"x+" : MakeGroupFlags(Vector3.Axis.AXIS_X,+1),
+		"x-" : MakeGroupFlags(Vector3.Axis.AXIS_X,-1),
+		"y+" : MakeGroupFlags(Vector3.Axis.AXIS_Y,+1),
+		"y-" : MakeGroupFlags(Vector3.Axis.AXIS_Y,-1),
+		"z+" : MakeGroupFlags(Vector3.Axis.AXIS_Z,+1),
+		"z-" : MakeGroupFlags(Vector3.Axis.AXIS_Z,-1),
+	}
+
+static var BitFlagAllLight :int = BitFlag.MakeFilledFlags(PlatonicSolids.CubePoints.size())
+var light_list :Array
+func get_light_list() -> Array:
+	return light_list
+
+## set field by index
+static func SetArray_field_value_at_index(list:Array, index :int, field:String, value :Variant) -> void:
+	list[index][field] = value
+
+## not bool field
+static func GetArray_from_field(list:Array, field :String) -> Array:
+	var rtn := []
+	for lt in list:
+		rtn.append(lt[field])
+	return rtn
+
+## flag bit == 1 , set light_energy
+func set_light_energy(v :float, flags :int) -> void:
+	BitFlag.SetArray_value_at_flag_true(light_list, flags, "light_energy", v)
+
+func set_light_energy_at(i :int, v :float) -> void:
+	SetArray_field_value_at_index(light_list, i, "light_energy", v)
+
+func set_light_color(co :Color, flags :int) -> void:
+	BitFlag.SetArray_value_at_flag_true(light_list,flags, "light_color", co)
+
+func set_light_color_at(i :int, co :Color) -> void:
+	SetArray_field_value_at_index(light_list, i, "light_color", co)
+
+## flag bit == 1 , set visible to b
+func set_light_on(b :bool, flags :int) -> void:
+	BitFlag.SetArray_value_at_flag_true(light_list,flags, "visible", b)
+
+func set_light_on_at(i :int, b :bool) -> void:
+	SetArray_field_value_at_index(light_list, i, "visible", b)
+
+## all light on/off by flag
+func set_light_on_all(flags :int) -> void:
+	BitFlag.SetArray_bool_by_flag(light_list, flags, "visible")
+
+## flag bit == 1 , set light shadow to b
+func set_light_shadow(b :bool, flags :int) -> void:
+	BitFlag.SetArray_value_at_flag_true(light_list,flags, "shadow_enabled", b)
+
+func set_light_shadow_at(i :int, b :bool) -> void:
+	SetArray_field_value_at_index(light_list, i, "shadow_enabled", b)
+
+## all light shadow on/off by flag
+func set_light_shadow_all(flags :int) -> void:
+	BitFlag.SetArray_bool_by_flag(light_list, flags, "shadow_enabled")
+
+func get_light_on_all() -> int:
+	return BitFlag.GetArray_flags_from_bool_field(light_list,"visible")
+
+func get_light_shadow_all() -> int:
+	return BitFlag.GetArray_flags_from_bool_field(light_list,"shadow_enabled")
+
+func get_light_color_all() -> Array:
+	return GetArray_from_field(light_list, "light_color")

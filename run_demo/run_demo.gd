@@ -61,7 +61,7 @@ func animate_empty_glass_cabinet_light() -> void:
 	for i in lai.slice(1).size():
 		var flags :=  GlassCabinet.GroupFlags[ GlassCabinet.GroupFlags.keys()[i] ]
 		var ani_state :AnimateGradient = lai.slice(1)[i]
-		gc.lights.set_light_color(ani_state.get_color(), flags)
+		gc.set_light_color(ani_state.get_color(), flags)
 		ani_state.inc_rate(0.1)
 
 func animate_used_glass_cabinet_light() -> void:
@@ -72,7 +72,7 @@ func animate_used_glass_cabinet_light() -> void:
 	for i in lai.slice(1).size():
 		var flags :=  GlassCabinet.GroupFlags[ GlassCabinet.GroupFlags.keys()[i] ]
 		var ani_state :AnimateGradient = lai.slice(1)[i]
-		gc.lights.set_light_color(ani_state.get_color(), flags)
+		gc.set_light_color(ani_state.get_color(), flags)
 		ani_state.inc_rate(0.1)
 
 func _process(delta: float) -> void:
@@ -87,8 +87,8 @@ func tetromino_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
 	gc.show_wall_box(false)
 	#gc.show_axis_arrow()
-	#gc.get_light_group().set_light_shadow_all(GlassCabinet.GroupFlags["y+"] & GlassCabinet.GroupFlags["z+"])
-	#gc.get_light_group().set_light_shadow(true, GlassCabinet.BitFlagAllLight)
+	#gc.set_light_shadow_all(GlassCabinet.GroupFlags["y+"] & GlassCabinet.GroupFlags["z+"])
+	#gc.set_light_shadow(true, GlassCabinet.BitFlagAllLight)
 	var grid_size := Vector2i(16,9)*2
 	#var wirenet :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		#).init_wire_net(Vector2(gc.cabinet_size.x,gc.cabinet_size.y), Vector2i(grid_size.x,grid_size.y), gc.cabinet_size.x/grid_size.x/10, NamedColors.random_color())
@@ -110,7 +110,7 @@ func tetromino_demo(gc :GlassCabinet) -> Callable:
 
 var battleshooter :BattleShooter
 func battle_shooter_demo(gc :GlassCabinet) -> Callable:
-	#gc.get_light_group().set_light_shadow(true, GlassCabinet.BitFlagAllLight)
+	#gc.set_light_shadow(true, GlassCabinet.BitFlagAllLight)
 	gc.show_description()
 	var sz := gc.cabinet_size
 	battleshooter = preload("res://battle_shooter_3d/battle_shooter.tscn").instantiate(
@@ -451,9 +451,9 @@ var maze3d_setting :Maze3DSetting
 var maze_balls :Array
 var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ReducedWithPillar
 func maze3d_demo(gc :GlassCabinet) -> Callable:
-	#gc.get_light_group().set_light_shadow_all(GlassCabinet.GroupFlags["y+"] )
-	#gc.get_light_group().set_light_shadow_all(GlassCabinet.GroupFlags["y+"] & GlassCabinet.GroupFlags["z+"])
-	#gc.get_light_group().set_light_shadow(true, GlassCabinet.BitFlagAllLight)
+	#gc.set_light_shadow_all(GlassCabinet.GroupFlags["y+"] )
+	#gc.set_light_shadow_all(GlassCabinet.GroupFlags["y+"] & GlassCabinet.GroupFlags["z+"])
+	#gc.set_light_shadow(true, GlassCabinet.BitFlagAllLight)
 	maze3d_setting = Maze3DSetting.new_default()
 	maze3d_setting.MazeSize = Vector2i(16,9)
 	maze3d_setting.LaneW = gc.cabinet_size.x/maze3d_setting.MazeSize.x-0.1
