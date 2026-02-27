@@ -31,7 +31,7 @@ func get_pos2d() -> Vector2i:
 	return pos2d
 
 func get_pos3d() -> Vector3:
-	return SnakeByte.pos2d_to_pos3d(pos2d.x, pos2d.y)
+	return SnakeByte.calc_grid.posi_to_lanepos( CalcGrid3D.Vector2iToVector3i(pos2d,0))
 
 func delete() -> void:
 	var old = field.del_at(pos2d)

@@ -26,7 +26,7 @@ func init(field_a :PlacedThings, astar_grid_a :AStarGrid2D) -> SBSnake:
 	mesh.radius = SnakeByte.tile_size.x /2
 	mesh.height = SnakeByte.tile_size.y
 	mesh.material = MultiMeshShape.make_color_material()
-	var pos := SnakeByte.pos2d_to_pos3d( SBWalls.FieldSize.x/2,SBWalls.FieldSize.y)
+	var pos := SnakeByte.calc_grid.posi_to_lanepos( Vector3i(SBWalls.FieldSize.x/2,SBWalls.FieldSize.y, 0))
 	$Body.init_with_color_mesh(mesh, SBWalls.FieldSize.x*SBWalls.FieldSize.y/2, 1.0,  pos)
 	dest_body_len = SnakeByte.SnakeLenStart
 	pos2d_list.append(SBWalls.StartPos)
@@ -67,7 +67,7 @@ func process_frame() -> void:
 	astar_grid.set_point_solid(headpos)
 	$Body.set_visible_count(pos2d_list.size())
 	for i in pos2d_list.size():
-		$Body.set_inst_position(i, SnakeByte.pos2d_to_pos3d(pos2d_list[i].x,pos2d_list[i].y))
+		$Body.set_inst_position(i, SnakeByte.calc_grid.posi_to_lanepos( CalcGrid3D.Vector2iToVector3i(pos2d_list[i], 0)) )
 	$Body.set_gradient_color_all(Color.RED, Color.BLUE)
 
 func get_next_head_pos() -> Vector2i:

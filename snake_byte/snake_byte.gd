@@ -1,20 +1,6 @@
 extends Node3D
 class_name SnakeByte
 
-static var cabinet_size :Vector3
-static var tile_size :Vector3
-
-static func pos2d_to_pos3d( x :int, y :int, z :float = 0) -> Vector3:
-	return Vector3(
-		float(x) * tile_size.x - cabinet_size.x/2 + tile_size.x/2,
-		float(y) * tile_size.y - cabinet_size.y/2 + tile_size.y/2,
-		z)
-static func pos3d_to_pos2d( pos :Vector3 ) -> Vector2i:
-	return Vector2i(
-		snappedi( (pos.x + cabinet_size.x/2 - tile_size.x/2) / tile_size.x ,1 ),
-		snappedi( (pos.y + cabinet_size.y/2 - tile_size.y/2) / tile_size.y ,1 ),
-	)
-
 signal score_changed(점수 :float)
 signal game_ended(game :SnakeByte)
 
@@ -28,6 +14,9 @@ static var EatStepOverLimit := SBWalls.FieldSize.x + SBWalls.FieldSize.y
 static var SnakeLife := 3
 static var SnakeLifeIncOnStageClear := 1
 static var ScorePerApple := 10
+static var cabinet_size :Vector3
+static var tile_size :Vector3
+static var calc_grid :CalcGrid3D
 
 var game_info :Dictionary
 var field :PlacedThings
@@ -52,18 +41,20 @@ func update_info() -> void:
 
 func init(sz :Vector3) -> SnakeByte:
 	cabinet_size = sz
-	tile_size = Vector3(cabinet_size.x / SBWalls.FieldSize.x, cabinet_size.y / SBWalls.FieldSize.y, cabinet_size.y / SBWalls.FieldSize.y )
+	calc_grid = CalcGrid3D.new( CalcGrid3D.SizeToAABB(cabinet_size), CalcGrid3D.Vector2iToVector3i(SBWalls.FieldSize))
+	tile_size = calc_grid.unit_size
+	tile_size.z = tile_size.y
 
-	$StageInfo.position = pos2d_to_pos3d(0, SBWalls.FieldSize.y, tile_size.z)
-	$SnakeInfo.position = pos2d_to_pos3d(SBWalls.FieldSize.x / 2, SBWalls.FieldSize.y, tile_size.z)
-	$AppleInfo.position = pos2d_to_pos3d(SBWalls.FieldSize.x -1, SBWalls.FieldSize.y, tile_size.z)
+	$StageInfo.position = calc_grid.posi_to_lanepos(Vector3i( 0, SBWalls.FieldSize.y, 0) )
+	$SnakeInfo.position = calc_grid.posi_to_lanepos(Vector3i( SBWalls.FieldSize.x / 2, SBWalls.FieldSize.y, 0) )
+	$AppleInfo.position = calc_grid.posi_to_lanepos(Vector3i( SBWalls.FieldSize.x -1, SBWalls.FieldSize.y, 0) )
 	$StageInfo.pixel_size = tile_size.y /24
 	$SnakeInfo.pixel_size = tile_size.y /24
 	$AppleInfo.pixel_size = tile_size.y /24
 
 	gauge = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).init_bar_gauge_y(SnakeByte.EatStepOverLimit, Vector3(tile_size.x, cabinet_size.y, tile_size.z), Color.GREEN, Color.RED)
-	gauge.position = pos2d_to_pos3d(SBWalls.FieldSize.x, 0)
+	gauge.position = calc_grid.posi_to_lanepos(Vector3i( SBWalls.FieldSize.x, 0, 0) )
 	add_child(gauge)
 	return self
 
