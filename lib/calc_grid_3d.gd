@@ -12,5 +12,16 @@ func _init(b_rect :AABB, g_size :Vector3i) -> void:
 func posi_to_linepos(posi :Vector3i) -> Vector3:
 	return boundary.position + (posi as Vector3)* unit_size
 
+func linepos_to_posi(pos :Vector3) -> Vector3i:
+	return  ((pos - boundary.position) / unit_size).snappedf(1.0) as Vector3i
+
 func posi_to_lanepos(posi :Vector3i) -> Vector3:
 	return boundary.position + (posi as Vector3)* unit_size + unit_size/2
+
+func lanepos_to_posi(pos :Vector3) -> Vector3i:
+	return  ((pos - boundary.position - unit_size/2) / unit_size).snappedf(1.0) as Vector3i
+	#return Vector3i(
+		#snappedi( (pos.x + boundary.size.x/2 - unit_size.x/2) / unit_size.x , 1 ),
+		#snappedi( (pos.y + boundary.size.y/2 - unit_size.y/2) / unit_size.y , 1 ),
+		#snappedi( (pos.z + boundary.size.z/2 - unit_size.z/2) / unit_size.z , 1 ),
+	#)
