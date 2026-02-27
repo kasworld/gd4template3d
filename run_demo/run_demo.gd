@@ -310,29 +310,31 @@ var platonic_solid_list :Array = []
 func platonic_solids_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_wall_box(false)
 	var grid43 := gc.make_CalcGrid3D(Vector3i(4,3,1))
+	var i:= 0
 	for ll in [
-		[4, 0.5,  [2, 0], 0, 3 ],
-		[4, 1.0,  [2, 1], 0, 3 ],
-		[4, 2.0,  [2, 2], 0, 3 ],
-		[6, 2.0,  [0, 0], 0, 3 ],
-		[6, 1.0,  [1, 0], 3, 7 ],
-		[8, 2.0,  [0, 1], 0, 4 ],
-		[8, 1.0,  [1, 1], 0, 5 ],
-		[20, 2.0, [0, 2], 0, 5 ],
-		[20, 1.0, [1, 2], 5, 10 ],
-		[12, 2.0, [3, 0], 0, 3 ],
-		[12, 1.0, [3, 1], 3, 9 ],
-		[12, 1.0, [3, 2], 9, 18 ],
+		[4, 0.5,  0, 3 ],
+		[4, 1.0,  0, 3 ],
+		[4, 2.0,  0, 3 ],
+		[6, 2.0,  0, 3 ],
+		[6, 1.0,  3, 7 ],
+		[8, 2.0,  0, 4 ],
+		[8, 1.0,  0, 5 ],
+		[20, 2.0, 0, 5 ],
+		[20, 1.0, 5, 10 ],
+		[12, 2.0, 0, 3 ],
+		[12, 1.0, 3, 9 ],
+		[12, 1.0, 9, 18 ],
 	]:
 		var face :int = ll[0]
-		var from :int = ll[3]
-		var to :int = ll[4]
 		var wire_width :float = ll[1]
+		var from :int = ll[2]
+		var to :int = ll[3]
 		var ws :WireSolid = preload("res://wire_solid/wire_solid.tscn").instantiate(
-			).init(face, from, to, gc.cabinet_size.length()/13 , wire_width, NamedColors.random_color())
+			).init(face, from, to, grid43.unit_size.y/2-wire_width , wire_width, NamedColors.random_color())
 		gc.add_child(ws)
 		platonic_solid_list.append(ws)
-		ws.position = grid43.posi_to_lanepos(Vector3i(ll[2][0],ll[2][1],0))
+		ws.position = grid43.get_n_th_lanepos(i)
+		i +=1
 	platonic_solids_animation.animation_ended.connect(platonic_solids_animation_ended)
 	start_platonic_solids_animation()
 	return func(_delta:float):
