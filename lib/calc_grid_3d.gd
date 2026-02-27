@@ -34,6 +34,13 @@ func get_n_th_posi(n :int) -> Vector3i:
 	var x :int = n % grid_size.x
 	return Vector3i(x,y,z)
 
+func get_n_th_lanepos(n :int) -> Vector3:
+	return posi_to_lanepos(get_n_th_posi(n))
+
+func get_n_th_linepos(n :int) -> Vector3:
+	return posi_to_linepos(get_n_th_posi(n))
+
+
 func lanepos_to_posi(pos :Vector3) -> Vector3i:
 	return  ((pos - boundary.position - unit_size/2) / unit_size).snappedf(1.0) as Vector3i
 	#return Vector3i(

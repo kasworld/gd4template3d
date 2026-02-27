@@ -88,22 +88,11 @@ func tetromino_demo(gc :GlassCabinet) -> Callable:
 	gc.show_wall_box(false)
 	var grid_size := Vector2i(16,9)*2
 	var calc_grid := CalcGrid3D.new(gc.get_aabb(),Vector3i(3,3,1))
-	var poslist := [
-		calc_grid.posi_to_lanepos(Vector3i(0,0,0)),
-		calc_grid.posi_to_lanepos(Vector3i(1,0,0)),
-		calc_grid.posi_to_lanepos(Vector3i(2,0,0)),
-		calc_grid.posi_to_lanepos(Vector3i(0,1,0)),
-		calc_grid.posi_to_lanepos(Vector3i(1,1,0)),
-		calc_grid.posi_to_lanepos(Vector3i(2,1,0)),
-		calc_grid.posi_to_lanepos(Vector3i(0,2,0)),
-		calc_grid.posi_to_lanepos(Vector3i(1,2,0)),
-		calc_grid.posi_to_lanepos(Vector3i(2,2,0)),
-	]
 	for t in Tetromino.Type.size():
 		var tetromino :Tetromino = preload("res://polyomino/tetromino/Tetromino.tscn").instantiate(
 			).init(t, 0, gc.cabinet_size.x / grid_size.x)
 		gc.add_child(tetromino)
-		tetromino.position = poslist[t]
+		tetromino.position = calc_grid.get_n_th_lanepos(t) # poslist[t]
 		tetromino_list.append(tetromino)
 	return func(_delta :float) -> void:
 		var tet :Tetromino = tetromino_list.pick_random()
