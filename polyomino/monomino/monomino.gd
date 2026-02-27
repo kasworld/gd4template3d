@@ -21,30 +21,23 @@ func set_color(outer_co :Color, inner_co :Color) -> Monomino:
 	$InnerCube.mesh.material.albedo_color = inner_co
 	return self
 
-func make_rotate_animation(dir :Vector3, ani_sec :float, name:String="") -> Dictionary:
+func make_rotate_animation(dir :Vector3, ani_sec :float, ani_name:String="") -> Dictionary:
 	match dir:
 		Vector3.DOWN:
-			return SimpleAnimation.MakeRotationSubfield(name, self, 0, -PI/2, 0.0, ani_sec)
+			return SimpleAnimation.MakeRotationSubfield(ani_name, self, 0, -PI/2, 0.0, ani_sec)
 		Vector3.UP:
-			return SimpleAnimation.MakeRotationSubfield(name, self, 0, PI/2, 0.0, ani_sec)
+			return SimpleAnimation.MakeRotationSubfield(ani_name, self, 0, PI/2, 0.0, ani_sec)
 		Vector3.RIGHT:
-			return SimpleAnimation.MakeRotationSubfield(name, self, 1, PI/2, 0.0, ani_sec)
+			return SimpleAnimation.MakeRotationSubfield(ani_name, self, 1, PI/2, 0.0, ani_sec)
 		Vector3.LEFT:
-			return SimpleAnimation.MakeRotationSubfield(name, self, 1, -PI/2, 0.0, ani_sec)
+			return SimpleAnimation.MakeRotationSubfield(ani_name, self, 1, -PI/2, 0.0, ani_sec)
 		Vector3.FORWARD:
-			return SimpleAnimation.MakeRotationSubfield(name, self, 2, PI/2, 0.0, ani_sec)
+			return SimpleAnimation.MakeRotationSubfield(ani_name, self, 2, PI/2, 0.0, ani_sec)
 		Vector3.BACK:
-			return SimpleAnimation.MakeRotationSubfield(name, self, 2, -PI/2, 0.0, ani_sec)
+			return SimpleAnimation.MakeRotationSubfield(ani_name, self, 2, -PI/2, 0.0, ani_sec)
 
 	assert(false, "invalid dir %s" % dir)
 	return {}
 
-func make_color_animation(from :Color, to :Color, ani_sec :float, name:String="") -> Dictionary:
-	return {
-			"Name" : name,
-			"AniNode" : self,
-			"Field" : "color",
-			"From" : from,
-			"To" : to,
-			"DurSec" : ani_sec,
-		}
+func make_color_animation(from :Color, to :Color, ani_sec :float, ani_name:String="") -> Dictionary:
+	return SimpleAnimation.MakeAnimation(ani_name,self,"color",from,to,ani_sec)

@@ -105,14 +105,7 @@ func animate_to(t :Type, rot :int) -> void:
 	var new_geo := get_geo(tetromino_type, tetromino_rot)
 	for i in monomino_list.size():
 		animation.start_move("", monomino_list[i], monomino_list[i].position, calc_geo_to_vt3(new_geo[i]), AniSec)
-		animation.add_animation({
-			"Name" : name, # for end signal
-			"AniNode" : monomino_list[i],
-			"Field" : "color",
-			"From" : old_color,
-			"To" : make_type_color(tetromino_type),
-			"DurSec" : AniSec,
-		})
+		animation.add_animation(  monomino_list[i].make_color_animation(old_color, make_type_color(tetromino_type),AniSec))
 
 func rotate_to_dir(dir :Vector3) -> void:
 	for i in monomino_list.size():
