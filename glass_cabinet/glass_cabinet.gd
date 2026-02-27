@@ -13,20 +13,8 @@ var cabinet_size :Vector3
 func get_aabb() -> AABB:
 	return AABB(-cabinet_size/2, cabinet_size)
 
-func calc_pos_by_grid(x :int, y :int, x_grid:int, y_grid:int) -> Vector3:
-	return calc_pos_by_grid_2d(Vector2i(x,y), Vector2i(x_grid,y_grid))
-
-func calc_unit_by_grid_2d(grid:Vector2i) -> Vector2:
-	return Vector2(cabinet_size.x/grid.x, cabinet_size.y/grid.y)
-func calc_pos_adj_by_grid_2d(unit :Vector2) -> Vector3:
-	return Vector3(+unit.x/2 - cabinet_size.x/2, +unit.y/2-cabinet_size.y/2, 0)
-func calc_pos_by_unit(pos :Vector2i, unit :Vector2, posadj :Vector3) -> Vector3:
-	return Vector3(unit.x * pos.x, unit.y * pos.y, 0) + posadj
-func calc_pos_by_grid_2d(pos :Vector2i, grid:Vector2i) -> Vector3:
-	var unit := calc_unit_by_grid_2d(grid)
-	var posadj := calc_pos_adj_by_grid_2d(unit)
-	return Vector3(unit.x * pos.x, unit.y * pos.y, 0) + posadj
-
+func make_CalcGrid3D(grid :Vector3i) -> CalcGrid3D:
+	return CalcGrid3D.new(get_aabb(), grid)
 
 func calc_fill_h_len_by_fov() -> float:
 	var hfov :float = $FixedCameraLight.camera_fov.get_value()

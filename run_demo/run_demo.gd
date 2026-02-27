@@ -226,21 +226,23 @@ var dialgauge_list :Array
 func dialgauge_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_wall_box(false)
 	var radius := gc.cabinet_size.x/5
+	var grid21 := gc.make_CalcGrid3D(Vector3i(2,1,1))
+	var grid33 := gc.make_CalcGrid3D(Vector3i(3,3,1))
 	var dg = new_dialgauge(radius, gc.cabinet_size)
-	dg.position = gc.calc_pos_by_grid(0,0,2,1)
+	dg.position = grid21.posi_to_lanepos(Vector3i(0,0,0))
 	gc.add_child(dg)
 	dialgauge_list.append([dg, dg.value_range_mid()])
 	dg = new_dialgauge(radius, gc.cabinet_size)
-	dg.position = gc.calc_pos_by_grid(1,0,2,1)
+	dg.position = grid21.posi_to_lanepos(Vector3i(1,0,0))
 	gc.add_child(dg)
 	dialgauge_list.append([dg, dg.value_range_mid()])
 	radius = gc.cabinet_size.x/10
 	dg = new_dialgauge(radius, gc.cabinet_size)
-	dg.position = gc.calc_pos_by_grid(1,0,3,3)
+	dg.position = grid33.posi_to_lanepos(Vector3i(1,0,0))
 	gc.add_child(dg)
 	dialgauge_list.append([dg, dg.value_range_mid()])
 	dg = new_dialgauge(radius, gc.cabinet_size)
-	dg.position = gc.calc_pos_by_grid(1,2,3,3)
+	dg.position = grid33.posi_to_lanepos(Vector3i(1,2,0))
 	gc.add_child(dg)
 	dialgauge_list.append([dg, dg.value_range_mid()])
 	return func (_delta :float) -> void:
@@ -318,6 +320,7 @@ func random_color2(_arg ) -> Color:
 var platonic_solid_list :Array = []
 func platonic_solids_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_wall_box(false)
+	var grid43 := gc.make_CalcGrid3D(Vector3i(4,3,1))
 	for ll in [
 		[4, 0.5,  [2, 0], 0, 3 ],
 		[4, 1.0,  [2, 1], 0, 3 ],
@@ -340,7 +343,7 @@ func platonic_solids_demo(gc :GlassCabinet) -> Callable:
 			).init(face, from, to, gc.cabinet_size.length()/13 , wire_width, NamedColors.random_color())
 		gc.add_child(ws)
 		platonic_solid_list.append(ws)
-		ws.position = gc.calc_pos_by_grid(ll[2][0],ll[2][1], 4,3)
+		ws.position = grid43.posi_to_lanepos(Vector3i(ll[2][0],ll[2][1],0))
 	platonic_solids_animation.animation_ended.connect(platonic_solids_animation_ended)
 	start_platonic_solids_animation()
 	return func(_delta:float):
@@ -533,8 +536,9 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 
 var prop_list :Array
 func props_demo(gc :GlassCabinet) -> Callable:
+	var grid32 := gc.make_CalcGrid3D( Vector3i(3,2,1))
 	var afterfn := func(pr, x,y):
-		pr.position = gc.calc_pos_by_grid(x,y,3,2)
+		pr.position = grid32.posi_to_lanepos(Vector3i(x,y,0))
 		gc.add_child(pr)
 		prop_list.append(pr)
 
