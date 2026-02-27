@@ -10,6 +10,9 @@ func get_focus_mode() -> bool:
 	return focus_mode
 
 var cabinet_size :Vector3
+func get_aabb() -> AABB:
+	return AABB(-cabinet_size/2, cabinet_size)
+
 func calc_pos_by_grid(x :int, y :int, x_grid:int, y_grid:int) -> Vector3:
 	return calc_pos_by_grid_2d(Vector2i(x,y), Vector2i(x_grid,y_grid))
 

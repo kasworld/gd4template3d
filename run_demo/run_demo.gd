@@ -87,14 +87,23 @@ func tetromino_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
 	gc.show_wall_box(false)
 	var grid_size := Vector2i(16,9)*2
+	var calc_grid := CalcGrid3D.new(gc.get_aabb(),Vector3i(3,3,1))
+	var poslist := [
+		calc_grid.posi_to_lanepos(Vector3i(0,0,0)),
+		calc_grid.posi_to_lanepos(Vector3i(1,0,0)),
+		calc_grid.posi_to_lanepos(Vector3i(2,0,0)),
+		calc_grid.posi_to_lanepos(Vector3i(0,1,0)),
+		calc_grid.posi_to_lanepos(Vector3i(1,1,0)),
+		calc_grid.posi_to_lanepos(Vector3i(2,1,0)),
+		calc_grid.posi_to_lanepos(Vector3i(0,2,0)),
+		calc_grid.posi_to_lanepos(Vector3i(1,2,0)),
+		calc_grid.posi_to_lanepos(Vector3i(2,2,0)),
+	]
 	for t in Tetromino.Type.size():
-		var pos := gc.calc_pos_by_grid_2d(
-			Vector2i(randi_range(0, grid_size.x-1),randi_range(0, grid_size.y-1) ),
-			grid_size)
 		var tetromino :Tetromino = preload("res://polyomino/tetromino/Tetromino.tscn").instantiate(
 			).init(t, 0, gc.cabinet_size.x / grid_size.x)
 		gc.add_child(tetromino)
-		tetromino.position = pos
+		tetromino.position = poslist[t]
 		tetromino_list.append(tetromino)
 	return func(_delta :float) -> void:
 		var tet :Tetromino = tetromino_list.pick_random()
@@ -104,9 +113,9 @@ func tetromino_demo(gc :GlassCabinet) -> Callable:
 				0,1,2,3,4,5:
 					tet.rotate_to_dir( [Vector3.UP, Vector3.DOWN,Vector3.LEFT, Vector3.RIGHT, Vector3.FORWARD, Vector3.BACK][n])
 				6:
-					tet.animate_to(tet.tetromino_type, (tet.tetromino_rot+1)%4)
+					tet.animate_to(tet.tetromino_type, tet.get_right_rotation())
 				7:
-					tet.animate_to(tet.tetromino_type, (tet.tetromino_rot+4-1)%4)
+					tet.animate_to(tet.tetromino_type, tet.get_left_rotation())
 
 
 var battleshooter :BattleShooter

@@ -75,6 +75,10 @@ var monomino_list :Array = []
 var monomino_len :float
 var tetromino_type :Type
 var tetromino_rot :int
+func get_right_rotation() -> int:
+	return (tetromino_rot +1) %4
+func get_left_rotation() -> int:
+	return (tetromino_rot -1 +4) %4
 
 func calc_geo_to_vt3(p :Array) -> Vector3:
 	return Vector3(p[0]*monomino_len,p[1]*monomino_len,0) #+ Vector3(-monomino_len,monomino_len,0)
@@ -83,7 +87,7 @@ func make_type_color(t :Type) -> Color:
 func get_geo(t :Type, rot :int) -> Array:
 	return Geo[t][rot%Geo[t].size()]
 
-func init(t :Type, rot :int,  l :float) -> Tetromino:
+func init(t :Type, rot :int, l :float) -> Tetromino:
 	monomino_len = l
 	tetromino_type = t
 	tetromino_rot = rot
