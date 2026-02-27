@@ -100,7 +100,7 @@ func init(t :Type, rot :int, l :float) -> Tetromino:
 	return self
 
 const AniSec := 0.5
-func animate_to(t :Type, rot :int) -> void:
+func animate_morph_to(t :Type, rot :int) -> void:
 	if not animation.is_empty():
 		animation.force_end(false)
 	var old_color := make_type_color(tetromino_type)
@@ -111,7 +111,10 @@ func animate_to(t :Type, rot :int) -> void:
 		animation.start_move("", monomino_list[i], monomino_list[i].position, calc_geo_to_vt3(new_geo[i]), AniSec)
 		animation.add_animation(  monomino_list[i].make_color_animation(old_color, make_type_color(tetromino_type),AniSec))
 
-func rotate_to_dir(dir :Vector3) -> void:
+func animate_move_to(newpos :Vector3) -> void:
+	animation.start_move("", self, position, newpos, AniSec)
+
+func animate_rotation_to_dir(dir :Vector3) -> void:
 	for i in monomino_list.size():
 		var ani :Dictionary = monomino_list[i].make_rotate_animation(dir, AniSec)
 		animation.add_animation(ani)

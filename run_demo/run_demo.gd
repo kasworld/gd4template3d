@@ -82,29 +82,36 @@ func _process(delta: float) -> void:
 		fn.call(delta)
 
 
-var tetromino_list :Array
+var tetromino_iter :ListIter
 func tetromino_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
 	gc.show_wall_box(false)
-	var grid_size := Vector2i(16,9)*2
-	var calc_grid := CalcGrid3D.new(gc.get_aabb(),Vector3i(3,3,1))
+	var grid_size := Vector2i(32,18)
+	var calc_grid := CalcGrid3D.new(gc.get_aabb(),CalcGrid3D.Vector2iToVector3i(grid_size,1))
+	var tetromino_list :Array = []
 	for t in Tetromino.Type.size():
 		var tetromino :Tetromino = preload("res://polyomino/tetromino/Tetromino.tscn").instantiate(
-			).init(t, 0, gc.cabinet_size.x / grid_size.x)
+			).init(t, 0, calc_grid.unit_size.x)
 		gc.add_child(tetromino)
-		tetromino.position = calc_grid.get_n_th_lanepos(t) # poslist[t]
+		tetromino.position = calc_grid.get_n_th_lanepos( randi_range(0, calc_grid.get_grid_count()-1) )
 		tetromino_list.append(tetromino)
+	tetromino_iter = ListIter.new(tetromino_list)
 	return func(_delta :float) -> void:
-		var tet :Tetromino = tetromino_list.pick_random()
+		var tet :Tetromino = tetromino_iter.get_current_and_step_next()
 		if tet.animation.is_empty():
 			var n := randi_range(0,7)
 			match n:
 				0,1,2,3,4,5:
-					tet.rotate_to_dir( [Vector3.UP, Vector3.DOWN,Vector3.LEFT, Vector3.RIGHT, Vector3.FORWARD, Vector3.BACK][n])
+					var dir :Vector3 = [Vector3.UP, Vector3.DOWN, Vector3.LEFT, Vector3.RIGHT, Vector3.FORWARD, Vector3.BACK][n]
+					tet.animate_rotation_to_dir(dir)
+					if dir.z == 0:
+						var dstpos := tet.position + dir*calc_grid.unit_size
+						if calc_grid.has_point(dstpos):
+							tet.animate_move_to( dstpos )
 				6:
-					tet.animate_to(tet.tetromino_type, tet.get_right_rotation())
+					tet.animate_morph_to(tet.tetromino_type, tet.get_right_rotation())
 				7:
-					tet.animate_to(tet.tetromino_type, tet.get_left_rotation())
+					tet.animate_morph_to(tet.tetromino_type, tet.get_left_rotation())
 
 
 var battleshooter :BattleShooter

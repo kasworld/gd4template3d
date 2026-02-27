@@ -18,6 +18,12 @@ func _init(b_rect :AABB, g_size :Vector3i) -> void:
 	grid_size = g_size
 	unit_size = boundary.size / (grid_size as Vector3)
 
+func get_grid_count() -> int:
+	return grid_size.x * grid_size.y * grid_size.z
+
+func has_point(pos :Vector3) -> bool:
+	return boundary.has_point(pos)
+
 func posi_to_linepos(posi :Vector3i) -> Vector3:
 	return boundary.position + (posi as Vector3)* unit_size
 
