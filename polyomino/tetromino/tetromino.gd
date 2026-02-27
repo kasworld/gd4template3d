@@ -114,18 +114,10 @@ func animate_to(t :Type, rot :int) -> void:
 			"DurSec" : AniSec,
 		})
 
-func rotate_to_dir(dir :Vector2) -> void:
+func rotate_to_dir(dir :Vector3) -> void:
 	for i in monomino_list.size():
-		match dir:
-			Vector2.DOWN:
-				animation.start_rotation_subfield("", monomino_list[i], 0, -PI/2, 0.0, AniSec)
-			Vector2.UP:
-				animation.start_rotation_subfield("", monomino_list[i], 0, PI/2, 0.0, AniSec)
-			Vector2.RIGHT:
-				animation.start_rotation_subfield("", monomino_list[i], 1, PI/2, 0.0, AniSec)
-			Vector2.LEFT:
-				animation.start_rotation_subfield("", monomino_list[i], 1, -PI/2, 0.0, AniSec)
-
+		var ani :Dictionary = monomino_list[i].make_rotate_animation(dir, AniSec)
+		animation.add_animation(ani)
 
 func _process(_delta: float) -> void:
 	animation.handle_animation()

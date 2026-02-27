@@ -99,13 +99,13 @@ func tetromino_demo(gc :GlassCabinet) -> Callable:
 	return func(_delta :float) -> void:
 		var tet :Tetromino = tetromino_list.pick_random()
 		if tet.animation.is_empty():
-			var n := randi_range(0,5)
+			var n := randi_range(0,7)
 			match n:
-				0,1,2,3:
-					tet.rotate_to_dir( [Vector2.UP, Vector2.DOWN,Vector2.LEFT, Vector2.RIGHT][n])
-				4:
+				0,1,2,3,4,5:
+					tet.rotate_to_dir( [Vector3.UP, Vector3.DOWN,Vector3.LEFT, Vector3.RIGHT, Vector3.FORWARD, Vector3.BACK][n])
+				6:
 					tet.animate_to(tet.tetromino_type, (tet.tetromino_rot+1)%4)
-				5:
+				7:
 					tet.animate_to(tet.tetromino_type, (tet.tetromino_rot+4-1)%4)
 
 

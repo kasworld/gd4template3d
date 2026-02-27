@@ -20,3 +20,21 @@ func set_color(outer_co :Color, inner_co :Color) -> Monomino:
 	$OuterCube.mesh.material.albedo_color = outer_co
 	$InnerCube.mesh.material.albedo_color = inner_co
 	return self
+
+func make_rotate_animation(dir :Vector3, ani_sec :float ) -> Dictionary:
+	match dir:
+		Vector3.DOWN:
+			return SimpleAnimation.MakeRotationSubfield("", self, 0, -PI/2, 0.0, ani_sec)
+		Vector3.UP:
+			return SimpleAnimation.MakeRotationSubfield("", self, 0, PI/2, 0.0, ani_sec)
+		Vector3.RIGHT:
+			return SimpleAnimation.MakeRotationSubfield("", self, 1, PI/2, 0.0, ani_sec)
+		Vector3.LEFT:
+			return SimpleAnimation.MakeRotationSubfield("", self, 1, -PI/2, 0.0, ani_sec)
+		Vector3.FORWARD:
+			return SimpleAnimation.MakeRotationSubfield("", self, 2, PI/2, 0.0, ani_sec)
+		Vector3.BACK:
+			return SimpleAnimation.MakeRotationSubfield("", self, 2, -PI/2, 0.0, ani_sec)
+
+	assert(false, "invalid dir %s" % dir)
+	return {}

@@ -2,9 +2,8 @@ class_name SimpleAnimation
 
 signal animation_ended(st :Node, ani :Dictionary)
 
+## {Name,  Node, Field(position, rotation, scale), SubField(0,1,2) , From, To , StartTick, DurSec }
 var animation_list :Array[Dictionary]
-# {Name,  Node, Field(position, rotation, scale), SubField(0,1,2) , From, To , StartTick, DurSec }
-
 
 func get_animation_count() -> int:
 	return animation_list.size()
@@ -44,9 +43,9 @@ func add_animation(ani :Dictionary) -> Dictionary:
 	return ani
 
 func start_move(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
-	return add_animation(make_move(name,aniNode,from,to,dur_sec))
+	return add_animation(MakeMove(name,aniNode,from,to,dur_sec))
 
-func make_move(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
+static func MakeMove(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
 	return {
 		"Name" : name, # for end signal
 		"AniNode" : aniNode,
@@ -57,9 +56,9 @@ func make_move(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec 
 	}
 
 func start_move_subfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
-	return add_animation( make_move_subfield(name,aniNode, sub_index, from,to, dur_sec) )
+	return add_animation( MakeMoveSubfield(name,aniNode, sub_index, from,to, dur_sec) )
 
-func make_move_subfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
+static func MakeMoveSubfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
 	return {
 		"Name" : name, # for end signal
 		"AniNode" : aniNode,
@@ -71,9 +70,9 @@ func make_move_subfield(name :String, aniNode :Node, sub_index :int, from :Varia
 	}
 
 func start_rotation(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
-	return add_animation(make_rotation(name,aniNode,from,to,dur_sec))
+	return add_animation(MakeRotation(name,aniNode,from,to,dur_sec))
 
-func make_rotation(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
+static func MakeRotation(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
 	return  {
 		"Name" : name, # for end signal
 		"AniNode" : aniNode,
@@ -84,9 +83,9 @@ func make_rotation(name :String, aniNode :Node, from :Variant, to: Variant, dur_
 	}
 
 func start_rotation_subfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
-	return add_animation( make_rotation_subfield(name,aniNode, sub_index, from,to, dur_sec) )
+	return add_animation( MakeRotationSubfield(name,aniNode, sub_index, from,to, dur_sec) )
 
-func make_rotation_subfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
+static func MakeRotationSubfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
 	return {
 		"Name" : name, # for end signal
 		"AniNode" : aniNode,
@@ -98,9 +97,9 @@ func make_rotation_subfield(name :String, aniNode :Node, sub_index :int, from :V
 	}
 
 func start_scale(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
-	return add_animation(make_scale(name,aniNode,from,to,dur_sec))
+	return add_animation(MakeScale(name,aniNode,from,to,dur_sec))
 
-func make_scale(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
+static func MakeScale(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
 	return {
 		"Name" : name, # for end signal
 		"AniNode" : aniNode,
@@ -111,9 +110,9 @@ func make_scale(name :String, aniNode :Node, from :Variant, to: Variant, dur_sec
 	}
 
 func start_scale_subfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
-	return add_animation( make_scale_subfield(name,aniNode, sub_index, from,to, dur_sec) )
+	return add_animation( MakeScaleSubfield(name,aniNode, sub_index, from,to, dur_sec) )
 
-func make_scale_subfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
+static func MakeScaleSubfield(name :String, aniNode :Node, sub_index :int, from :Variant, to: Variant, dur_sec :float) -> Dictionary:
 	return {
 		"Name" : name, # for end signal
 		"AniNode" : aniNode,
