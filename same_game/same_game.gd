@@ -26,7 +26,7 @@ var 점수 :int
 
 func init(sz :Vector3) -> SameGame:
 	cabinet_size = sz
-	calc_grid = CalcGrid3D.new( CalcGrid3D.SizeToAABB(cabinet_size), CalcGrid3D.Vector2iToVector3i(game_size))
+	calc_grid = CalcGrid3D.new( CalcGrid3D.SizeToAABB(cabinet_size), CalcGrid3D.Vector2iToVector3i(game_size,1))
 	tile_size = calc_grid.unit_size
 	tile_size.z = tile_size.y
 	SameGameTile.tile_size = tile_size

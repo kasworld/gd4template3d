@@ -41,7 +41,7 @@ func update_info() -> void:
 
 func init(sz :Vector3) -> SnakeByte:
 	cabinet_size = sz
-	calc_grid = CalcGrid3D.new( CalcGrid3D.SizeToAABB(cabinet_size), CalcGrid3D.Vector2iToVector3i(SBWalls.FieldSize))
+	calc_grid = CalcGrid3D.new( CalcGrid3D.SizeToAABB(cabinet_size), CalcGrid3D.Vector2iToVector3i(SBWalls.FieldSize,1))
 	tile_size = calc_grid.unit_size
 	tile_size.z = tile_size.y
 
