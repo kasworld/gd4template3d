@@ -4,6 +4,15 @@ var boundary :AABB
 var grid_size :Vector3i
 var unit_size :Vector3
 
+static func Vector2iToVector3i(vt2i :Vector2i) -> Vector3i:
+	return Vector3i(vt2i.x, vt2i.y, 1)
+
+static func Vector3iToVector2i(vt3i :Vector3i) -> Vector2i:
+	return Vector2i(vt3i.x, vt3i.y)
+
+static func SizeToAABB(size :Vector3) -> AABB:
+	return AABB(-size/2, size)
+
 func _init(b_rect :AABB, g_size :Vector3i) -> void:
 	boundary = b_rect
 	grid_size = g_size

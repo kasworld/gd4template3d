@@ -20,26 +20,17 @@ var game_level :int
 var cabinet_size :Vector3
 var game_size := Vector2i(16,9)
 var tile_size :Vector3
-
-func pos2d_to_pos3d( x :int, y :int) -> Vector3:
-	return Vector3(
-		float(x) * tile_size.x - cabinet_size.x/2 + tile_size.x/2,
-		float(y) *tile_size.y -cabinet_size.y/2 + tile_size.y/2,
-		0.0)
-func pos3d_to_pos2d( pos :Vector3 ) -> Vector2i:
-	return Vector2i(
-		snappedi( (pos.x + cabinet_size.x/2 - tile_size.x/2) / tile_size.x ,1 ),
-		snappedi( (pos.y + cabinet_size.y/2 - tile_size.y/2) / tile_size.y ,1 ),
-	)
-
+var calc_grid :CalcGrid3D
 var co3d_grid :SamegameGrid # [x][y]
 var 점수 :int
 
 func init(sz :Vector3) -> SameGame:
 	cabinet_size = sz
-	tile_size = Vector3(cabinet_size.x / game_size.x, cabinet_size.y / game_size.y, cabinet_size.y / game_size.y )
+	calc_grid = CalcGrid3D.new( CalcGrid3D.SizeToAABB(cabinet_size), CalcGrid3D.Vector2iToVector3i(game_size))
+	tile_size = calc_grid.unit_size
+	tile_size.z = tile_size.y
 	SameGameTile.tile_size = tile_size
-	SameGameTile.calc_pos_in_grid = pos3d_to_pos2d
+	SameGameTile.calc_pos_in_grid = calc_grid.lanepos_to_posi #  pos3d_to_pos2d
 	return self
 
 func new_game(lv:int) -> void:
@@ -58,7 +49,7 @@ func fix_gridco3d_pos_all() -> void:
 		for y in co3d_grid.grid_size.y:
 			var co3d = co3d_grid.get_data(x,y)
 			if co3d != null:
-				move_ani.start_move("move", co3d, co3d.position, pos2d_to_pos3d(x,y) , 0.5)
+				move_ani.start_move("move", co3d, co3d.position, calc_grid.posi_to_lanepos(Vector3i(x,y,0)) , 0.5)
 
 var auto_play :bool = true
 var auto_play_selected :CollisionObject3D
@@ -97,7 +88,7 @@ func add_co3d() -> void:
 			var b = preload("res://same_game/same_game_tile/same_game_tile.tscn").instantiate().set_type_num(co3d_num
 				).set_char(char_list[co3d_num]
 				).set_color( color_list[co3d_num] )
-			b.position = pos2d_to_pos3d(x,y)
+			b.position = calc_grid.posi_to_lanepos(Vector3i(x,y,0))
 			b.co3d_mouse_entered.connect(co3d_mouse_entered)
 			b.co3d_mouse_exited.connect(co3d_mouse_exited)
 			b.co3d_mouse_pressed.connect(co3d_mouse_pressed)
@@ -123,7 +114,7 @@ func co3d_mouse_pressed(b :CollisionObject3D) -> void:
 	점수 += pow(co3d_list.size(), 2) as int
 	score_changed.emit(점수)
 	for n in co3d_list:
-		var p2d = pos3d_to_pos2d(n.position)
+		var p2d := calc_grid.lanepos_to_posi(n.position)
 		co3d_grid.set_data(p2d.x,p2d.y, null)
 		n.queue_free()
 	if co3d_grid.count_data() == 0:
@@ -136,9 +127,9 @@ func co3d_mouse_pressed(b :CollisionObject3D) -> void:
 
 func find_sameballs(b :CollisionObject3D) -> Array[CollisionObject3D]:
 	var found_balls :Array[CollisionObject3D] = []
-	var visited_pos :Dictionary # vector2i
-	var to_visit_pos :Array # vector2i
-	to_visit_pos.append(pos3d_to_pos2d(b.position) )
+	var visited_pos :Dictionary[Vector2i,bool] # vector2i
+	var to_visit_pos :Array[Vector2i] # vector2i
+	to_visit_pos.append( CalcGrid3D.Vector3iToVector2i(calc_grid.lanepos_to_posi(b.position) ) )
 	while not to_visit_pos.is_empty():
 		var current_pos = to_visit_pos.pop_front()
 		if visited_pos.has(current_pos):
