@@ -36,27 +36,33 @@ func rand_pos_2i() -> Vector2i:
 func CalcCellCount() -> int:
 	return MazeSize.x * MazeSize.y
 
+func CellSize() -> Vector3:
+	return Vector3(LaneW, StoryH, LaneW)
+
+func PillarSize() -> Vector3:
+	return Vector3(WallThick,StoryH,WallThick)
+
 # without wall
 func CalcSizeV2() -> Vector2:
 	return MazeSize*LaneW
-func CalcDiagonalLengthV2() -> float:
-	return CalcSizeV2().length()
+#func CalcDiagonalLengthV2() -> float:
+	#return CalcSizeV2().length()
 func CalcSizeV3() -> Vector3:
 	var sz := CalcSizeV2()
 	return Vector3(sz.x,StoryH,sz.y)
-func CalcDiagonalLengthV3() -> float:
-	return CalcSizeV3().length()
+#func CalcDiagonalLengthV3() -> float:
+	#return CalcSizeV3().length()
 
 # with wall
 func CalcSizeWithWallV2() -> Vector2:
 	return CalcSizeV2() + Vector2(WallThick, WallThick)
-func CalcDiagonalLengthWithWallV2() -> float:
-	return CalcSizeWithWallV2().length()
+#func CalcDiagonalLengthWithWallV2() -> float:
+	#return CalcSizeWithWallV2().length()
 func CalcSizeWithWallV3() -> Vector3:
 	var sz := CalcSizeWithWallV2()
 	return Vector3(sz.x,StoryH,sz.y)
-func CalcDiagonalLengthWithWallV3() -> float:
-	return CalcSizeWithWallV3().length()
+#func CalcDiagonalLengthWithWallV3() -> float:
+	#return CalcSizeWithWallV3().length()
 
 func CalcWallSize_NS_Full() -> Vector3:
 	return Vector3(LaneW, StoryH, WallThick)
@@ -68,6 +74,7 @@ func CalcWallSize_EW_Full() -> Vector3:
 func CalcWallSize_EW_Reduced() -> Vector3:
 	return CalcWallSize_EW_Full() - Vector3(0, 0, WallThick)
 
+
 func mazepos2storeypos( mp :Vector2i, y :float) -> Vector3:
 	return Vector3(LaneW/2+ mp.x*LaneW, y, LaneW/2+ mp.y*LaneW) -CalcSizeV3()/2
 
@@ -77,13 +84,11 @@ func storeypos2mazepos(pos :Vector3) -> Vector2i:
 	var y = clampi(int(pos.z/LaneW),0, MazeSize.y-1)
 	return Vector2i(x,y)
 
-func BoundCellSize() -> Vector3:
-	return Vector3(LaneW, StoryH, LaneW)
 
 func CalcCellBox(pos :Vector2i) -> AABB:
 	return AABB(
 		Vector3(LaneW*pos.x, 0, LaneW*pos.y) -CalcSizeV3()/2,
-		BoundCellSize(),
+		CellSize(),
 		)
 
 func CalcCellBoxXY(x :int, y :int) -> AABB:
