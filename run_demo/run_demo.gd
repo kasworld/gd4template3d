@@ -474,7 +474,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_with_color( maze3d_setting, Callable(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color() )
 	maze3d.make_bounce_wall_info()
-	#maze3d.rotation.x = PI/4
+	maze3d.rotation.x = -PI/4
 	maze3d.view_floor_ceiling(true,false)
 	gc.add_child(maze3d)
 	for i in 100:
@@ -487,6 +487,7 @@ var maze_ani_i :int
 func maze3d_animate(delta :float) -> void:
 	for mb in maze_balls:
 		mb.bounce(delta)
+	return
 	maze_ani_i += 1
 	if maze_ani_i% 60 == 0:
 		view_walls = Maze3D.wallview_next(view_walls)

@@ -241,7 +241,7 @@ func make_bounce_wall_info() -> void:
 		for x in maze3d_setting.MazeSize.x:
 			bounce_wall_info_all[y][x] = [
 				maze3d_setting.CalcCellBoxXY(x,y), # AABB
-				maze_cells.make_wallinfo_for_bounce(x,y), # axis_wall [3:xyz][2]bool
+				make_wallinfo_for_bounce(x,y), # axis_wall [3:xyz][2]bool
 			]
 func bounce_cell(oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	var pos2d := maze3d_setting.storeypos2mazepos(oldpos)
@@ -251,3 +251,11 @@ func bounce_cell(oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	var aabb :AABB = wallinfo[0]
 	var axis_wall :Array = wallinfo[1]
 	return Bounce.v3f_wall(pos, aabb, axis_wall, radius)
+
+# wall [axis:3][2]bool : [ [-x,+x], [-y,+y], [-z,+z] ]
+func make_wallinfo_for_bounce(x:int, y:int) -> Array[Array]:
+	return [
+		[maze_cells.is_wall_dir_at(x,y, EnumDir.Flag.West), maze_cells.is_wall_dir_at(x,y, EnumDir.Flag.East)],
+		[maze_cells.is_wall_dir_at(x,y, EnumDir.Flag.North), maze_cells.is_wall_dir_at(x,y, EnumDir.Flag.South)],
+		[true,true],
+	]
