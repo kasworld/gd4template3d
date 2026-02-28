@@ -462,15 +462,13 @@ var maze3d_setting :Maze3DSetting
 var maze_balls :Array
 var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ShortWithPillarCapsule
 func maze3d_demo(gc :GlassCabinet) -> Callable:
-	#gc.set_light_shadow_all(GlassCabinet.GroupFlags["y+"] )
-	#gc.set_light_shadow_all(GlassCabinet.GroupFlags["y+"] & GlassCabinet.GroupFlags["z+"])
-	#gc.set_light_shadow(true, GlassCabinet.BitFlagAllLight)
-	maze3d_setting = Maze3DSetting.new_default()
-	maze3d_setting.MazeSize = Vector2i(16,9)
-	maze3d_setting.LaneW = gc.cabinet_size.x/maze3d_setting.MazeSize.x-0.1
-	maze3d_setting.StoryH = maze3d_setting.LaneW
-	maze3d_setting.WallThick = maze3d_setting.LaneW *0.1
-	maze3d_setting.MakeSubWallRate = 0.1
+	gc.show_axis_arrow(true)
+	var MazeSize = Vector2i(16,9)
+	var LaneW = gc.cabinet_size.x/MazeSize.x-0.1
+	var StoryH = LaneW
+	var WallThick = LaneW *0.1
+	var MakeSubWallRate = 0.1
+	maze3d_setting = Maze3DSetting.new(MazeSize, LaneW, StoryH, WallThick, MakeSubWallRate)
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_with_color( maze3d_setting, Callable(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color() )
 	maze3d.make_bounce_wall_info()
@@ -485,6 +483,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	return maze3d_animate
 var maze_ani_i :int
 func maze3d_animate(delta :float) -> void:
+	#return
 	for mb in maze_balls:
 		mb.bounce(delta)
 	maze_ani_i += 1

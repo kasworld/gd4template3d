@@ -13,6 +13,7 @@ var StoryH :float
 var LaneW :float
 var WallThick :float
 var MakeSubWallRate :float
+var calc_grid :CalcGrid3D
 
 func _init(
 	size :Vector2i = Vector2i(4,4),
@@ -27,27 +28,52 @@ func _init(
 	WallThick = wall_thick
 	MakeSubWallRate = subwall_rate
 
+	var sz := Vector3(LaneW*MazeSize.x, LaneW*MazeSize.y, StoryH)
+	calc_grid = CalcGrid3D.new(
+		CalcGrid3D.SizeToAABB(sz),
+		CalcGrid3D.Vector2iToVector3i(MazeSize, 1),
+		)
+	print_debug(calc_grid)
+
 func duplicate() -> Maze3DSetting:
 	return new(MazeSize,StoryH,LaneW,WallThick,MakeSubWallRate)
+
+## CalcGrid3D funcs
+
+func CalcCellCount() -> int:
+	return calc_grid.get_grid_count()
+
+func CellSize() -> Vector3:
+	return calc_grid.unit_size
+
+func CalcSizeV3() -> Vector3:
+	return calc_grid.boundary.size
+
+func mazepos2storeypos( mp :Vector2i, z :float) -> Vector3:
+	var rtn := calc_grid.posi_to_lanepos( CalcGrid3D.Vector2iToVector3i(mp,0) )
+	rtn.z = z
+	return rtn
+	#return Vector3(LaneW/2+ mp.x*LaneW, LaneW/2+ mp.y*LaneW, z) -CalcSizeV3()/2
+
+func storeypos2mazepos(pos :Vector3) -> Vector2i:
+	var rtn := calc_grid.lanepos_to_posi(pos)
+	return CalcGrid3D.Vector3iToVector2i(rtn)
+	#pos += CalcSizeV3()/2
+	#var x = clampi(int(pos.x/LaneW),0, MazeSize.x-1)
+	#var y = clampi(int(pos.y/LaneW),0, MazeSize.y-1)
+	#return Vector2i(x,y)
+
+
+
 
 func rand_pos_2i() -> Vector2i:
 	return Vector2i(randi_range(0,MazeSize.x-1),randi_range(0,MazeSize.y-1) )
 
-func CalcCellCount() -> int:
-	return MazeSize.x * MazeSize.y
-
-func CellSize() -> Vector3:
-	return Vector3(LaneW, LaneW, StoryH)
-
 func PillarSize() -> Vector3:
 	return Vector3(WallThick,WallThick,StoryH)
-
 # without wall
 func CalcSizeV2() -> Vector2:
 	return MazeSize*LaneW
-func CalcSizeV3() -> Vector3:
-	var sz := CalcSizeV2()
-	return Vector3(sz.x,sz.y,StoryH)
 
 # with wall
 func CalcSizeWithWallV2() -> Vector2:
@@ -68,22 +94,3 @@ func CalcWallSize_V_Short() -> Vector3:
 
 static func swap_xy(src :Vector3) -> Vector3:
 	return Vector3(src.y,src.x,src.z)
-
-func mazepos2storeypos( mp :Vector2i, z :float) -> Vector3:
-	return Vector3(LaneW/2+ mp.x*LaneW, LaneW/2+ mp.y*LaneW, z) -CalcSizeV3()/2
-
-func storeypos2mazepos(pos :Vector3) -> Vector2i:
-	pos += CalcSizeV3()/2
-	var x = clampi(int(pos.x/LaneW),0, MazeSize.x-1)
-	var y = clampi(int(pos.y/LaneW),0, MazeSize.y-1)
-	return Vector2i(x,y)
-
-
-func CalcCellBox(pos :Vector2i) -> AABB:
-	return AABB(
-		Vector3(LaneW*pos.x, LaneW*pos.y, 0) -CalcSizeV3()/2,
-		CellSize(),
-		)
-
-func CalcCellBoxXY(x :int, y :int) -> AABB:
-	return CalcCellBox(Vector2i(x,y))

@@ -52,16 +52,13 @@ func init_floor_ceiling() -> void:
 	$Ceiling.init_wire_net(net_size, maze3d_setting.MazeSize*2, wire_r, lightcolorlist.pick_random())
 	$Floor.position.z -= maze3d_setting.StoryH/2
 	$Ceiling.position.z += maze3d_setting.StoryH/2
-	var shiftsize := maze3d_setting.CalcSizeV3()/2
-	$WallContainer.position = -shiftsize
-	$CapsulePillars.position = -shiftsize
-	$BoxPillars.position = -shiftsize
 
 func make_box_pillas() -> void:
 	var pos_list :Array = []
 	for y in maze3d_setting.MazeSize.y+1:
 		for x in maze3d_setting.MazeSize.x+1:
-			pos_list.append(Vector3( x *maze3d_setting.LaneW, y *maze3d_setting.LaneW, maze3d_setting.StoryH/2.0) )
+			pos_list.append(
+				maze3d_setting.calc_grid.posi_to_linepos(Vector3i(x,y,0))  + Vector3(0,0,maze3d_setting.StoryH/2.0) )
 	var mesh := BoxMesh.new()
 	mesh.material = pillar_mat
 	mesh.size = maze3d_setting.PillarSize()
@@ -74,7 +71,8 @@ func make_capsule_pillas() -> void:
 	var pos_list :Array = []
 	for y in maze3d_setting.MazeSize.y+1:
 		for x in maze3d_setting.MazeSize.x+1:
-			pos_list.append(Vector3( x *maze3d_setting.LaneW, y *maze3d_setting.LaneW, maze3d_setting.StoryH/2.0) )
+			pos_list.append(
+				maze3d_setting.calc_grid.posi_to_linepos(Vector3i(x,y,0)) + Vector3(0,0,maze3d_setting.StoryH/2.0) )
 	var mesh := CapsuleMesh.new()
 	mesh.material = pillar_mat
 	mesh.radius = maze3d_setting.WallThick/2
@@ -135,8 +133,8 @@ func make_wall_by_maze() -> void:
 	wall_multi_inst_H_sub = make_wall_multi_shape(sub_wall_mat, maze3d_setting.CalcWallSize_H_Short(), pos_list_H_sub)
 
 func add_wall_at(x :int, y :int, dir :EnumDir.Flag) -> void:
-	var pos_face_V := Vector3( x *maze3d_setting.LaneW, y *maze3d_setting.LaneW +maze3d_setting.LaneW/2, maze3d_setting.StoryH/2.0)
-	var pos_face_H := Vector3( x *maze3d_setting.LaneW +maze3d_setting.LaneW/2, y *maze3d_setting.LaneW, maze3d_setting.StoryH/2.0)
+	var pos_face_V := maze3d_setting.calc_grid.posi_to_linepos(Vector3i(x,y,0)) + Vector3(0, maze3d_setting.LaneW/2, maze3d_setting.StoryH/2)
+	var pos_face_H := maze3d_setting.calc_grid.posi_to_linepos(Vector3i(x,y,0)) + Vector3(maze3d_setting.LaneW/2, 0, maze3d_setting.StoryH/2)
 
 	match dir:
 		EnumDir.Flag.West, EnumDir.Flag.East:
