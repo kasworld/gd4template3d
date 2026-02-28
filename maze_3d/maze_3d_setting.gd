@@ -20,6 +20,20 @@ var LaneW :float
 var WallThick :float
 var MakeSubWallRate :float
 
+func _init(
+	size :Vector2i = Vector2i(4,4),
+	height :float = 3.0,
+	lane_width :float = 4.0,
+	wall_thick :float = 4.0*0.05,
+	subwall_rate :float = 1.0/(4*4)
+	) -> void:
+	MazeSize = size
+	StoryH = height
+	LaneW = lane_width
+	WallThick = wall_thick
+	MakeSubWallRate = subwall_rate
+
+
 func duplicate() -> Maze3DSetting:
 	var rtn := new()
 	rtn.MazeSize = MazeSize
