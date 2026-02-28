@@ -460,7 +460,7 @@ func wavegauge_box_demo(gc :GlassCabinet) -> Callable:
 var maze3d :Maze3D
 var maze3d_setting :Maze3DSetting
 var maze_balls :Array
-var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ReducedWithPillar
+var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ShortWithPillarCapsule
 func maze3d_demo(gc :GlassCabinet) -> Callable:
 	#gc.set_light_shadow_all(GlassCabinet.GroupFlags["y+"] )
 	#gc.set_light_shadow_all(GlassCabinet.GroupFlags["y+"] & GlassCabinet.GroupFlags["z+"])
@@ -487,7 +487,6 @@ var maze_ani_i :int
 func maze3d_animate(delta :float) -> void:
 	for mb in maze_balls:
 		mb.bounce(delta)
-	return
 	maze_ani_i += 1
 	if maze_ani_i% 60 == 0:
 		view_walls = Maze3D.wallview_next(view_walls)
