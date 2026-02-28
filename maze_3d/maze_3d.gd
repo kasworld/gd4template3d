@@ -184,9 +184,22 @@ func deco_pos_by_dir(x :int, y :int, dir :EnumDir.Flag) -> Vector3:
 			pos =  pos_face_H - Vector3(0,maze3d_setting.WallThick,0)
 	return pos
 
-func view_floor_ceiling(f :bool,c :bool) -> void:
-	$Floor.visible = f
-	$Ceiling.visible = c
+
+enum FloorCeiling {Off, Floor, Ceiling, Both}
+func view_floor_ceiling(v :FloorCeiling) -> void:
+	match v:
+		FloorCeiling.Off:
+			$Floor.visible = false
+			$Ceiling.visible = false
+		FloorCeiling.Floor:
+			$Floor.visible = true
+			$Ceiling.visible = false
+		FloorCeiling.Ceiling:
+			$Floor.visible = false
+			$Ceiling.visible = true
+		FloorCeiling.Both:
+			$Floor.visible = true
+			$Ceiling.visible = true
 
 func set_wall_size_long(b :bool) -> void:
 	if b:

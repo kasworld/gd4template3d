@@ -475,7 +475,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 		).init_with_color( maze3d_setting, Callable(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color() )
 	maze3d.make_bounce_wall_info()
 	maze3d.rotation.x = -PI/4
-	maze3d.view_floor_ceiling(true,false)
+	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Floor)
 	gc.add_child(maze3d)
 	for i in 100:
 		var mb :MazeBall = preload("res://maze_3d/maze_ball/maze_ball.tscn").instantiate(
@@ -491,7 +491,8 @@ func maze3d_animate(delta :float) -> void:
 	if maze_ani_i% 60 == 0:
 		view_walls = Maze3D.wallview_next(view_walls)
 		maze3d.set_wallpillar_view_mode(view_walls)
-	maze3d.rotation.x = sin(deg_to_rad(maze_ani_i)) * PI + PI - PI/4
+		maze3d.view_floor_ceiling( randi_range(0,3) as Maze3D.FloorCeiling)
+	maze3d.rotation.x = sin(deg_to_rad(maze_ani_i/1.5)) * PI + PI - PI/4
 
 
 var trailmesh_radius :float
