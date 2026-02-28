@@ -64,16 +64,18 @@ func CalcSizeWithWallV3() -> Vector3:
 #func CalcDiagonalLengthWithWallV3() -> float:
 	#return CalcSizeWithWallV3().length()
 
-func CalcWallSize_NS_Full() -> Vector3:
+func CalcWallSize_H_Long() -> Vector3:
 	return Vector3(LaneW, StoryH, WallThick)
-func CalcWallSize_NS_Reduced() -> Vector3:
-	return CalcWallSize_NS_Full() - Vector3(WallThick, 0, 0)
+func CalcWallSize_H_Short() -> Vector3:
+	return CalcWallSize_H_Long() - Vector3(WallThick, 0, 0)
 
-func CalcWallSize_EW_Full() -> Vector3:
-	return Vector3(WallThick, StoryH, LaneW)
-func CalcWallSize_EW_Reduced() -> Vector3:
-	return CalcWallSize_EW_Full() - Vector3(0, 0, WallThick)
+func CalcWallSize_V_Long() -> Vector3:
+	return swap_xz(CalcWallSize_H_Long())
+func CalcWallSize_V_Short() -> Vector3:
+	return swap_xz(CalcWallSize_H_Short())
 
+static func swap_xz(src :Vector3) -> Vector3:
+	return Vector3(src.z,src.y,src.x)
 
 func mazepos2storeypos( mp :Vector2i, y :float) -> Vector3:
 	return Vector3(LaneW/2+ mp.x*LaneW, y, LaneW/2+ mp.y*LaneW) -CalcSizeV3()/2
