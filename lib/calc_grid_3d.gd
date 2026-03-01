@@ -57,3 +57,10 @@ func get_n_th_lanepos(n :int) -> Vector3:
 
 func get_n_th_linepos(n :int) -> Vector3:
 	return posi_to_linepos(get_n_th_posi(n))
+
+func rand_posi() -> Vector3i:
+	return Vector3i(
+		randi_range(0,grid_size.x-1),
+		randi_range(0,grid_size.y-1),
+		randi_range(0,grid_size.z-1),
+		)

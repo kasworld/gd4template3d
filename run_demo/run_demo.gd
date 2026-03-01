@@ -470,7 +470,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_setting(MazeSize, LaneW, StoryH, WallThick, MakeSubWallRate
 		).init_with_color(Callable(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color() )
-	maze3d.rotation.x = -PI/4
+	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Floor)
 	gc.add_child(maze3d)
 	for i in 100:
@@ -483,6 +483,7 @@ var maze_ani_i :int
 func maze3d_animate(delta :float) -> void:
 	for mb in maze_balls:
 		mb.bounce(delta)
+	return
 	maze_ani_i += 1
 	if maze_ani_i% 60 == 0:
 		view_walls = Maze3D.wallview_next(view_walls)
@@ -697,10 +698,10 @@ func make_sub_tree(gc :GlassCabinet, tree_size :Vector3, bar_count :int, shift :
 	t.position = pos
 	if use_mat:
 		t.init_bartree_with_material([
-				preload("res://earthmoon/sun_mat.tres"),
-				preload("res://earthmoon/earth_mat.tres"),
-				preload("res://earthmoon/moon_mat.tres"),
-				preload("res://image/leaf.tres"),
+			preload("res://earthmoon/sun_mat.tres"),
+			preload("res://earthmoon/earth_mat.tres"),
+			preload("res://earthmoon/moon_mat.tres"),
+			preload("res://image/leaf.tres"),
 			].pick_random(), bar_count)
 	else:
 		t.init_bartree_with_color(NamedColors.random_color(), NamedColors.random_color(), bar_count)
