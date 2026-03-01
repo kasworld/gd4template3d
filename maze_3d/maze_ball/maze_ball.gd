@@ -23,7 +23,7 @@ func init(co :Color, mz :Maze3D) -> MazeBall:
 	velocity = Vector3(randf()-0.5,randf()-0.5,randf()-0.5).normalized() * maze3d.maze3d_setting.LaneW
 	rot_vel = Vector3(randf()-0.5,randf()-0.5,randf()-0.5).normalized() / PI /2
 	var pos2d := maze3d.maze3d_setting.rand_pos_2i()
-	position = maze3d.maze3d_setting.mazepos2storeypos(pos2d, maze3d.maze3d_setting.StoryH/2)
+	position = maze3d.maze3d_setting.mazepos2storeypos(pos2d, 0)
 	return self
 
 func bounce(delta :float) -> void:

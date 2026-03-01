@@ -270,34 +270,14 @@ func set_wallpillar_view_mode(w :WallPillarView) -> void:
 			view_walls(WallView.Off)
 			view_pillars(PillarView.Capsule)
 
-var bounce_wall_info_all :Array
-# wallinfo [aabb , axis_wall [3][2]bool ]
-func make_bounce_wall_info() -> void:
-	var cell_size := maze3d_setting.CellSize()
-	var maze_size_half := maze3d_setting.CalcSizeV3()/2
-	bounce_wall_info_all = []
-	bounce_wall_info_all.resize(maze3d_setting.MazeSize.y)
-	for y in maze3d_setting.MazeSize.y:
-		bounce_wall_info_all[y] = []
-		bounce_wall_info_all[y].resize(maze3d_setting.MazeSize.x)
-		for x in maze3d_setting.MazeSize.x:
-			bounce_wall_info_all[y][x] = [
-				AABB(
-					Vector3(maze3d_setting.LaneW*x, maze3d_setting.LaneW*y, 0) -maze_size_half,
-					cell_size), # AABB
-				make_wallinfo_for_bounce(x,y), # axis_wall [3:xyz][2]bool
-			]
 func bounce_cell(oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
-	var pos2d := maze3d_setting.storeypos2mazepos(oldpos)
-	var wallinfo :Array = bounce_wall_info_all[pos2d.y][pos2d.x]
-	var aabb :AABB = wallinfo[0]
-	var axis_wall :Array = wallinfo[1]
-	return Bounce.v3f_wall(pos, aabb, axis_wall, radius)
-
-# wall [axis:3][2]bool : [ [-x,+x], [-y,+y], [-z,+z] ]
-func make_wallinfo_for_bounce(x:int, y:int) -> Array[Array]:
-	return [
-		[maze_cells.is_wall_dir_at(x,y, EnumDir.Flag.West), maze_cells.is_wall_dir_at(x,y, EnumDir.Flag.East)],
-		[maze_cells.is_wall_dir_at(x,y, EnumDir.Flag.North), maze_cells.is_wall_dir_at(x,y, EnumDir.Flag.South)],
-		[true,true],
-	]
+	var posi := maze3d_setting.calc_grid.lanepos_to_posi(oldpos)
+	return Bounce.v3f_wall(
+		pos,
+		maze3d_setting.calc_grid.cell_aabb_by_posi(posi),
+		[
+			[maze_cells.is_wall_dir_at(posi.x,posi.y, EnumDir.Flag.West), maze_cells.is_wall_dir_at(posi.x,posi.y, EnumDir.Flag.East)],
+			[maze_cells.is_wall_dir_at(posi.x,posi.y, EnumDir.Flag.North), maze_cells.is_wall_dir_at(posi.x,posi.y, EnumDir.Flag.South)],
+			[true,true],
+		],
+		radius)

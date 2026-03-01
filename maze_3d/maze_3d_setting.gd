@@ -33,7 +33,7 @@ func _init(
 		CalcGrid3D.SizeToAABB(sz),
 		CalcGrid3D.Vector2iToVector3i(MazeSize, 1),
 		)
-	print_debug(calc_grid)
+	#print_debug(calc_grid)
 
 func duplicate() -> Maze3DSetting:
 	return new(MazeSize,StoryH,LaneW,WallThick,MakeSubWallRate)
@@ -53,18 +53,10 @@ func mazepos2storeypos( mp :Vector2i, z :float) -> Vector3:
 	var rtn := calc_grid.posi_to_lanepos( CalcGrid3D.Vector2iToVector3i(mp,0) )
 	rtn.z = z
 	return rtn
-	#return Vector3(LaneW/2+ mp.x*LaneW, LaneW/2+ mp.y*LaneW, z) -CalcSizeV3()/2
 
 func storeypos2mazepos(pos :Vector3) -> Vector2i:
 	var rtn := calc_grid.lanepos_to_posi(pos)
 	return CalcGrid3D.Vector3iToVector2i(rtn)
-	#pos += CalcSizeV3()/2
-	#var x = clampi(int(pos.x/LaneW),0, MazeSize.x-1)
-	#var y = clampi(int(pos.y/LaneW),0, MazeSize.y-1)
-	#return Vector2i(x,y)
-
-
-
 
 func rand_pos_2i() -> Vector2i:
 	return Vector2i(randi_range(0,MazeSize.x-1),randi_range(0,MazeSize.y-1) )
