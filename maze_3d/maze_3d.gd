@@ -39,6 +39,7 @@ func init_setting(grid_size :Vector2i, maze_height :float, lane_width :float, wa
 	maze_cells = Maze.new(grid_size)
 	PreCalced.PillarSize = Vector3(wall_thick,maze_height,wall_thick)
 	PreCalced.SizeV2 = grid_size*lane_width
+	PreCalced.SizeV3 = calc_grid.boundary.size
 	PreCalced.SizeWithWallV2 = PreCalced.SizeV2 + Vector2(wall_thick, wall_thick)
 	PreCalced.SizeWithWallV3 = Vector3(PreCalced.SizeWithWallV2.x, maze_height, PreCalced.SizeWithWallV2.y)
 	PreCalced.WallSize_H_Long = Vector3(lane_width, maze_height, wall_thick)
@@ -221,8 +222,8 @@ func make_wall_deco_by_maze(makedeco :Callable) -> void:
 			makedeco.call( MazeSize.x , y , EnumDir.Flag.East)
 
 func deco_pos_by_dir(x :int, y :int, dir :EnumDir.Flag) -> Vector3:
-	var pos_face_V := Vector3( x *LaneW, StoryH/2.0, y *LaneW +LaneW/2)
-	var pos_face_H := Vector3( x *LaneW, StoryH/2.0 ,y *LaneW +LaneW/2)
+	var pos_face_V := calc_grid.posi_to_linepos(Vector3i(x,0,y)) + Vector3(0, StoryH/2, LaneW/2)
+	var pos_face_H := calc_grid.posi_to_linepos(Vector3i(x,0,y)) + Vector3(LaneW/2, StoryH/2, 0)
 	var pos :Vector3
 	match dir:
 		EnumDir.Flag.West:
