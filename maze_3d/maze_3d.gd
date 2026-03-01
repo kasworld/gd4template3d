@@ -4,16 +4,15 @@ class_name Maze3D
 static var darkcolorlist = NamedColors.filter_dark_color_list()
 static var lightcolorlist = NamedColors.filter_light_color_list()
 
-
-#var maze3d_setting :Maze3DSetting
 var MazeSize :Vector2i
 var StoryH :float
 var LaneW :float
 var WallThick :float
 var MakeSubWallRate :float
-var calc_grid :CalcGrid3D
 
+var calc_grid :CalcGrid3D
 var maze_cells :Maze
+
 var main_wall_mat :StandardMaterial3D
 var sub_wall_mat :StandardMaterial3D
 var pillar_mat :StandardMaterial3D
@@ -36,15 +35,6 @@ func init_setting(size :Vector2i, height :float, lane_width :float, wall_thick :
 		CalcGrid3D.Vector2iToVector3i(MazeSize, 1),
 		)
 	return self
-
-func CalcCellCount() -> int:
-	return calc_grid.get_grid_count()
-
-func CellSize() -> Vector3:
-	return calc_grid.unit_size
-
-func CalcSizeV3() -> Vector3:
-	return calc_grid.boundary.size
 
 func mazepos2storeypos( mp :Vector2i, z :float) -> Vector3:
 	var rtn := calc_grid.posi_to_lanepos( CalcGrid3D.Vector2iToVector3i(mp,0) )

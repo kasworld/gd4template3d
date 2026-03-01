@@ -458,7 +458,6 @@ func wavegauge_box_demo(gc :GlassCabinet) -> Callable:
 
 
 var maze3d :Maze3D
-var maze3d_setting :Maze3DSetting
 var maze_balls :Array
 var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ShortWithPillarCapsule
 func maze3d_demo(gc :GlassCabinet) -> Callable:
