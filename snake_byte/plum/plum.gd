@@ -45,7 +45,7 @@ func _process(delta: float) -> void:
 		)
 
 func get_pos3d() -> Vector3:
-	return SnakeByte.calc_grid.posi_to_lanepos( CalcGrid3D.Vector2iToVector3i(pos2d,0))
+	return SnakeByte.calc_grid.posi_to_lanepos( CalcGrid3D.xy_Vector2iToVector3i(pos2d,0))
 
 func field_get(pos :Vector2i, d :Dir8Lib.Dir):
 	return field.get_at(pos + Dir8Lib.Dir2Vt[d] )

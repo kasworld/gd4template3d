@@ -7,10 +7,10 @@ var unit_size :Vector3
 func _to_string() -> String:
 	return "boundary %s gridsize %s unitsize %s" % [boundary,grid_size,unit_size]
 
-static func Vector2iToVector3i(vt2i :Vector2i, z :int) -> Vector3i:
+static func xy_Vector2iToVector3i(vt2i :Vector2i, z :int) -> Vector3i:
 	return Vector3i(vt2i.x, vt2i.y, z)
 
-static func Vector3iToVector2i(vt3i :Vector3i) -> Vector2i:
+static func xy_Vector3iToVector2i(vt3i :Vector3i) -> Vector2i:
 	return Vector2i(vt3i.x, vt3i.y)
 
 static func SizeToAABB(size :Vector3) -> AABB:

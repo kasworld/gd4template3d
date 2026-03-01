@@ -26,7 +26,7 @@ var 점수 :int
 
 func init(sz :Vector3) -> SameGame:
 	cabinet_size = sz
-	calc_grid = CalcGrid3D.new( CalcGrid3D.SizeToAABB(cabinet_size), CalcGrid3D.Vector2iToVector3i(game_size,1))
+	calc_grid = CalcGrid3D.new( CalcGrid3D.SizeToAABB(cabinet_size), CalcGrid3D.xy_Vector2iToVector3i(game_size,1))
 	tile_size = calc_grid.unit_size
 	tile_size.z = tile_size.y
 	SameGameTile.tile_size = tile_size
@@ -129,7 +129,7 @@ func find_sameballs(b :CollisionObject3D) -> Array[CollisionObject3D]:
 	var found_balls :Array[CollisionObject3D] = []
 	var visited_pos :Dictionary[Vector2i,bool] # vector2i
 	var to_visit_pos :Array[Vector2i] # vector2i
-	to_visit_pos.append( CalcGrid3D.Vector3iToVector2i(calc_grid.lanepos_to_posi(b.position) ) )
+	to_visit_pos.append( CalcGrid3D.xy_Vector3iToVector2i(calc_grid.lanepos_to_posi(b.position) ) )
 	while not to_visit_pos.is_empty():
 		var current_pos = to_visit_pos.pop_front()
 		if visited_pos.has(current_pos):

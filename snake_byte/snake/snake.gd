@@ -67,7 +67,7 @@ func process_frame() -> void:
 	astar_grid.set_point_solid(headpos)
 	$Body.set_visible_count(pos2d_list.size())
 	for i in pos2d_list.size():
-		$Body.set_inst_position(i, SnakeByte.calc_grid.posi_to_lanepos( CalcGrid3D.Vector2iToVector3i(pos2d_list[i], 0)) )
+		$Body.set_inst_position(i, SnakeByte.calc_grid.posi_to_lanepos( CalcGrid3D.xy_Vector2iToVector3i(pos2d_list[i], 0)) )
 	$Body.set_gradient_color_all(Color.RED, Color.BLUE)
 
 func get_next_head_pos() -> Vector2i:

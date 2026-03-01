@@ -87,7 +87,7 @@ func tetromino_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
 	gc.show_wall_box(false)
 	var grid_size := Vector2i(32,18)
-	var calc_grid := CalcGrid3D.new(gc.get_aabb(),CalcGrid3D.Vector2iToVector3i(grid_size,1))
+	var calc_grid := CalcGrid3D.new(gc.get_aabb(),CalcGrid3D.xy_Vector2iToVector3i(grid_size,1))
 	var tetromino_list :Array = []
 	for t in Tetromino.Type.size():
 		var tetromino :Tetromino = preload("res://polyomino/tetromino/Tetromino.tscn").instantiate(
@@ -483,13 +483,12 @@ var maze_ani_i :int
 func maze3d_animate(delta :float) -> void:
 	for mb in maze_balls:
 		mb.bounce(delta)
-	return
 	maze_ani_i += 1
 	if maze_ani_i% 60 == 0:
 		view_walls = Maze3D.wallview_next(view_walls)
 		maze3d.set_wallpillar_view_mode(view_walls)
 		maze3d.view_floor_ceiling( randi_range(0,3) as Maze3D.FloorCeiling)
-	maze3d.rotation.x = sin(deg_to_rad(maze_ani_i/1.5)) * PI + PI - PI/4
+	maze3d.rotation.x = sin(deg_to_rad(maze_ani_i/1.5)) * PI + PI + PI/4
 
 
 var trailmesh_radius :float
