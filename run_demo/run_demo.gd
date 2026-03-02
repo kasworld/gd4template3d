@@ -461,14 +461,17 @@ var maze3d :Maze3D
 var maze_balls :Array
 var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ShortWithPillarCapsule
 func maze3d_demo(gc :GlassCabinet) -> Callable:
-	gc.show_axis_arrow(true)
-	var MazeSize = Vector2i(16,9)*1
-	var LaneW = max(1,gc.cabinet_size.x/MazeSize.x-0.1)
-	var StoryH = LaneW
-	var WallThick = LaneW *0.1
+	#gc.show_axis_arrow(true)
+	var grid_size := Vector2i(16,9)*1
+	var cell_size := Vector3(
+		max(1,gc.cabinet_size.x/grid_size.x-0.1),
+		max(1,gc.cabinet_size.y/grid_size.y-0.1),
+		max(1,gc.cabinet_size.z/grid_size.y-0.1),
+	)
+	var WallThick = cell_size.x *0.1
 	var MakeSubWallRate = 0.1
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
-		).init_setting(MazeSize, LaneW, StoryH, WallThick, MakeSubWallRate
+		).init_setting(grid_size, cell_size, WallThick, MakeSubWallRate
 		).init_with_color(Callable(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color() )
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Floor)
