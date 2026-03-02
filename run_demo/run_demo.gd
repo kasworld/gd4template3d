@@ -333,7 +333,7 @@ func platonic_solids_demo(gc :GlassCabinet) -> Callable:
 		[12, 1.0, 9, 18 ],
 	]:
 		var face :int = ll[0]
-		var wire_width :float = ll[1]
+		var wire_width :float = ll[1] * gc.cabinet_size.length() /300
 		var from :int = ll[2]
 		var to :int = ll[3]
 		var ws :WireSolid = preload("res://wire_solid/wire_solid.tscn").instantiate(
