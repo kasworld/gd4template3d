@@ -82,7 +82,7 @@ func init_with_color(makedecofn :Callable, comain :Color, cosub :Color, copillar
 	return self
 
 func init_floor_ceiling() -> void:
-	var wire_r := WallThick * 0.5
+	var wire_r := WallThick
 	var net_size :Vector2 = PreCalced.SizeWithWallV2 - Vector2(wire_r,wire_r)
 	$Floor.init_wire_net(net_size, PreCalced.Grid2D*2, wire_r, darkcolorlist.pick_random())
 	$Ceiling.init_wire_net(net_size, PreCalced.Grid2D*2, wire_r, lightcolorlist.pick_random())

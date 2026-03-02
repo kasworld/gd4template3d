@@ -466,7 +466,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	var cell_size := Vector3(
 		max(1,gc.cabinet_size.x/grid_size.x-0.1),
 		max(1,gc.cabinet_size.y/grid_size.y-0.1),
-		max(1,gc.cabinet_size.z/grid_size.y-0.1),
+		max(1,gc.cabinet_size.y/grid_size.y-0.1),
 	)
 	var WallThick = cell_size.x *0.1
 	var MakeSubWallRate = 0.1
