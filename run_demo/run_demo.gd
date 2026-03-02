@@ -462,8 +462,8 @@ var maze_balls :Array
 var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ShortWithPillarCapsule
 func maze3d_demo(gc :GlassCabinet) -> Callable:
 	gc.show_axis_arrow(true)
-	var MazeSize = Vector2i(16,9)
-	var LaneW = gc.cabinet_size.x/MazeSize.x-0.1
+	var MazeSize = Vector2i(16,9)*1
+	var LaneW = max(1,gc.cabinet_size.x/MazeSize.x-0.1)
 	var StoryH = LaneW
 	var WallThick = LaneW *0.1
 	var MakeSubWallRate = 0.1

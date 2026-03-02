@@ -44,31 +44,21 @@ func init_setting(grid_size :Vector2i, maze_height :float, lane_width :float, wa
 	PreCalced.SizeWithWallV3 = Vector3(PreCalced.SizeWithWallV2.x, maze_height, PreCalced.SizeWithWallV2.y)
 	PreCalced.WallSize_H_Long = Vector3(lane_width, maze_height, wall_thick)
 	PreCalced.WallSize_H_Short = PreCalced.WallSize_H_Long - Vector3(wall_thick, 0, 0)
-	PreCalced.WallSize_V_Long = swap_xz(PreCalced.WallSize_H_Long)
-	PreCalced.WallSize_V_Short = swap_xz(PreCalced.WallSize_H_Short)
+	PreCalced.WallSize_V_Long = SwapXZ(PreCalced.WallSize_H_Long)
+	PreCalced.WallSize_V_Short = SwapXZ(PreCalced.WallSize_H_Short)
 	return self
 
+static func SwapXZ(src :Vector3) -> Vector3:
+	return Vector3(src.z,src.y,src.x)
 
 func mazepos2storeypos( mp :Vector2i, y :float) -> Vector3:
-	var rtn := calc_grid.posi_to_lanepos( xz_Vector2iToVector3i(mp,0) )
+	var rtn := calc_grid.posi_to_lanepos( CalcGrid3D.xz_Vector2iToVector3i(mp,0) )
 	rtn.y = y
 	return rtn
 
 func storeypos2mazepos(pos :Vector3) -> Vector2i:
 	var rtn := calc_grid.lanepos_to_posi(pos)
-	return xz_Vector3iToVector2i(rtn)
-
-static func xz_Vector2iToVector3i(vt2i :Vector2i, y :int) -> Vector3i:
-	return Vector3i(vt2i.x, y, vt2i.y)
-
-static func xz_Vector3iToVector2i(vt3i :Vector3i) -> Vector2i:
-	return Vector2i(vt3i.x, vt3i.z)
-
-static func swap_xz(src :Vector3) -> Vector3:
-	return Vector3(src.z,src.y,src.x)
-
-#func rand_pos_2i() -> Vector2i:
-	#return Vector2i(randi_range(0,MazeSize.x-1),randi_range(0,MazeSize.y-1) )
+	return CalcGrid3D.xz_Vector3iToVector2i(rtn)
 
 # end settings
 
