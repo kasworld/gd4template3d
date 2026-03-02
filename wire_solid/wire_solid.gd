@@ -33,3 +33,6 @@ func set_color(co :Color) -> WireSolid:
 	$Wires.set_color_all(co)
 	$OuterSphere.set_color_all(co)
 	return self
+
+func show_points(b :bool) -> void:
+	$Spheres.visible = b
