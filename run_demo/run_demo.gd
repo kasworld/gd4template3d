@@ -462,22 +462,23 @@ var maze_balls :Array
 var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ShortWithPillarCapsule
 func maze3d_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_axis_arrow(true)
+	#gc.show_wall_box(false)
 	var grid_size := Vector2i(16,9)*1
 	var cell_size := Vector3(
-		max(1,gc.cabinet_size.x/grid_size.x-0.1),
-		max(1,gc.cabinet_size.y/grid_size.y-0.1),
-		max(1,gc.cabinet_size.y/grid_size.y-0.1),
-	)
+		max(1,gc.cabinet_size.x/grid_size.x),
+		max(1,gc.cabinet_size.y/grid_size.y),
+		max(1,gc.cabinet_size.y/grid_size.y),
+	) * 0.95
 	var WallThick = cell_size.x *0.1
 	var MakeSubWallRate = 0.1
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_setting(grid_size, cell_size, WallThick, MakeSubWallRate
 		).init_with_color(Callable(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color()
-		).init_floor_ceiling(grid_size*4, WallThick/4, NamedColors.random_color(), NamedColors.random_color())
+		).init_floor_ceiling(grid_size*4, cell_size.x*0.01,cell_size.x*0.2, NamedColors.random_color(), NamedColors.random_color())
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Floor)
 	gc.add_child(maze3d)
-	for i in 100:
+	for i in min(100,grid_size.x*grid_size.y):
 		var mb :MazeBall = preload("res://maze_3d/maze_ball/maze_ball.tscn").instantiate(
 			).init(NamedColors.random_color(), maze3d)
 		maze3d.add_child(mb)
@@ -487,6 +488,7 @@ var maze_ani_i :int
 func maze3d_animate(delta :float) -> void:
 	for mb in maze_balls:
 		mb.bounce(delta)
+	#return
 	maze_ani_i += 1
 	if maze_ani_i% 60 == 0:
 		view_walls = Maze3D.wallview_next(view_walls)
@@ -556,7 +558,10 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	afterfn.call(prop,1,1)
 	var grid_size := Vector2i(16,9)
 	prop = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_wire_net(Vector2(gc.cabinet_size.x,gc.cabinet_size.y)/4, grid_size, gc.cabinet_size.x/grid_size.x/20, NamedColors.random_color())
+		).init_wire_net2(Vector2(gc.cabinet_size.x,gc.cabinet_size.y)/4, grid_size, gc.cabinet_size.x*0.005,gc.cabinet_size.y*0.001, NamedColors.random_color())
+	afterfn.call(prop,2,0)
+	prop = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
+		).init_wire_net2(Vector2(gc.cabinet_size.x,gc.cabinet_size.y)/4, grid_size, gc.cabinet_size.x*0.001,gc.cabinet_size.y*0.02, NamedColors.random_color())
 	afterfn.call(prop,2,0)
 	prop = preload("res://axis_arrow_3d/axis_arrow_3d.tscn").instantiate(
 		).set_colors().set_size(gc.cabinet_size.length()/10)
