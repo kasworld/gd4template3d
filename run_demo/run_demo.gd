@@ -473,7 +473,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_setting(grid_size, cell_size, WallThick, MakeSubWallRate
 		).init_with_color(Callable(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color()
-		).init_floor_ceiling(WallThick/2)
+		).init_floor_ceiling(grid_size*4, WallThick/4, NamedColors.random_color(), NamedColors.random_color())
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Floor)
 	gc.add_child(maze3d)
