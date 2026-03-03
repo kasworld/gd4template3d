@@ -472,7 +472,8 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	var MakeSubWallRate = 0.1
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_setting(grid_size, cell_size, WallThick, MakeSubWallRate
-		).init_with_color(Callable(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color() )
+		).init_with_color(Callable(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color()
+		).init_floor_ceiling(WallThick/2)
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Floor)
 	gc.add_child(maze3d)
@@ -489,6 +490,7 @@ func maze3d_animate(delta :float) -> void:
 	maze_ani_i += 1
 	if maze_ani_i% 60 == 0:
 		view_walls = Maze3D.wallview_next(view_walls)
+		#if view_walls != Maze3D.WallPillarView.ShortWithPillarCapsule and view_walls != Maze3D.WallPillarView.OffWithPillarCapsule:
 		maze3d.set_wallpillar_view_mode(view_walls)
 		maze3d.view_floor_ceiling( randi_range(0,3) as Maze3D.FloorCeiling)
 	maze3d.rotation.x = sin(deg_to_rad(maze_ani_i/1.5)) * PI + PI + PI/4
