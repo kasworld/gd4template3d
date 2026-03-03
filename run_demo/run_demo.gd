@@ -538,7 +538,7 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 
 var prop_list :Array
 func props_demo(gc :GlassCabinet) -> Callable:
-	var grid32 := gc.make_CalcGrid3D( Vector3i(3,2,1))
+	var grid32 := gc.make_CalcGrid3D( Vector3i(4,2,1))
 	var afterfn := func(pr, x,y):
 		pr.position = grid32.posi_to_lanepos(Vector3i(x,y,0))
 		gc.add_child(pr)
@@ -559,10 +559,10 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	var grid_size := Vector2i(16,9)
 	prop = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).init_wire_net2(Vector2(gc.cabinet_size.x,gc.cabinet_size.y)/4, grid_size, gc.cabinet_size.x*0.005,gc.cabinet_size.y*0.001, NamedColors.random_color())
-	afterfn.call(prop,2,0)
+	afterfn.call(prop,3,0)
 	prop = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_wire_net2(Vector2(gc.cabinet_size.x,gc.cabinet_size.y)/4, grid_size, gc.cabinet_size.x*0.001,gc.cabinet_size.y*0.02, NamedColors.random_color())
-	afterfn.call(prop,2,0)
+		).init_wire_net2(Vector2(gc.cabinet_size.x,gc.cabinet_size.y)/4, grid_size, gc.cabinet_size.x*0.001,gc.cabinet_size.y*0.03, NamedColors.random_color())
+	afterfn.call(prop,3,1)
 	prop = preload("res://axis_arrow_3d/axis_arrow_3d.tscn").instantiate(
 		).set_colors().set_size(gc.cabinet_size.length()/10)
 	afterfn.call(prop,2,1)
