@@ -337,7 +337,7 @@ func platonic_solids_demo(gc :GlassCabinet) -> Callable:
 		var from :int = ll[2]
 		var to :int = ll[3]
 		var ws :WireSolid = preload("res://wire_solid/wire_solid.tscn").instantiate(
-			).init(face, from, to, grid43.unit_size.y/2-wire_width , wire_width, NamedColors.random_color())
+			).init(face, from, to, grid43.unit_size.y/2-wire_width , wire_width, NamedColors.random_color(), wire_width )
 		gc.add_child(ws)
 		platonic_solid_list.append(ws)
 		ws.position = grid43.get_n_th_lanepos(i)

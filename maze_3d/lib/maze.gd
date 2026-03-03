@@ -1,7 +1,7 @@
 class_name Maze
 
 # opened dir NOT wall
-var _cells : Array[PackedInt32Array]
+var _cells : Array[PackedByteArray]
 var _maze_size : Vector2i
 
 func _select_visited(visted_pos :Array) -> int:
@@ -56,6 +56,15 @@ func get_open_dir_at(x :int, y :int) -> Array[EnumDir.Flag]:
 
 func is_wall_dir_at(x :int, y :int, dir :EnumDir.Flag) -> bool:
 	return (_cells[y][x] & dir) == 0
+
+## enumdir order : North West South East
+func get_wall_alldir_at(x :int, y :int) -> Array[bool]:
+	return [
+		(_cells[y][x] & EnumDir.Flag.North) == 0,
+		(_cells[y][x] & EnumDir.Flag.West) == 0,
+		(_cells[y][x] & EnumDir.Flag.South) == 0,
+		(_cells[y][x] & EnumDir.Flag.East) == 0,
+	]
 
 func get_wall_dir_at(x :int, y :int) -> Array[EnumDir.Flag]:
 	var rtn :Array[EnumDir.Flag] = []

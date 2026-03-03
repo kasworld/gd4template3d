@@ -9,7 +9,7 @@ const FaceEdgeData = {
 	12 : [ [0, 3,], [3, 9,], [9, 18] ],
 }
 
-func init(face :int, edge_from:int, edge_to :int, outer_radius :float, wire_width :float, wire_color :Color) -> WireSolid:
+func init(face :int, edge_from:int, edge_to :int, outer_radius :float, wire_width :float, wire_color :Color, ball_radius :float) -> WireSolid:
 	var points := PlatonicSolids.ScalePointList( PlatonicSolids.PointEdge[face][0], outer_radius )
 	var lines := PlatonicSolids.PointListToLineList2(points, edge_from, edge_to )
 	$Wires.multi_line_by_pos(lines, wire_width, wire_color)
@@ -20,8 +20,8 @@ func init(face :int, edge_from:int, edge_to :int, outer_radius :float, wire_widt
 	sp_mesh.material.clearcoat_enabled = true
 	sp_mesh.material.refraction_enabled = true
 	sp_mesh.material.rim_enabled = true
-	sp_mesh.radius = wire_width
-	sp_mesh.height = wire_width*2
+	sp_mesh.radius = ball_radius
+	sp_mesh.height = ball_radius *2
 	$Spheres.init_meshs_by_point_list(sp_mesh, points, wire_color)
 
 	outer_radius += wire_width
