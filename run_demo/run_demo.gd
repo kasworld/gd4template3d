@@ -562,8 +562,8 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
 		).init(Vector2(gc.cabinet_size.x,gc.cabinet_size.y)/4, grid_size, gc.cabinet_size.x*0.005,gc.cabinet_size.y*0.001, NamedColors.random_color())
 	afterfn.call(prop,3,0)
-	prop = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_wire_net2(Vector2(gc.cabinet_size.x,gc.cabinet_size.y)/4, grid_size, gc.cabinet_size.x*0.001,gc.cabinet_size.y*0.03, NamedColors.random_color())
+	prop = preload("res://wire_net/wire_net.tscn").instantiate(
+		).init(Vector2(gc.cabinet_size.x,gc.cabinet_size.y)/4, grid_size, gc.cabinet_size.x*0.001,gc.cabinet_size.y*0.03, NamedColors.random_color())
 	afterfn.call(prop,3,1)
 	prop = preload("res://axis_arrow_3d/axis_arrow_3d.tscn").instantiate(
 		).set_colors().set_size(gc.cabinet_size.length()/10)
@@ -588,6 +588,9 @@ func props_demo(gc :GlassCabinet) -> Callable:
 				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
 			if ps is TileGrid:
 				ps.start_tile_rotate(randi_range(0,2),  0.0, PI, 1.0)
+			if ps is WireNet:
+				ps.start_rotate(randi_range(0,1),  0.0, PI, 1.0)
+
 
 	props_animation.animation_ended.connect(
 		func(_node :Node3D, _ani :Dictionary) -> void:
