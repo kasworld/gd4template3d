@@ -545,10 +545,10 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		prop_list.append(pr)
 
 	var prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
-		).set_color(NamedColors.random_color()).set_size( gc.cabinet_size.x/5, gc.cabinet_size.x/100, gc.cabinet_size.x/25,0.3)
+		).set_color(NamedColors.random_color()).set_size( gc.cabinet_size.x/10, gc.cabinet_size.x/200, gc.cabinet_size.x/50,0.3)
 	afterfn.call(prop,0,0)
 	prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
-		).set_color(NamedColors.random_color()).set_size( gc.cabinet_size.x/5, gc.cabinet_size.x/70, gc.cabinet_size.x/25)
+		).set_color(NamedColors.random_color()).set_size( gc.cabinet_size.x/10, gc.cabinet_size.x/140, gc.cabinet_size.x/50)
 	afterfn.call(prop,1,0)
 	prop = preload("res://valve_handle/valve_handle.tscn").instantiate(
 		).init(gc.cabinet_size.x/20, gc.cabinet_size.x/10, 8, NamedColors.random_color())
