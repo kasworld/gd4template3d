@@ -43,3 +43,25 @@ func animation_ended(_node :Node3D, _ani :Dictionary) -> void:
 
 func _process(_delta: float) -> void:
 	animation.handle_animation()
+
+func start_tile_rotate(axis :int, from :float, to :float, dur_sec :float) -> void:
+	animation.add_animation(SimpleAnimation.MakeAnimation(
+		"", self,
+		["tile_rotation_x", "tile_rotation_y", "tile_rotation_z"][axis],
+		from , to, dur_sec
+	))
+
+func start_tile_rotate_x(from :float, to :float, dur_sec :float) -> void:
+	animation.add_animation(SimpleAnimation.MakeAnimation(
+		"", self, "tile_rotation_x", from , to, dur_sec
+	))
+
+func start_tile_rotate_y(from :float, to :float, dur_sec :float) -> void:
+	animation.add_animation(SimpleAnimation.MakeAnimation(
+		"", self, "tile_rotation_y", from , to, dur_sec
+	))
+
+func start_tile_rotate_z(from :float, to :float, dur_sec :float) -> void:
+	animation.add_animation(SimpleAnimation.MakeAnimation(
+		"", self, "tile_rotation_z", from , to, dur_sec
+	))

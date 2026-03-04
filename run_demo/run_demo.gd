@@ -584,6 +584,9 @@ func props_demo(gc :GlassCabinet) -> Callable:
 			var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
 			props_animation.start_rotation_subfield(
 				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
+			if ps is TileGrid:
+				ps.start_tile_rotate(randi_range(0,2),  0.0, PI, 1.0)
+
 	props_animation.animation_ended.connect(
 		func(_node :Node3D, _ani :Dictionary) -> void:
 			if props_animation.is_empty():
