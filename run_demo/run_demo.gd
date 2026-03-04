@@ -536,8 +536,8 @@ func get_color_ByPosition(pos :Vector3) -> Color:
 func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	return Bounce.v3f(pos, bound_aabb, radius)
 
-var prop_list :Array
 func props_demo(gc :GlassCabinet) -> Callable:
+	var prop_list :Array
 	var grid32 := gc.make_CalcGrid3D( Vector3i(4,2,1))
 	var afterfn := func(pr, x,y):
 		pr.position = grid32.posi_to_lanepos(Vector3i(x,y,0))
@@ -566,9 +566,8 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	prop = preload("res://axis_arrow_3d/axis_arrow_3d.tscn").instantiate(
 		).set_colors().set_size(gc.cabinet_size.length()/10)
 	afterfn.call(prop,2,1)
-
-	prop = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_tilegrid(
+	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
+		).init(
 		Vector3(gc.cabinet_size.x, gc.cabinet_size.y, gc.cabinet_size.z / 100)/4,
 		Vector2i(16,9),
 		0.9,
@@ -577,21 +576,22 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	for i in prop.get_visible_count():
 		prop.set_inst_color(i, NamedColors.random_color())
 	afterfn.call(prop, 2,0)
-	props_animation.animation_ended.connect(props_animation_ended)
-	start_props_animation()
+
+	var props_animation := SimpleAnimation.new()
+	var start_props_animation = func() -> void:
+		for ps in prop_list:
+			var diff :float = [PI/2,-PI/2].pick_random()
+			var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
+			props_animation.start_rotation_subfield(
+				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
+	props_animation.animation_ended.connect(
+		func(_node :Node3D, _ani :Dictionary) -> void:
+			if props_animation.is_empty():
+				start_props_animation.call())
+	start_props_animation.call()
 	return func(_delta:float):
 		props_animation.handle_animation()
 
-var props_animation := SimpleAnimation.new()
-func props_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
-	if props_animation.is_empty():
-		start_props_animation()
-func start_props_animation() -> void:
-	for ps in prop_list:
-		var diff :float = [PI/2,-PI/2].pick_random()
-		var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-		props_animation.start_rotation_subfield(
-			"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
 
 
 func line2d_demo(gc :GlassCabinet) -> Callable:

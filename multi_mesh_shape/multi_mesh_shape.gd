@@ -18,19 +18,6 @@ func init_집중선(r :float, start:float, end:float, depth :float, count :int, 
 		set_inst_color(i, co)
 	return self
 
-func init_tilegrid(sz :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> MultiMeshShape:
-	var calc_grid := CalcGrid3D.new(
-		CalcGrid3D.SizeToAABB(sz),
-		CalcGrid3D.xy_Vector2iToVector3i(grid_count,1),
-	)
-	var plist := []
-	for i in calc_grid.get_grid_count():
-		plist.append(calc_grid.get_n_th_lanepos(i))
-	var mesh := BoxMesh.new()
-	mesh.size = calc_grid.unit_size *gap_rate
-	mesh.material = make_color_material()
-	init_meshs_by_point_list(mesh, plist , co)
-	return self
 
 func init_wire_net(net_size :Vector2, grid_count :Vector2i, wire_radius :float, co :Color, alpha :float = 1.0) -> MultiMeshShape:
 	return init_wire_net2(net_size, grid_count, wire_radius, wire_radius, co, alpha)
