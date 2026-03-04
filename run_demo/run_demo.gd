@@ -81,32 +81,6 @@ func _process(delta: float) -> void:
 	for fn in animate_func_list:
 		fn.call(delta)
 
-var multitile_list :Array = []
-func multitile_demo(gc :GlassCabinet) -> Callable:
-	var mmt :MultiMeshShape= preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_tilegrid(
-		Vector3(gc.cabinet_size.x, gc.cabinet_size.y, gc.cabinet_size.z / 100),
-		Vector2i(16,9),
-		0.9,
-		NamedColors.random_color(),
-	)
-	gc.add_child(mmt)
-	multitile_list.append(mmt)
-	multitile_animation.animation_ended.connect(multitile_animation_ended)
-	start_multitile_animation()
-	return func(_delta:float):
-		multitile_animation.handle_animation()
-var multitile_animation := SimpleAnimation.new()
-func multitile_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
-	if multitile_animation.is_empty():
-		start_multitile_animation()
-func start_multitile_animation() -> void:
-	for ps in multitile_list:
-		var diff :float = [PI/2,-PI/2].pick_random()
-		var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-		multitile_animation.start_rotation_subfield(
-			"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
-
 
 var tetromino_iter :ListIter
 func tetromino_demo(gc :GlassCabinet) -> Callable:
@@ -592,6 +566,17 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	prop = preload("res://axis_arrow_3d/axis_arrow_3d.tscn").instantiate(
 		).set_colors().set_size(gc.cabinet_size.length()/10)
 	afterfn.call(prop,2,1)
+
+	prop = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
+		).init_tilegrid(
+		Vector3(gc.cabinet_size.x, gc.cabinet_size.y, gc.cabinet_size.z / 100)/4,
+		Vector2i(16,9),
+		0.9,
+		NamedColors.random_color(),
+	)
+	for i in prop.get_visible_count():
+		prop.set_inst_color(i, NamedColors.random_color())
+	afterfn.call(prop, 2,0)
 	props_animation.animation_ended.connect(props_animation_ended)
 	start_props_animation()
 	return func(_delta:float):
@@ -607,6 +592,7 @@ func start_props_animation() -> void:
 		var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
 		props_animation.start_rotation_subfield(
 			"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
+
 
 func line2d_demo(gc :GlassCabinet) -> Callable:
 	gc.show_wall_box(false)
