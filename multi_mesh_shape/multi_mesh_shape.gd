@@ -13,11 +13,11 @@ func init_집중선(r :float, start:float, end:float, depth :float, count :int, 
 	init_with_color_mesh(구분선, count)
 	for i in count:
 		var rad := cell각도 *i + cell각도/2
-		set_inst_rotation(i, Vector3.BACK, rad)
-		set_inst_position(i, Vector3(cos(rad) *radius,sin(rad) *radius, 0) )
+		#set_inst_rotation(i, Vector3.BACK, rad)
+		#set_inst_position(i, Vector3(cos(rad) *radius,sin(rad) *radius, 0) )
+		set_inst_position_rotation(i, Vector3(cos(rad) *radius,sin(rad) *radius, 0), Vector3.BACK, rad)
 		set_inst_color(i, co)
 	return self
-
 
 func init_wire_net(net_size :Vector2, grid_count :Vector2i, wire_radius :float, co :Color, alpha :float = 1.0) -> MultiMeshShape:
 	return init_wire_net2(net_size, grid_count, wire_radius, wire_radius, co, alpha)
@@ -254,8 +254,15 @@ func set_position_all(pos :Vector3) -> MultiMeshShape:
 		multimesh.set_instance_transform(i,t)
 	return self
 
+func set_inst_rotate(i :int, axis :Vector3, rot :float) -> void:
+	var t := multimesh.get_instance_transform(i)
+	t = Transform3D(Basis(), t.origin)
+	t = t.rotated_local(axis, rot)
+	multimesh.set_instance_transform(i, t)
+
 func set_inst_rotation(i :int, axis :Vector3, rot :float) -> void:
 	var t := multimesh.get_instance_transform(i)
+	t = Transform3D(Basis(), t.origin)
 	t = t.rotated_local(axis, rot)
 	multimesh.set_instance_transform(i, t)
 
