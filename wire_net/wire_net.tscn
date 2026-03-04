@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://bqcycxshrffmd"]
+
+[ext_resource type="Script" uid="uid://4dwgetwo054e" path="res://wire_net/wire_net.gd" id="1_vsprm"]
+
+[sub_resource type="MultiMesh" id="MultiMesh_vsprm"]
+resource_local_to_scene = true
+
+[node name="WireNet" type="MultiMeshInstance3D" unique_id=541657175]
+multimesh = SubResource("MultiMesh_vsprm")
+script = ExtResource("1_vsprm")
+metadata/_custom_type_script = "uid://brthvnlbu6c53"
