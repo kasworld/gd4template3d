@@ -557,8 +557,10 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		).init(gc.cabinet_size.x/20, gc.cabinet_size.x/20, 4, NamedColors.random_color())
 	afterfn.call(prop,1,1)
 	var grid_size := Vector2i(16,9)
-	prop = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_wire_net2(Vector2(gc.cabinet_size.x,gc.cabinet_size.y)/4, grid_size, gc.cabinet_size.x*0.005,gc.cabinet_size.y*0.001, NamedColors.random_color())
+	#prop = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
+		#).init_wire_net2(Vector2(gc.cabinet_size.x,gc.cabinet_size.y)/4, grid_size, gc.cabinet_size.x*0.005,gc.cabinet_size.y*0.001, NamedColors.random_color())
+	prop = preload("res://wire_net/wire_net.tscn").instantiate(
+		).init(Vector2(gc.cabinet_size.x,gc.cabinet_size.y)/4, grid_size, gc.cabinet_size.x*0.005,gc.cabinet_size.y*0.001, NamedColors.random_color())
 	afterfn.call(prop,3,0)
 	prop = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).init_wire_net2(Vector2(gc.cabinet_size.x,gc.cabinet_size.y)/4, grid_size, gc.cabinet_size.x*0.001,gc.cabinet_size.y*0.03, NamedColors.random_color())
