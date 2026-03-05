@@ -37,17 +37,18 @@ var calc_grid :CalcGrid3D
 var pos_list :Array
 
 func init(sz :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> MultiMeshShape:
-	calc_grid = CalcGrid3D.new(
+	var calc_grid_a := CalcGrid3D.new(
 		CalcGrid3D.SizeToAABB(sz),
 		CalcGrid3D.xy_Vector2iToVector3i(grid_count,1),
 	)
 	var mesh := BoxMesh.new()
-	mesh.size = calc_grid.unit_size *gap_rate
-	mesh.material = make_color_material()
-	init_tile_grid_with_mesh(mesh, calc_grid, co)
+	mesh.size = calc_grid_a.unit_size *gap_rate
+	mesh.material = make_color_material(co.a)
+	init_tile_grid_with_mesh(mesh, calc_grid_a, co)
 	return self
 
-func init_tile_grid_with_mesh(mesh :Mesh, calc_grid :CalcGrid3D, co :Color) -> MultiMeshShape:
+func init_tile_grid_with_mesh(mesh :Mesh, calc_grid_a :CalcGrid3D, co :Color) -> MultiMeshShape:
+	calc_grid = calc_grid_a
 	pos_list = []
 	for i in calc_grid.get_grid_count():
 		pos_list.append(calc_grid.get_n_th_lanepos(i))

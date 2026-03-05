@@ -577,7 +577,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		Vector3(grid32.unit_size.x, grid32.unit_size.y, grid32.unit_size.z/200),
 		Vector2i(16,9),
 		0.9,
-		NamedColors.random_color(),
+		Color.WHITE,
 	)
 	for i in prop.get_visible_count():
 		prop.set_inst_color(i, NamedColors.random_color())
