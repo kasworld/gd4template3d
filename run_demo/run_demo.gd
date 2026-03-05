@@ -563,9 +563,13 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	var grid_size := Vector2i(16,9)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
 		).init(Vector2(grid32.unit_size.x,grid32.unit_size.y), grid_size, grid32.unit_size.x*0.01, grid32.unit_size.y*0.005, NamedColors.random_color())
+	prop.set_color_H(NamedColors.random_color())
+	prop.set_color_V(NamedColors.random_color())
 	afterfn.call(prop,3,0)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
 		).init(Vector2(grid32.unit_size.x,grid32.unit_size.y), grid_size, grid32.unit_size.x*0.01, grid32.unit_size.y*0.1, NamedColors.random_color())
+	prop.set_color_H(NamedColors.random_color())
+	prop.set_color_V(NamedColors.random_color())
 	afterfn.call(prop,3,1)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
 		).init(Vector2(grid32.unit_size.x,grid32.unit_size.y), Vector2i(16,1), grid32.unit_size.x*0.01, grid32.unit_size.y*0.1, NamedColors.random_color())

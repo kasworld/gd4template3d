@@ -1,6 +1,17 @@
 extends Node3D
 class_name WireNet
 
+func get_wire_H() -> MultiMeshShape:
+	return $WireH
+func get_wire_V() -> MultiMeshShape:
+	return $WireV
+
+func set_color_H(co :Color) -> void:
+	$WireH.set_color_all(co)
+
+func set_color_V(co :Color) -> void:
+	$WireV.set_color_all(co)
+
 ## for animation
 var wire_H_rotation_x :float:
 	set(rad):
@@ -33,7 +44,6 @@ func init(net_size :Vector2, grid_count :Vector2i, wire_width :float, wire_heigh
 	init_wire_V(net_size,grid_count,wire_width,wire_height,co,alpha)
 	return self
 
-
 func init_wire_H(net_size :Vector2, grid_count :Vector2i, wire_width :float, wire_height :float, co :Color, alpha :float = 1.0) -> WireNet:
 	h_count = grid_count.y
 	var mesh := BoxMesh.new()
@@ -49,11 +59,6 @@ func init_wire_H(net_size :Vector2, grid_count :Vector2i, wire_width :float, wir
 	$WireH.visible = true
 	return self
 
-func set_color_H(co :Color) -> void:
-	$WireH.set_color_all(co)
-
-func set_color_V(co :Color) -> void:
-	$WireV.set_color_all(co)
 
 func init_wire_V(net_size :Vector2, grid_count :Vector2i, wire_width :float, wire_height :float, co :Color, alpha :float = 1.0) -> WireNet:
 	v_count = grid_count.x
