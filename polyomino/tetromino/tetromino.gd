@@ -109,14 +109,14 @@ func animate_morph_to(t :Type, rot :int) -> void:
 	var new_geo := get_geo(tetromino_type, tetromino_rot)
 	for i in monomino_list.size():
 		animation.start_move("", monomino_list[i], monomino_list[i].position, calc_geo_to_vt3(new_geo[i]), AniSec)
-		animation.add_animation(  monomino_list[i].make_color_animation(old_color, make_type_color(tetromino_type),AniSec))
+		animation.add_animation(  monomino_list[i].make_ani_color("", old_color, make_type_color(tetromino_type),AniSec))
 
 func animate_move_to(newpos :Vector3) -> void:
 	animation.start_move("", self, position, newpos, AniSec)
 
 func animate_rotation_to_dir(dir :Vector3) -> void:
 	for i in monomino_list.size():
-		var ani :Dictionary = monomino_list[i].make_rotate_animation(dir, AniSec)
+		var ani :Dictionary = monomino_list[i].make_ani_rotation("", dir, AniSec)
 		animation.add_animation(ani)
 
 func _process(_delta: float) -> void:
