@@ -577,15 +577,26 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	afterfn.call(prop,3,2)
 
 	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
-		).init(
+		).init_tile_grid_with_box(
 		Vector3(grid32.unit_size.x, grid32.unit_size.y, grid32.unit_size.z/200),
-		Vector2i(16,9),
-		0.9,
-		Color.WHITE,
-	)
+		Vector2i(16,9), 0.9, Color.WHITE, )
 	for i in prop.get_visible_count():
 		prop.set_inst_color(i, NamedColors.random_color())
 	afterfn.call(prop, 1,0)
+	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
+		).init_tile_grid_with_plane(
+		Vector3(grid32.unit_size.x, grid32.unit_size.y, grid32.unit_size.z/200),
+		Vector2i(16,9), 0.9, Color.WHITE)
+	for i in prop.get_visible_count():
+		prop.set_inst_color(i, NamedColors.random_color())
+	afterfn.call(prop, 1,1)
+	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
+		).init_tile_grid_with_sphere(
+		Vector3(grid32.unit_size.x, grid32.unit_size.y, grid32.unit_size.z/200),
+		Vector2i(16,9), 0.9, Color.WHITE)
+	for i in prop.get_visible_count():
+		prop.set_inst_color(i, NamedColors.random_color())
+	afterfn.call(prop, 1,2)
 
 	var props_animation := SimpleAnimation.new()
 	var start_props_animation = func() -> void:

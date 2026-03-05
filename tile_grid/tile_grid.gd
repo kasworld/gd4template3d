@@ -36,7 +36,7 @@ func make_ani_tile_rotate_z(aniname :String, from :float, to :float, dur_sec :fl
 var calc_grid :CalcGrid3D
 var pos_list :Array
 
-func init(sz :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> MultiMeshShape:
+func init_tile_grid_with_box(sz :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> MultiMeshShape:
 	var calc_grid_a := CalcGrid3D.new(
 		CalcGrid3D.SizeToAABB(sz),
 		CalcGrid3D.xy_Vector2iToVector3i(grid_count,1),
@@ -46,6 +46,30 @@ func init(sz :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> Mult
 	mesh.material = make_color_material(co.a)
 	init_tile_grid_with_mesh(mesh, calc_grid_a, co)
 	return self
+
+func init_tile_grid_with_plane(sz :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> MultiMeshShape:
+	var calc_grid_a := CalcGrid3D.new(
+		CalcGrid3D.SizeToAABB(sz),
+		CalcGrid3D.xy_Vector2iToVector3i(grid_count,1),
+	)
+	var mesh := PlaneMesh.new()
+	mesh.size = Vector2(calc_grid_a.unit_size.x,calc_grid_a.unit_size.y) *gap_rate
+	mesh.material = make_color_material(co.a)
+	init_tile_grid_with_mesh(mesh, calc_grid_a, co)
+	return self
+
+func init_tile_grid_with_sphere(sz :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> MultiMeshShape:
+	var calc_grid_a := CalcGrid3D.new(
+		CalcGrid3D.SizeToAABB(sz),
+		CalcGrid3D.xy_Vector2iToVector3i(grid_count,1),
+	)
+	var mesh := SphereMesh.new()
+	mesh.radius = calc_grid_a.unit_size.x *gap_rate /2
+	mesh.height = calc_grid_a.unit_size.y *gap_rate
+	mesh.material = make_color_material(co.a)
+	init_tile_grid_with_mesh(mesh, calc_grid_a, co)
+	return self
+
 
 func init_tile_grid_with_mesh(mesh :Mesh, calc_grid_a :CalcGrid3D, co :Color) -> MultiMeshShape:
 	calc_grid = calc_grid_a
