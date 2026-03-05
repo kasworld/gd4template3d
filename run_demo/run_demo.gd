@@ -557,7 +557,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		).init(grid32.unit_size.x/6, grid32.unit_size.x/10, 4, NamedColors.random_color())
 	afterfn.call(prop,4,2)
 	prop = preload("res://axis_arrow_3d/axis_arrow_3d.tscn").instantiate(
-		).set_colors().set_size(grid32.unit_size.length()/6)
+		).set_colors().set_size(grid32.unit_size.length()/10)
 	afterfn.call(prop,2,1)
 
 	var grid_size := Vector2i(16,9)
@@ -567,6 +567,10 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
 		).init(Vector2(grid32.unit_size.x,grid32.unit_size.y), grid_size, grid32.unit_size.x*0.01, grid32.unit_size.y*0.1, NamedColors.random_color())
 	afterfn.call(prop,3,1)
+	prop = preload("res://wire_net/wire_net.tscn").instantiate(
+		).init(Vector2(grid32.unit_size.x,grid32.unit_size.y), Vector2i(16,1), grid32.unit_size.x*0.01, grid32.unit_size.y*0.1, NamedColors.random_color())
+	prop.wire_V_rotation_y = PI/4
+	afterfn.call(prop,3,2)
 
 	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
 		).init(
@@ -577,7 +581,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	)
 	for i in prop.get_visible_count():
 		prop.set_inst_color(i, NamedColors.random_color())
-	afterfn.call(prop, 2,0)
+	afterfn.call(prop, 1,0)
 
 	var props_animation := SimpleAnimation.new()
 	var start_props_animation = func() -> void:
