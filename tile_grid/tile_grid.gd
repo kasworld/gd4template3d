@@ -41,11 +41,18 @@ func init(sz :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> Mult
 		CalcGrid3D.SizeToAABB(sz),
 		CalcGrid3D.xy_Vector2iToVector3i(grid_count,1),
 	)
-	pos_list = []
-	for i in calc_grid.get_grid_count():
-		pos_list.append(calc_grid.get_n_th_lanepos(i))
 	var mesh := BoxMesh.new()
 	mesh.size = calc_grid.unit_size *gap_rate
 	mesh.material = make_color_material()
-	init_meshs_by_point_list(mesh, pos_list , co)
+	init_tile_grid_with_mesh(mesh, calc_grid, co)
+	return self
+
+func init_tile_grid_with_mesh(mesh :Mesh, calc_grid :CalcGrid3D, co :Color) -> MultiMeshShape:
+	pos_list = []
+	for i in calc_grid.get_grid_count():
+		pos_list.append(calc_grid.get_n_th_lanepos(i))
+	init_with_color_mesh(mesh, pos_list.size(), false)
+	set_color_all(co)
+	for i in pos_list.size():
+		multimesh.set_instance_transform(i, Transform3D(Basis(), pos_list[i]))
 	return self
