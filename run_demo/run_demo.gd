@@ -538,39 +538,39 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 
 func props_demo(gc :GlassCabinet) -> Callable:
 	var prop_list :Array
-	var grid32 := gc.make_CalcGrid3D( Vector3i(4,2,1))
+	var grid32 := gc.make_CalcGrid3D( Vector3i(5,3,1))
 	var afterfn := func(pr, x,y):
 		pr.position = grid32.posi_to_lanepos(Vector3i(x,y,0))
 		gc.add_child(pr)
 		prop_list.append(pr)
 
 	var prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
-		).set_color(NamedColors.random_color()).set_size( gc.cabinet_size.x/10, gc.cabinet_size.x/200, gc.cabinet_size.x/50,0.3)
+		).set_color(NamedColors.random_color()).set_size( grid32.unit_size.x *0.6, grid32.unit_size.x/30, grid32.unit_size.x/10, 0.3)
 	afterfn.call(prop,0,0)
 	prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
-		).set_color(NamedColors.random_color()).set_size( gc.cabinet_size.x/10, gc.cabinet_size.x/140, gc.cabinet_size.x/50)
-	afterfn.call(prop,1,0)
+		).set_color(NamedColors.random_color()).set_size( grid32.unit_size.x *0.6, grid32.unit_size.x/30, grid32.unit_size.x/10, 0.7)
+	afterfn.call(prop,4,0)
 	prop = preload("res://valve_handle/valve_handle.tscn").instantiate(
-		).init(gc.cabinet_size.x/20, gc.cabinet_size.x/10, 8, NamedColors.random_color())
-	afterfn.call(prop,0,1)
+		).init(grid32.unit_size.x/6, grid32.unit_size.x/6, 8, NamedColors.random_color())
+	afterfn.call(prop,0,2)
 	prop = preload("res://valve_handle/valve_handle.tscn").instantiate(
-		).init(gc.cabinet_size.x/20, gc.cabinet_size.x/20, 4, NamedColors.random_color())
-	afterfn.call(prop,1,1)
+		).init(grid32.unit_size.x/6, grid32.unit_size.x/10, 4, NamedColors.random_color())
+	afterfn.call(prop,4,2)
+	prop = preload("res://axis_arrow_3d/axis_arrow_3d.tscn").instantiate(
+		).set_colors().set_size(grid32.unit_size.length()/6)
+	afterfn.call(prop,2,1)
+
 	var grid_size := Vector2i(16,9)
-	#prop = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		#).init_wire_net2(Vector2(gc.cabinet_size.x,gc.cabinet_size.y)/4, grid_size, gc.cabinet_size.x*0.005,gc.cabinet_size.y*0.001, NamedColors.random_color())
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
-		).init(Vector2(gc.cabinet_size.x,gc.cabinet_size.y)/4, grid_size, gc.cabinet_size.x*0.005,gc.cabinet_size.y*0.001, NamedColors.random_color())
+		).init(Vector2(grid32.unit_size.x,grid32.unit_size.y), grid_size, grid32.unit_size.x*0.01, grid32.unit_size.y*0.005, NamedColors.random_color())
 	afterfn.call(prop,3,0)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
-		).init(Vector2(gc.cabinet_size.x,gc.cabinet_size.y)/4, grid_size, gc.cabinet_size.x*0.001,gc.cabinet_size.y*0.03, NamedColors.random_color())
+		).init(Vector2(grid32.unit_size.x,grid32.unit_size.y), grid_size, grid32.unit_size.x*0.01, grid32.unit_size.y*0.1, NamedColors.random_color())
 	afterfn.call(prop,3,1)
-	prop = preload("res://axis_arrow_3d/axis_arrow_3d.tscn").instantiate(
-		).set_colors().set_size(gc.cabinet_size.length()/10)
-	afterfn.call(prop,2,1)
+
 	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
 		).init(
-		Vector3(gc.cabinet_size.x, gc.cabinet_size.y, gc.cabinet_size.z / 100)/4,
+		Vector3(grid32.unit_size.x, grid32.unit_size.y, grid32.unit_size.z/200),
 		Vector2i(16,9),
 		0.9,
 		NamedColors.random_color(),
