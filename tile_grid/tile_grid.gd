@@ -17,9 +17,24 @@ var tile_rotation_z :float:
 		for i in calc_grid.get_grid_count():
 			set_inst_rotation(i, Vector3.FORWARD, rad)
 
+func make_ani_tile_rotate(aniname :String, axis :int, from :float, to :float, dur_sec :float) -> Dictionary:
+	return SimpleAnimation.MakeAnimation(
+		aniname, self,
+		["tile_rotation_x", "tile_rotation_y", "tile_rotation_z"][axis],
+		from , to, dur_sec
+	)
+
+func make_ani_tile_rotate_x(aniname :String, from :float, to :float, dur_sec :float) -> Dictionary:
+	return SimpleAnimation.MakeAnimation(aniname, self, "tile_rotation_x", from , to, dur_sec)
+
+func make_ani_tile_rotate_y(aniname :String, from :float, to :float, dur_sec :float) -> Dictionary:
+	return SimpleAnimation.MakeAnimation(aniname, self, "tile_rotation_y", from , to, dur_sec)
+
+func make_ani_tile_rotate_z(aniname :String, from :float, to :float, dur_sec :float) -> Dictionary:
+	return SimpleAnimation.MakeAnimation(aniname, self, "tile_rotation_z", from , to, dur_sec)
+
 var calc_grid :CalcGrid3D
 var pos_list :Array
-var animation :SimpleAnimation
 
 func init(sz :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> MultiMeshShape:
 	calc_grid = CalcGrid3D.new(
@@ -33,35 +48,4 @@ func init(sz :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> Mult
 	mesh.size = calc_grid.unit_size *gap_rate
 	mesh.material = make_color_material()
 	init_meshs_by_point_list(mesh, pos_list , co)
-	animation = SimpleAnimation.new()
-	animation.animation_ended.connect(animation_ended)
-
 	return self
-
-func animation_ended(_node :Node3D, _ani :Dictionary) -> void:
-	pass
-
-func _process(_delta: float) -> void:
-	animation.handle_animation()
-
-func start_tile_rotate(axis :int, from :float, to :float, dur_sec :float) -> void:
-	animation.add_animation(SimpleAnimation.MakeAnimation(
-		"", self,
-		["tile_rotation_x", "tile_rotation_y", "tile_rotation_z"][axis],
-		from , to, dur_sec
-	))
-
-func start_tile_rotate_x(from :float, to :float, dur_sec :float) -> void:
-	animation.add_animation(SimpleAnimation.MakeAnimation(
-		"", self, "tile_rotation_x", from , to, dur_sec
-	))
-
-func start_tile_rotate_y(from :float, to :float, dur_sec :float) -> void:
-	animation.add_animation(SimpleAnimation.MakeAnimation(
-		"", self, "tile_rotation_y", from , to, dur_sec
-	))
-
-func start_tile_rotate_z(from :float, to :float, dur_sec :float) -> void:
-	animation.add_animation(SimpleAnimation.MakeAnimation(
-		"", self, "tile_rotation_z", from , to, dur_sec
-	))

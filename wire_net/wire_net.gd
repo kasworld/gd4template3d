@@ -12,40 +12,27 @@ var wire_V_rotation_y :float:
 		for i in v_count:
 			$WireV.set_inst_rotation(i, Vector3.UP, rad)
 
+func make_ani_rotate(aniname :String, hv :int, from :float, to :float, dur_sec :float) -> Dictionary:
+	return SimpleAnimation.MakeAnimation(
+		aniname, self,
+		["wire_H_rotation_x", "wire_V_rotation_y"][hv],
+		from , to, dur_sec
+	)
+
+func make_ani_H_rotate_x(aniname :String, from :float, to :float, dur_sec :float) -> Dictionary:
+	return SimpleAnimation.MakeAnimation(aniname, self, "wire_H_rotation_x", from , to, dur_sec)
+
+func start_V_rotate_y(aniname :String, from :float, to :float, dur_sec :float) -> Dictionary:
+	return SimpleAnimation.MakeAnimation(aniname, self, "wire_V_rotation_y", from , to, dur_sec)
+
 var h_count :int
 var v_count :int
-var animation :SimpleAnimation
 
 func init(net_size :Vector2, grid_count :Vector2i, wire_width :float, wire_height :float, co :Color, alpha :float = 1.0) -> WireNet:
 	init_wire_H(net_size,grid_count,wire_width,wire_height,co,alpha)
 	init_wire_V(net_size,grid_count,wire_width,wire_height,co,alpha)
-	animation = SimpleAnimation.new()
-	animation.animation_ended.connect(animation_ended)
 	return self
 
-func animation_ended(_node :Node3D, _ani :Dictionary) -> void:
-	pass
-
-func start_rotate(hv :int, from :float, to :float, dur_sec :float) -> void:
-	animation.add_animation(SimpleAnimation.MakeAnimation(
-		"", self,
-		["wire_H_rotation_x", "wire_V_rotation_y"][hv],
-		from , to, dur_sec
-	))
-
-func start_H_rotate_x(from :float, to :float, dur_sec :float) -> void:
-	animation.add_animation(SimpleAnimation.MakeAnimation(
-		"", self, "wire_H_rotation_x", from , to, dur_sec
-	))
-
-func start_V_rotate_y(from :float, to :float, dur_sec :float) -> void:
-	animation.add_animation(SimpleAnimation.MakeAnimation(
-		"", self, "wire_V_rotation_y", from , to, dur_sec
-	))
-
-
-func _process(_delta: float) -> void:
-	animation.handle_animation()
 
 func init_wire_H(net_size :Vector2, grid_count :Vector2i, wire_width :float, wire_height :float, co :Color, alpha :float = 1.0) -> WireNet:
 	h_count = grid_count.y

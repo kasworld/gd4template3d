@@ -587,10 +587,9 @@ func props_demo(gc :GlassCabinet) -> Callable:
 			props_animation.start_rotation_subfield(
 				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
 			if ps is TileGrid:
-				ps.start_tile_rotate(randi_range(0,2),  0.0, PI, 1.0)
-			if ps is WireNet:
-				ps.start_rotate(randi_range(0,1),  0.0, PI, 1.0)
-
+				props_animation.add_animation( ps.make_ani_tile_rotate("", randi_range(0,2),  0.0, PI, 1.0))
+			#if ps is WireNet:
+				#props_animation.add_animation( ps.make_ani_rotate("", randi_range(0,1),  0.0, PI, 1.0))
 
 	props_animation.animation_ended.connect(
 		func(_node :Node3D, _ani :Dictionary) -> void:
