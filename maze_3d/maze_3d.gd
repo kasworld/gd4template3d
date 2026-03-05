@@ -91,14 +91,14 @@ func init_floor_ceiling(grid_count :Vector2i, wire_width :float, wire_height :fl
 		grid_count, 0.9, co_floor)
 	#$Floor.tile_rotation_x = PI/2
 	$Floor.rotation.x = -PI/2
-	$Floor.position.y -= calc_grid.unit_size.y/2 #+wire_height/2
+	$Floor.position.y -= calc_grid.unit_size.y/2 +wire_height/2
 
 	$Ceiling.init_tile_grid_with_box(
 		Vector3(net_size.x, net_size.y, wire_height),
 		grid_count, 0.9, co_ceiling)
 	#$Ceiling.tile_rotation_x = PI/2
 	$Ceiling.rotation.x = PI/2
-	$Ceiling.position.y += calc_grid.unit_size.y/2 #+wire_height/2
+	$Ceiling.position.y += calc_grid.unit_size.y/2 +wire_height/2
 	return self
 
 func make_box_pillas() -> void:
