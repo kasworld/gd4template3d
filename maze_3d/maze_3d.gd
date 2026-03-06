@@ -326,8 +326,8 @@ func bounce_cell(oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 		pos,
 		calc_grid.cell_aabb_by_posi(posi),
 		[
-			[walls[ EnumDir.Dir.West] , walls[ EnumDir.Dir.East] ],
-			[true,true],
-			[walls[ EnumDir.Dir.North] , walls[ EnumDir.Dir.South] ],
+			walls[ EnumDir.Dir.West] , walls[ EnumDir.Dir.East] ,
+			true,true,
+			walls[ EnumDir.Dir.North] , walls[ EnumDir.Dir.South] ,
 		],
 		radius)
