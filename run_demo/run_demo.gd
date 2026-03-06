@@ -480,9 +480,10 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Both)
 	gc.add_child(maze3d)
+	var r := maze3d.calc_grid.unit_size.x /10
 	for i in min(100,grid_size.x*grid_size.y):
 		var mb :MazeBall = preload("res://maze_3d/maze_ball/maze_ball.tscn").instantiate(
-			).init(NamedColors.random_color(), maze3d)
+			).init(maze3d, r, r*10,  NamedColors.random_color())
 		maze3d.add_child(mb)
 		maze_balls.append(mb)
 	return maze3d_animate
