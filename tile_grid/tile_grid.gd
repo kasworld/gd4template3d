@@ -43,11 +43,27 @@ func set_tile_color_all(color_list :Array[Color]) -> void:
 	for i in get_visible_count():
 		multimesh.set_instance_color(i,color_list[i%color_list.size()])
 
-func set_tile_color_diagonal(color_list :Array[Color]) -> void:
-	for i in get_visible_count():
-		var posi := calc_grid.get_n_th_posi(i)
-		var cidx := (posi.x + posi.y) % color_list.size()
-		multimesh.set_instance_color(i,color_list[cidx])
+func set_tile_color_x(color_list :Array[Color]) -> void:
+	for y in calc_grid.grid_size.y:
+		for x in calc_grid.grid_size.x:
+			var i := calc_grid.get_index_by_posi_xyz(x,y)
+			var cidx := (x) % color_list.size()
+			multimesh.set_instance_color(i,color_list[cidx])
+
+func set_tile_color_y(color_list :Array[Color]) -> void:
+	for x in calc_grid.grid_size.x:
+		for y in calc_grid.grid_size.y:
+			var i := calc_grid.get_index_by_posi_xyz(x,y)
+			var cidx := (y) % color_list.size()
+			multimesh.set_instance_color(i,color_list[cidx])
+
+func set_tile_color_xy(color_list :Array[Color]) -> void:
+	for x in calc_grid.grid_size.x:
+		for y in calc_grid.grid_size.y:
+			var i := calc_grid.get_index_by_posi_xyz(x,y)
+			var cidx := (x + y) % color_list.size()
+			multimesh.set_instance_color(i,color_list[cidx])
+
 
 func init_tile_grid_with_box(sz :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> MultiMeshShape:
 	var calc_grid_a := CalcGrid3D.new(
