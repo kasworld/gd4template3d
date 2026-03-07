@@ -582,9 +582,8 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
 		).init_tile_grid_with_box(
 		Vector3(grid32.unit_size.x, grid32.unit_size.y, grid32.unit_size.z/200),
-		Vector2i(16,9), 0.9, Color.WHITE, )
-	for i in prop.get_visible_count():
-		prop.set_inst_color(i, NamedColors.random_color())
+		Vector2i(16,9), 0.9, Color.WHITE)
+	prop.set_tile_color_all(NamedColors.color_list)
 	afterfn.call(prop, 1,0)
 	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
 		).init_tile_grid_with_plane(
@@ -597,8 +596,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		).init_tile_grid_with_sphere(
 		Vector3(grid32.unit_size.x, grid32.unit_size.y, grid32.unit_size.z/200),
 		Vector2i(16,9), 0.9, Color.WHITE)
-	for i in prop.get_visible_count():
-		prop.set_inst_color(i, NamedColors.random_color())
+	prop.set_tile_color_diagonal(NamedColors.color_list)
 	afterfn.call(prop, 1,2)
 
 	var props_animation := SimpleAnimation.new()
