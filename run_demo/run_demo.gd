@@ -583,19 +583,19 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		).init_tile_grid_with_box(
 		Vector3(grid32.unit_size.x, grid32.unit_size.y, grid32.unit_size.z/200),
 		Vector2i(16,9), 0.9, Color.WHITE)
-	prop.set_tile_color_all(NamedColors.color_list)
+	#prop.set_tile_color_xy(NamedColors.color_list)
 	afterfn.call(prop, 1,0)
 	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
 		).init_tile_grid_with_plane(
 		Vector3(grid32.unit_size.x, grid32.unit_size.y, grid32.unit_size.z/200),
 		Vector2i(16,9), 0.9, Color.WHITE)
-	prop.set_tile_color_x(NamedColors.color_list)
+	#prop.set_tile_color_x(NamedColors.color_list)
 	afterfn.call(prop, 1,1)
 	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
 		).init_tile_grid_with_sphere(
 		Vector3(grid32.unit_size.x, grid32.unit_size.y, grid32.unit_size.z/200),
 		Vector2i(16,9), 0.9, Color.WHITE)
-	prop.set_tile_color_xy(NamedColors.color_list)
+	#prop.set_tile_color_xy(NamedColors.color_list)
 	afterfn.call(prop, 1,2)
 
 	var props_animation := SimpleAnimation.new()
@@ -607,6 +607,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
 			if ps is TileGrid:
 				props_animation.add_animation( ps.make_ani_tile_rotate("", randi_range(0,2),  0.0, PI, 1.0))
+				ps.set_tile_color_8way(NamedColors.color_list, randi_range(0,7))
 			#if ps is WireNet:
 				#props_animation.add_animation( ps.make_ani_rotate("", randi_range(0,1),  0.0, PI, 1.0))
 
