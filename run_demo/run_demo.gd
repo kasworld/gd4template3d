@@ -666,7 +666,7 @@ func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
 	var a30 := PI/6
 	var axis1 := Vector3.UP.rotated(
 		[Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK].pick_random(),
-		a30)
+		randf_range(0,a30))
 	var 궤도mat1 := StandardMaterial3D.new()
 	궤도mat1.albedo_color = NamedColors.random_color()
 	var 구mat2 :StandardMaterial3D
