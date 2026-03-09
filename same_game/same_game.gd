@@ -84,7 +84,7 @@ func add_co3d() -> void:
 	var tile_type_count :int = (game_level % char_list.size())+1
 	for x :int in game_size.x:
 		for y :int in game_size.y:
-			var co3d_num = randi_range(0,tile_type_count)
+			var co3d_num = randi_range(0,tile_type_count-1)
 			var b = preload("res://same_game/same_game_tile/same_game_tile.tscn").instantiate().set_type_num(co3d_num
 				).set_char(char_list[co3d_num]
 				).set_color( color_list[co3d_num] )
