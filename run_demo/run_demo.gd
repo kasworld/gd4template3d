@@ -473,8 +473,8 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	var MakeSubWallRate = 0.1
 	var maze2d := Maze.new(grid_size)
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
-		).init_setting(maze2d, cell_size, WallThick, MakeSubWallRate
-		).init_with_color(Callable(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color()
+		).init_params(maze2d, cell_size, WallThick, MakeSubWallRate
+		).init_with_color(NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color()
 		).init_floor_ceiling(grid_size*4, cell_size.x*0.01, 0.9,
 		Color(NamedColors.random_color(), 0.9),
 		Color(NamedColors.random_color(), 0.9),

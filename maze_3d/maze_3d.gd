@@ -34,7 +34,7 @@ func storeypos2mazepos(pos :Vector3) -> Vector2i:
 	var rtn := calc_grid.lanepos_to_posi(pos)
 	return CalcGrid3D.xz_Vector3iToVector2i(rtn)
 
-func init_setting( maze2d :Maze, cell_size :Vector3, wall_thick :float, subwall_rate :float) -> Maze3D:
+func init_params( maze2d :Maze, cell_size :Vector3, wall_thick :float, subwall_rate :float) -> Maze3D:
 	WallThick = wall_thick
 	MakeSubWallRate = subwall_rate
 	maze_cells = maze2d
@@ -53,17 +53,17 @@ func init_setting( maze2d :Maze, cell_size :Vector3, wall_thick :float, subwall_
 	PreCalced.WallSize_V_Short = PreCalced.WallSize_V_Long - Vector3(0, 0, wall_thick)
 	return self
 
-func init_with_mat(makedecofn :Callable, matmain :StandardMaterial3D, matsub :StandardMaterial3D) -> Maze3D:
+func init_with_material(matmain :StandardMaterial3D, matsub :StandardMaterial3D) -> Maze3D:
 	sub_wall_mat = matsub
 	main_wall_mat = matmain
 	pillar_box_mat = main_wall_mat.duplicate()
 	pillar_box_mat.uv1_scale = Vector3( 3.0/20, 2, 1)
 	pillar_capsule_mat = main_wall_mat.duplicate()
 	pillar_capsule_mat.uv1_scale = Vector3( 3.0/20, 2, 1)
-	init_make(makedecofn)
+	exec_make()
 	return self
 
-func init_with_color(makedecofn :Callable, comain :Color, cosub :Color, copillarbox :Color, copillarcapsule :Color) -> Maze3D:
+func init_with_color(comain :Color, cosub :Color, copillarbox :Color, copillarcapsule :Color) -> Maze3D:
 	sub_wall_mat = StandardMaterial3D.new()
 	sub_wall_mat.albedo_color = Color( cosub, 0.5)
 	sub_wall_mat.transparency = BaseMaterial3D.Transparency.TRANSPARENCY_ALPHA
@@ -73,14 +73,13 @@ func init_with_color(makedecofn :Callable, comain :Color, cosub :Color, copillar
 	pillar_box_mat.albedo_color = copillarbox
 	pillar_capsule_mat = StandardMaterial3D.new()
 	pillar_capsule_mat.albedo_color = copillarcapsule
-	init_make(makedecofn)
+	exec_make()
 	return self
 
-func init_make(makedecofn :Callable) -> void:
-	make_wall_by_maze()
+func exec_make() -> void:
 	make_box_pillas()
 	make_capsule_pillas()
-	make_wall_deco_by_maze(makedecofn)
+	make_wall_by_maze()
 
 func init_floor_ceiling(grid_count :Vector2i, height :float, size_rate :float, co_floor :Color, co_ceiling :Color) -> Maze3D:
 	var net_size :Vector2 = PreCalced.SizeWithWallV2
@@ -92,7 +91,7 @@ func init_floor_ceiling(grid_count :Vector2i, height :float, size_rate :float, c
 	$Ceiling.position.y += calc_grid.unit_size.y/2 +height/2
 	return self
 
-func make_wall_deco_by_maze(makedeco :Callable) -> void:
+func init_wall_deco(makedeco :Callable) -> void:
 	if not makedeco.is_valid():
 		return
 	for y in PreCalced.Grid2D.y:
