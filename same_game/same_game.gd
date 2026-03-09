@@ -49,12 +49,12 @@ func fix_gridco3d_pos_all() -> void:
 		for y in co3d_grid.grid_size.y:
 			var co3d = co3d_grid.get_data(x,y)
 			if co3d != null:
-				move_ani.start_move("move", co3d, co3d.position, calc_grid.posi_to_lanepos(Vector3i(x,y,0)) , 0.5)
+				move_ani.start_move("move", co3d, co3d.position, calc_grid.posi_to_lanepos(Vector3i(x,y,0)) , auto_play_step_dur_sec)
 
 var auto_play :bool = true
 var auto_play_selected :CollisionObject3D
 var auto_play_last_time :float
-const auto_play_step_dur_sec := 1.0
+const auto_play_step_dur_sec := 0.5
 func set_auto_play(b :bool) -> void:
 	auto_play = b
 func auto_play_select_animate_tile() -> void:
@@ -81,10 +81,10 @@ func _process(_delta: float) -> void:
 
 func add_co3d() -> void:
 	co3d_grid = SamegameGrid.new( game_size.x , game_size.y )
-	var tile_type_count :int = (game_level % char_list.size())+1
+	var tile_type_count :int = (game_level % (char_list.size()-1) ) +1
 	for x :int in game_size.x:
 		for y :int in game_size.y:
-			var co3d_num = randi_range(0,tile_type_count-1)
+			var co3d_num = randi_range(0,tile_type_count)
 			var b = preload("res://same_game/same_game_tile/same_game_tile.tscn").instantiate().set_type_num(co3d_num
 				).set_char(char_list[co3d_num]
 				).set_color( color_list[co3d_num] )
