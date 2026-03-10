@@ -5,7 +5,7 @@ class_name Maze
 static func RadianToDir(rad :float) -> Dir:
 	var dir := snappedi(rad *2/PI, 1)
 	dir = ((dir%4)+4)%4
-	var dir2dir := [
+	const dir2dir :Array[Dir]= [
 		Dir.North, # Vector2i(0,-1),
 		Dir.West,  # Vector2i(-1,0),
 		Dir.South, # Vector2i(0,1),
@@ -19,47 +19,47 @@ enum Dir {
 	South = 2,
 	East = 3,
 }
-const DirList = [Dir.North,Dir.West,Dir.South,Dir.East]
+const DirList :Array[Dir] = [Dir.North,Dir.West,Dir.South,Dir.East]
 
-const DirToStr = {
+const DirToStr :Dictionary[Dir,String] = {
 	Dir.North : "North",
 	Dir.West : "West",
 	Dir.South : "South",
 	Dir.East : "East",
 }
-const StrToDir = {
+const StrToDir :Dictionary[String,Dir] = {
 	 "North" : Dir.North ,
 	 "West" : Dir.West ,
 	 "South" : Dir.South ,
 	 "East" : Dir.East ,
 }
 
-const DirOpppsite = {
+const DirOpppsite :Dictionary[Dir,Dir] = {
 	Dir.North : Dir.South,
 	Dir.West : Dir.East,
 	Dir.South : Dir.North,
 	Dir.East : Dir.West,
 }
-const DirTurnLeft = {
+const DirTurnLeft :Dictionary[Dir,Dir] = {
 	Dir.North : Dir.West,
 	Dir.West : Dir.South,
 	Dir.South : Dir.East,
 	Dir.East : Dir.North,
 }
-const DirTurnRight = {
+const DirTurnRight :Dictionary[Dir,Dir] = {
 	Dir.North : Dir.East,
 	Dir.East : Dir.South,
 	Dir.South : Dir.West,
 	Dir.West : Dir.North,
 }
 
-const DirToVt2 = {
+const DirToVt2 :Dictionary[Dir,Vector2i] = {
 	Dir.North : Vector2i(0,-1),
 	Dir.West : Vector2i(-1,0),
 	Dir.South : Vector2i(0, 1),
 	Dir.East : Vector2i(1,0),
 }
-const Vt2ToDir = {
+const Vt2ToDir :Dictionary[Vector2i,Dir] = {
 	 Vector2i(0,-1) : Dir.North,
 	 Vector2i(-1,0) : Dir.West,
 	 Vector2i(0, 1) : Dir.South,
@@ -75,58 +75,58 @@ enum Flag {
 	South = 1 << Dir.South,
 	East = 1 << Dir.East,
 }
-const FlagList = [Flag.North,Flag.West,Flag.South,Flag.East]
+const FlagList :Array[Flag] = [Flag.North,Flag.West,Flag.South,Flag.East]
 
-const FlagToDir = {
+const FlagToDir :Dictionary[Flag,Dir] = {
 	Flag.North : Dir.North,
 	Flag.West : Dir.West,
 	Flag.South : Dir.South,
 	Flag.East : Dir.East,
 }
-const DirToFlag = {
+const DirToFlag :Dictionary[Dir,Flag] = {
 	Dir.North : Flag.North,
 	Dir.West : Flag.West,
 	Dir.South : Flag.South,
 	Dir.East : Flag.East,
 }
-const FlagToStr = {
+const FlagToStr :Dictionary[Flag,String] = {
 	Flag.North : "North",
 	Flag.West : "West",
 	Flag.South : "South",
 	Flag.East : "East",
 }
-const StrToFlag = {
+const StrToFlag :Dictionary[String,Flag] = {
 	 "North" : Flag.North ,
 	 "West" : Flag.West ,
 	 "South" : Flag.South ,
 	 "East" : Flag.East ,
 }
 
-const FlagOpppsite = {
+const FlagOpppsite :Dictionary[Flag,Flag] = {
 	Flag.North : Flag.South,
 	Flag.West : Flag.East,
 	Flag.South : Flag.North,
 	Flag.East : Flag.West,
 }
-const FlagTurnLeft = {
+const FlagTurnLeft :Dictionary[Flag,Flag] = {
 	Flag.North : Flag.West,
 	Flag.West : Flag.South,
 	Flag.South : Flag.East,
 	Flag.East : Flag.North,
 }
-const FlagTurnRight = {
+const FlagTurnRight :Dictionary[Flag,Flag] = {
 	Flag.North : Flag.East,
 	Flag.East : Flag.South,
 	Flag.South : Flag.West,
 	Flag.West : Flag.North,
 }
-const FlagToVt2 = {
+const FlagToVt2 :Dictionary[Flag,Vector2i] = {
 	Flag.North : Vector2i(0,-1),
 	Flag.West : Vector2i(-1,0),
 	Flag.South : Vector2i(0, 1),
 	Flag.East : Vector2i(1,0),
 }
-const Vt2ToFlag = {
+const Vt2ToFlag :Dictionary[Vector2i,Flag] = {
 	 Vector2i(0,-1) : Flag.North,
 	 Vector2i(-1,0) : Flag.West,
 	 Vector2i(0, 1) : Flag.South,
