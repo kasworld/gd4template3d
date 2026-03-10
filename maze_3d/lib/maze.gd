@@ -198,9 +198,10 @@ func _init(msize :Vector2i) -> void:
 		var posidx := _select_visited(visted_pos)
 		pos = visted_pos[posidx]
 		var delpos := true
-		var rnddir := Maze.FlagList.duplicate()
-		rnddir.shuffle()
-		for dir in rnddir:
+		#var rnddir := Maze.FlagList.duplicate()
+		#rnddir.shuffle()
+		#for dir in rnddir:
+		for dir in FlagPermutation.pick_random():
 			var npos :Vector2i = pos + Maze.FlagToVt2[dir]
 			if is_in(npos.x,npos.y) && get_cell(npos.x,npos.y)==0:
 				_open_dir_at(pos.x,pos.y, dir)
