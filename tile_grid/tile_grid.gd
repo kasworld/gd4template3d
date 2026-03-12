@@ -93,9 +93,9 @@ func set_tile_color_xy(color_list :Array[Color], reverse_x :bool=false, reverse_
 			multimesh.set_instance_color(i, color_list[ (x+y) % color_list.size() ])
 
 
-func init_tile_grid_with_box(sz :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> TileGrid:
+func init_tile_grid_with_box(total_size :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> TileGrid:
 	var calc_grid_a := CalcGrid3D.new(
-		CalcGrid3D.SizeToAABB(sz),
+		CalcGrid3D.SizeToAABB(total_size),
 		CalcGrid3D.xy_Vector2iToVector3i(grid_count,1),
 	)
 	var mesh := BoxMesh.new()
@@ -104,20 +104,37 @@ func init_tile_grid_with_box(sz :Vector3, grid_count :Vector2i, gap_rate :float,
 	init_tile_grid_with_mesh(mesh, calc_grid_a, co)
 	return self
 
-func init_tile_grid_with_plane(sz :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> TileGrid:
+func init_tile_grid_with_cylinder(total_size :Vector3, grid_count :Vector2i, gap_rate :float, radial_segments :int, co :Color, shift :bool = false) -> TileGrid:
 	var calc_grid_a := CalcGrid3D.new(
-		CalcGrid3D.SizeToAABB(sz),
+		CalcGrid3D.SizeToAABB(total_size),
+		CalcGrid3D.xy_Vector2iToVector3i(grid_count,1),
+	)
+	var mesh := CylinderMesh.new()
+	mesh.top_radius = calc_grid_a.unit_size.length() / 2 * gap_rate
+	mesh.bottom_radius = calc_grid_a.unit_size.length() / 2 * gap_rate
+	mesh.height = calc_grid_a.unit_size.z
+	mesh.radial_segments = radial_segments
+	mesh.material = make_color_material(co.a)
+	init_tile_grid_with_mesh(mesh, calc_grid_a, co)
+	tile_rotation_x = PI/2
+	return self
+
+
+func init_tile_grid_with_plane(total_size :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> TileGrid:
+	var calc_grid_a := CalcGrid3D.new(
+		CalcGrid3D.SizeToAABB(total_size),
 		CalcGrid3D.xy_Vector2iToVector3i(grid_count,1),
 	)
 	var mesh := PlaneMesh.new()
 	mesh.size = Vector2(calc_grid_a.unit_size.x,calc_grid_a.unit_size.y) *gap_rate
 	mesh.material = make_color_material(co.a)
 	init_tile_grid_with_mesh(mesh, calc_grid_a, co)
+	tile_rotation_x = PI/2
 	return self
 
-func init_tile_grid_with_sphere(sz :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> TileGrid:
+func init_tile_grid_with_sphere(total_size :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> TileGrid:
 	var calc_grid_a := CalcGrid3D.new(
-		CalcGrid3D.SizeToAABB(sz),
+		CalcGrid3D.SizeToAABB(total_size),
 		CalcGrid3D.xy_Vector2iToVector3i(grid_count,1),
 	)
 	var mesh := SphereMesh.new()
