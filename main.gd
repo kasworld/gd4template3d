@@ -121,7 +121,7 @@ func _on_fov_inc_pressed() -> void:
 	MovingCameraLight.GetCurrentCamera().camera_fov_inc()
 func _on_fov_dec_pressed() -> void:
 	MovingCameraLight.GetCurrentCamera().camera_fov_dec()
-var key2fn = {
+var key2fn :Dictionary[Key, Callable]= {
 	KEY_ESCAPE:_on_끝내기_pressed,
 	KEY_ENTER:_on_카메라변경_pressed,
 	KEY_PAGEUP:_on_fov_inc_pressed,
@@ -129,15 +129,15 @@ var key2fn = {
 }
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed:
-		var fn = key2fn.get(event.keycode)
+		var fn :Variant = key2fn.get(event.keycode)
 		if fn != null:
 			fn.call()
 		if $FixedCameraLight.is_current_camera():
-			var fi = FlyNode3D.Key2Info.get(event.keycode)
+			var fi :Variant = FlyNode3D.Key2Info.get(event.keycode)
 			if fi != null:
 				FlyNode3D.fly_node3d($FixedCameraLight, fi)
 		elif $CenterCameraLight.is_current_camera():
-			var fi = FlyNode3D.Key2Info.get(event.keycode)
+			var fi :Variant = FlyNode3D.Key2Info.get(event.keycode)
 			if fi != null:
 				FlyNode3D.fly_node3d($CenterCameraLight, fi)
 	elif event is InputEventMouseButton and event.is_pressed():
