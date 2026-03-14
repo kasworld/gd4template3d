@@ -31,6 +31,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		[slotreel_demo, "SlotReel"],
 		[wheel_demo, "RouletteWheel" ],
 		[props_demo, "Props"],
+		[tile_grid_demo, "TileGrid"],
 		[wavegauge_box_demo, "WaveGaugeBox"],
 		[tornado_demo, "Tornado"],
 		[platonic_solids_demo, "Platonic Solids"],
@@ -547,70 +548,43 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 
 func props_demo(gc :GlassCabinet) -> Callable:
 	var prop_list :Array
-	var grid32 := gc.make_CalcGrid3D( Vector3i(5,3,1))
+	var grid_gc := gc.make_CalcGrid3D( Vector3i(4,2,1))
 	var afterfn := func(pr, x,y):
-		pr.position = grid32.posi_to_lanepos(Vector3i(x,y,0))
+		pr.position = grid_gc.posi_to_lanepos(Vector3i(x,y,0))
 		gc.add_child(pr)
 		prop_list.append(pr)
-
-	var prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
-		).set_color(NamedColors.random_color()).set_size( grid32.unit_size.x *0.6, grid32.unit_size.x/30, grid32.unit_size.x/10, 0.3)
+	var prop
+	prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
+		).set_color(NamedColors.random_color()).set_size( grid_gc.unit_size.x *0.6, grid_gc.unit_size.x/30, grid_gc.unit_size.x/10, 0.3)
 	afterfn.call(prop,0,0)
 	prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
-		).set_color(NamedColors.random_color()).set_size( grid32.unit_size.x *0.6, grid32.unit_size.x/30, grid32.unit_size.x/10, 0.7)
-	afterfn.call(prop,4,0)
+		).set_color(NamedColors.random_color()).set_size( grid_gc.unit_size.x *0.6, grid_gc.unit_size.x/30, grid_gc.unit_size.x/10, 0.7)
+	afterfn.call(prop,0,1)
 	prop = preload("res://valve_handle/valve_handle.tscn").instantiate(
-		).init(grid32.unit_size.x/6, grid32.unit_size.x/6, 8, NamedColors.random_color())
-	afterfn.call(prop,0,2)
+		).init(grid_gc.unit_size.x/6, grid_gc.unit_size.x/6, 8, NamedColors.random_color())
+	afterfn.call(prop,1,0)
 	prop = preload("res://valve_handle/valve_handle.tscn").instantiate(
-		).init(grid32.unit_size.x/6, grid32.unit_size.x/10, 4, NamedColors.random_color())
-	afterfn.call(prop,4,2)
+		).init(grid_gc.unit_size.x/6, grid_gc.unit_size.x/10, 4, NamedColors.random_color())
+	afterfn.call(prop,1,1)
 	prop = preload("res://axis_arrow_3d/axis_arrow_3d.tscn").instantiate(
-		).set_colors().set_size(grid32.unit_size.length()/10)
-	afterfn.call(prop,2,1)
+		).set_colors().set_size(grid_gc.unit_size.length()/10)
+	afterfn.call(prop,2,0)
 
 	var grid_size := Vector2i(16,9)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
-		).init(Vector2(grid32.unit_size.x,grid32.unit_size.y), grid_size, grid32.unit_size.x*0.01, grid32.unit_size.y*0.005, NamedColors.random_color())
+		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), grid_size, grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.005, NamedColors.random_color())
+	prop.set_color_H(NamedColors.random_color())
+	prop.set_color_V(NamedColors.random_color())
+	afterfn.call(prop,2,1)
+	prop = preload("res://wire_net/wire_net.tscn").instantiate(
+		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), grid_size, grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.1, NamedColors.random_color())
 	prop.set_color_H(NamedColors.random_color())
 	prop.set_color_V(NamedColors.random_color())
 	afterfn.call(prop,3,0)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
-		).init(Vector2(grid32.unit_size.x,grid32.unit_size.y), grid_size, grid32.unit_size.x*0.01, grid32.unit_size.y*0.1, NamedColors.random_color())
-	prop.set_color_H(NamedColors.random_color())
-	prop.set_color_V(NamedColors.random_color())
-	afterfn.call(prop,3,1)
-	prop = preload("res://wire_net/wire_net.tscn").instantiate(
-		).init(Vector2(grid32.unit_size.x,grid32.unit_size.y), Vector2i(16,1), grid32.unit_size.x*0.01, grid32.unit_size.y*0.1, NamedColors.random_color())
+		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), Vector2i(16,1), grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.1, NamedColors.random_color())
 	prop.wire_V_rotation_y = PI/4
-	afterfn.call(prop,3,2)
-
-	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
-		).init_tile_grid_with_box(
-		Vector3(grid32.unit_size.x, grid32.unit_size.y, grid32.unit_size.z/200),
-		Vector2i(16,9), 0.9, Color.WHITE)
-	afterfn.call(prop, 1,0)
-	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
-		).init_tile_grid_with_plane(
-		Vector3(grid32.unit_size.x, grid32.unit_size.y, grid32.unit_size.z/200),
-		Vector2i(16,9), 0.9, Color.WHITE)
-	afterfn.call(prop, 1,1)
-	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
-		).init_tile_grid_with_sphere(
-		Vector3(grid32.unit_size.x, grid32.unit_size.y, grid32.unit_size.z/200),
-		Vector2i(12,12), 0.9, Color.WHITE)
-	afterfn.call(prop, 1,2)
-	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
-		).init_tile_grid_with_cylinder(
-		Vector3(grid32.unit_size.x, grid32.unit_size.y, grid32.unit_size.z/200),
-		Vector2i(12,12), 0.7, 6, Color.WHITE)
-	afterfn.call(prop, 2,0)
-	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
-		).init_tile_grid_with_cylinder(
-		Vector3(grid32.unit_size.x, grid32.unit_size.y, grid32.unit_size.z/200),
-		Vector2i(12,12), 0.7, 8, Color.WHITE)
-	afterfn.call(prop, 2,2)
-
+	afterfn.call(prop,3,1)
 
 	var props_animation := SimpleAnimation.new()
 	var start_props_animation = func() -> void:
@@ -619,9 +593,6 @@ func props_demo(gc :GlassCabinet) -> Callable:
 			var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
 			props_animation.start_rotation_subfield(
 				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
-			if ps is TileGrid:
-				props_animation.add_animation( ps.make_ani_tile_rotate("", randi_range(0,2),  0.0, PI, 1.0))
-				ps.set_tile_color_8way(NamedColors.color_list, randi_range(0,7))
 			#if ps is WireNet:
 				#props_animation.add_animation( ps.make_ani_rotate("", randi_range(0,1),  0.0, PI, 1.0))
 
@@ -633,6 +604,57 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	return func(_delta:float):
 		props_animation.handle_animation()
 
+func tile_grid_demo(gc :GlassCabinet) -> Callable:
+	var tile_grid_list :Array
+	var grid_gc := gc.make_CalcGrid3D( Vector3i(4,2,1))
+	var afterfn := func(pr, x,y):
+		pr.position = grid_gc.posi_to_lanepos(Vector3i(x,y,0))
+		gc.add_child(pr)
+		tile_grid_list.append(pr)
+	var prop
+	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
+		).init_tile_grid_with_box(
+		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
+		Vector2i(16,9), 0.9, Color.WHITE)
+	afterfn.call(prop, 0,0)
+	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
+		).init_tile_grid_with_plane(
+		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
+		Vector2i(16,9), 0.9, Color.WHITE)
+	afterfn.call(prop, 0,1)
+	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
+		).init_tile_grid_with_sphere(
+		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
+		Vector2i(12,12), 0.9, Color.WHITE)
+	afterfn.call(prop, 1,0)
+	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
+		).init_tile_grid_with_cylinder(
+		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
+		Vector2i(12,12), 0.7, 6, Color.WHITE)
+	afterfn.call(prop, 2,0)
+	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
+		).init_tile_grid_with_cylinder(
+		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
+		Vector2i(12,12), 0.7, 8, Color.WHITE)
+	afterfn.call(prop, 3,0)
+
+	var tile_grid_animation := SimpleAnimation.new()
+	var start_tile_grid_animation = func() -> void:
+		for ps in tile_grid_list:
+			var diff :float = [PI/2,-PI/2].pick_random()
+			var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
+			tile_grid_animation.start_rotation_subfield(
+				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
+			tile_grid_animation.add_animation( ps.make_ani_tile_rotate("", randi_range(0,2),  0.0, PI, 1.0))
+			ps.set_tile_color_8way(NamedColors.color_list, randi_range(0,7))
+
+	tile_grid_animation.animation_ended.connect(
+		func(_node :Node3D, _ani :Dictionary) -> void:
+			if tile_grid_animation.is_empty():
+				start_tile_grid_animation.call())
+	start_tile_grid_animation.call()
+	return func(_delta:float):
+		tile_grid_animation.handle_animation()
 
 
 func line2d_demo(gc :GlassCabinet) -> Callable:
