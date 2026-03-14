@@ -104,7 +104,7 @@ func init_tile_grid_with_box(total_size :Vector3, grid_count :Vector2i, gap_rate
 	init_tile_grid_with_mesh(mesh, calc_grid_a, co)
 	return self
 
-func init_tile_grid_with_cylinder(total_size :Vector3, grid_count :Vector2i, gap_rate :float, radial_segments :int, co :Color, shift :bool = false) -> TileGrid:
+func init_tile_grid_with_cylinder(total_size :Vector3, grid_count :Vector2i, gap_rate :float, radial_segments :int, co :Color) -> TileGrid:
 	var calc_grid_a := CalcGrid3D.new(
 		CalcGrid3D.SizeToAABB(total_size),
 		CalcGrid3D.xy_Vector2iToVector3i(grid_count,1),

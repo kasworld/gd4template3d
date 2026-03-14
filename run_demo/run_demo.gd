@@ -611,7 +611,7 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 		pr.position = grid_gc.posi_to_lanepos(Vector3i(x,y,0))
 		gc.add_child(pr)
 		tile_grid_list.append(pr)
-	var prop
+	var prop :TileGrid
 	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
 		).init_tile_grid_with_box(
 		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
@@ -637,6 +637,20 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
 		Vector2i(12,12), 0.7, 8, Color.WHITE)
 	afterfn.call(prop, 3,0)
+	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
+		).init_tile_grid_with_cylinder(
+		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
+		Vector2i(12,16), 0.8, 6, Color.WHITE)
+	var cg := prop.calc_grid
+	var i := 0
+	for y in cg.grid_size.y:
+		for x in cg.grid_size.x:
+			var pos := cg.posi_to_lanepos(Vector3i(x,y,0))
+			if y % 2 == 1:
+				pos += Vector3(cg.unit_size.x/2, 0, 0)
+			prop.set_inst_position_rotation(i, pos, Vector3.RIGHT, PI/2)
+			i += 1
+	afterfn.call(prop, 3,1)
 
 	var tile_grid_animation := SimpleAnimation.new()
 	var start_tile_grid_animation = func() -> void:
@@ -645,7 +659,7 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 			var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
 			tile_grid_animation.start_rotation_subfield(
 				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
-			tile_grid_animation.add_animation( ps.make_ani_tile_rotate("", randi_range(0,2),  0.0, PI, 1.0))
+			#tile_grid_animation.add_animation( ps.make_ani_tile_rotate("", randi_range(0,2),  0.0, PI, 1.0))
 			ps.set_tile_color_8way(NamedColors.color_list, randi_range(0,7))
 
 	tile_grid_animation.animation_ended.connect(
