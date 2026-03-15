@@ -642,14 +642,12 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
 		Vector2i(12,16), 0.8, 6, Color.WHITE)
 	var cg := prop.calc_grid
-	var i := 0
-	for y in cg.grid_size.y:
-		for x in cg.grid_size.x:
-			var pos := cg.posi_to_lanepos(Vector3i(x,y,0))
-			if y % 2 == 1:
-				pos += Vector3(cg.unit_size.x/2, 0, 0)
-			prop.set_inst_position_rotation(i, pos, Vector3.RIGHT, PI/2)
-			i += 1
+	cg.iter_ixyz(func(index:int,xi:int,yi:int,zi:int):
+		var pos := cg.posi_to_lanepos(Vector3i(xi,yi,zi))
+		if yi % 2 == 1:
+			pos += Vector3(cg.unit_size.x/2, 0, 0)
+		prop.set_inst_position_rotation(index, pos, Vector3.RIGHT, PI/2)
+		)
 	afterfn.call(prop, 3,1)
 
 	var tile_grid_animation := SimpleAnimation.new()
