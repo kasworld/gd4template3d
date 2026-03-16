@@ -615,7 +615,13 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
 		).init_tile_grid_with_box(
 		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
-		Vector2i(16,9), 0.9, Color.WHITE)
+		Vector2i(16,16), 1.0, Color.WHITE)
+	var cg := prop.calc_grid
+	cg.iter_ixyz(func(index:int,xi:int,yi:int,zi:int):
+		var pos := cg.posi_to_lanepos(Vector3i(xi,yi,zi))
+		pos.z += ( sin(cg.rate_xi(xi) *2*PI) + cos(cg.rate_yi(yi) *2*PI) ) * cg.unit_size.x
+		prop.set_inst_position(index, pos)
+		)
 	afterfn.call(prop, 0,0)
 	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
 		).init_tile_grid_with_plane(
@@ -641,7 +647,7 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 		).init_tile_grid_with_cylinder(
 		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
 		Vector2i(12,16), 0.8, 6, Color.WHITE)
-	var cg := prop.calc_grid
+	cg = prop.calc_grid
 	cg.iter_ixyz(func(index:int,xi:int,yi:int,zi:int):
 		var pos := cg.posi_to_lanepos(Vector3i(xi,yi,zi))
 		if yi % 2 == 1:
