@@ -159,16 +159,16 @@ static func _recursive_permutation_helper(array :Array, start_index :int, output
 
 		# Backtrack: swap them back to restore the original array state for the next iteration
 		#array.swap(start_index, i)
-		tmp = array[start_index]
-		array[start_index] = array[i]
-		array[i] = tmp
+		#tmp = array[i]
+		array[i] = array[start_index]
+		array[start_index] = tmp
 
 static var FlagPermutation :Array
 static var DirPermutation :Array
 static func _static_init() -> void:
 	FlagPermutation = generate_all_permutations(FlagList.duplicate())
 	DirPermutation = generate_all_permutations(DirList.duplicate())
-	#print_debug(FlagPermutation, DirPermutation)
+	print_debug(FlagPermutation, DirPermutation)
 
 # end enum ###########################
 
