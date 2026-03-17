@@ -611,43 +611,32 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 		pr.position = grid_gc.posi_to_lanepos(Vector3i(x,y,0))
 		gc.add_child(pr)
 		tile_grid_list.append(pr)
+	var tg_scene := preload("res://tile_grid/tile_grid.tscn")
 	var prop :TileGrid
-	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
-		).init_tile_grid_with_box(
+	prop = tg_scene.instantiate().init_tile_grid_with_box(
 		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
 		Vector2i(16,16), 1.0, Color.WHITE)
-	var cg := prop.calc_grid
-	cg.iter_ixyz(func(index:int,xi:int,yi:int,zi:int):
-		var pos := cg.posi_to_lanepos(Vector3i(xi,yi,zi))
-		pos.z += ( sin(cg.rate_xi(xi) *2*PI) + cos(cg.rate_yi(yi) *2*PI) ) * cg.unit_size.x
-		prop.set_inst_position(index, pos)
-		)
 	afterfn.call(prop, 0,0)
-	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
-		).init_tile_grid_with_plane(
+	prop = tg_scene.instantiate().init_tile_grid_with_plane(
 		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
 		Vector2i(16,9), 0.9, Color.WHITE)
 	afterfn.call(prop, 0,1)
-	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
-		).init_tile_grid_with_sphere(
+	prop = tg_scene.instantiate().init_tile_grid_with_sphere(
 		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
 		Vector2i(12,12), 0.9, Color.WHITE)
 	afterfn.call(prop, 1,0)
-	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
-		).init_tile_grid_with_cylinder(
+	prop = tg_scene.instantiate().init_tile_grid_with_cylinder(
 		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
 		Vector2i(12,12), 0.7, 6, Color.WHITE)
 	afterfn.call(prop, 2,0)
-	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
-		).init_tile_grid_with_cylinder(
+	prop = tg_scene.instantiate().init_tile_grid_with_cylinder(
 		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
 		Vector2i(12,12), 0.7, 8, Color.WHITE)
 	afterfn.call(prop, 3,0)
-	prop = preload("res://tile_grid/tile_grid.tscn").instantiate(
-		).init_tile_grid_with_cylinder(
+	prop = tg_scene.instantiate().init_tile_grid_with_cylinder(
 		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
 		Vector2i(12,16), 0.8, 6, Color.WHITE)
-	cg = prop.calc_grid
+	var cg := prop.calc_grid
 	cg.iter_ixyz(func(index:int,xi:int,yi:int,zi:int):
 		var pos := cg.posi_to_lanepos(Vector3i(xi,yi,zi))
 		if yi % 2 == 1:
@@ -673,6 +662,14 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 	start_tile_grid_animation.call()
 	return func(_delta:float):
 		tile_grid_animation.handle_animation()
+		var now := Time.get_unix_time_from_system()
+		for ps in tile_grid_list:
+			cg = ps.calc_grid
+			cg.iter_ixyz(func(index:int,xi:int,yi:int,zi:int):
+				var t :Transform3D = ps.multimesh.get_instance_transform(index)
+				t.origin.z = ( sin(cg.rate_xi(xi) *2*PI +now*PI ) + cos(cg.rate_yi(yi) *2*PI +now*PI) ) * cg.unit_size.x
+				ps.multimesh.set_instance_transform(index, t)
+				)
 
 
 func line2d_demo(gc :GlassCabinet) -> Callable:
