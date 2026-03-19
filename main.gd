@@ -118,9 +118,9 @@ func _ready() -> void:
 func _on_끝내기_pressed() -> void:
 	get_tree().quit()
 func _on_fov_inc_pressed() -> void:
-	MovingCameraLight.GetCurrentCamera().camera_fov_inc()
+	MovingCameraLight.GetCurrentCamera().fov_inc()
 func _on_fov_dec_pressed() -> void:
-	MovingCameraLight.GetCurrentCamera().camera_fov_dec()
+	MovingCameraLight.GetCurrentCamera().fov_dec()
 var key2fn :Dictionary[Key, Callable] = {
 	KEY_ESCAPE:_on_끝내기_pressed,
 	KEY_ENTER:_on_카메라변경_pressed,

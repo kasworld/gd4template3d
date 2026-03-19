@@ -16,14 +16,11 @@ func get_aabb() -> AABB:
 func make_CalcGrid3D(grid :Vector3i) -> CalcGrid3D:
 	return CalcGrid3D.new(get_aabb(), grid)
 
-func calc_fill_h_len_by_fov() -> float:
-	var hfov :float = $FixedCameraLight.camera_fov.get_value()
-	return cabinet_size.y/2 / tan(deg_to_rad(hfov/2)) + cabinet_size.z/2
-
 func init(cabinet_size_a :Vector3) -> GlassCabinet:
 	cabinet_size = cabinet_size_a
 	$WallBox.mesh.size = cabinet_size
-	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, 	Vector3(0, 0, calc_fill_h_len_by_fov()), cabinet_size.length()*2)
+	var camera_pos := Vector3(0, 0, $FixedCameraLight.calc_z_len_by_fov_size(cabinet_size) + cabinet_size.z)
+	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, camera_pos, cabinet_size.length()*2)
 	$AxisArrow3D.set_size(cabinet_size.length()/10).set_colors()
 	$Title.pixel_size = cabinet_size.y/300
 	$Title.position = Vector3(-cabinet_size.x/2,cabinet_size.y/2,cabinet_size.z/2)
