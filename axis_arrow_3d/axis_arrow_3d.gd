@@ -16,6 +16,8 @@ func make_color_material(co :Color) -> StandardMaterial3D:
 	mat.refraction_enabled = true
 	mat.rim_enabled = true
 	mat.albedo_color = co
+	mat.emission_enabled = true
+	mat.emission = co
 	return mat
 
 func set_label_text(text_list :Array = label_text) -> AxisArrow3D:
