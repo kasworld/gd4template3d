@@ -460,7 +460,7 @@ func wavegauge_box_demo(gc :GlassCabinet) -> Callable:
 
 var maze3d :Maze3D
 var maze_balls :Array
-var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ShortWithPillarCapsule
+var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ShortWithPillarCylinder
 func maze3d_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_axis_arrow(true)
 	#gc.show_wall_box(false)
@@ -481,7 +481,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 		Color(NamedColors.random_color(), 0.9),
 		)
 	maze3d.rotation.x = PI/4
-	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Both)
+	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Off)
 	gc.add_child(maze3d)
 	var r := maze3d.calc_grid.unit_size.x /10
 	for i in min(100,grid_size.x*grid_size.y):
@@ -494,11 +494,9 @@ var maze_ani_i :int
 func maze3d_animate(delta :float) -> void:
 	for mb in maze_balls:
 		mb.bounce(delta)
-	#return
 	maze_ani_i += 1
 	if maze_ani_i% 60 == 0:
 		view_walls = Maze3D.wallview_next(view_walls)
-		#if view_walls != Maze3D.WallPillarView.ShortWithPillarCapsule and view_walls != Maze3D.WallPillarView.OffWithPillarCapsule:
 		maze3d.set_wallpillar_view_mode(view_walls)
 		maze3d.view_floor_ceiling( randi_range(0,3) as Maze3D.FloorCeiling)
 		if maze3d.get_floor().visible:
