@@ -481,8 +481,10 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 		Color(NamedColors.random_color(), 0.9),
 		)
 	maze3d.rotation.x = PI/4
-	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Off)
-	maze3d.make_stair(maze3d.get_floor(), Vector2i(0,0), Maze.DirList.pick_random())
+	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Both)
+	for i in 10:
+		maze3d.make_stair(maze3d.get_floor(),CalcGrid3D.xz_Vector3iToVector2i(maze3d.calc_grid.rand_posi()), Maze.DirList.pick_random())
+		maze3d.make_stair(maze3d.get_ceiling(),CalcGrid3D.xz_Vector3iToVector2i(maze3d.calc_grid.rand_posi()), Maze.DirList.pick_random())
 	gc.add_child(maze3d)
 	var r := maze3d.calc_grid.unit_size.x /10
 	for i in min(100,grid_size.x*grid_size.y):
@@ -504,7 +506,7 @@ func maze3d_animate(delta :float) -> void:
 			maze3d.get_floor().set_tile_color_8way(NamedColors.color_list, randi_range(0,7))
 		if maze3d.get_ceiling().visible:
 			maze3d.get_ceiling().set_tile_color_8way(NamedColors.color_list, randi_range(0,7))
-	#maze3d.rotation.x = sin(deg_to_rad(maze_ani_i/1.5)) * PI + PI + PI/4
+	maze3d.rotation.x = sin(deg_to_rad(maze_ani_i/1.5)) * PI + PI + PI/4
 
 
 var trailmesh_radius :float
