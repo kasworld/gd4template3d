@@ -83,7 +83,7 @@ func exec_make() -> void:
 func init_floor_ceiling(grid_count :Vector2i, height :float, size_rate :float, co_floor :Color, co_ceiling :Color) -> Maze3D:
 	var net_size :Vector2 = PreCalced.SizeWithWallV2
 	$Floor.init_tile_grid_with_box( Vector3(net_size.x, net_size.y, height), grid_count, size_rate, co_floor)
-	$Floor.rotation.x = -PI/2
+	$Floor.rotation.x = PI/2
 	$Floor.position.y -= calc_grid.unit_size.y/2 +height/2
 	$Ceiling.init_tile_grid_with_box(Vector3(net_size.x, net_size.y, height), grid_count, size_rate, co_ceiling)
 	$Ceiling.rotation.x = PI/2
@@ -95,38 +95,46 @@ func get_floor() -> TileGrid:
 func get_ceiling() -> TileGrid:
 	return $Ceiling
 
-func open_tile_grid_cell(tg :TileGrid, cell_pos_x :int, cell_pos_y :int, open :bool) -> void:
-	var xcount :int = tg.calc_grid.grid_size.x / maze_cells.width
-	var ycount :int = tg.calc_grid.grid_size.y / maze_cells.height
-	for y in ycount:
-		for x in xcount:
-			var tile_pos_x := cell_pos_x * xcount +x
-			var tile_pos_y := cell_pos_y * ycount +y
-			var rad := 0.0
-			if open :
-				rad = PI/2
-			var index :int = tg.get_index_by_xy(tile_pos_x, tile_pos_y)
-			tg.set_inst_rotation( index, Vector3.RIGHT, rad)
 
-func open_floor_cell(cell_pos_x :int, cell_pos_y :int, open :bool) -> void:
-	open_tile_grid_cell($Floor, cell_pos_x,cell_pos_y, open)
-func open_ceiling_cell(cell_pos_x :int, cell_pos_y :int, open :bool) -> void:
-	open_tile_grid_cell($Ceiling, cell_pos_x,cell_pos_y, open)
+func calc_tile_count(tg :TileGrid) -> Vector2:
+	return Vector2( float(tg.calc_grid.grid_size.x) / maze_cells.width, float(tg.calc_grid.grid_size.y) / maze_cells.height)
+
+func make_stair(tg :TileGrid, cell_posi :Vector2i, dir :Maze.Dir) -> void:
+	var count := calc_tile_count(tg)
+	var step_x := calc_grid.unit_size.x / (count.x+1)
+	var step_y := calc_grid.unit_size.y / (count.y+1)
+	for y in count.y:
+		for x in count.x:
+			var tile_pos := cell_posi as Vector2 * count + Vector2(x,y)
+			var index :int = tg.get_index_by_xy(tile_pos.x as int, tile_pos.y as int)
+			var t := tg.multimesh.get_instance_transform(index)
+			match dir:
+				Maze.Dir.North:
+					t.origin.z = step_y * (y+1)
+				Maze.Dir.South:
+					t.origin.z = step_y * (count.y - y)
+				Maze.Dir.East:
+					t.origin.z = step_x * (count.x - x)
+				Maze.Dir.West:
+					t.origin.z = step_x * (x+1)
+				_ :
+					assert(false, "invalid dir %s" % dir)
+			tg.multimesh.set_instance_transform(index, t)
 
 func init_wall_deco(makedeco :Callable) -> void:
 	if not makedeco.is_valid():
 		return
 	for y in PreCalced.Grid2D.y:
 		for x in PreCalced.Grid2D.x:
-			if not maze_cells.is_open_dir_at(x,y,Maze.Flag.North):
+			if not maze_cells.is_open_flag_at(x,y,Maze.Flag.North):
 				makedeco.call(x, y, Maze.Flag.North)
-			if not maze_cells.is_open_dir_at(x,y,Maze.Flag.West):
+			if not maze_cells.is_open_flag_at(x,y,Maze.Flag.West):
 				makedeco.call(x, y, Maze.Flag.West)
 	for x in PreCalced.Grid2D.x :
-		if not maze_cells.is_open_dir_at(x,PreCalced.Grid2D.y-1,Maze.Flag.South):
+		if not maze_cells.is_open_flag_at(x,PreCalced.Grid2D.y-1,Maze.Flag.South):
 			makedeco.call(x, PreCalced.Grid2D.y, Maze.Flag.South)
 	for y in PreCalced.Grid2D.y:
-		if not maze_cells.is_open_dir_at(PreCalced.Grid2D.x-1,y,Maze.Flag.East):
+		if not maze_cells.is_open_flag_at(PreCalced.Grid2D.x-1,y,Maze.Flag.East):
 			makedeco.call(PreCalced.Grid2D.x, y, Maze.Flag.East)
 
 
@@ -193,17 +201,17 @@ var pos_list_H_sub :Array
 func make_wall_by_maze() -> void:
 	for y in PreCalced.Grid2D.y:
 		for x in PreCalced.Grid2D.x:
-			if not maze_cells.is_open_dir_at(x,y,Maze.Flag.North):
+			if not maze_cells.is_open_flag_at(x,y,Maze.Flag.North):
 				add_wall_at( x , y , Maze.Flag.North)
-			if not maze_cells.is_open_dir_at(x,y,Maze.Flag.West):
+			if not maze_cells.is_open_flag_at(x,y,Maze.Flag.West):
 				add_wall_at( x , y , Maze.Flag.West)
 
 	for x in PreCalced.Grid2D.x :
-		if not maze_cells.is_open_dir_at(x,PreCalced.Grid2D.y-1,Maze.Flag.South):
+		if not maze_cells.is_open_flag_at(x,PreCalced.Grid2D.y-1,Maze.Flag.South):
 			add_wall_at( x , PreCalced.Grid2D.y , Maze.Flag.South)
 
 	for y in PreCalced.Grid2D.y:
-		if not maze_cells.is_open_dir_at(PreCalced.Grid2D.x-1,y,Maze.Flag.East):
+		if not maze_cells.is_open_flag_at(PreCalced.Grid2D.x-1,y,Maze.Flag.East):
 			add_wall_at( PreCalced.Grid2D.x , y , Maze.Flag.East)
 
 	wall_multi_inst_V_main = make_wall_multi_shape(main_wall_mat, PreCalced.WallSize_V_Long, pos_list_V_main)
@@ -259,6 +267,8 @@ func view_floor_ceiling(v :FloorCeiling) -> void:
 		FloorCeiling.Both:
 			$Floor.visible = true
 			$Ceiling.visible = true
+static func view_floor_ceiling_next(a :FloorCeiling) -> FloorCeiling:
+	return (a +1) % FloorCeiling.keys().size() as FloorCeiling
 
 func set_wall_size_long(b :bool) -> void:
 	if b:

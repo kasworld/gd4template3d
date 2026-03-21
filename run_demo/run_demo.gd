@@ -482,7 +482,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 		)
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Off)
-	maze3d.open_floor_cell(0,0,true)
+	maze3d.make_stair(maze3d.get_floor(), Vector2i(0,0), Maze.DirList.pick_random())
 	gc.add_child(maze3d)
 	var r := maze3d.calc_grid.unit_size.x /10
 	for i in min(100,grid_size.x*grid_size.y):
@@ -664,7 +664,7 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 		var now := Time.get_unix_time_from_system()
 		for ps in tile_grid_list:
 			cg = ps.calc_grid
-			cg.iter_ixyz(func(index:int,xi:int,yi:int,zi:int):
+			cg.iter_ixyz(func(index:int,xi:int,yi:int,_zi:int):
 				var t :Transform3D = ps.multimesh.get_instance_transform(index)
 				t.origin.z = ( sin(cg.rate_xi(xi) *2*PI +now*PI ) + cos(cg.rate_yi(yi) *2*PI +now*PI) ) * cg.unit_size.x
 				ps.multimesh.set_instance_transform(index, t)
