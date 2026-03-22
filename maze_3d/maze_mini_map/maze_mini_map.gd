@@ -18,11 +18,12 @@ func get_width() -> float:
 func get_height() -> float:
 	return maze.height * map_scale
 
-func update_size(rt :Rect2) -> void:
+func update_size(rt :Rect2) -> MazeMiniMap:
 	map_scale = min( rt.size.x / maze.width , rt.size.y / maze.height )
 	WallThick = max(1, map_scale*0.1)
 	make_walllines_all()
 	position = rt.position
+	return self
 
 func pos2mapscale(pos :Vector2i) -> Vector2:
 	return pos * map_scale + Vector2(WallThick,WallThick)

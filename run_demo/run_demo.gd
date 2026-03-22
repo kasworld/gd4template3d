@@ -473,6 +473,10 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	var WallThick = cell_size.x *0.1
 	var MakeSubWallRate = 0.1
 	var maze2d := Maze.new(grid_size)
+	var minimap :MazeMiniMap = preload("res://maze_3d/maze_mini_map/maze_mini_map.tscn").instantiate(
+		).init(maze2d).update_size(Rect2(Vector2.ZERO, Vector2(1920,1080)))
+	var plane := make_subviewport(gc, Vector2i(1920,1080), minimap)
+	plane.position.z = gc.cabinet_size.z /2
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_params(maze2d, cell_size, WallThick, MakeSubWallRate
 		).init_with_color(NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color()
@@ -678,7 +682,7 @@ func line2d_demo(gc :GlassCabinet) -> Callable:
 	make_subviewport(gc, size_pixel, ml2d)
 	return Callable()
 
-func make_subviewport(gc :GlassCabinet, size_pixel :Vector2i, toview) -> SubViewport:
+func make_subviewport(gc :GlassCabinet, size_pixel :Vector2i, toview) -> MeshInstance3D:
 	var svp := SubViewport.new()
 	svp.add_child(toview)
 	svp.size = size_pixel
@@ -695,7 +699,7 @@ func make_subviewport(gc :GlassCabinet, size_pixel :Vector2i, toview) -> SubView
 	#ml2dmi.rotation.x = -PI/4
 	gc.add_child(svp)
 	gc.add_child(ml2dmi)
-	return svp
+	return ml2dmi
 
 var orbitsphere_list :Array
 func orbit_demo(gc :GlassCabinet) -> Callable:
