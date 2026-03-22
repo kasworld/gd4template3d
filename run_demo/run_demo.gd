@@ -675,8 +675,12 @@ func line2d_demo(gc :GlassCabinet) -> Callable:
 	var ml2d = preload("res://move_line_2d/move_line_2d.tscn").instantiate()
 	ml2d.init_with_random(300, 4, 1, size_pixel)
 	ml2d.start()
-	var svp = SubViewport.new()
-	svp.add_child(ml2d)
+	make_subviewport(gc, size_pixel, ml2d)
+	return Callable()
+
+func make_subviewport(gc :GlassCabinet, size_pixel :Vector2i, toview) -> SubViewport:
+	var svp := SubViewport.new()
+	svp.add_child(toview)
 	svp.size = size_pixel
 	svp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	svp.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
@@ -691,7 +695,7 @@ func line2d_demo(gc :GlassCabinet) -> Callable:
 	#ml2dmi.rotation.x = -PI/4
 	gc.add_child(svp)
 	gc.add_child(ml2dmi)
-	return Callable()
+	return svp
 
 var orbitsphere_list :Array
 func orbit_demo(gc :GlassCabinet) -> Callable:
