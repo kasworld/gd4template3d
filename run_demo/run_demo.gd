@@ -473,9 +473,13 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	var WallThick = cell_size.x *0.1
 	var MakeSubWallRate = 0.1
 	var maze2d := Maze.new(grid_size)
+	var size_pixel :=Vector2(1920,1080)
 	var minimap :MazeMiniMap = preload("res://maze_3d/maze_mini_map/maze_mini_map.tscn").instantiate(
-		).init(maze2d).update_size(Rect2(Vector2.ZERO, Vector2(1920,1080)))
-	var plane := make_subviewport(gc, Vector2i(1920,1080), minimap)
+		).init(maze2d).update_size(Rect2(Vector2.ZERO, size_pixel))
+	var svp := make_subviewport(minimap, size_pixel)
+	var plane := make_plane_from_subviewport(svp, Vector2(gc.cabinet_size.x, gc.cabinet_size.y))
+	gc.add_child(svp)
+	gc.add_child(plane)
 	plane.position.z = gc.cabinet_size.z /2
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_params(maze2d, cell_size, WallThick, MakeSubWallRate
@@ -679,27 +683,32 @@ func line2d_demo(gc :GlassCabinet) -> Callable:
 	var ml2d = preload("res://move_line_2d/move_line_2d.tscn").instantiate()
 	ml2d.init_with_random(300, 4, 1, size_pixel)
 	ml2d.start()
-	make_subviewport(gc, size_pixel, ml2d)
+	#make_subviewport(gc, size_pixel, ml2d)
+	var svp := make_subviewport(ml2d, size_pixel)
+	var plane := make_plane_from_subviewport(svp, Vector2(gc.cabinet_size.x, gc.cabinet_size.y))
+	gc.add_child(svp)
+	gc.add_child(plane)
 	return Callable()
 
-func make_subviewport(gc :GlassCabinet, size_pixel :Vector2i, toview) -> MeshInstance3D:
-	var svp := SubViewport.new()
-	svp.add_child(toview)
-	svp.size = size_pixel
-	svp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-	svp.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
-	svp.transparent_bg = true
-	var ml2dmi = MeshInstance3D.new()
-	ml2dmi.mesh = PlaneMesh.new()
-	ml2dmi.mesh.size = Vector2(gc.cabinet_size.x, gc.cabinet_size.y)
-	ml2dmi.mesh.orientation = PlaneMesh.FACE_Z
-	ml2dmi.material_override = StandardMaterial3D.new()
-	ml2dmi.material_override.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
-	ml2dmi.material_override.albedo_texture = svp.get_texture()
-	#ml2dmi.rotation.x = -PI/4
-	gc.add_child(svp)
-	gc.add_child(ml2dmi)
-	return ml2dmi
+static func make_subviewport(n2d :Node2D, size_pixel:Vector2i) -> SubViewport:
+	var sv := SubViewport.new()
+	sv.size = size_pixel
+	#sv.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	#sv.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
+	sv.transparent_bg = true
+	sv.add_child(n2d)
+	return sv
+
+static func make_plane_from_subviewport(svp :SubViewport, mesh_size :Vector2) -> MeshInstance3D:
+	var sp := MeshInstance3D.new()
+	sp.mesh = PlaneMesh.new()
+	sp.mesh.size = mesh_size
+	sp.mesh.orientation = PlaneMesh.FACE_Z
+	sp.material_override = StandardMaterial3D.new()
+	sp.material_override.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
+	sp.material_override.albedo_texture = svp.get_texture()
+	return sp
+
 
 var orbitsphere_list :Array
 func orbit_demo(gc :GlassCabinet) -> Callable:
