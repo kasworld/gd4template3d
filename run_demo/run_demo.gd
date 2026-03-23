@@ -1,10 +1,28 @@
 extends Node3D
 class_name RunDemo
 
+static func MakeSubViewport(n2d :Node2D, size_pixel:Vector2i) -> SubViewport:
+	var sv := SubViewport.new()
+	sv.size = size_pixel
+	#sv.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	#sv.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
+	sv.transparent_bg = true
+	sv.add_child(n2d)
+	return sv
+
+static func MakePlaneSubViewport(svp :SubViewport, mesh_size :Vector2) -> MeshInstance3D:
+	var sp := MeshInstance3D.new()
+	sp.mesh = PlaneMesh.new()
+	sp.mesh.size = mesh_size
+	sp.mesh.orientation = PlaneMesh.FACE_Z
+	sp.material_override = StandardMaterial3D.new()
+	sp.material_override.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
+	sp.material_override.albedo_texture = svp.get_texture()
+	return sp
+
 var glass_cabinet_iter :ListIter # [ GlassCabinet, light iter data]
 var used_glass_cabinet_iter :ListIter
 var empty_glass_cabinet_iter :ListIter
-
 
 var animate_func_list :Array[Callable] = []
 func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> void:
@@ -473,14 +491,16 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	var WallThick = cell_size.x *0.1
 	var MakeSubWallRate = 0.1
 	var maze2d := Maze.new(grid_size)
+
 	var size_pixel :=Vector2(1920,1080)
 	var minimap :MazeMiniMap = preload("res://maze_3d/maze_mini_map/maze_mini_map.tscn").instantiate(
 		).init(maze2d).update_size(Rect2(Vector2.ZERO, size_pixel))
-	var svp := make_subviewport(minimap, size_pixel)
-	var plane := make_plane_from_subviewport(svp, Vector2(gc.cabinet_size.x, gc.cabinet_size.y))
+	var svp := MakeSubViewport(minimap, size_pixel)
+	var plane := MakePlaneSubViewport(svp, Vector2(gc.cabinet_size.x, gc.cabinet_size.y))
 	gc.add_child(svp)
 	gc.add_child(plane)
 	plane.position.z = gc.cabinet_size.z /2
+
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_params(maze2d, cell_size, WallThick, MakeSubWallRate
 		).init_with_color(NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color()
@@ -683,31 +703,11 @@ func line2d_demo(gc :GlassCabinet) -> Callable:
 	var ml2d = preload("res://move_line_2d/move_line_2d.tscn").instantiate()
 	ml2d.init_with_random(300, 4, 1, size_pixel)
 	ml2d.start()
-	#make_subviewport(gc, size_pixel, ml2d)
-	var svp := make_subviewport(ml2d, size_pixel)
-	var plane := make_plane_from_subviewport(svp, Vector2(gc.cabinet_size.x, gc.cabinet_size.y))
+	var svp := MakeSubViewport(ml2d, size_pixel)
+	var plane := MakePlaneSubViewport(svp, Vector2(gc.cabinet_size.x, gc.cabinet_size.y))
 	gc.add_child(svp)
 	gc.add_child(plane)
 	return Callable()
-
-static func make_subviewport(n2d :Node2D, size_pixel:Vector2i) -> SubViewport:
-	var sv := SubViewport.new()
-	sv.size = size_pixel
-	#sv.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-	#sv.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
-	sv.transparent_bg = true
-	sv.add_child(n2d)
-	return sv
-
-static func make_plane_from_subviewport(svp :SubViewport, mesh_size :Vector2) -> MeshInstance3D:
-	var sp := MeshInstance3D.new()
-	sp.mesh = PlaneMesh.new()
-	sp.mesh.size = mesh_size
-	sp.mesh.orientation = PlaneMesh.FACE_Z
-	sp.material_override = StandardMaterial3D.new()
-	sp.material_override.transparency = StandardMaterial3D.TRANSPARENCY_ALPHA
-	sp.material_override.albedo_texture = svp.get_texture()
-	return sp
 
 
 var orbitsphere_list :Array
