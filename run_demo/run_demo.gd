@@ -493,15 +493,16 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	var maze2d := Maze.new(grid_size)
 
 	var size_pixel :=Vector2(1920,1080)
-	var minimap :MazeMiniMap = preload("res://maze_3d/maze_mini_map/maze_mini_map.tscn").instantiate(
-		)
+	var minimap :MazeMiniMap = preload("res://maze_3d/maze_mini_map/maze_mini_map.tscn").instantiate()
 	minimap.set_maze(maze2d)
 	minimap.update_size(size_pixel)
+	minimap.set_color(NamedColors.random_color())
+	minimap.position.x = size_pixel.x/2 - minimap.maze2d_helper.get_width()/2
 	var svp := MakeSubViewport(minimap, size_pixel)
 	var plane := MakePlaneSubViewport(svp, Vector2(gc.cabinet_size.x, gc.cabinet_size.y))
 	gc.add_child(svp)
 	gc.add_child(plane)
-	plane.position.z = gc.cabinet_size.z /2
+	plane.position.z = -gc.cabinet_size.z /2
 
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_params(maze2d, cell_size, WallThick, MakeSubWallRate
