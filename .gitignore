@@ -9,3 +9,4 @@ addons/godot-git-plugin/
 *.pck
 *.err
 *.tmp
+.DS_Store
