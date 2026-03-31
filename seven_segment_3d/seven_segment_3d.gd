@@ -19,6 +19,19 @@ static func MakeColorMaterial(alpha :float = 1.0) -> StandardMaterial3D:
 	return mat
 
 
+const NumToFlag :Dictionary[int,int] = {
+	0: 0b1111101,
+	1: 0b1100000,
+	2: 0b1001111,
+	3: 0b1100111,
+	4: 0b1110010,
+	5: 0b0110111,
+	6: 0b0111111,
+	7: 0b1110100,
+	8: 0b1111111,
+	9: 0b1110111,
+}
+
 var full_size :Vector3
 var segment_thick :float
 var segment_list :Array[MeshInstance3D] = []
