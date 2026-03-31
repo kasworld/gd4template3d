@@ -366,9 +366,9 @@ func random_color2(_arg ) -> Color:
 	return named_color_list.get_current_and_step_next()
 
 
-var platonic_solid_list :Array = []
 func platonic_solids_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_wall_box(false)
+	var platonic_solid_list :Array = []
 	var grid43 := gc.make_CalcGrid3D(Vector3i(4,3,1))
 	var i:= 0
 	for ll in [
@@ -395,21 +395,21 @@ func platonic_solids_demo(gc :GlassCabinet) -> Callable:
 		platonic_solid_list.append(ws)
 		ws.position = grid43.get_n_th_lanepos(i)
 		i +=1
-	platonic_solids_animation.animation_ended.connect(platonic_solids_animation_ended)
-	start_platonic_solids_animation()
-	return func(_delta:float):
-		platonic_solids_animation.handle_animation()
 
-var platonic_solids_animation := SimpleAnimation.new()
-func platonic_solids_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
-	if platonic_solids_animation.is_empty():
-		start_platonic_solids_animation()
-func start_platonic_solids_animation() -> void:
-	for ps in platonic_solid_list:
-		var diff :float = [PI/2,-PI/2].pick_random()
-		var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-		platonic_solids_animation.start_rotation_subfield(
-			"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
+	var animation := SimpleAnimation.new()
+	var start_animation = func() -> void:
+		for ps in platonic_solid_list:
+			var diff :float = [PI/2,-PI/2].pick_random()
+			var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
+			animation.start_rotation_subfield(
+				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
+	animation.animation_ended.connect(
+		func(_node :Node3D, _ani :Dictionary) -> void:
+			if animation.is_empty():
+				start_animation.call())
+	start_animation.call()
+	return func(_delta:float):
+		animation.handle_animation()
 
 
 var tornado_list :Array # [ tornado , AnimateGradient , AnimateGradient ]
@@ -648,23 +648,21 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	prop.wire_V_rotation_y = PI/4
 	afterfn.call(prop,3,1)
 
-	var props_animation := SimpleAnimation.new()
-	var start_props_animation = func() -> void:
+	var animation := SimpleAnimation.new()
+	var start_animation = func() -> void:
 		for ps in prop_list:
 			var diff :float = [PI/2,-PI/2].pick_random()
 			var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-			props_animation.start_rotation_subfield(
+			animation.start_rotation_subfield(
 				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
-			#if ps is WireNet:
-				#props_animation.add_animation( ps.make_ani_rotate("", randi_range(0,1),  0.0, PI, 1.0))
-
-	props_animation.animation_ended.connect(
+	animation.animation_ended.connect(
 		func(_node :Node3D, _ani :Dictionary) -> void:
-			if props_animation.is_empty():
-				start_props_animation.call())
-	start_props_animation.call()
+			if animation.is_empty():
+				start_animation.call())
+	start_animation.call()
 	return func(_delta:float):
-		props_animation.handle_animation()
+		animation.handle_animation()
+
 
 func tile_grid_demo(gc :GlassCabinet) -> Callable:
 	var tile_grid_list :Array
@@ -707,23 +705,23 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 		)
 	afterfn.call(prop, 3,1)
 
-	var tile_grid_animation := SimpleAnimation.new()
-	var start_tile_grid_animation = func() -> void:
+	var animation := SimpleAnimation.new()
+	var start_animation = func() -> void:
 		for ps in tile_grid_list:
 			var diff :float = [PI/2,-PI/2].pick_random()
 			var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-			tile_grid_animation.start_rotation_subfield(
+			animation.start_rotation_subfield(
 				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
-			#tile_grid_animation.add_animation( ps.make_ani_tile_rotate("", randi_range(0,2),  0.0, PI, 1.0))
+			#animation.add_animation( ps.make_ani_tile_rotate("", randi_range(0,2),  0.0, PI, 1.0))
 			ps.set_tile_color_8way(NamedColors.color_list, randi_range(0,7))
 
-	tile_grid_animation.animation_ended.connect(
+	animation.animation_ended.connect(
 		func(_node :Node3D, _ani :Dictionary) -> void:
-			if tile_grid_animation.is_empty():
-				start_tile_grid_animation.call())
-	start_tile_grid_animation.call()
+			if animation.is_empty():
+				start_animation.call())
+	start_animation.call()
 	return func(_delta:float):
-		tile_grid_animation.handle_animation()
+		animation.handle_animation()
 		var now := Time.get_unix_time_from_system()
 		for ps in tile_grid_list:
 			cg = ps.calc_grid
