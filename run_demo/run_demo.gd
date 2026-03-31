@@ -36,6 +36,27 @@ static func AnimateListRotateRandom(obj_list :Array) -> Callable:
 	return func(_delta:float):
 		animation.handle_animation()
 
+class ListAnimateRotateRandom:
+	var animation :SimpleAnimation
+	var obj_list :Array
+	func start_animation() -> void:
+		for ps in obj_list:
+			var diff :float = [PI/2,-PI/2].pick_random()
+			var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
+			animation.start_rotation_subfield(
+				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
+	func restart_on_end(_node :Node3D, _ani :Dictionary) -> void:
+		if animation.is_empty():
+			start_animation.call()
+	func init(olist :Array) -> Callable:
+		obj_list = olist
+		animation = SimpleAnimation.new()
+		animation.animation_ended.connect(restart_on_end)
+		start_animation()
+		return func(_delta:float):
+			animation.handle_animation()
+
+
 var glass_cabinet_iter :ListIter # [ GlassCabinet, light iter data]
 var used_glass_cabinet_iter :ListIter
 var empty_glass_cabinet_iter :ListIter
@@ -134,7 +155,8 @@ func seven_segment_demo(gc :GlassCabinet) -> Callable:
 		ss.position = calc_grid.get_n_th_lanepos(i)
 		#ss.show_segment_by_flag(randi_range(0,127))
 		ss.show_segment_by_flag( SevenSegment3D.NumToFlag[i])
-	return AnimateListRotateRandom(seven_segment_list)
+	return ListAnimateRotateRandom.new().init(seven_segment_list)
+	#return AnimateListRotateRandom(seven_segment_list)
 
 
 
