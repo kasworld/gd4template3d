@@ -24,9 +24,9 @@ var segment_thick :float
 var segment_list :Array[MeshInstance3D] = []
 
 ## face Z
-func init(sz :Vector3, co :Color) -> SevenSegment3D:
+func init(sz :Vector3, seg_w :float, co :Color) -> SevenSegment3D:
 	full_size = sz
-	segment_thick = sz.z
+	segment_thick = seg_w
 	var h_size := calc_H_segment_size()
 	var v_size := calc_V_segment_size()
 	for y in 3:
@@ -54,11 +54,11 @@ func show_segment_by_flag(flag :int) -> void:
 ## face Z
 func calc_H_segment_size() -> Vector3:
 	var h_size := full_size.x - segment_thick*2
-	return Vector3( h_size, segment_thick, segment_thick)
+	return Vector3( h_size, segment_thick, full_size.z)
 
 func calc_V_segment_size() -> Vector3:
 	var v_size := (full_size.y - segment_thick*3)/2
-	return Vector3( segment_thick, v_size, segment_thick)
+	return Vector3( segment_thick, v_size, full_size.z)
 
 ## y : 0,1,2
 func calc_H_segment_pos(y :int) -> Vector3:

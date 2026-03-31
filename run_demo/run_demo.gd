@@ -111,12 +111,13 @@ func seven_segment_demo(gc :GlassCabinet) -> Callable:
 	for i in calc_grid.get_grid_count():
 		var ss :SevenSegment3D = preload("res://seven_segment_3d/seven_segment_3d.tscn").instantiate()
 		var ss_size := calc_grid.unit_size
-		ss_size.z /= 80
+		ss_size.z /= 8
 		ss_size *= 0.9
-		ss.init(ss_size, NamedColors.random_color())
+		ss.init(ss_size, ss_size.x /10,  NamedColors.random_color())
 		seven_segment_list.append(ss)
 		gc.add_child(ss)
 		ss.position = calc_grid.get_n_th_lanepos(i)
+		ss.show_segment_by_flag(randi_range(0,127))
 
 	seven_segment_iter = ListIter.new(seven_segment_list)
 	return func(_delta :float) -> void:
