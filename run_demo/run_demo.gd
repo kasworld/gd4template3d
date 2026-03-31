@@ -20,6 +20,22 @@ static func MakePlaneSubViewport(svp :SubViewport, mesh_size :Vector2) -> MeshIn
 	sp.material_override.albedo_texture = svp.get_texture()
 	return sp
 
+static func AnimateListRotateRandom(obj_list :Array) -> Callable:
+	var animation := SimpleAnimation.new()
+	var start_animation = func() -> void:
+		for ps in obj_list:
+			var diff :float = [PI/2,-PI/2].pick_random()
+			var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
+			animation.start_rotation_subfield(
+				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
+	animation.animation_ended.connect(
+		func(_node :Node3D, _ani :Dictionary) -> void:
+			if animation.is_empty():
+				start_animation.call())
+	start_animation.call()
+	return func(_delta:float):
+		animation.handle_animation()
+
 var glass_cabinet_iter :ListIter # [ GlassCabinet, light iter data]
 var used_glass_cabinet_iter :ListIter
 var empty_glass_cabinet_iter :ListIter
@@ -118,21 +134,8 @@ func seven_segment_demo(gc :GlassCabinet) -> Callable:
 		ss.position = calc_grid.get_n_th_lanepos(i)
 		#ss.show_segment_by_flag(randi_range(0,127))
 		ss.show_segment_by_flag( SevenSegment3D.NumToFlag[i])
+	return AnimateListRotateRandom(seven_segment_list)
 
-	var animation := SimpleAnimation.new()
-	var start_animation = func() -> void:
-		for ps in seven_segment_list:
-			var diff :float = [PI/2,-PI/2].pick_random()
-			var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-			animation.start_rotation_subfield(
-				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
-	animation.animation_ended.connect(
-		func(_node :Node3D, _ani :Dictionary) -> void:
-			if animation.is_empty():
-				start_animation.call())
-	start_animation.call()
-	return func(_delta:float):
-		animation.handle_animation()
 
 
 var tetromino_iter :ListIter
@@ -396,20 +399,7 @@ func platonic_solids_demo(gc :GlassCabinet) -> Callable:
 		ws.position = grid43.get_n_th_lanepos(i)
 		i +=1
 
-	var animation := SimpleAnimation.new()
-	var start_animation = func() -> void:
-		for ps in platonic_solid_list:
-			var diff :float = [PI/2,-PI/2].pick_random()
-			var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-			animation.start_rotation_subfield(
-				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
-	animation.animation_ended.connect(
-		func(_node :Node3D, _ani :Dictionary) -> void:
-			if animation.is_empty():
-				start_animation.call())
-	start_animation.call()
-	return func(_delta:float):
-		animation.handle_animation()
+	return AnimateListRotateRandom(platonic_solid_list)
 
 
 var tornado_list :Array # [ tornado , AnimateGradient , AnimateGradient ]
@@ -648,20 +638,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	prop.wire_V_rotation_y = PI/4
 	afterfn.call(prop,3,1)
 
-	var animation := SimpleAnimation.new()
-	var start_animation = func() -> void:
-		for ps in prop_list:
-			var diff :float = [PI/2,-PI/2].pick_random()
-			var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-			animation.start_rotation_subfield(
-				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
-	animation.animation_ended.connect(
-		func(_node :Node3D, _ani :Dictionary) -> void:
-			if animation.is_empty():
-				start_animation.call())
-	start_animation.call()
-	return func(_delta:float):
-		animation.handle_animation()
+	return AnimateListRotateRandom(prop_list)
 
 
 func tile_grid_demo(gc :GlassCabinet) -> Callable:
