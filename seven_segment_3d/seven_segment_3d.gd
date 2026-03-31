@@ -42,9 +42,14 @@ func init(sz :Vector3, co :Color) -> SevenSegment3D:
 			sg.position = calc_V_segment_pos(x,y)
 	return self
 
-func show_segment(arr :Array[bool]) -> void:
+func show_segment_by_array(arr :Array[bool]) -> void:
 	for i in arr.size():
 		segment_list[i].visible = arr[i]
+
+func show_segment_by_flag(flag :int) -> void:
+	for i in segment_list.size():
+		segment_list[i].visible = BitFlag.TestByPos(i, flag)
+
 
 ## face Z
 func calc_H_segment_size() -> Vector3:
