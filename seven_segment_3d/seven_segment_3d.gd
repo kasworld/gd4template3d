@@ -27,22 +27,24 @@ var segment_list :Array[MeshInstance3D] = []
 func init(sz :Vector3, co :Color) -> SevenSegment3D:
 	full_size = sz
 	segment_thick = sz.z
-
+	var h_size := calc_H_segment_size()
+	var v_size := calc_V_segment_size()
 	for y in 3:
-		var ssz := calc_H_segment_size()
-		var sg := make_segment( ssz, co )
+		var sg := make_segment( h_size, co )
 		segment_list.append(sg)
 		add_child(sg)
 		sg.position = calc_H_segment_pos(y)
 	for x in 2:
 		for y in 2:
-			var ssz := calc_V_segment_size()
-			var sg := make_segment( ssz, co )
+			var sg := make_segment( v_size, co )
 			segment_list.append(sg)
 			add_child(sg)
 			sg.position = calc_V_segment_pos(x,y)
-
 	return self
+
+func show_segment(arr :Array[bool]) -> void:
+	for i in arr.size():
+		segment_list[i].visible = arr[i]
 
 ## face Z
 func calc_H_segment_size() -> Vector3:
@@ -69,6 +71,6 @@ func make_segment(sz :Vector3, co :Color) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
 	mi.mesh = BoxMesh.new()
 	mi.mesh.size = sz
-	mi.mesh.material = MakeColorMaterial(0.9)
+	mi.mesh.material = MakeColorMaterial(1.0)
 	mi.mesh.material.albedo_color = co
 	return mi

@@ -104,7 +104,7 @@ func _process(delta: float) -> void:
 var seven_segment_iter :ListIter
 func seven_segment_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
-	gc.show_wall_box(false)
+	#gc.show_wall_box(false)
 	var grid_size := Vector2i(16,5)
 	var calc_grid := CalcGrid3D.new(gc.get_aabb(),CalcGrid3D.xy_Vector2iToVector3i(grid_size,1))
 	var seven_segment_list :Array = []
