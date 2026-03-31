@@ -109,7 +109,7 @@ func tetromino_demo(gc :GlassCabinet) -> Callable:
 	var calc_grid := CalcGrid3D.new(gc.get_aabb(),CalcGrid3D.xy_Vector2iToVector3i(grid_size,1))
 	var tetromino_list :Array = []
 	for t in Tetromino.Type.size():
-		var tetromino :Tetromino = preload("res://polyomino/tetromino/Tetromino.tscn").instantiate(
+		var tetromino :Tetromino = preload("res://polyomino/tetromino/tetromino.tscn").instantiate(
 			).init(t, 0, calc_grid.unit_size.x)
 		gc.add_child(tetromino)
 		tetromino.position = calc_grid.get_n_th_lanepos( randi_range(0, calc_grid.get_grid_count()-1) )
