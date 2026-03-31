@@ -61,6 +61,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		[yutgame_demo, "윷놀이"],
 		[battle_shooter_demo, "Battle Shooter"],
 		[tetromino_demo, "Tetromino"],
+		[seven_segment_demo, "seven segment 3d"],
 	]
 	if not run1.is_empty():
 		run_all = [ run1 ]
@@ -99,6 +100,27 @@ func _process(delta: float) -> void:
 	#animate_used_glass_cabinet_light()
 	for fn in animate_func_list:
 		fn.call(delta)
+
+var seven_segment_iter :ListIter
+func seven_segment_demo(gc :GlassCabinet) -> Callable:
+	gc.show_description()
+	gc.show_wall_box(false)
+	var grid_size := Vector2i(16,5)
+	var calc_grid := CalcGrid3D.new(gc.get_aabb(),CalcGrid3D.xy_Vector2iToVector3i(grid_size,1))
+	var seven_segment_list :Array = []
+	for i in calc_grid.get_grid_count():
+		var ss :SevenSegment3D = preload("res://seven_segment_3d/seven_segment_3d.tscn").instantiate()
+		var ss_size := calc_grid.unit_size
+		ss_size.z /= 80
+		ss_size *= 0.9
+		ss.init(ss_size, NamedColors.random_color())
+		seven_segment_list.append(ss)
+		gc.add_child(ss)
+		ss.position = calc_grid.get_n_th_lanepos(i)
+
+	seven_segment_iter = ListIter.new(seven_segment_list)
+	return func(_delta :float) -> void:
+		return Callable()
 
 
 var tetromino_iter :ListIter

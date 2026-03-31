@@ -102,7 +102,7 @@ func _ready() -> void:
 	add_child(rundemo)
 
 	var run1 := []
-	#run1 = [rundemo.maze3d_demo, "maze3d_demo"]
+	run1 = [rundemo.seven_segment_demo, "seven segment 3d"]
 	if not run1.is_empty() :
 		rundemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict, run1)
 		var gc :GlassCabinet = rundemo.used_glass_cabinet_iter.get_current()[0]

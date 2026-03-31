@@ -56,7 +56,7 @@ func calc_V_segment_size() -> Vector3:
 ## y : 0,1,2
 func calc_H_segment_pos(y :int) -> Vector3:
 	var y_pos :float = (y-1) * (full_size.y-segment_thick)/2
-	return Vector3(full_size.x/2, y_pos, 0)
+	return Vector3(0, y_pos, 0)
 
 ## x : 0,1  y : 0,1
 func calc_V_segment_pos(x :int, y :int) -> Vector3:
