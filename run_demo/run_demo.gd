@@ -101,7 +101,6 @@ func _process(delta: float) -> void:
 	for fn in animate_func_list:
 		fn.call(delta)
 
-var seven_segment_iter :ListIter
 func seven_segment_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
 	#gc.show_wall_box(false)
@@ -111,7 +110,7 @@ func seven_segment_demo(gc :GlassCabinet) -> Callable:
 	for i in calc_grid.get_grid_count():
 		var ss :SevenSegment3D = preload("res://seven_segment_3d/seven_segment_3d.tscn").instantiate()
 		var ss_size := calc_grid.unit_size
-		ss_size.z /= 80
+		ss_size.z /= 8
 		ss_size *= 0.9
 		ss.init(ss_size, ss_size.x /10,  NamedColors.random_color())
 		seven_segment_list.append(ss)
@@ -120,9 +119,20 @@ func seven_segment_demo(gc :GlassCabinet) -> Callable:
 		#ss.show_segment_by_flag(randi_range(0,127))
 		ss.show_segment_by_flag( SevenSegment3D.NumToFlag[i])
 
-	seven_segment_iter = ListIter.new(seven_segment_list)
-	return func(_delta :float) -> void:
-		return Callable()
+	var animation := SimpleAnimation.new()
+	var start_animation = func() -> void:
+		for ps in seven_segment_list:
+			var diff :float = [PI/2,-PI/2].pick_random()
+			var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
+			animation.start_rotation_subfield(
+				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
+	animation.animation_ended.connect(
+		func(_node :Node3D, _ani :Dictionary) -> void:
+			if animation.is_empty():
+				start_animation.call())
+	start_animation.call()
+	return func(_delta:float):
+		animation.handle_animation()
 
 
 var tetromino_iter :ListIter
