@@ -35,6 +35,8 @@ const NumToFlag :Dictionary[int,int] = {
 var full_size :Vector3
 var segment_thick :float
 var segment_list :Array[MeshInstance3D] = []
+var material_on :StandardMaterial3D
+var material_off :StandardMaterial3D
 
 ## face Z
 func init(sz :Vector3, seg_w :float, co :Color) -> SevenSegment3D:
@@ -42,14 +44,20 @@ func init(sz :Vector3, seg_w :float, co :Color) -> SevenSegment3D:
 	segment_thick = seg_w
 	var h_size := calc_H_segment_size()
 	var v_size := calc_V_segment_size()
+
+	material_on = MakeColorMaterial(1.0)
+	material_on.albedo_color = co
+	material_off = MakeColorMaterial(0.1)
+	material_off.albedo_color = Color(co, 0.1)
+
 	for y in 3:
-		var sg := make_segment( h_size, co )
+		var sg := make_segment( h_size)
 		segment_list.append(sg)
 		add_child(sg)
 		sg.position = calc_H_segment_pos(y)
 	for x in 2:
 		for y in 2:
-			var sg := make_segment( v_size, co )
+			var sg := make_segment( v_size)
 			segment_list.append(sg)
 			add_child(sg)
 			sg.position = calc_V_segment_pos(x,y)
@@ -61,8 +69,11 @@ func show_segment_by_array(arr :Array[bool]) -> void:
 
 func show_segment_by_flag(flag :int) -> void:
 	for i in segment_list.size():
-		segment_list[i].visible = BitFlag.TestByPos(i, flag)
-
+		#segment_list[i].visible = BitFlag.TestByPos(i, flag)
+		if BitFlag.TestByPos(i, flag):
+			segment_list[i].mesh.material = material_on
+		else:
+			segment_list[i].mesh.material = material_off
 
 ## face Z
 func calc_H_segment_size() -> Vector3:
@@ -85,10 +96,9 @@ func calc_V_segment_pos(x :int, y :int) -> Vector3:
 	var y_pos :float = [-v_seg_size.y/2-segment_thick/2, v_seg_size.y/2+segment_thick/2][y]
 	return Vector3(x_pos, y_pos, 0)
 
-func make_segment(sz :Vector3, co :Color) -> MeshInstance3D:
+func make_segment(sz :Vector3) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
 	mi.mesh = BoxMesh.new()
 	mi.mesh.size = sz
-	mi.mesh.material = MakeColorMaterial(1.0)
-	mi.mesh.material.albedo_color = co
+	mi.mesh.material = material_on
 	return mi
