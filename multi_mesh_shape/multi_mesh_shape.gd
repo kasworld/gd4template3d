@@ -1,6 +1,24 @@
 extends MultiMeshInstance3D
 class_name MultiMeshShape
 
+static func MakeColorMaterial(alpha :float = 1.0) -> StandardMaterial3D:
+	var mat := StandardMaterial3D.new()
+	# draw call 이 TRANSPARENCY_ALPHA 인 경우만 줄어든다. 버그인가?
+	if alpha >= 1.0:
+		mat.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+	else:
+		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.albedo_color = Color(Color.WHITE,alpha)
+	mat.vertex_color_use_as_albedo = true
+
+	#mat.metallic = 1.0
+	##mat.roughness = 0.5
+	#mat.clearcoat_enabled = true
+	#mat.refraction_enabled = true
+	#mat.rim_enabled = true
+	return mat
+
+
 # example usage ################################################################
 
 func init_집중선(r :float, start:float, end:float, depth :float, count :int, co :Color, alpha :float = 1.0) -> MultiMeshShape:
