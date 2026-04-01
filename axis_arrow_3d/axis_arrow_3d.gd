@@ -10,7 +10,6 @@ func set_colors(colist :Array = colors) -> AxisArrow3D:
 
 func make_color_material(co :Color) -> StandardMaterial3D:
 	var mat := MultiMeshShape.make_color_material()
-	mat = MultiMeshShape.make_color_material(1.0)
 	mat.metallic = 1.0
 	mat.clearcoat_enabled = true
 	mat.refraction_enabled = true
