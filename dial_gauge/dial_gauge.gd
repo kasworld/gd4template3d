@@ -86,7 +86,7 @@ func add_dial_bar(r :float, bar_size :Vector3, align :BarAlign, step_count :int,
 		t = t.scaled_local( bar_size )
 		tf_list.append(t)
 	var mesh := BoxMesh.new()
-	mesh.material = MultiMeshShape.make_color_material()
+	mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial()
 	var sm :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
 		).init_with_color_mesh(mesh, tf_list.size(), 1.0)
 	for i in tf_list.size():

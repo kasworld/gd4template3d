@@ -3,7 +3,7 @@ class_name BarTree
 
 func init_bartree_with_color(color_from :Color, color_to:Color, bar_count :int) -> BarTree:
 	var mesh := BoxMesh.new()
-	mesh.material = MultiMeshShape.make_color_material()
+	mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial()
 	init_with_color_mesh(mesh, bar_count, 1.0)
 	set_gradient_color_all(color_from, color_to)
 	return self

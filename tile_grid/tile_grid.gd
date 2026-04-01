@@ -103,7 +103,7 @@ func init_tile_grid_with_box(total_size :Vector3, grid_count :Vector2i, gap_rate
 	var calc_grid_a := MakeCalcGrid(total_size,grid_count)
 	var mesh := BoxMesh.new()
 	mesh.size = calc_grid_a.unit_size *gap_rate
-	mesh.material = make_color_material(co.a)
+	mesh.material = MakeMultiMeshColorMaterial(co.a)
 	init_tile_grid_with_mesh(mesh, calc_grid_a, co)
 	return self
 
@@ -114,7 +114,7 @@ func init_tile_grid_with_cylinder(total_size :Vector3, grid_count :Vector2i, gap
 	mesh.bottom_radius = calc_grid_a.unit_size.length() / 2 * gap_rate
 	mesh.height = calc_grid_a.unit_size.z
 	mesh.radial_segments = radial_segments
-	mesh.material = make_color_material(co.a)
+	mesh.material = MakeMultiMeshColorMaterial(co.a)
 	init_tile_grid_with_mesh(mesh, calc_grid_a, co)
 	tile_rotation_x = PI/2
 	return self
@@ -123,7 +123,7 @@ func init_tile_grid_with_plane(total_size :Vector3, grid_count :Vector2i, gap_ra
 	var calc_grid_a := MakeCalcGrid(total_size,grid_count)
 	var mesh := PlaneMesh.new()
 	mesh.size = Vector2(calc_grid_a.unit_size.x,calc_grid_a.unit_size.y) *gap_rate
-	mesh.material = make_color_material(co.a)
+	mesh.material = MakeMultiMeshColorMaterial(co.a)
 	init_tile_grid_with_mesh(mesh, calc_grid_a, co)
 	tile_rotation_x = PI/2
 	return self
@@ -135,7 +135,7 @@ func init_tile_grid_with_sphere(total_size :Vector3, grid_count :Vector2i, gap_r
 	mesh.height = calc_grid_a.unit_size.y *gap_rate
 	mesh.radial_segments = 4
 	mesh.rings = 1
-	mesh.material = make_color_material(co.a)
+	mesh.material = MakeMultiMeshColorMaterial(co.a)
 	init_tile_grid_with_mesh(mesh, calc_grid_a, co)
 	return self
 

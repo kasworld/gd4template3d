@@ -15,7 +15,7 @@ func init(face :int, edge_from:int, edge_to :int, outer_radius :float, wire_widt
 	$Wires.multi_line_by_pos(lines, wire_width, wire_color)
 
 	var sp_mesh := SphereMesh.new()
-	sp_mesh.material = MultiMeshShape.make_color_material(1.0)
+	sp_mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial(1.0)
 	sp_mesh.material.metallic = 1.0
 	sp_mesh.material.clearcoat_enabled = true
 	sp_mesh.material.refraction_enabled = true

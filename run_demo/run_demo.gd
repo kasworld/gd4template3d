@@ -576,7 +576,7 @@ func meshtrail_demo(gc :GlassCabinet) -> Callable:
 	trailmesh_radius = gc.cabinet_size.length()/100
 	bound_aabb = AABB( -gc.cabinet_size/2, gc.cabinet_size)
 	var mesh := BoxMesh.new()
-	mesh.material = MultiMeshShape.make_color_material()
+	mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial()
 	mesh.size = Vector3(trailmesh_radius*3, trailmesh_radius /5, trailmesh_radius/5)
 	for i in 10:
 		make_meshtrail(gc, i %4, mesh, 100, bound_aabb.get_center())

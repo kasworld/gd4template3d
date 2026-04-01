@@ -140,7 +140,7 @@ func init0(t :Type, t_num :int) -> void:
 	type = t
 
 func init1() -> void:
-	$MeshInstance3D.mesh.material = MultiMeshShape.make_color_material()
+	$MeshInstance3D.mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial()
 	$MeshInstance3D.mesh.material.albedo_color = BattleShooter.TeamList[team_number].color
 	animation_bsobj.animation_ended.connect(animation_ended)
 

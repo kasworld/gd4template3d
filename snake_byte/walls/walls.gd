@@ -36,7 +36,7 @@ func init(stage_number :int, field_a :PlacedThings, astar_grid_a :AStarGrid2D) -
 	wall_list = []
 	var mesh := BoxMesh.new()
 	mesh.size = SnakeByte.tile_size *0.9
-	mesh.material = MultiMeshShape.make_color_material()
+	mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial()
 	$MultiMeshShape.multimesh.instance_count = 0
 	$MultiMeshShape.init_with_color_mesh(mesh, SBWalls.FieldSize.x*SBWalls.FieldSize.y/2)
 	exec_script(BounderyWalls)

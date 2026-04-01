@@ -25,7 +25,7 @@ func init_basic(count :int, radius :float, ring_height :float) -> Tornado:
 
 func _init_rings(rings :MultiMeshShape, count :int, radius :float, ring_height :float, flip_faces :bool) -> void:
 	var ring_mesh := CylinderMesh.new()
-	ring_mesh.material = MultiMeshShape.make_color_material(0.9)
+	ring_mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial(0.9)
 	ring_mesh.cap_bottom = false
 	ring_mesh.cap_top = false
 	ring_mesh.top_radius = radius
