@@ -64,14 +64,21 @@ func init(sz :Vector3, seg_w :float, co :Color, alpha_off :float = 0.1, alpha_on
 func show_segment_by_array(arr :Array[bool]) -> void:
 	for i in arr.size():
 		segment_list[i].visible = arr[i]
+		segment_list[i].mesh.material = material_on
 
 func show_segment_by_flag(flag :int) -> void:
+	for i in segment_list.size():
+		segment_list[i].visible = BitFlag.TestByPos(i, flag)
+		segment_list[i].mesh.material = material_on
+
+func material_on_off_segment_by_flag(flag :int) -> void:
 	for i in segment_list.size():
 		#segment_list[i].visible = BitFlag.TestByPos(i, flag)
 		if BitFlag.TestByPos(i, flag):
 			segment_list[i].mesh.material = material_on
 		else:
 			segment_list[i].mesh.material = material_off
+
 
 ## face Z
 func calc_H_segment_size() -> Vector3:
