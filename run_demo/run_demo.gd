@@ -124,15 +124,15 @@ func _process(delta: float) -> void:
 
 func seven_segment_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
-	#gc.show_wall_box(false)
+	gc.show_wall_box(false)
 	var grid_size := Vector2i(5,2)
 	var calc_grid := CalcGrid3D.new(gc.get_aabb(),CalcGrid3D.xy_Vector2iToVector3i(grid_size,1))
 	var seven_segment_list :Array = []
 	for i in calc_grid.get_grid_count():
 		var ss :SevenSegment3D = preload("res://seven_segment_3d/seven_segment_3d.tscn").instantiate()
 		var ss_size := calc_grid.unit_size
-		ss_size.z /= 8
-		ss_size *= 0.9
+		ss_size.z = (calc_grid.unit_size.z / 100) * (1+ i*1)
+		ss_size *= 0.5
 		ss.init(ss_size, ss_size.x /10,  NamedColors.random_color())
 		seven_segment_list.append(ss)
 		gc.add_child(ss)
