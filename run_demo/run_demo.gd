@@ -133,14 +133,19 @@ func seven_segment_demo(gc :GlassCabinet) -> Callable:
 		var ss_size := calc_grid.unit_size
 		ss_size.z = (calc_grid.unit_size.z / 100) * (1+ i*1)
 		ss_size *= 0.5
-		ss.init(ss_size, ss_size.x /10,  NamedColors.random_color())
+		ss.init(ss_size, ss_size.x /10,  NamedColors.random_color(), 0.1, 1.0)
 		seven_segment_list.append(ss)
 		gc.add_child(ss)
 		ss.position = calc_grid.get_n_th_lanepos(i)
 		#ss.show_segment_by_flag(randi_range(0,127))
 		ss.show_segment_by_flag( SevenSegment3D.NumToFlag[i])
-	return ListAnimateRotateRandom.new().init(seven_segment_list)
-
+	return func(_delta :float) -> void:
+		if randf() > 0.01:
+			return
+		var nth :int = randi_range(0,9)
+		for i in seven_segment_list.size():
+			seven_segment_list[i].show_segment_by_flag(
+				SevenSegment3D.NumToFlag[(nth+i)%seven_segment_list.size()] )
 
 
 var tetromino_iter :ListIter

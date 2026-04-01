@@ -39,14 +39,14 @@ var material_on :StandardMaterial3D
 var material_off :StandardMaterial3D
 
 ## face Z
-func init(sz :Vector3, seg_w :float, co :Color) -> SevenSegment3D:
+func init(sz :Vector3, seg_w :float, co :Color, alpha_off :float = 0.1, alpha_on :float = 1.0) -> SevenSegment3D:
 	full_size = sz
 	segment_thick = seg_w
 	var h_size := calc_H_segment_size()
 	var v_size := calc_V_segment_size()
 
-	material_on = MakeColorMaterialWithAlpha(co, 1.0)
-	material_off = MakeColorMaterialWithAlpha(co, 0.2)
+	material_on = MakeColorMaterialWithAlpha(co, alpha_on)
+	material_off = MakeColorMaterialWithAlpha(co, alpha_off)
 
 	for y in 3:
 		var sg := make_segment( h_size)
