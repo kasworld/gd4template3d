@@ -133,7 +133,7 @@ func seven_segment_demo(gc :GlassCabinet) -> Callable:
 		var ss_size := calc_grid.unit_size
 		ss_size.z = (calc_grid.unit_size.z / 100) * (1+ i*1)
 		ss_size *= 0.5
-		ss.init(ss_size, ss_size.x /(i+4.0),  NamedColors.random_color(), 0.1, 1.0)
+		ss.init(ss_size, ss_size.x /(i+4.0),  NamedColors.random_color())
 		seven_segment_list.append(ss)
 		gc.add_child(ss)
 		ss.position = calc_grid.get_n_th_lanepos(i)

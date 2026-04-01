@@ -3,11 +3,11 @@ class_name SevenSegment3D
 
 static func MakeColorMaterialWithAlpha(co :Color = Color.WHITE, alpha :float = 1.0) -> StandardMaterial3D:
 	var mat := StandardMaterial3D.new()
-	# draw call 이 TRANSPARENCY_ALPHA 인 경우만 줄어든다. 버그인가?
-	if alpha >= 1.0:
-		mat.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
-	else:
-		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	## draw call 이 TRANSPARENCY_ALPHA 인 경우만 줄어든다. 버그인가?
+	#if alpha >= 1.0:
+		#mat.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
+	#else:
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	mat.albedo_color = Color(co, alpha)
 	mat.vertex_color_use_as_albedo = true
 
@@ -35,27 +35,25 @@ const NumToFlag :Dictionary[int,int] = {
 var full_size :Vector3
 var segment_thick :float
 var segment_list :Array[MeshInstance3D] = []
-var material_on :StandardMaterial3D
-var material_off :StandardMaterial3D
+var material : StandardMaterial3D
 
 ## face Z
-func init(sz :Vector3, seg_w :float, co :Color, alpha_off :float = 0.1, alpha_on :float = 1.0) -> SevenSegment3D:
+func init(sz :Vector3, seg_w :float, co :Color) -> SevenSegment3D:
 	full_size = sz
 	segment_thick = seg_w
+
 	var h_size := calc_H_segment_size()
 	var v_size := calc_V_segment_size()
-
-	material_on = MakeColorMaterialWithAlpha(co, alpha_on)
-	material_off = MakeColorMaterialWithAlpha(co, alpha_off)
+	material = MakeColorMaterialWithAlpha(co, 1.0)
 
 	for y in 3:
-		var sg := make_segment( h_size)
+		var sg := make_segment(h_size)
 		segment_list.append(sg)
 		add_child(sg)
 		sg.position = calc_H_segment_pos(y)
 	for x in 2:
 		for y in 2:
-			var sg := make_segment( v_size)
+			var sg := make_segment(v_size)
 			segment_list.append(sg)
 			add_child(sg)
 			sg.position = calc_V_segment_pos(x,y)
@@ -64,20 +62,19 @@ func init(sz :Vector3, seg_w :float, co :Color, alpha_off :float = 0.1, alpha_on
 func show_segment_by_array(arr :Array[bool]) -> void:
 	for i in arr.size():
 		segment_list[i].visible = arr[i]
-		segment_list[i].mesh.material = material_on
 
 func show_segment_by_flag(flag :int) -> void:
 	for i in segment_list.size():
 		segment_list[i].visible = BitFlag.TestByPos(i, flag)
-		segment_list[i].mesh.material = material_on
 
-func material_on_off_segment_by_flag(flag :int) -> void:
-	for i in segment_list.size():
-		#segment_list[i].visible = BitFlag.TestByPos(i, flag)
-		if BitFlag.TestByPos(i, flag):
-			segment_list[i].mesh.material = material_on
-		else:
-			segment_list[i].mesh.material = material_off
+func set_color(co :Color) -> void:
+	material.albedo_color = co
+
+func get_color() -> Color:
+	return material.albedo_color
+
+func set_alpha(a :float) -> void:
+	material.albedo_color.a = a
 
 
 ## face Z
@@ -105,5 +102,5 @@ func make_segment(sz :Vector3) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
 	mi.mesh = BoxMesh.new()
 	mi.mesh.size = sz
-	mi.mesh.material = material_on
+	mi.mesh.material = material
 	return mi
