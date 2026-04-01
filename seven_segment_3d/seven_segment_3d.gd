@@ -1,14 +1,14 @@
 extends Node3D
 class_name SevenSegment3D
 
-static func MakeColorMaterial(alpha :float = 1.0) -> StandardMaterial3D:
+static func MakeColorMaterialWithAlpha(co :Color = Color.WHITE, alpha :float = 1.0) -> StandardMaterial3D:
 	var mat := StandardMaterial3D.new()
 	# draw call 이 TRANSPARENCY_ALPHA 인 경우만 줄어든다. 버그인가?
 	if alpha >= 1.0:
 		mat.transparency = BaseMaterial3D.TRANSPARENCY_DISABLED
 	else:
 		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	mat.albedo_color = Color(Color.WHITE,alpha)
+	mat.albedo_color = Color(co, alpha)
 	mat.vertex_color_use_as_albedo = true
 
 	#mat.metallic = 1.0
@@ -45,10 +45,8 @@ func init(sz :Vector3, seg_w :float, co :Color) -> SevenSegment3D:
 	var h_size := calc_H_segment_size()
 	var v_size := calc_V_segment_size()
 
-	material_on = MakeColorMaterial(1.0)
-	material_on.albedo_color = co
-	material_off = MakeColorMaterial(0.1)
-	material_off.albedo_color = Color(co, 0.1)
+	material_on = MakeColorMaterialWithAlpha(co, 1.0)
+	material_off = MakeColorMaterialWithAlpha(co, 0.2)
 
 	for y in 3:
 		var sg := make_segment( h_size)
