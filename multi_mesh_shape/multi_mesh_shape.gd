@@ -2,7 +2,6 @@ extends MultiMeshInstance3D
 class_name MultiMeshShape
 
 ## for multimesh use only
-#static func make_color_material(alpha :float = 1.0) -> StandardMaterial3D:
 static func MakeMultiMeshColorMaterial(alpha :float = 1.0) -> StandardMaterial3D:
 	var mat := StandardMaterial3D.new()
 	# draw call 이 TRANSPARENCY_ALPHA 인 경우만 줄어든다. 버그인가?
