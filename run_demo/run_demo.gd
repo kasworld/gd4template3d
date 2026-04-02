@@ -657,31 +657,24 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 		gc.add_child(pr)
 		tile_grid_list.append(pr)
 	var tg_scene := preload("res://tile_grid/tile_grid.tscn")
+	var prop_size := Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200)
 	var prop :TileGrid
-	prop = tg_scene.instantiate().init_tile_grid_with_box(
-		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
-		Vector2i(16,16), 1.0, Color.WHITE)
+	prop = tg_scene.instantiate().init_tile_grid_with_box(prop_size, Vector2i(16,16), 1.0, Color.WHITE)
 	afterfn.call(prop, 0,0)
-	prop = tg_scene.instantiate().init_tile_grid_with_plane(
-		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
-		Vector2i(16,9), 0.9, Color.WHITE)
+	prop = tg_scene.instantiate().init_tile_grid_with_plane(prop_size, Vector2i(16,9), 0.9, Color.WHITE)
 	afterfn.call(prop, 0,1)
-	prop = tg_scene.instantiate().init_tile_grid_with_sphere(
-		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
-		Vector2i(12,12), 0.9, Color.WHITE)
-	afterfn.call(prop, 1,0)
-	prop = tg_scene.instantiate().init_tile_grid_with_cylinder(
-		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
-		Vector2i(12,12), 0.7, 6, Color.WHITE)
-	afterfn.call(prop, 2,0)
-	prop = tg_scene.instantiate().init_tile_grid_with_cylinder(
-		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
-		Vector2i(12,12), 0.7, 8, Color.WHITE)
-	afterfn.call(prop, 3,0)
-	prop = tg_scene.instantiate().init_tile_grid_with_cylinder(
-		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200),
-		Vector2i(12,16), 0.8, 6, Color.WHITE)
+	prop = tg_scene.instantiate().init_tile_grid_with_sphere(prop_size, Vector2i(12,12), 1.5, Color.WHITE)
 	var cg := prop.calc_grid
+	cg.iter_ixyz(func(index:int,xi:int,yi:int,zi:int):
+		prop.set_inst_rotation(index, Vector3.FORWARD, PI/4)
+		)
+	afterfn.call(prop, 1,0)
+	prop = tg_scene.instantiate().init_tile_grid_with_cylinder(	prop_size, Vector2i(12,12), 0.7, 6, Color.WHITE)
+	afterfn.call(prop, 2,0)
+	prop = tg_scene.instantiate().init_tile_grid_with_cylinder(	prop_size, Vector2i(12,12), 0.7, 8, Color.WHITE)
+	afterfn.call(prop, 3,0)
+	prop = tg_scene.instantiate().init_tile_grid_with_cylinder(	prop_size, Vector2i(12,16), 0.8, 6, Color.WHITE)
+	cg = prop.calc_grid
 	cg.iter_ixyz(func(index:int,xi:int,yi:int,zi:int):
 		var pos := cg.posi_to_lanepos(Vector3i(xi,yi,zi))
 		if yi % 2 == 1:

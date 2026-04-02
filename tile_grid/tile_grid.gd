@@ -1,6 +1,13 @@
 extends MultiMeshShape
 class_name TileGrid
 
+static func MakeCalcGrid(total_size :Vector3, grid_count :Vector2i) -> CalcGrid3D:
+	return CalcGrid3D.new(
+		CalcGrid3D.SizeToAABB(total_size),
+		CalcGrid3D.xy_Vector2iToVector3i(grid_count,1),
+	)
+
+
 ## for animation
 var tile_rotation_x :float:
 	set(rad):
@@ -93,11 +100,6 @@ func set_tile_color_xy(color_list :Array[Color], reverse_x :bool=false, reverse_
 			multimesh.set_instance_color(i, color_list[ (x+y) % color_list.size() ])
 
 
-static func MakeCalcGrid(total_size :Vector3, grid_count :Vector2i) -> CalcGrid3D:
-	return CalcGrid3D.new(
-		CalcGrid3D.SizeToAABB(total_size),
-		CalcGrid3D.xy_Vector2iToVector3i(grid_count,1),
-	)
 
 func init_tile_grid_with_box(total_size :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> TileGrid:
 	var calc_grid_a := MakeCalcGrid(total_size,grid_count)
