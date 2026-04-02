@@ -32,12 +32,17 @@ class AnimateList:
 		start_rotate_animation()
 		return func(_delta:float):
 			animation.handle_animation()
+
+	func rotate_random_animation(ps :Node3D) -> void:
+		var diff :float = [PI/2,-PI/2].pick_random()
+		var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
+		animation.start_rotation_subfield(
+			"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
+
 	func start_rotate_animation() -> void:
 		for ps in obj_list:
-			var diff :float = [PI/2,-PI/2].pick_random()
-			var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-			animation.start_rotation_subfield(
-				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
+			rotate_random_animation(ps)
+
 	func restart_on_end_rotate(_node :Node3D, _ani :Dictionary) -> void:
 		if animation.is_empty():
 			start_rotate_animation.call()
