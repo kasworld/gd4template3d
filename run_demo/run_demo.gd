@@ -20,25 +20,27 @@ static func MakePlaneSubViewport(svp :SubViewport, mesh_size :Vector2) -> MeshIn
 	sp.material_override.albedo_texture = svp.get_texture()
 	return sp
 
-class ListAnimateRotateRandom:
+class AnimateList:
 	var animation :SimpleAnimation
+	func _init() -> void:
+		animation = SimpleAnimation.new()
+
 	var obj_list :Array
-	func start_animation() -> void:
+	func init_rotate(olist :Array) -> Callable:
+		obj_list = olist
+		animation.animation_ended.connect(restart_on_end_rotate)
+		start_rotate_animation()
+		return func(_delta:float):
+			animation.handle_animation()
+	func start_rotate_animation() -> void:
 		for ps in obj_list:
 			var diff :float = [PI/2,-PI/2].pick_random()
 			var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
 			animation.start_rotation_subfield(
 				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
-	func restart_on_end(_node :Node3D, _ani :Dictionary) -> void:
+	func restart_on_end_rotate(_node :Node3D, _ani :Dictionary) -> void:
 		if animation.is_empty():
-			start_animation.call()
-	func init(olist :Array) -> Callable:
-		obj_list = olist
-		animation = SimpleAnimation.new()
-		animation.animation_ended.connect(restart_on_end)
-		start_animation()
-		return func(_delta:float):
-			animation.handle_animation()
+			start_rotate_animation.call()
 
 
 var glass_cabinet_iter :ListIter # [ GlassCabinet, light iter data]
@@ -408,7 +410,7 @@ func platonic_solids_demo(gc :GlassCabinet) -> Callable:
 		platonic_solid_list.append(ws)
 		ws.position = grid43.get_n_th_lanepos(i)
 		i +=1
-	return ListAnimateRotateRandom.new().init(platonic_solid_list)
+	return AnimateList.new().init_rotate(platonic_solid_list)
 
 
 var tornado_list :Array # [ tornado , AnimateGradient , AnimateGradient ]
@@ -646,7 +648,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), Vector2i(16,1), grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.1, NamedColors.random_color())
 	prop.wire_V_rotation_y = PI/4
 	afterfn.call(prop,3,1)
-	return ListAnimateRotateRandom.new().init(prop_list)
+	return AnimateList.new().init_rotate(prop_list)
 
 
 func tile_grid_demo(gc :GlassCabinet) -> Callable:
@@ -665,7 +667,7 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 	afterfn.call(prop, 0,1)
 	prop = tg_scene.instantiate().init_tile_grid_with_sphere(prop_size, Vector2i(12,12), 1.5, Color.WHITE)
 	var cg := prop.calc_grid
-	cg.iter_ixyz(func(index:int,xi:int,yi:int,zi:int):
+	cg.iter_ixyz(func(index:int,_xi:int,_yi:int,_zi:int):
 		prop.set_inst_rotation(index, Vector3.FORWARD, PI/4)
 		)
 	afterfn.call(prop, 1,0)
@@ -702,10 +704,9 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 		animation.handle_animation()
 		var now := Time.get_unix_time_from_system()
 		for ps in tile_grid_list:
-			cg = ps.calc_grid
-			cg.iter_ixyz(func(index:int,xi:int,yi:int,_zi:int):
+			ps.calc_grid.iter_ixyz(func(index:int,xi:int,yi:int,_zi:int):
 				var t :Transform3D = ps.multimesh.get_instance_transform(index)
-				t.origin.z = ( sin(cg.rate_xi(xi) *2*PI +now*PI ) + cos(cg.rate_yi(yi) *2*PI +now*PI) ) * cg.unit_size.x
+				t.origin.z = ( sin(ps.calc_grid.rate_xi(xi) *2*PI +now*PI ) + cos(ps.calc_grid.rate_yi(yi) *2*PI +now*PI) ) * ps.calc_grid.unit_size.x
 				ps.multimesh.set_instance_transform(index, t)
 				)
 
