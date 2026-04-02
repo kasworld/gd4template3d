@@ -20,32 +20,36 @@ static func MakePlaneSubViewport(svp :SubViewport, mesh_size :Vector2) -> MeshIn
 	sp.material_override.albedo_texture = svp.get_texture()
 	return sp
 
+static func AddRotateRandomAnimation(animation :SimpleAnimation, node3d :Node3D, anidur :float = 1.0) -> void:
+	var diff :float = [PI/2,-PI/2].pick_random()
+	var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
+	animation.start_rotation_subfield(
+		"ani_rot", node3d, axis , node3d.rotation[axis], node3d.rotation[axis] + diff, anidur)
+
+
 class AnimateList:
 	var animation :SimpleAnimation
 	func _init() -> void:
 		animation = SimpleAnimation.new()
-
 	var obj_list :Array
-	func init_rotate(olist :Array) -> Callable:
+	func set_list(olist :Array) -> AnimateList:
 		obj_list = olist
+		return self
+
+	func init_rotate(olist :Array) -> Callable:
+		set_list(olist)
 		animation.animation_ended.connect(restart_on_end_rotate)
 		start_rotate_animation()
 		return func(_delta:float):
 			animation.handle_animation()
 
-	func rotate_random_animation(ps :Node3D) -> void:
-		var diff :float = [PI/2,-PI/2].pick_random()
-		var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-		animation.start_rotation_subfield(
-			"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
-
 	func start_rotate_animation() -> void:
 		for ps in obj_list:
-			rotate_random_animation(ps)
+			RunDemo.AddRotateRandomAnimation(animation, ps, 1.0)
 
 	func restart_on_end_rotate(_node :Node3D, _ani :Dictionary) -> void:
 		if animation.is_empty():
-			start_rotate_animation.call()
+			start_rotate_animation()
 
 
 var glass_cabinet_iter :ListIter # [ GlassCabinet, light iter data]
@@ -693,10 +697,7 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 	var animation := SimpleAnimation.new()
 	var start_animation = func() -> void:
 		for ps in tile_grid_list:
-			var diff :float = [PI/2,-PI/2].pick_random()
-			var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
-			animation.start_rotation_subfield(
-				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
+			AddRotateRandomAnimation(animation, ps, 1.0)
 			#animation.add_animation( ps.make_ani_tile_rotate("", randi_range(0,2),  0.0, PI, 1.0))
 			ps.set_all_tile_color_8way(NamedColors.color_list, randi_range(0,7))
 
