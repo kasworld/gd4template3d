@@ -691,7 +691,7 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 			animation.start_rotation_subfield(
 				"ani_rot", ps, axis , ps.rotation[axis], ps.rotation[axis] + diff, 1.0)
 			#animation.add_animation( ps.make_ani_tile_rotate("", randi_range(0,2),  0.0, PI, 1.0))
-			ps.set_tile_color_8way(NamedColors.color_list, randi_range(0,7))
+			ps.set_all_tile_color_8way(NamedColors.color_list, randi_range(0,7))
 
 	animation.animation_ended.connect(
 		func(_node :Node3D, _ani :Dictionary) -> void:
