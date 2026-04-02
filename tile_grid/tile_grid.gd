@@ -99,7 +99,27 @@ func set_tile_color_xy(color_list :Array[Color], reverse_x :bool=false, reverse_
 			var i := calc_grid.get_index_by_posi_xyz(effx,effy)
 			multimesh.set_instance_color(i, color_list[ (x+y) % color_list.size() ])
 
+## include x2
+func draw_hline_color(x1 :int, x2 :int, y :int, co :Color):
+	if x1 > x2 :
+		var t := x1
+		x1 = x2
+		x2 = t
+	for x in range(x1,x2+1):
+		var i := calc_grid.get_index_by_posi_xyz(x,y,0)
+		multimesh.set_instance_color(i, co)
 
+## include y2
+func draw_vline_color(x :int, y1 :int, y2 :int, co :Color):
+	if y1 > y2 :
+		var t := y1
+		y1 = y2
+		y2 = t
+	for y in range(y1,y2+1):
+		var i := calc_grid.get_index_by_posi_xyz(x,y,0)
+		multimesh.set_instance_color(i, co)
+
+# init functions
 
 func init_tile_grid_with_box(total_size :Vector3, grid_count :Vector2i, gap_rate :float, co :Color) -> TileGrid:
 	var calc_grid_a := MakeCalcGrid(total_size,grid_count)
@@ -141,6 +161,7 @@ func init_tile_grid_with_sphere(total_size :Vector3, grid_count :Vector2i, gap_r
 	init_tile_grid_with_mesh(mesh, calc_grid_a, co)
 	return self
 
+## init base func
 func init_tile_grid_with_mesh(mesh :Mesh, calc_grid_a :CalcGrid3D, co :Color) -> TileGrid:
 	calc_grid = calc_grid_a
 	pos_list = []

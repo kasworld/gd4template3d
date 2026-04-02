@@ -114,7 +114,8 @@ func _process(_delta: float) -> void:
 
 func set_at(pos :Vector2i):
 	wall_list.append([pos])
-# include x2
+
+## include x2
 func draw_hline(x1 :int, x2 :int, y :int):
 	if x1 > x2 :
 		var t := x1
@@ -125,7 +126,7 @@ func draw_hline(x1 :int, x2 :int, y :int):
 		rtn.append( Vector2i(x,y) )
 	wall_list.append(rtn)
 
-# include y2
+## include y2
 func draw_vline(x :int, y1 :int, y2 :int):
 	if y1 > y2 :
 		var t := y1
