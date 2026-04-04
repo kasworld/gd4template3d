@@ -699,7 +699,7 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 		for ps in tile_grid_list:
 			AddRotateRandomAnimation(animation, ps, 1.0)
 			#animation.add_animation( ps.make_ani_tile_rotate("", randi_range(0,2),  0.0, PI, 1.0))
-			ps.set_all_tile_color_8way(NamedColors.color_list, randi_range(0,7))
+			#ps.set_all_tile_color_8way(NamedColors.color_list, randi_range(0,7))
 
 	animation.animation_ended.connect(
 		func(_node :Node3D, _ani :Dictionary) -> void:
@@ -711,9 +711,15 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 		var now := Time.get_unix_time_from_system()
 		for ps in tile_grid_list:
 			ps.calc_grid.iter_ixyz(func(index:int,xi:int,yi:int,_zi:int):
+				var xrate :float= ps.calc_grid.rate_xi(xi)
+				var yrate :float= ps.calc_grid.rate_yi(yi)
+				# make 0.0 ~ 1.0
+				var zrate :=  (sin( xrate*2*PI +now*PI ) + cos( yrate*2*PI +now*PI) + sqrt(2) ) / (2*sqrt(2))
 				var t :Transform3D = ps.multimesh.get_instance_transform(index)
-				t.origin.z = ( sin(ps.calc_grid.rate_xi(xi) *2*PI +now*PI ) + cos(ps.calc_grid.rate_yi(yi) *2*PI +now*PI) ) * ps.calc_grid.unit_size.x
+				t.origin.z = (zrate - 0.5) * ps.calc_grid.unit_size.x * 2
 				ps.multimesh.set_instance_transform(index, t)
+				var co := Color(xrate,yrate, zrate)
+				ps.multimesh.set_instance_color(index,co)
 				)
 
 
