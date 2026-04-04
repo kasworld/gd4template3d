@@ -674,12 +674,16 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 	afterfn.call(0, tg_inst.call().init_tile_grid_with_box(prop_size, Vector2i(16,16), 1.0, Color.WHITE))
 	afterfn.call(1, tg_inst.call().init_tile_grid_with_plane(prop_size, Vector2i(16,9), 0.9, Color.WHITE))
 	var prop = afterfn.call(2, tg_inst.call().init_tile_grid_with_sphere(prop_size, Vector2i(12,12), 1.5, Color.WHITE))
-	prop.calc_grid.iter_ixyz(func(index:int,_xi:int,_yi:int,_zi:int):
-		prop.set_inst_rotation(index, Vector3.FORWARD, PI/4)
-		)
-	afterfn.call(3, tg_inst.call().init_tile_grid_with_cylinder(	prop_size, Vector2i(12,12), 0.7, 6, Color.WHITE))
-	afterfn.call(4, tg_inst.call().init_tile_grid_with_cylinder(	prop_size, Vector2i(12,12), 0.7, 8, Color.WHITE))
-	prop = afterfn.call(5, tg_inst.call().init_tile_grid_with_cylinder(	prop_size, Vector2i(12,16), 0.8, 6, Color.WHITE))
+	prop.tile_rotation_z = PI/4
+	afterfn.call(3, tg_inst.call().init_tile_grid_with_cylinder(prop_size, Vector2i(12,12), 0.7, 6, Color.WHITE))
+	prop = afterfn.call(4, tg_inst.call().init_tile_grid_with_cylinder(prop_size, Vector2i(12,12), 0.7, 8, Color.WHITE))
+	for i in prop.calc_grid.get_grid_count():
+		prop.set_inst_rotate(i, Vector3.UP, PI/8)
+
+	#prop.calc_grid.iter_ixyz(func(index:int,_xi:int,_yi:int,_zi:int):
+		#prop.set_inst_rotation(index, Vector3.RIGHT, PI/8)
+		#)
+	prop = afterfn.call(5, tg_inst.call().init_tile_grid_with_cylinder(prop_size, Vector2i(12,16), 0.8, 6, Color.WHITE))
 	prop.calc_grid.iter_ixyz(func(index:int,xi:int,yi:int,zi:int):
 		var pos :Vector3 = prop.calc_grid.posi_to_lanepos(Vector3i(xi,yi,zi))
 		if yi % 2 == 1:
