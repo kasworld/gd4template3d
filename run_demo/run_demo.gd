@@ -621,78 +621,71 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 func props_demo(gc :GlassCabinet) -> Callable:
 	var prop_list :Array
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(4,2,1))
-	var afterfn := func(pr, n):
-		pr.position = grid_gc.get_n_th_lanepos(n)
-		gc.add_child(pr)
-		prop_list.append(pr)
+	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
+		node3d.position = grid_gc.get_n_th_lanepos(n)
+		gc.add_child(node3d)
+		prop_list.append(node3d)
+		return node3d
 	var prop
 	prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
 		).set_color(NamedColors.random_color()).set_size( grid_gc.unit_size.x *0.6, grid_gc.unit_size.x/30, grid_gc.unit_size.x/10, 0.3)
-	afterfn.call(prop,0)
+	afterfn.call(0, prop)
 	prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
 		).set_color(NamedColors.random_color()).set_size( grid_gc.unit_size.x *0.6, grid_gc.unit_size.x/30, grid_gc.unit_size.x/10, 0.7)
-	afterfn.call(prop,1)
+	afterfn.call(1, prop)
 	prop = preload("res://valve_handle/valve_handle.tscn").instantiate(
 		).init(grid_gc.unit_size.x/6, grid_gc.unit_size.x/6, 8, NamedColors.random_color())
-	afterfn.call(prop,2)
+	afterfn.call(2, prop)
 	prop = preload("res://valve_handle/valve_handle.tscn").instantiate(
 		).init(grid_gc.unit_size.x/6, grid_gc.unit_size.x/10, 4, NamedColors.random_color())
-	afterfn.call(prop,3)
+	afterfn.call(3, prop)
 	prop = preload("res://axis_arrow_3d/axis_arrow_3d.tscn").instantiate(
 		).set_colors().set_size(grid_gc.unit_size.length()/10)
-	afterfn.call(prop,4)
+	afterfn.call(4, prop)
 
 	var grid_size := Vector2i(16,9)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
 		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), grid_size, grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.005, NamedColors.random_color())
 	prop.set_color_H(NamedColors.random_color())
 	prop.set_color_V(NamedColors.random_color())
-	afterfn.call(prop,5)
+	afterfn.call(5, prop)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
 		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), grid_size, grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.1, NamedColors.random_color())
 	prop.set_color_H(NamedColors.random_color())
 	prop.set_color_V(NamedColors.random_color())
-	afterfn.call(prop,6)
+	afterfn.call(6, prop)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
 		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), Vector2i(16,1), grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.1, NamedColors.random_color())
 	prop.wire_V_rotation_y = PI/4
-	afterfn.call(prop,7)
+	afterfn.call(7, prop)
 	return AnimateList.new().init_rotate(prop_list)
 
 
 func tile_grid_demo(gc :GlassCabinet) -> Callable:
 	var tile_grid_list :Array
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(3,2,1))
-	var afterfn := func(pr, n):
-		pr.position = grid_gc.get_n_th_lanepos(n)
-		gc.add_child(pr)
-		tile_grid_list.append(pr)
+	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
+		node3d.position = grid_gc.get_n_th_lanepos(n)
+		gc.add_child(node3d)
+		tile_grid_list.append(node3d)
+		return node3d
 	var tg_scene := preload("res://tile_grid/tile_grid.tscn")
 	var prop_size := Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200)
-	var prop :TileGrid
-	prop = tg_scene.instantiate().init_tile_grid_with_box(prop_size, Vector2i(16,16), 1.0, Color.WHITE)
-	afterfn.call(prop, 0)
-	prop = tg_scene.instantiate().init_tile_grid_with_plane(prop_size, Vector2i(16,9), 0.9, Color.WHITE)
-	afterfn.call(prop, 1)
-	prop = tg_scene.instantiate().init_tile_grid_with_sphere(prop_size, Vector2i(12,12), 1.5, Color.WHITE)
-	var cg := prop.calc_grid
-	cg.iter_ixyz(func(index:int,_xi:int,_yi:int,_zi:int):
+	afterfn.call(0, tg_scene.instantiate().init_tile_grid_with_box(prop_size, Vector2i(16,16), 1.0, Color.WHITE))
+	afterfn.call(1, tg_scene.instantiate().init_tile_grid_with_plane(prop_size, Vector2i(16,9), 0.9, Color.WHITE))
+	var prop = afterfn.call(2, tg_scene.instantiate().init_tile_grid_with_sphere(prop_size, Vector2i(12,12), 1.5, Color.WHITE))
+	prop.calc_grid.iter_ixyz(func(index:int,_xi:int,_yi:int,_zi:int):
 		prop.set_inst_rotation(index, Vector3.FORWARD, PI/4)
 		)
-	afterfn.call(prop, 2)
-	prop = tg_scene.instantiate().init_tile_grid_with_cylinder(	prop_size, Vector2i(12,12), 0.7, 6, Color.WHITE)
-	afterfn.call(prop, 3)
-	prop = tg_scene.instantiate().init_tile_grid_with_cylinder(	prop_size, Vector2i(12,12), 0.7, 8, Color.WHITE)
-	afterfn.call(prop, 4)
-	prop = tg_scene.instantiate().init_tile_grid_with_cylinder(	prop_size, Vector2i(12,16), 0.8, 6, Color.WHITE)
-	cg = prop.calc_grid
-	cg.iter_ixyz(func(index:int,xi:int,yi:int,zi:int):
-		var pos := cg.posi_to_lanepos(Vector3i(xi,yi,zi))
+	afterfn.call(3, tg_scene.instantiate().init_tile_grid_with_cylinder(	prop_size, Vector2i(12,12), 0.7, 6, Color.WHITE))
+	afterfn.call(4, tg_scene.instantiate().init_tile_grid_with_cylinder(	prop_size, Vector2i(12,12), 0.7, 8, Color.WHITE))
+	prop = afterfn.call(5, tg_scene.instantiate().init_tile_grid_with_cylinder(	prop_size, Vector2i(12,16), 0.8, 6, Color.WHITE))
+	prop.calc_grid.iter_ixyz(func(index:int,xi:int,yi:int,zi:int):
+		var pos :Vector3 = prop.calc_grid.posi_to_lanepos(Vector3i(xi,yi,zi))
 		if yi % 2 == 1:
-			pos += Vector3(cg.unit_size.x/2, 0, 0)
+			pos += Vector3(prop.calc_grid.unit_size.x/2, 0, 0)
 		prop.set_inst_position_rotation(index, pos, Vector3.RIGHT, PI/2)
 		)
-	afterfn.call(prop, 5)
 
 	var animation := SimpleAnimation.new()
 	var start_animation = func() -> void:
