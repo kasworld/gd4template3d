@@ -770,7 +770,7 @@ func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
 
 func clock_calendar_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_wall_box(false)
-
+	var grid_gc := gc.make_CalcGrid3D( Vector3i(2,1,1))
 	var calendar :Calendar3D= preload("res://calendar_3d/calendar_3d.tscn").instantiate(
 		).init(gc.cabinet_size.x/2, gc.cabinet_size.y, gc.cabinet_size.z/10, gc.cabinet_size.y/2.0/6 , true )
 	gc.add_child(calendar)
@@ -779,7 +779,7 @@ func clock_calendar_demo(gc :GlassCabinet) -> Callable:
 	gc.add_child(clock)
 
 	var animation := SimpleAnimation.new()
-	var pos_list := [Vector3(-gc.cabinet_size.x/4,0,0), Vector3(gc.cabinet_size.x/4,0,0)]
+	var pos_list := [grid_gc.get_n_th_lanepos(0), grid_gc.get_n_th_lanepos(1)]
 	var rot_args := [ [0.0, 2*PI], [2*PI, 0.0] ]
 	const ani_speed :float = 3
 	clock.position = pos_list[0]
@@ -790,8 +790,8 @@ func clock_calendar_demo(gc :GlassCabinet) -> Callable:
 		animation.start_rotation_subfield("clock",clock, Vector3.Axis.AXIS_Y, rot_args[0][0] , rot_args[0][1], ani_speed)
 		animation.start_move("clock",calendar, pos_list[1], pos_list[0], ani_speed)
 		animation.start_rotation_subfield("clock",calendar, Vector3.Axis.AXIS_Y, rot_args[1][0], rot_args[1][1], ani_speed)
-		pos_list.push_back( pos_list.pop_front()) # = [pos_list[1], pos_list[0]]
-		rot_args.push_back( rot_args.pop_front()) # = [rot_args[1], rot_args[0]]
+		pos_list.push_back( pos_list.pop_front()) # swap [pos_list[1], pos_list[0]]
+		rot_args.push_back( rot_args.pop_front()) # swap [rot_args[1], rot_args[0]]
 	var animation_ended := func(_node :Node3D, _ani :Dictionary) -> void:
 		if animation.is_empty():
 			start_animation.call()
