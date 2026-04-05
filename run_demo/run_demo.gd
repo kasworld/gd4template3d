@@ -159,7 +159,6 @@ func seven_segment_demo(gc :GlassCabinet) -> Callable:
 				SevenSegment3D.NumToFlag[(nth+i)%seven_segment_list.size()] )
 
 
-var tetromino_iter :ListIter
 func tetromino_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
 	gc.show_wall_box(false)
@@ -172,7 +171,7 @@ func tetromino_demo(gc :GlassCabinet) -> Callable:
 		gc.add_child(tetromino)
 		tetromino.position = calc_grid.get_n_th_lanepos( randi_range(0, calc_grid.get_grid_count()-1) )
 		tetromino_list.append(tetromino)
-	tetromino_iter = ListIter.new(tetromino_list)
+	var tetromino_iter := ListIter.new(tetromino_list)
 	return func(_delta :float) -> void:
 		var tet :Tetromino = tetromino_iter.get_current_and_step_next()
 		if tet.animation.is_empty():
