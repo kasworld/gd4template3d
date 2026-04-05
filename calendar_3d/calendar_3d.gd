@@ -48,7 +48,7 @@ func init(w :float, h:float,d:float, fsize :float, backplane:bool=true) -> Calen
 		$BackplaneBox.mesh.material.albedo_color = colors.calbg
 		$BackplaneBox.mesh.size = Vector3(w, h, d*0.5)
 	init_calendar(w, h,d, fsize)
-	update_calendar()
+	update_calendar(get_today_int())
 	return self
 
 func init_calendar(w :float, h :float, d:float, fsize :float) -> void:
@@ -78,14 +78,17 @@ func set_mesh_color(sp:MeshInstance3D, co:Color) -> void:
 func set_mesh_text(sp:MeshInstance3D, text :String) -> void:
 	sp.mesh.text = text
 
-func update_calendar() -> void:
+## with time zone shift
+func get_today_int() -> int:
 	var tz := Time.get_time_zone_from_system()
 	var today :int = int(Time.get_unix_time_from_system()) +tz["bias"]*60
+	return today
+
+func update_calendar(today :int) -> void:
 	var today_dict := Time.get_date_dict_from_unix_time(today)
 	set_mesh_text(calendar_labels[0], "%4d년 %2d월" % [
 		today_dict["year"] , today_dict["month"]
 		])
-
 	var day_index :int = today - (7 + today_dict["weekday"] )*24*60*60
 	for wd in weekdaystring.size():
 		var curLabel :MeshInstance3D = calendar_labels[1][wd]
@@ -115,8 +118,9 @@ func update_calendar() -> void:
 
 var old_time_dict = {"day":0} # datetime dict
 func _on_timer_timeout() -> void:
-	var time_now_dict := Time.get_datetime_dict_from_system()
+	var today := get_today_int()
+	var time_now_dict := Time.get_date_dict_from_unix_time(today)
 	# date changed, update datelabel, calendar
 	if old_time_dict["day"] != time_now_dict["day"]:
 		old_time_dict = time_now_dict
-		update_calendar()
+		update_calendar(today)
