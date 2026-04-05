@@ -794,13 +794,14 @@ func clock_calendar_demo(gc :GlassCabinet) -> Callable:
 		).init(gc.cabinet_size.x/2, gc.cabinet_size.y, gc.cabinet_size.z/10, gc.cabinet_size.y/2.0/6 , true )
 	gc.add_child(calendar)
 	clock = preload("res://analog_clock_3d/analog_clock_3d.tscn").instantiate(
-		).init(gc.cabinet_size.x/4, gc.cabinet_size.z/10, gc.cabinet_size.y/2.0/7 ,9.0, true )
+		).init(gc.cabinet_size.x/4, gc.cabinet_size.z/10, gc.cabinet_size.y/2.0/7 , true )
 	gc.add_child(clock)
 	clock_calendar_pos_list = [Vector3(-gc.cabinet_size.x/4,0,0), Vector3(gc.cabinet_size.x/4,0,0)]
 	reset_clock_calendar_pos()
 	clock_calendar_animation.animation_ended.connect(clock_calendar_animation_ended)
 	start_clock_calendar_animation()
 	return func(_delta:float):
+		clock.update_clock(Time.get_unix_time_from_system(), 9.0)
 		clock_calendar_animation.handle_animation()
 
 
