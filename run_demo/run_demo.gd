@@ -768,41 +768,38 @@ func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
 	orbitsphere_list.append(os)
 
 
-var clock_calendar_animation := SimpleAnimation.new()
-func clock_calendar_animation_ended(_node :Node3D, _ani :Dictionary) -> void:
-	if clock_calendar_animation.is_empty():
-		start_clock_calendar_animation()
-var clock_calendar_pos_list := []
-var clock_calendar_rot_args := [ [0.0, 2*PI], [2*PI, 0.0] ]
-func reset_clock_calendar_pos()->void:
-	clock.position = clock_calendar_pos_list[0]
-	calendar.position = clock_calendar_pos_list[1]
-func start_clock_calendar_animation():
-	const ani_speed :float = 3
-	clock_calendar_animation.start_move("clock",clock, clock_calendar_pos_list[0], clock_calendar_pos_list[1], ani_speed)
-	clock_calendar_animation.start_rotation_subfield("clock",clock, Vector3.Axis.AXIS_Y, clock_calendar_rot_args[0][0] , clock_calendar_rot_args[0][1], ani_speed)
-	clock_calendar_animation.start_move("clock",calendar, clock_calendar_pos_list[1], clock_calendar_pos_list[0], ani_speed)
-	clock_calendar_animation.start_rotation_subfield("clock",calendar, Vector3.Axis.AXIS_Y, clock_calendar_rot_args[1][0], clock_calendar_rot_args[1][1], ani_speed)
-	clock_calendar_pos_list = [clock_calendar_pos_list[1], clock_calendar_pos_list[0]]
-	clock_calendar_rot_args = [clock_calendar_rot_args[1], clock_calendar_rot_args[0]]
-
-var calendar :Calendar3D
-var clock :AnalogClock3D
 func clock_calendar_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_wall_box(false)
-	calendar = preload("res://calendar_3d/calendar_3d.tscn").instantiate(
+
+	var calendar :Calendar3D= preload("res://calendar_3d/calendar_3d.tscn").instantiate(
 		).init(gc.cabinet_size.x/2, gc.cabinet_size.y, gc.cabinet_size.z/10, gc.cabinet_size.y/2.0/6 , true )
 	gc.add_child(calendar)
-	clock = preload("res://analog_clock_3d/analog_clock_3d.tscn").instantiate(
+	var clock :AnalogClock3D= preload("res://analog_clock_3d/analog_clock_3d.tscn").instantiate(
 		).init(gc.cabinet_size.x/4, gc.cabinet_size.z/10, gc.cabinet_size.y/2.0/7 , true )
 	gc.add_child(clock)
-	clock_calendar_pos_list = [Vector3(-gc.cabinet_size.x/4,0,0), Vector3(gc.cabinet_size.x/4,0,0)]
-	reset_clock_calendar_pos()
-	clock_calendar_animation.animation_ended.connect(clock_calendar_animation_ended)
-	start_clock_calendar_animation()
+
+	var animation := SimpleAnimation.new()
+	var pos_list := [Vector3(-gc.cabinet_size.x/4,0,0), Vector3(gc.cabinet_size.x/4,0,0)]
+	var rot_args := [ [0.0, 2*PI], [2*PI, 0.0] ]
+	const ani_speed :float = 3
+	clock.position = pos_list[0]
+	calendar.position = pos_list[1]
+
+	var start_animation := func():
+		animation.start_move("clock",clock, pos_list[0], pos_list[1], ani_speed)
+		animation.start_rotation_subfield("clock",clock, Vector3.Axis.AXIS_Y, rot_args[0][0] , rot_args[0][1], ani_speed)
+		animation.start_move("clock",calendar, pos_list[1], pos_list[0], ani_speed)
+		animation.start_rotation_subfield("clock",calendar, Vector3.Axis.AXIS_Y, rot_args[1][0], rot_args[1][1], ani_speed)
+		pos_list.push_back( pos_list.pop_front()) # = [pos_list[1], pos_list[0]]
+		rot_args.push_back( rot_args.pop_front()) # = [rot_args[1], rot_args[0]]
+	var animation_ended := func(_node :Node3D, _ani :Dictionary) -> void:
+		if animation.is_empty():
+			start_animation.call()
+	animation.animation_ended.connect(animation_ended)
+	start_animation.call()
 	return func(_delta:float):
 		clock.update_clock(Time.get_unix_time_from_system(), 9.0)
-		clock_calendar_animation.handle_animation()
+		animation.handle_animation()
 
 
 var bartree_scene = preload("res://bar_tree/bar_tree.tscn")
