@@ -55,10 +55,8 @@ func init_calendar(w :float, h :float, d:float, fsize :float) -> void:
 	var calc_grid := CalcGrid3D.new( CalcGrid3D.SizeToAABB(Vector3(w,h,d)) , Vector3i(7,8,1))
 	# add year month
 	var fdepth := d * 0.2
-	var time_now_dict := Time.get_datetime_dict_from_system()
 	var mat := get_color_mat(colors.datelabel)
-	var lb := new_text(fsize, fdepth, mat,
-		"%4d년 %2d월" % [time_now_dict["year"] , time_now_dict["month"]])
+	var lb := new_text(fsize, fdepth, mat,"0000년 00월")
 	lb.position = calc_grid.posi_to_lanepos(Vector3(3,7,0))
 	calendar_labels.append(lb)
 	$LabelConatiner.add_child(lb)
@@ -84,8 +82,11 @@ func update_calendar() -> void:
 	var tz := Time.get_time_zone_from_system()
 	var today :int = int(Time.get_unix_time_from_system()) +tz["bias"]*60
 	var today_dict := Time.get_date_dict_from_unix_time(today)
-	var day_index :int = today - (7 + today_dict["weekday"] )*24*60*60 #datetime.timedelta(days=(-today.weekday() - 7))
+	set_mesh_text(calendar_labels[0], "%4d년 %2d월" % [
+		today_dict["year"] , today_dict["month"]
+		])
 
+	var day_index :int = today - (7 + today_dict["weekday"] )*24*60*60
 	for wd in weekdaystring.size():
 		var curLabel :MeshInstance3D = calendar_labels[1][wd]
 		var co :Color = colors.weekday[wd]
@@ -119,7 +120,3 @@ func _on_timer_timeout() -> void:
 	if old_time_dict["day"] != time_now_dict["day"]:
 		old_time_dict = time_now_dict
 		update_calendar()
-		var curLabel :MeshInstance3D = calendar_labels[0]
-		set_mesh_text(curLabel, "%4d년 %2d월" % [
-			time_now_dict["year"] , time_now_dict["month"]
-			])
