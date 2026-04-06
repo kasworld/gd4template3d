@@ -773,6 +773,7 @@ func clock_calendar_demo(gc :GlassCabinet) -> Callable:
 	var calendar :Calendar3D= preload("res://calendar_3d/calendar_3d.tscn").instantiate(
 		).init(gc.cabinet_size.x/2, gc.cabinet_size.y, gc.cabinet_size.z/10, gc.cabinet_size.y/2.0/6 , true )
 	gc.add_child(calendar)
+	#calendar.update_calendar(Calendar3D.make_unix_time(2026,3,7))
 	var clock :AnalogClock3D= preload("res://analog_clock_3d/analog_clock_3d.tscn").instantiate(
 		).init(gc.cabinet_size.x/4, gc.cabinet_size.z/10, gc.cabinet_size.y/2.0/7 , true )
 	gc.add_child(clock)

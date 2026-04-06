@@ -48,7 +48,7 @@ func init(w :float, h:float,d:float, fsize :float, backplane:bool=true) -> Calen
 		$BackplaneBox.mesh.material.albedo_color = colors.calbg
 		$BackplaneBox.mesh.size = Vector3(w, h, d*0.5)
 	init_calendar(w, h,d, fsize)
-	update_calendar(get_today_int())
+	update_calendar(get_localtime_from_system())
 	return self
 
 func init_calendar(w :float, h :float, d:float, fsize :float) -> void:
@@ -78,23 +78,30 @@ func set_mesh_color(sp:MeshInstance3D, co:Color) -> void:
 func set_mesh_text(sp:MeshInstance3D, text :String) -> void:
 	sp.mesh.text = text
 
-## with time zone shift
-func get_today_int() -> int:
+## with time zone applied
+static func get_localtime_from_system() -> int:
 	var tz := Time.get_time_zone_from_system()
 	var today :int = int(Time.get_unix_time_from_system()) +tz["bias"]*60
 	return today
 
-func update_calendar(today :int) -> void:
-	var today_dict := Time.get_date_dict_from_unix_time(today)
+static func make_unix_time(year :int, month :int, day :int) -> int:
+	return Time.get_unix_time_from_datetime_dict({
+		"year" : year,
+		"month" : month,
+		"day" : day,
+	})
+
+func update_calendar(unix_time :int) -> void:
+	var datetime_dict := Time.get_date_dict_from_unix_time(unix_time)
 	set_mesh_text(calendar_labels[0], "%4d년 %2d월" % [
-		today_dict["year"] , today_dict["month"]
+		datetime_dict["year"] , datetime_dict["month"]
 		])
-	var day_index :int = today - (7 + today_dict["weekday"] )*24*60*60
+	var day_index :int = unix_time - (7 + datetime_dict["weekday"] )*24*60*60
 	for wd in weekdaystring.size():
 		var curLabel :MeshInstance3D = calendar_labels[1][wd]
 		var co :Color = colors.weekday[wd]
 		var lb_scale := Vector3(1,1,1)
-		if wd == today_dict["weekday"] :
+		if wd == datetime_dict["weekday"] :
 			co = colors.today
 			lb_scale = Vector3(1.3,1.3,1)
 		curLabel.scale = lb_scale
@@ -107,9 +114,9 @@ func update_calendar(today :int) -> void:
 			set_mesh_text(curLabel, "%d" % day_index_dict["day"] )
 			var co :Color = colors.weekday[wd]
 			var lb_scale := Vector3(1,1,1)
-			if day_index_dict["month"] != today_dict["month"]:
+			if day_index_dict["month"] != datetime_dict["month"]:
 				co = co.darkened(0.5)
-			elif day_index_dict["day"] == today_dict["day"]:
+			elif day_index_dict["day"] == datetime_dict["day"]:
 				co = colors.today
 				lb_scale = Vector3(1.3,1.3,1)
 			curLabel.scale = lb_scale
@@ -117,8 +124,8 @@ func update_calendar(today :int) -> void:
 			day_index += 24*60*60
 
 var old_time_dict = {"day":0} # datetime dict
-func _on_timer_timeout() -> void:
-	var today := get_today_int()
+func update_calender_if_day_changed() -> void:
+	var today := get_localtime_from_system()
 	var time_now_dict := Time.get_date_dict_from_unix_time(today)
 	# date changed, update datelabel, calendar
 	if old_time_dict["day"] != time_now_dict["day"]:
