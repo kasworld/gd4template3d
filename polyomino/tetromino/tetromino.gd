@@ -118,6 +118,3 @@ func animate_rotation_to_dir(dir :Vector3) -> void:
 	for i in monomino_list.size():
 		var ani :Dictionary = monomino_list[i].make_ani_rotation("", dir, AniSec)
 		animation.add_animation(ani)
-
-func _process(_delta: float) -> void:
-	animation.handle_animation()

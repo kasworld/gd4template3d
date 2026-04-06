@@ -173,6 +173,8 @@ func tetromino_demo(gc :GlassCabinet) -> Callable:
 		tetromino_list.append(tetromino)
 	var tetromino_iter := ListIter.new(tetromino_list)
 	return func(_delta :float) -> void:
+		for tt in tetromino_list:
+			tt.animation.handle_animation()
 		var tet :Tetromino = tetromino_iter.get_current_and_step_next()
 		if tet.animation.is_empty():
 			var n := randi_range(0,7)
