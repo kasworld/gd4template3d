@@ -109,7 +109,6 @@ func 결과가결정됨(_rl :RouletteWheel) -> void:
 func 회전중인가() -> bool:
 	return $Wheel.회전중인가
 
-
 func 장식돌리기() -> void:
 	bar_rot = -$"Wheel".rotation_per_second/10
 
@@ -123,10 +122,12 @@ func set_acceleration(accel :float=0.5) -> void:
 	$"Wheel".set_acceleration(accel)
 
 var bar_rot := 0.1
-func _process(_delta: float) -> void:
-	$"Wheel/BarTree2".rotate_tree_bar_y(bar_rot)
-	$"Wheel/BarTree1".rotate_tree_bar_y(bar_rot)
-
+func _process(delta: float) -> void:
+	$Wheel.process_animation(delta)
+	if $"Wheel/BarTree2".visible:
+		$"Wheel/BarTree2".rotate_tree_bar_y(bar_rot)
+	if $"Wheel/BarTree1".visible:
+		$"Wheel/BarTree1".rotate_tree_bar_y(bar_rot)
 
 func 선택된cell강조상태켜기() -> void:
 	var 선택칸 := 선택된cell얻기()

@@ -24,7 +24,7 @@ func init(r :float, d: float, color_text_info_list :Array) -> RouletteWheel:
 		cell_list.append(k)
 	return self
 
-func _process(delta: float) -> void:
+func process_animation(delta: float) -> void:
 	if 회전중인가:
 		돌리기(delta)
 
