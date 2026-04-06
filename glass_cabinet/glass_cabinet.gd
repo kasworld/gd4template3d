@@ -34,6 +34,12 @@ func init(cabinet_size_a :Vector3) -> GlassCabinet:
 	add_spot_lights()
 	return self
 
+var animate_func_list :Array[Callable] = []
+func process_animation(delta :float) -> void:
+	for fn in animate_func_list:
+		fn.call(delta)
+
+
 func add_spot_lights() -> GlassCabinet:
 	var points := PlatonicSolids.MultiplyPointList(PlatonicSolids.CubePoints, cabinet_size/2 )
 	for pos in points:

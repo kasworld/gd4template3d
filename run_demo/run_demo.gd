@@ -56,7 +56,6 @@ var glass_cabinet_iter :ListIter # [ GlassCabinet, light iter data]
 var used_glass_cabinet_iter :ListIter
 var empty_glass_cabinet_iter :ListIter
 
-var animate_func_list :Array[Callable] = []
 func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> void:
 	var gc_ani_list := []
 	for gc in cabinet_list:
@@ -67,7 +66,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		var gc :GlassCabinet = glass_cabinet_iter.get_current_and_step_next()[0]
 		var ani_fn :Callable = demo.call(gc)
 		if not ani_fn.is_null():
-			animate_func_list.append(ani_fn)
+			gc.animate_func_list.append(ani_fn)
 		gc.set_title_text(text)
 		add_camera_dict.call(gc.get_camera_light(), text)
 
@@ -130,8 +129,10 @@ func animate_used_glass_cabinet_light() -> void:
 func _process(delta: float) -> void:
 	animate_empty_glass_cabinet_light()
 	#animate_used_glass_cabinet_light()
-	for fn in animate_func_list:
-		fn.call(delta)
+	#for fn in animate_func_list:
+		#fn.call(delta)
+	for gc in glass_cabinet_iter.get_data_array():
+		gc[0].process_animation(delta)
 
 func seven_segment_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
