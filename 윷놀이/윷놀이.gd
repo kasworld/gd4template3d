@@ -18,7 +18,7 @@ static var 자동진행 :bool = true
 static var 눈번호보기 :bool = true
 static var 말빠르기 :float = 0.1
 
-var 말이동길_animation := SimpleAnimation.new()
+var animation := SimpleAnimation.new()
 
 var cabinet_size :Vector3
 var yutset := YutSet.new()
@@ -45,7 +45,7 @@ func init(sz :Vector3) -> 윷놀이:
 	$"말판/난말통".position = Vector3(판반지름/3,판반지름/3, -depth/2)
 	$"말판/이동용말통".init(판반지름*0.03, depth, Color.BLACK )
 
-	말이동길_animation.animation_ended.connect(말이동길_animation_ended)
+	#animation.animation_ended.connect(animation_ended)
 	init_wheel()
 	return self
 
@@ -117,21 +117,21 @@ func 윷던지기() -> void:
 	var co := 편들[이번윷던질편번호].인자.색
 	$Roulette.set_all_text_color(co)
 	$Roulette.start_rotation(2*PI)
-	말이동길_animation.force_end(false)
+	animation.force_end(false)
 	var ani_sec := 0.5
 	for i in 편들.size():
 		var t := 편들[i]
 		if i == 이번윷던질편번호:
-			말이동길_animation.start_move("move", t.길, t.길.position, calc_way_show_pos(), ani_sec )
+			animation.start_move("move", t.길, t.길.position, calc_way_show_pos(), ani_sec )
 		else:
-			말이동길_animation.start_move("move", t.길, t.길.position, calc_way_pos(i), ani_sec )
+			animation.start_move("move", t.길, t.길.position, calc_way_pos(i), ani_sec )
 
 func _process(_delta: float) -> void:
-	말이동길_animation.handle_animation()
+	animation.handle_animation()
 	#$Roulette.선택된cell강조상태켜기()
 
-func 말이동길_animation_ended(_st :Node, _ani :Dictionary) -> void:
-	pass
+#func animation_ended(_st :Node, _ani :Dictionary) -> void:
+	#pass
 
 func calc_way_pos(i :int) -> Vector3:
 	var deg_start := 30.0
