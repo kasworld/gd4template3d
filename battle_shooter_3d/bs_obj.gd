@@ -50,16 +50,16 @@ static var MaskDict :Dictionary[Type,int] = {
 var type :Type
 var alive :bool
 var team_number :int
-var animation := SimpleAnimation.new()
 var velocity :Vector3
 var bounce_radius :float
+var animation : SimpleAnimation
 
 func _to_string() -> String:
 	var rtn := "team:%s type:%s alive:%s" % [team_number, Type.keys()[type], alive]
 	return rtn
 
-func init_ship(t_num :int) -> BSObj:
-	init0(Type.Ship,t_num)
+func init_ship(ani :SimpleAnimation, t_num :int) -> BSObj:
+	init0(ani, Type.Ship,t_num)
 	$MeshInstance3D.mesh = BoxMesh.new()
 	$MeshInstance3D.mesh.size = Vector3(CalcRefSize(type),CalcRefSize(type),CalcRefSize(type))
 	$CollisionShape3D.shape = SphereShape3D.new()
@@ -69,12 +69,12 @@ func init_ship(t_num :int) -> BSObj:
 	velocity = BattleShooter.RandVector3(CalcRefSpeed(type))
 	animation.start_scale("ship_spawn", $MeshInstance3D, Vector3(0.1,0.1,0.1), Vector3(1,1,1), AniDurSec)
 	for i in BattleShooter.ShieldCount:
-		new_shield()
+		new_shield(ani)
 	return self
 
-func new_shield() -> BSObj:
+func new_shield(ani :SimpleAnimation) -> BSObj:
 	var shield :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
-		).init_shield(self)
+		).init_shield(ani, self)
 	$ShieldContainer.add_child(shield)
 	#shield.spawn_ended.connect(shield_spawn_ended)
 	#shield.life_ended.connect(shield_life_ended)
@@ -89,8 +89,8 @@ func shield_explode_ended(me :BSObj) -> void:
 	me.queue_free()
 
 var shield_rotate_dir :float
-func init_shield(src_ship :BSObj) -> BSObj:
-	init0(Type.Shield,src_ship.team_number)
+func init_shield(ani :SimpleAnimation, src_ship :BSObj) -> BSObj:
+	init0(ani, Type.Shield,src_ship.team_number)
 	$MeshInstance3D.mesh = BoxMesh.new()
 	$MeshInstance3D.mesh.size = Vector3(CalcRefSize(type),CalcRefSize(type),CalcRefSize(type))
 	$CollisionShape3D.shape = SphereShape3D.new()
@@ -105,8 +105,8 @@ func init_shield(src_ship :BSObj) -> BSObj:
 func shield_src_ship_life_end(_src_ship :BSObj, _other :BSObj) -> void:
 	end_life(null)
 
-func init_bullet(t_num :int, velocity_a :Vector3) -> BSObj:
-	init0(Type.Bullet,t_num)
+func init_bullet(ani :SimpleAnimation, t_num :int, velocity_a :Vector3) -> BSObj:
+	init0(ani, Type.Bullet,t_num)
 	$MeshInstance3D.mesh = BoxMesh.new()
 	$MeshInstance3D.mesh.size = Vector3(CalcRefSize(type),CalcRefSize(type),CalcRefSize(type)*3)
 	$CollisionShape3D.shape = SphereShape3D.new()
@@ -118,8 +118,8 @@ func init_bullet(t_num :int, velocity_a :Vector3) -> BSObj:
 	return self
 
 var homming_dst :BSObj
-func init_homming(t_num :int, dstobj :BSObj) -> BSObj:
-	init0(Type.Homming,t_num)
+func init_homming(ani :SimpleAnimation, t_num :int, dstobj :BSObj) -> BSObj:
+	init0(ani, Type.Homming,t_num)
 	$MeshInstance3D.mesh = BoxMesh.new()
 	$MeshInstance3D.mesh.size = Vector3(CalcRefSize(type),CalcRefSize(type),CalcRefSize(type)/4)
 	$CollisionShape3D.shape = SphereShape3D.new()
@@ -135,14 +135,15 @@ func homming_dst_life_end(_dst_ship :BSObj, _other :BSObj) -> void:
 	homming_dst = null
 	end_life(null)
 
-func init0(t :Type, t_num :int) -> void:
+func init0(ani :SimpleAnimation, t :Type, t_num :int) -> void:
+	animation = ani
 	team_number = t_num
 	type = t
 
 func init1() -> void:
 	$MeshInstance3D.mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial()
 	$MeshInstance3D.mesh.material.albedo_color = BattleShooter.TeamList[team_number].color
-	animation.animation_ended.connect(animation_ended)
+	#animation.animation_ended.connect(animation_ended)
 
 ## end spawn animation
 func begin_life() -> void:
@@ -173,14 +174,14 @@ func end_life(other :BSObj) -> void:
 		Type.Homming:
 			animation.start_scale("homming_explode", $MeshInstance3D, Vector3(1,1,1), Vector3(0.1,0.1,0.1), AniDurSec)
 
-func animation_ended(_st :Node, ani :Dictionary) -> void:
-	match ani.Name:
-		"ship_spawn","shield_spawn","bullet_spawn","homming_spawn" :
-			begin_life.call_deferred()
-		"ship_explode","shield_explode","bullet_explode","homming_explode":
-			explode_ended.emit(self)
-		_ :
-			print_debug("unhandled end animation %s", ani )
+#func animation_ended(_st :Node, ani :Dictionary) -> void:
+	#match ani.Name:
+		#"ship_spawn","shield_spawn","bullet_spawn","homming_spawn" :
+			#begin_life.call_deferred()
+		#"ship_explode","shield_explode","bullet_explode","homming_explode":
+			#explode_ended.emit(self)
+		#_ :
+			#print_debug("unhandled end animation %s", ani )
 
 ## called from BattleShooter
 func ship_ai_act(delta: float, game :BattleShooter) -> void:
@@ -214,10 +215,7 @@ func ship_ai_act(delta: float, game :BattleShooter) -> void:
 		game.new_homming(self, dst)
 
 	if $ShieldContainer.get_child_count() < BattleShooter.ShieldCount and BattleShooterAI.do_add_shield(delta):
-		new_shield()
-
-func _process(_delta: float) -> void:
-	animation.handle_animation()
+		new_shield(animation)
 
 func _physics_process(delta: float) -> void:
 	if not alive:
@@ -253,7 +251,6 @@ func _physics_process(delta: float) -> void:
 	#$DirSprite.position = Vector2.RIGHT.rotated(velocity.angle())*20
 
 func _on_area_entered(area: Area3D) -> void:
-	assert(area is BSObj)
 	if area.team_number == team_number:
 		return
 	end_life.call_deferred(area as BSObj)

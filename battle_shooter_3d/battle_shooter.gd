@@ -75,17 +75,31 @@ func _process(delta: float) -> void:
 	build_octree()
 	for ship in $ShipContainer.get_children():
 		ship.ship_ai_act(delta, self)
+	animation.handle_animation()
 
 func get_ship_list()->Array:
 	return $ShipContainer.get_children()
 
+var animation := SimpleAnimation.new()
+
 func init(sz :Vector3) -> BattleShooter:
 	Boundary = AABB(-sz/2,sz)
 	TeamList = MakeTeamList(TeamCount, ShipPerTeam)
+	animation.animation_ended.connect(animation_ended)
 	for t_num in TeamList.size():
 		for i in ShipPerTeam:
 			new_ship(t_num)
 	return self
+
+func animation_ended(node :Node, ani :Dictionary) -> void:
+	var bsobj := node.get_parent() as BSObj
+	match ani.Name:
+		"ship_spawn","shield_spawn","bullet_spawn","homming_spawn" :
+			bsobj.begin_life.call_deferred()
+		"ship_explode","shield_explode","bullet_explode","homming_explode":
+			bsobj.explode_ended.emit(bsobj)
+		_ :
+			print_debug("unhandled end animation %s", ani )
 
 func new_ship(t_num :int) -> BSObj:
 	if TeamList[t_num].calc_tomake_ship() <= 0:
@@ -93,7 +107,7 @@ func new_ship(t_num :int) -> BSObj:
 		return
 	TeamList[t_num].inc_ship_count()
 	var ship :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
-		).init_ship(t_num)
+		).init_ship(animation, t_num)
 	$ShipContainer.add_child(ship)
 	#ship.spawn_ended.connect(spawn_ended)
 	#ship.life_ended.connect(life_ended)
@@ -103,7 +117,7 @@ func new_ship(t_num :int) -> BSObj:
 
 func new_bullet(src_ship :BSObj, velocity :Vector3) -> BSObj:
 	var bullet :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
-		).init_bullet(src_ship.team_number, velocity)
+		).init_bullet(animation, src_ship.team_number, velocity)
 	$BulletContainer.add_child(bullet)
 	#bullet.spawn_ended.connect(spawn_ended)
 	#bullet.life_ended.connect(life_ended)
@@ -114,7 +128,7 @@ func new_bullet(src_ship :BSObj, velocity :Vector3) -> BSObj:
 
 func new_homming(src_ship :BSObj, dstobj :BSObj) -> BSObj:
 	var homming :BSObj = preload("res://battle_shooter_3d/bs_obj.tscn").instantiate(
-		).init_homming(src_ship.team_number, dstobj)
+		).init_homming(animation, src_ship.team_number, dstobj)
 	$HommingContainer.add_child(homming)
 	#homming.spawn_ended.connect(spawn_ended)
 	#homming.life_ended.connect(life_ended)
