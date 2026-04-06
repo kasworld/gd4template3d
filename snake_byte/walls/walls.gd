@@ -104,7 +104,7 @@ func open_goalpos() -> void:
 		"pos2" : pos2,
 	}
 
-func _process(_delta: float) -> void:
+func process_animation(_delta: float) -> void:
 	if animate_inst.start_time != 0:
 		var rate :float = (Time.get_unix_time_from_system() - animate_inst.start_time) / animate_inst.ani_dur_sec
 		var pos :Vector3 = lerp(animate_inst.pos1, animate_inst.pos2, rate )

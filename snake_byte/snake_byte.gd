@@ -168,11 +168,16 @@ func process_frame() -> void:
 		gauge.set_visible_count(0)
 
 var last_time :float = Time.get_unix_time_from_system()
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	var now := Time.get_unix_time_from_system()
 	if now - last_time > FrameTime:
 		process_frame()
 		last_time = now
+	for nd in $AppleContainer.get_children():
+		nd.process_animation(delta)
+	for nd in $PlumContainer.get_children():
+		nd.process_animation(delta)
+	$Walls.process_animation(delta)
 
 func handle_stepover() -> void:
 	snake_step_after_eat = 0

@@ -34,7 +34,7 @@ func init(field_a :PlacedThings, astar_grid_a :AStarGrid2D, p2d :Vector2i, d :Di
 	position = get_pos3d()
 	return self
 
-func _process(delta: float) -> void:
+func process_animation(delta: float) -> void:
 	$"모양".rotate_z(delta*rotate_v)
 	$"이동모양".rotation = $"모양".rotation
 	var vt2 := pos2d - old_pos2d

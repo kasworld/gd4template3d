@@ -37,5 +37,5 @@ func delete() -> void:
 	var old = field.del_at(pos2d)
 	assert( old is SBApple, "not %s at %s %s" % [self, pos2d , old] )
 
-func _process(delta: float) -> void:
+func process_animation(delta: float) -> void:
 	$"모양".rotate_x(delta*rotate_v)
