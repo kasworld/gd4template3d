@@ -51,7 +51,7 @@ func init(n :int, symbol크기a :Vector2, color_text_info_lista :Array) -> SlotR
 	$Reel.rotation.x = symbol각도/2
 	return self
 
-func _process(delta: float) -> void:
+func process_animation(delta: float) -> void:
 	if 회전중인가:
 		돌리기(delta)
 

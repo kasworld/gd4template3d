@@ -48,6 +48,10 @@ func start_rotation() -> void:
 			rot = -rot
 		r.start_rotation(rot)
 
+func _process(delta: float) -> void:
+	for r in reel_list:
+		r.process_animation(delta)
+
 ## accel < 1.0
 func set_acceleration(accel :float=0.5) -> void:
 	for r in reel_list:
