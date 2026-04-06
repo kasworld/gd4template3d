@@ -722,12 +722,12 @@ func line2d_demo(gc :GlassCabinet) -> Callable:
 	var size_pixel := Vector2i(2048,2048)
 	var ml2d = preload("res://move_line_2d/move_line_2d.tscn").instantiate()
 	ml2d.init_with_random(300, 4, 1, size_pixel)
-	ml2d.start()
 	var svp := MakeSubViewport(ml2d, size_pixel)
 	var plane := MakePlaneSubViewport(svp, Vector2(gc.cabinet_size.x, gc.cabinet_size.y))
 	gc.add_child(svp)
 	gc.add_child(plane)
-	return Callable()
+	return func(delta:float):
+		ml2d.process_animation(delta)
 
 
 var orbitsphere_list :Array
