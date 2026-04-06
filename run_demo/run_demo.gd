@@ -52,18 +52,14 @@ class AnimateList:
 			start_rotate_animation()
 
 
-var glass_cabinet_iter :ListIter # [ GlassCabinet, light iter data]
+var glass_cabinet_iter :ListIter
 var used_glass_cabinet_iter :ListIter
 var empty_glass_cabinet_iter :ListIter
 
 func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> void:
-	var gc_ani_list := []
-	for gc in cabinet_list:
-		gc_ani_list.append([gc, AnimateGradient.new(),AnimateGradient.new()])
-	glass_cabinet_iter = ListIter.new(gc_ani_list, true)
-
+	glass_cabinet_iter = ListIter.new(cabinet_list, true)
 	var run_demo := func(demo :Callable, text :String) -> void:
-		var gc :GlassCabinet = glass_cabinet_iter.get_current_and_step_next()[0]
+		var gc :GlassCabinet = glass_cabinet_iter.get_current_and_step_next()
 		var ani_fn :Callable = demo.call(gc)
 		if not ani_fn.is_null():
 			gc.animate_func_list.append(ani_fn)
@@ -107,24 +103,14 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 func animate_empty_glass_cabinet_light() -> void:
 	if not empty_glass_cabinet_iter:
 		return
-	var lai :Array = empty_glass_cabinet_iter.get_current_and_step_next()
-	var gc :GlassCabinet = lai[0]
-	for i in lai.slice(1).size():
-		var flags :=  GlassCabinet.GroupFlags[ GlassCabinet.GroupFlags.keys()[i] ]
-		var ani_state :AnimateGradient = lai.slice(1)[i]
-		gc.set_light_color(ani_state.get_color(), flags)
-		ani_state.inc_rate(0.1)
+	var gc :GlassCabinet = empty_glass_cabinet_iter.get_current_and_step_next()
+	gc.animate_light()
 
 func animate_used_glass_cabinet_light() -> void:
 	if not used_glass_cabinet_iter:
 		return
-	var lai :Array = used_glass_cabinet_iter.get_current_and_step_next()
-	var gc :GlassCabinet = lai[0]
-	for i in lai.slice(1).size():
-		var flags :=  GlassCabinet.GroupFlags[ GlassCabinet.GroupFlags.keys()[i] ]
-		var ani_state :AnimateGradient = lai.slice(1)[i]
-		gc.set_light_color(ani_state.get_color(), flags)
-		ani_state.inc_rate(0.1)
+	var gc :GlassCabinet = used_glass_cabinet_iter.get_current_and_step_next()
+	gc.animate_light()
 
 func _process(delta: float) -> void:
 	animate_empty_glass_cabinet_light()
@@ -132,7 +118,7 @@ func _process(delta: float) -> void:
 	#for fn in animate_func_list:
 		#fn.call(delta)
 	for gc in glass_cabinet_iter.get_data_array():
-		gc[0].process_animation(delta)
+		gc.process_animation(delta)
 
 func seven_segment_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()

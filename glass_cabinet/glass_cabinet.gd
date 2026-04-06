@@ -39,6 +39,14 @@ func process_animation(delta :float) -> void:
 	for fn in animate_func_list:
 		fn.call(delta)
 
+## x+ , x-
+var ani_state := [AnimateGradient.new(), AnimateGradient.new()]
+func animate_light() -> void:
+	for i in ani_state.size():
+		var flags :=  GroupFlags[ GroupFlags.keys()[i] ]
+		set_light_color(ani_state[i].get_color(), flags)
+		ani_state[i].inc_rate(0.1)
+
 
 func add_spot_lights() -> GlassCabinet:
 	var points := PlatonicSolids.MultiplyPointList(PlatonicSolids.CubePoints, cabinet_size/2 )
