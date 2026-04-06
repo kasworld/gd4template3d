@@ -35,13 +35,17 @@ func init(cabinet_size_a :Vector3) -> GlassCabinet:
 	return self
 
 var animate_func_list :Array[Callable] = []
+func add_animate_func(fn :Callable) -> void:
+	animate_func_list.append(fn)
 func process_animation(delta :float) -> void:
 	for fn in animate_func_list:
 		fn.call(delta)
+func add_light_animation_to_animate_func_list() -> void:
+	animate_func_list.append(animate_light)
 
 ## x+ , x-
 var ani_state := [AnimateGradient.new(), AnimateGradient.new()]
-func animate_light() -> void:
+func animate_light(_delta) -> void:
 	for i in ani_state.size():
 		var flags :=  GroupFlags[ GroupFlags.keys()[i] ]
 		set_light_color(ani_state[i].get_color(), flags)

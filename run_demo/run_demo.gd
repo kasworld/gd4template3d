@@ -62,7 +62,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		var gc :GlassCabinet = glass_cabinet_iter.get_current_and_step_next()
 		var ani_fn :Callable = demo.call(gc)
 		if not ani_fn.is_null():
-			gc.animate_func_list.append(ani_fn)
+			gc.add_animate_func(ani_fn)
 		gc.set_title_text(text)
 		add_camera_dict.call(gc.get_camera_light(), text)
 
@@ -97,26 +97,12 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 
 	used_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_itered_slice())
 	empty_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_unitered_slice())
+	for gc in empty_glass_cabinet_iter.get_data_array():
+		gc.add_light_animation_to_animate_func_list()
 	print_debug("remain glass cabinet %d\ndemo count %s" % [
 		empty_glass_cabinet_iter.get_size(),used_glass_cabinet_iter.get_size() ])
 
-func animate_empty_glass_cabinet_light() -> void:
-	if not empty_glass_cabinet_iter:
-		return
-	var gc :GlassCabinet = empty_glass_cabinet_iter.get_current_and_step_next()
-	gc.animate_light()
-
-func animate_used_glass_cabinet_light() -> void:
-	if not used_glass_cabinet_iter:
-		return
-	var gc :GlassCabinet = used_glass_cabinet_iter.get_current_and_step_next()
-	gc.animate_light()
-
 func _process(delta: float) -> void:
-	animate_empty_glass_cabinet_light()
-	#animate_used_glass_cabinet_light()
-	#for fn in animate_func_list:
-		#fn.call(delta)
 	for gc in glass_cabinet_iter.get_data_array():
 		gc.process_animation(delta)
 
