@@ -43,13 +43,13 @@ func new_game(lv:int) -> void:
 		n.queue_free()
 	add_co3d()
 
-var move_ani := SimpleAnimation.new()
+var animation := SimpleAnimation.new()
 func fix_gridco3d_pos_all() -> void:
 	for x in co3d_grid.grid_size.x:
 		for y in co3d_grid.grid_size.y:
 			var co3d = co3d_grid.get_data(x,y)
 			if co3d != null:
-				move_ani.start_move("move", co3d, co3d.position, calc_grid.posi_to_lanepos(Vector3i(x,y,0)) , auto_play_step_dur_sec)
+				animation.start_move("move", co3d, co3d.position, calc_grid.posi_to_lanepos(Vector3i(x,y,0)) , auto_play_step_dur_sec)
 
 var auto_play :bool = true
 var auto_play_selected :CollisionObject3D
@@ -77,7 +77,7 @@ func _process(_delta: float) -> void:
 			auto_play_select_animate_tile()
 		else:
 			auto_play_selected_tile()
-	move_ani.handle_animation()
+	animation.handle_animation()
 
 func add_co3d() -> void:
 	co3d_grid = SamegameGrid.new( game_size.x , game_size.y )
