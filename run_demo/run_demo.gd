@@ -102,10 +102,6 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 	print_debug("remain glass cabinet %d\ndemo count %s" % [
 		empty_glass_cabinet_iter.get_size(),used_glass_cabinet_iter.get_size() ])
 
-func _process(delta: float) -> void:
-	for gc in glass_cabinet_iter.get_data_array():
-		gc.process_animation(delta)
-
 func seven_segment_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
 	gc.show_wall_box(false)

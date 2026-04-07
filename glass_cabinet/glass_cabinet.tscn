@@ -50,3 +50,5 @@ vertical_alignment = 0
 visible = false
 horizontal_alignment = 2
 vertical_alignment = 2
+
+[node name="VisibleOnScreenEnabler3D" type="VisibleOnScreenEnabler3D" parent="." unique_id=1399243933]

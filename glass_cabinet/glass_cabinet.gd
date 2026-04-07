@@ -18,6 +18,7 @@ func make_CalcGrid3D(grid :Vector3i) -> CalcGrid3D:
 
 func init(cabinet_size_a :Vector3) -> GlassCabinet:
 	cabinet_size = cabinet_size_a
+	$VisibleOnScreenEnabler3D.aabb = get_aabb()
 	$WallBox.mesh.size = cabinet_size
 	var camera_pos := Vector3(0, 0, $FixedCameraLight.calc_z_len_by_fov_size(cabinet_size) + cabinet_size.z)
 	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, camera_pos, cabinet_size.length()*2)
@@ -33,6 +34,9 @@ func init(cabinet_size_a :Vector3) -> GlassCabinet:
 	)
 	add_spot_lights()
 	return self
+
+func _process(delta: float) -> void:
+	process_animation(delta)
 
 var animate_func_list :Array[Callable] = []
 func add_animate_func(fn :Callable) -> void:
