@@ -44,12 +44,13 @@ func add_light_animation_to_animate_func_list() -> void:
 	animate_func_list.append(animate_light)
 
 ## x+ , x-
-var ani_state := [AnimateGradient.new(), AnimateGradient.new()]
-func animate_light(_delta) -> void:
-	for i in ani_state.size():
-		var flags :=  GroupFlags[ GroupFlags.keys()[i] ]
-		set_light_color(ani_state[i].get_color(), flags)
-		ani_state[i].inc_rate(0.1)
+var light_ani_state := [AnimateGradient.new(), AnimateGradient.new()]
+var light_ani_flag_list :Array[int] = [ GroupFlags.x_p , GroupFlags.x_n ]
+func animate_light(_delta=0) -> void:
+	for i in light_ani_state.size():
+		var flags := light_ani_flag_list[i]
+		set_light_color(light_ani_state[i].get_color(), flags)
+		light_ani_state[i].inc_rate(0.1)
 
 
 func add_spot_lights() -> GlassCabinet:
@@ -151,12 +152,12 @@ static func MakeGroupFlags(axis :int, axis_sign :int) -> int:
 	return rtn
 
 static var GroupFlags :Dictionary[String,int] = {
-		"x+" : MakeGroupFlags(Vector3.Axis.AXIS_X,+1),
-		"x-" : MakeGroupFlags(Vector3.Axis.AXIS_X,-1),
-		"y+" : MakeGroupFlags(Vector3.Axis.AXIS_Y,+1),
-		"y-" : MakeGroupFlags(Vector3.Axis.AXIS_Y,-1),
-		"z+" : MakeGroupFlags(Vector3.Axis.AXIS_Z,+1),
-		"z-" : MakeGroupFlags(Vector3.Axis.AXIS_Z,-1),
+		"x_p" : MakeGroupFlags(Vector3.Axis.AXIS_X,+1),
+		"x_n" : MakeGroupFlags(Vector3.Axis.AXIS_X,-1),
+		"y_p" : MakeGroupFlags(Vector3.Axis.AXIS_Y,+1),
+		"y_n" : MakeGroupFlags(Vector3.Axis.AXIS_Y,-1),
+		"z_p" : MakeGroupFlags(Vector3.Axis.AXIS_Z,+1),
+		"z_n" : MakeGroupFlags(Vector3.Axis.AXIS_Z,-1),
 	}
 
 static var BitFlagAllLight :int = BitFlag.MakeFilledFlags(PlatonicSolids.CubePoints.size())
