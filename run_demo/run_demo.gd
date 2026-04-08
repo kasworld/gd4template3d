@@ -88,7 +88,8 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		[yutgame_demo, "윷놀이"],
 		[battle_shooter_demo, "Battle Shooter"],
 		[tetromino_demo, "Tetromino"],
-		[seven_segment_demo, "seven segment 3d"],
+		[seven_segment_demo, "Seven Segment 3D"],
+		[color_tile_demo, "Color Tile"],
 	]
 	if not run1.is_empty():
 		run_all = [ run1 ]
@@ -630,6 +631,12 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	afterfn.call(7, prop)
 	return AnimateList.new().init_rotate(prop_list)
 
+func color_tile_demo(gc :GlassCabinet) -> Callable:
+	var tg_inst := preload("res://tile_grid/tile_grid.tscn").instantiate
+	var prop_size := Vector3(gc.cabinet_size.x, gc.cabinet_size.y, gc.cabinet_size.z/200)
+	var ct :TileGrid = tg_inst.call().init_tile_grid_with_box(prop_size, Vector2i(16,9)*4, 0.9, Color.WHITE)
+	gc.add_child(ct)
+	return Callable()
 
 func tile_grid_demo(gc :GlassCabinet) -> Callable:
 	var tile_grid_list :Array

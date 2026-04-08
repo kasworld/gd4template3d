@@ -102,10 +102,10 @@ func _ready() -> void:
 	add_child(rundemo)
 
 	var run1 := []
-	#run1 = [rundemo.clock_calendar_demo, "clock_calendar"]
+	run1 = [rundemo.color_tile_demo, "color tile"]
 	if not run1.is_empty() :
 		rundemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict, run1)
-		var gc :GlassCabinet = rundemo.used_glass_cabinet_iter.get_current()[0]
+		var gc :GlassCabinet = rundemo.used_glass_cabinet_iter.get_current()
 		focus_to_new_MovingCameraLight(gc.get_camera_light())
 	else:
 		rundemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict)

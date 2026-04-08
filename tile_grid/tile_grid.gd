@@ -43,6 +43,8 @@ func make_ani_tile_rotate_z(aniname :String, from :float, to :float, dur_sec :fl
 var calc_grid :CalcGrid3D
 var pos_list :Array
 
+# color functions
+
 func get_index_by_xy(x :int, y :int) -> int:
 	return calc_grid.get_index_by_posi_xyz(x,y)
 
