@@ -21,7 +21,7 @@ static func MakePlaneSubViewport(svp :SubViewport, mesh_size :Vector2) -> MeshIn
 	return sp
 
 static func AddRotateRandomAnimation(animation :SimpleAnimation, node3d :Node3D, anidur :float = 1.0) -> void:
-	var diff :float = [PI/2,-PI/2].pick_random()
+	var diff :float =  randf_range(PI/2,-PI/2) # [PI/2,-PI/2].pick_random()
 	var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
 	animation.start_rotation_subfield(
 		"ani_rot", node3d, axis , node3d.rotation[axis], node3d.rotation[axis] + diff, anidur)
@@ -639,14 +639,15 @@ func color_tile_demo(gc :GlassCabinet) -> Callable:
 		image.decompress()
 	var image_size := image.get_size()
 	var image_scale :float = min(gc.cabinet_size.x/image_size.x, gc.cabinet_size.y/image_size.y)
-	var prop_size := Vector3(image_size.x*image_scale, image_size.y*image_scale, gc.cabinet_size.z/200)
+	var prop_size := Vector3(image_size.x*image_scale, image_size.y*image_scale, gc.cabinet_size.z/100)
 	var ct :TileGrid = tg_inst.call().init_tile_grid_with_box(prop_size, image_size, 0.8, Color(Color.WHITE, 0.9))
 	ct.calc_grid.iter_ixyz(func(_index:int,xi:int,yi:int,_zi:int):
 		var co :Color = image.get_pixel(xi,yi)
 		ct.set_tile_color_at(xi,image_size.y-yi-1,co)
 		)
 	gc.add_child(ct)
-	return Callable()
+	return AnimateList.new().init_rotate([ct])
+	#return Callable()
 
 func tile_grid_demo(gc :GlassCabinet) -> Callable:
 	var tile_grid_list :Array
