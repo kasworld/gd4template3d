@@ -632,9 +632,19 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	return AnimateList.new().init_rotate(prop_list)
 
 func color_tile_demo(gc :GlassCabinet) -> Callable:
+	gc.show_wall_box(false)
 	var tg_inst := preload("res://tile_grid/tile_grid.tscn").instantiate
-	var prop_size := Vector3(gc.cabinet_size.x, gc.cabinet_size.y, gc.cabinet_size.z/200)
-	var ct :TileGrid = tg_inst.call().init_tile_grid_with_box(prop_size, Vector2i(16,9)*4, 0.9, Color.WHITE)
+	var image := preload("res://image/me.png").get_image()
+	if image.is_compressed():
+		image.decompress()
+	var image_size := image.get_size()
+	var image_scale :float = min(gc.cabinet_size.x/image_size.x, gc.cabinet_size.y/image_size.y)
+	var prop_size := Vector3(image_size.x*image_scale, image_size.y*image_scale, gc.cabinet_size.z/200)
+	var ct :TileGrid = tg_inst.call().init_tile_grid_with_box(prop_size, image_size, 0.8, Color(Color.WHITE, 0.9))
+	ct.calc_grid.iter_ixyz(func(_index:int,xi:int,yi:int,_zi:int):
+		var co :Color = image.get_pixel(xi,yi)
+		ct.set_tile_color_at(xi,image_size.y-yi-1,co)
+		)
 	gc.add_child(ct)
 	return Callable()
 
