@@ -1,5 +1,4 @@
 extends Node3D
-const WorldSize := Vector3(160,90,80)
 
 func on_viewport_size_changed() -> void:
 	var vp_size := get_viewport().get_visible_rect().size
@@ -67,12 +66,14 @@ func _on_카메라변경_pressed() -> void:
 	if info != null :
 		$"왼쪽패널/SelectCamera".select(info[1])
 
+const CabinetSize := Vector3(160,90,80)
+
 func _process(_delta: float) -> void:
 	var now := Time.get_unix_time_from_system()
 	if $MovingCameraLightHober.is_current_camera():
-		$MovingCameraLightHober.move_hober_around_z(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
+		$MovingCameraLightHober.move_hober_around_z(now/2.3, Vector3.ZERO, CabinetSize.length()/2, CabinetSize.length()/4 )
 	elif $MovingCameraLightAround.is_current_camera():
-		$MovingCameraLightAround.move_wave_around_y(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
+		$MovingCameraLightAround.move_wave_around_y(now/2.3, Vector3.ZERO, CabinetSize.length()/2, CabinetSize.length()/4 )
 	update_label()
 
 func _ready() -> void:
@@ -80,18 +81,18 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(on_viewport_size_changed)
 	$TimedMessage.panel_hidden.connect(timed_message_hidden)
 	$TimedMessage.show_message("",0)
-	$CenterCameraLight.set_center_pos_far( Vector3(0, 0, -WorldSize.z), Vector3.ZERO, WorldSize.length()*3)
-	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
-	$MovingCameraLightHober.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
-	$MovingCameraLightAround.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
-	$AxisArrow3D.set_colors().set_size(WorldSize.length()/20)
+	$CenterCameraLight.set_center_pos_far( Vector3(0, 0, -CabinetSize.z), Vector3.ZERO, CabinetSize.length()*3)
+	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, CabinetSize.z),  CabinetSize.length()*3)
+	$MovingCameraLightHober.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, CabinetSize.z),  CabinetSize.length()*3)
+	$MovingCameraLightAround.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, CabinetSize.z),  CabinetSize.length()*3)
+	$AxisArrow3D.set_colors().set_size(CabinetSize.length()/20)
 
 	add_camera_dict($CenterCameraLight, "Center")
 	add_camera_dict($FixedCameraLight, "Fixed")
 	add_camera_dict($MovingCameraLightHober, "Hober")
 	add_camera_dict($MovingCameraLightAround, "Around")
 
-	$CabinetDemo.init(WorldSize, 3)
+	$CabinetDemo.init(CabinetSize, 3)
 
 	var rundemo :RunDemo = preload("res://run_demo/run_demo.tscn").instantiate()
 	add_child(rundemo)
