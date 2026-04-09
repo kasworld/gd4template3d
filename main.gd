@@ -17,7 +17,7 @@ func on_viewport_size_changed() -> void:
 func timed_message_hidden(_s :String) -> void:
 	pass
 
-func label_demo() -> void:
+func update_label() -> void:
 	if $"오른쪽패널/LabelPerformance".visible:
 		$"오른쪽패널/LabelPerformance".text = """%d FPS (%.2f mspf)
 Currently rendering: occlusion culling:%s
@@ -67,24 +67,19 @@ func _on_카메라변경_pressed() -> void:
 	if info != null :
 		$"왼쪽패널/SelectCamera".select(info[1])
 
-var animate_func :Callable
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	var now := Time.get_unix_time_from_system()
 	if $MovingCameraLightHober.is_current_camera():
 		$MovingCameraLightHober.move_hober_around_z(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
 	elif $MovingCameraLightAround.is_current_camera():
 		$MovingCameraLightAround.move_wave_around_y(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
-
-	label_demo()
-	if not animate_func.is_null():
-		animate_func.call(delta)
+	update_label()
 
 func _ready() -> void:
 	on_viewport_size_changed()
 	get_viewport().size_changed.connect(on_viewport_size_changed)
 	$TimedMessage.panel_hidden.connect(timed_message_hidden)
 	$TimedMessage.show_message("",0)
-	$OmniLight3D.omni_range = WorldSize.length()*3
 	$CenterCameraLight.set_center_pos_far( Vector3(0, 0, -WorldSize.z), Vector3.ZERO, WorldSize.length()*3)
 	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
 	$MovingCameraLightHober.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
@@ -96,7 +91,7 @@ func _ready() -> void:
 	add_camera_dict($MovingCameraLightHober, "Hober")
 	add_camera_dict($MovingCameraLightAround, "Around")
 
-	$CabinetDemo.init(WorldSize, 2)
+	$CabinetDemo.init(WorldSize, 3)
 
 	var rundemo :RunDemo = preload("res://run_demo/run_demo.tscn").instantiate()
 	add_child(rundemo)

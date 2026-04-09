@@ -95,24 +95,6 @@ autowrap_mode = 3
 self_modulate = Color(1, 1, 1, 0.498039)
 theme = SubResource("Theme_272bh")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=955085543]
-visible = false
-shadow_opacity = 0.5
-omni_attenuation = 0.0
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1362809251]
-transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 0, 0)
-visible = false
-shadow_enabled = true
-directional_shadow_max_distance = 1000.0
-sky_mode = 1
-
-[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="." unique_id=308330320]
-transform = Transform3D(0.707107, -0.5, -0.5, 0, 0.707107, -0.707107, 0.707107, 0.5, 0.5, 0, 0, 0)
-visible = false
-shadow_enabled = true
-sky_mode = 1
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1464726638]
 environment = SubResource("Environment_7mycd")
 
