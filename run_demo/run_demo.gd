@@ -646,11 +646,20 @@ func props_demo(gc :GlassCabinet) -> Callable:
 
 func color_tile_demo(gc :GlassCabinet) -> Callable:
 	gc.show_wall_box(false)
-	var tg_size := gc.cabinet_size
+	var tile_grid_list :Array
+	var grid_gc := gc.make_CalcGrid3D( Vector3i(4,2,1))
+	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
+		node3d.position = grid_gc.get_n_th_lanepos(n)
+		gc.add_child(node3d)
+		tile_grid_list.append(node3d)
+		return node3d
+
+	var tg_size := grid_gc.unit_size
 	tg_size.z /= 50
-	var ct :TileGrid = init_tile_grid_by_texture2d_z(tg_size, preload("res://image/me.png"), 0.9)
-	gc.add_child(ct)
-	return AnimateList.new().init_rotate([ct])
+	afterfn.call(0, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/red2blue.png"), 0.9) )
+	afterfn.call(3, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/me.png"), 0.9) )
+
+	return AnimateList.new().init_rotate(tile_grid_list)
 
 func init_tile_grid_by_texture2d_z(tg_size :Vector3, texture2d :Texture2D, pixel_rate :float = 0.8) -> TileGrid:
 	var image := texture2d.get_image()
@@ -665,7 +674,7 @@ func init_tile_grid_by_texture2d_z(tg_size :Vector3, texture2d :Texture2D, pixel
 		var co :Color = image.get_pixel(xi,yi)
 		tg.set_tile_color_at(xi,image_size.y-yi-1,co)
 		var t :Transform3D = tg.multimesh.get_instance_transform(index)
-		t.origin.z = co.get_luminance() * tg_size.z
+		t.origin.z = co.r * tg_size.z
 		tg.multimesh.set_instance_transform(index, t)
 		)
 	return tg
