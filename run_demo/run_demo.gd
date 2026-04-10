@@ -27,7 +27,7 @@ static func AddRotateRandomAnimation(animation :SimpleAnimation, node3d :Node3D,
 	animation.start_rotation_subfield(
 		"ani_rot", node3d, axis , node3d.rotation[axis], node3d.rotation[axis] + diff, ani_dur)
 
-static func WaveTileGrid(tg :TileGrid, now :float) -> void:
+static func WaveColorTileGrid(tg :TileGrid, now :float) -> void:
 	var cg := tg.calc_grid
 	cg.iter_ixyz(func(index:int,xi:int,yi:int,_zi:int):
 		var xrate :float= cg.rate_xi(xi)
@@ -670,8 +670,8 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 	for i in prop.calc_grid.get_grid_count():
 		prop.set_inst_rotate(i, Vector3.UP, PI/8)
 	prop = afterfn.call(5, tg_inst.call().init_tile_grid_with_cylinder(
-		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/50),
-		Vector2i(12,16), 0.8, 6, Color.WHITE))
+		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/20),
+		Vector2i(16,16), 0.8, 6, Color.WHITE))
 	prop.calc_grid.iter_ixyz(func(index:int,xi:int,yi:int,zi:int):
 		var pos :Vector3 = prop.calc_grid.posi_to_lanepos(Vector3i(xi,yi,zi))
 		if yi % 2 == 1:
@@ -688,7 +688,7 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 		animation.handle_animation()
 		var now := Time.get_unix_time_from_system()
 		for ps in tile_grid_list:
-			WaveTileGrid(ps, now)
+			WaveColorTileGrid(ps, now)
 
 
 func line2d_demo(gc :GlassCabinet) -> Callable:
