@@ -20,36 +20,45 @@ static func MakePlaneSubViewport(svp :SubViewport, mesh_size :Vector2) -> MeshIn
 	sp.material_override.albedo_texture = svp.get_texture()
 	return sp
 
-static func AddRotateRandomAnimation(animation :SimpleAnimation, node3d :Node3D, anidur :float = 1.0) -> void:
-	var diff :float =  randf_range(PI/2,-PI/2) # [PI/2,-PI/2].pick_random()
+static func AddRotateRandomAnimation(animation :SimpleAnimation, node3d :Node3D, rotate_range :float = PI) -> void:
+	var diff :float =  randf_range(-rotate_range, rotate_range)
+	var ani_dur := absf(diff)
 	var axis :int = [Vector3.Axis.AXIS_X, Vector3.Axis.AXIS_Y, Vector3.Axis.AXIS_Z].pick_random()
 	animation.start_rotation_subfield(
-		"ani_rot", node3d, axis , node3d.rotation[axis], node3d.rotation[axis] + diff, anidur)
+		"ani_rot", node3d, axis , node3d.rotation[axis], node3d.rotation[axis] + diff, ani_dur)
+
+static func WaveTileGrid(tg :TileGrid, now :float) -> void:
+	var cg := tg.calc_grid
+	cg.iter_ixyz(func(index:int,xi:int,yi:int,_zi:int):
+		var xrate :float= cg.rate_xi(xi)
+		var yrate :float= cg.rate_yi(yi)
+		# make 0.0 ~ 1.0
+		var zrate :=  (sin( xrate*2*PI +now*PI ) + cos( yrate*2*PI +now*PI) + sqrt(2) ) / (2*sqrt(2))
+		var t :Transform3D = tg.multimesh.get_instance_transform(index)
+		t.origin.z = (zrate - 0.5) * cg.unit_size.x * 2
+		tg.multimesh.set_instance_transform(index, t)
+		var co := Color(xrate,yrate, zrate)
+		tg.multimesh.set_instance_color(index,co)
+		)
 
 
 class AnimateList:
 	var animation :SimpleAnimation
 	func _init() -> void:
 		animation = SimpleAnimation.new()
-	var obj_list :Array
-	func set_list(olist :Array) -> AnimateList:
-		obj_list = olist
+	var node3d_list :Array
+	func set_list(nlist :Array) -> AnimateList:
+		node3d_list = nlist
 		return self
 
-	func init_rotate(olist :Array) -> Callable:
+	func init_rotate(olist :Array, rotate_range :float = PI) -> Callable:
 		set_list(olist)
-		animation.animation_ended.connect(restart_on_end_rotate)
-		start_rotate_animation()
+		animation.animation_ended.connect(func(node :Node3D, _ani :Dictionary) -> void:
+			RunDemo.AddRotateRandomAnimation(animation, node, rotate_range))
+		for node in node3d_list:
+			RunDemo.AddRotateRandomAnimation(animation, node, rotate_range)
 		return func(_delta:float):
 			animation.handle_animation()
-
-	func start_rotate_animation() -> void:
-		for ps in obj_list:
-			RunDemo.AddRotateRandomAnimation(animation, ps, 1.0)
-
-	func restart_on_end_rotate(_node :Node3D, _ani :Dictionary) -> void:
-		if animation.is_empty():
-			start_rotate_animation()
 
 
 var glass_cabinet_iter :ListIter
@@ -668,32 +677,15 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 		)
 
 	var animation := SimpleAnimation.new()
-	var start_animation = func() -> void:
-		for ps in tile_grid_list:
-			AddRotateRandomAnimation(animation, ps, 1.0)
-			#animation.add_animation( ps.make_ani_tile_rotate("", randi_range(0,2),  0.0, PI, 1.0))
-			#ps.set_all_tile_color_8way(NamedColors.color_list, randi_range(0,7))
-
-	animation.animation_ended.connect(
-		func(_node :Node3D, _ani :Dictionary) -> void:
-			if animation.is_empty():
-				start_animation.call())
-	start_animation.call()
+	animation.animation_ended.connect(func(node :Node3D, _ani :Dictionary) -> void:
+			AddRotateRandomAnimation(animation, node))
+	for node in tile_grid_list:
+		AddRotateRandomAnimation(animation, node)
 	return func(_delta:float):
 		animation.handle_animation()
 		var now := Time.get_unix_time_from_system()
 		for ps in tile_grid_list:
-			ps.calc_grid.iter_ixyz(func(index:int,xi:int,yi:int,_zi:int):
-				var xrate :float= ps.calc_grid.rate_xi(xi)
-				var yrate :float= ps.calc_grid.rate_yi(yi)
-				# make 0.0 ~ 1.0
-				var zrate :=  (sin( xrate*2*PI +now*PI ) + cos( yrate*2*PI +now*PI) + sqrt(2) ) / (2*sqrt(2))
-				var t :Transform3D = ps.multimesh.get_instance_transform(index)
-				t.origin.z = (zrate - 0.5) * ps.calc_grid.unit_size.x * 2
-				ps.multimesh.set_instance_transform(index, t)
-				var co := Color(xrate,yrate, zrate)
-				ps.multimesh.set_instance_color(index,co)
-				)
+			WaveTileGrid(ps, now)
 
 
 func line2d_demo(gc :GlassCabinet) -> Callable:

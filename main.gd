@@ -92,7 +92,7 @@ func _ready() -> void:
 	add_camera_dict($MovingCameraLightHober, "Hober")
 	add_camera_dict($MovingCameraLightAround, "Around")
 
-	$CabinetDemo.init(CabinetSize, 3)
+	$CabinetDemo.init(CabinetSize, 2)
 
 	var rundemo :RunDemo = preload("res://run_demo/run_demo.tscn").instantiate()
 	add_child(rundemo)
