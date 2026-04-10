@@ -153,8 +153,9 @@ func init_tile_grid_with_box(total_size :Vector3, grid_count :Vector2i, gap_rate
 func init_tile_grid_with_cylinder(total_size :Vector3, grid_count :Vector2i, gap_rate :float, radial_segments :int, co :Color) -> TileGrid:
 	var calc_grid_a := MakeCalcGrid(total_size,grid_count)
 	var mesh := CylinderMesh.new()
-	mesh.top_radius = calc_grid_a.unit_size.length() / 2 * gap_rate
-	mesh.bottom_radius = calc_grid_a.unit_size.length() / 2 * gap_rate
+	var v2 := Vector2(calc_grid_a.unit_size.x, calc_grid_a.unit_size.y)
+	mesh.top_radius = v2.length() / 2 * gap_rate
+	mesh.bottom_radius = v2.length() / 2 * gap_rate
 	mesh.height = calc_grid_a.unit_size.z
 	mesh.radial_segments = radial_segments
 	mesh.material = MakeMultiMeshColorMaterial(co.a)
