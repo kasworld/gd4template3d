@@ -27,17 +27,20 @@ static func AddRotateRandomAnimation(animation :SimpleAnimation, node3d :Node3D,
 	animation.start_rotation_subfield(
 		"ani_rot", node3d, axis , node3d.rotation[axis], node3d.rotation[axis] + diff, ani_dur)
 
-static func WaveColorTileGrid(tg :TileGrid, now :float) -> void:
+## z offset : -zrange ~ zrange
+static func WaveColorTileGrid(tg :TileGrid, now :float, zrange :float) -> void:
 	var cg := tg.calc_grid
+	const PI2 = 2*PI
+	const sqrt2 := sqrt(2)
 	cg.iter_ixyz(func(index:int,xi:int,yi:int,_zi:int):
 		var xrate :float= cg.rate_xi(xi)
 		var yrate :float= cg.rate_yi(yi)
-		# make 0.0 ~ 1.0
-		var zrate :=  (sin( xrate*2*PI +now*PI ) + cos( yrate*2*PI +now*PI) + sqrt(2) ) / (2*sqrt(2))
+		# make -1.0 ~ 1.0
+		var zrate :=  ( sin( xrate*PI2 +now ) + cos( yrate*PI2 +now) ) / sqrt2
 		var t :Transform3D = tg.multimesh.get_instance_transform(index)
-		t.origin.z = (zrate - 0.5) * cg.unit_size.x * 2
+		t.origin.z = zrate * zrange
 		tg.multimesh.set_instance_transform(index, t)
-		var co := Color(xrate,yrate, zrate)
+		var co := Color(xrate,yrate, absf(zrate) )
 		tg.multimesh.set_instance_color(index,co)
 		)
 
@@ -688,7 +691,7 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 		animation.handle_animation()
 		var now := Time.get_unix_time_from_system()
 		for ps in tile_grid_list:
-			WaveColorTileGrid(ps, now)
+			WaveColorTileGrid(ps, now, ps.calc_grid.unit_size.length()/3 )
 
 
 func line2d_demo(gc :GlassCabinet) -> Callable:
