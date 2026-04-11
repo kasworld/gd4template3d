@@ -95,4 +95,4 @@ func get_daystringlist() -> Array[String]:
 func calc_day_diff(from :String, to :String) -> int:
 	var from_tick := Time.get_unix_time_from_datetime_string(from)
 	var to_tick := Time.get_unix_time_from_datetime_string(to)
-	return (to_tick-from_tick)/(24*60*60)
+	return (to_tick-from_tick)/(24.0*60*60) as int
