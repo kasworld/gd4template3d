@@ -804,7 +804,7 @@ func clock_calendar_demo(gc :GlassCabinet) -> Callable:
 	animation.animation_ended.connect(animation_ended)
 	start_animation.call()
 	return func(_delta:float):
-		clock.update_clock(Time.get_unix_time_from_system(), 9.0)
+		clock.update_clock(AnalogClock3D.get_localtime_from_system())
 		animation.handle_animation()
 
 
