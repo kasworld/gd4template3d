@@ -65,7 +65,7 @@ func add_dial_num(r :float, d:float, fsize :float, step_count :int, co :Color ) 
 		$NumberContainer.add_child(t)
 	return self
 
-enum BarAlign {None, In,Mid,Out}
+enum BarAlign {In,Mid,Out}
 func add_dial_bar(r :float, bar_size :Vector3, align :BarAlign, step_count :int, co :Color) -> DialGauge:
 	var bar_position := Vector3.ZERO
 	var tf_list := []
@@ -88,7 +88,7 @@ func add_dial_bar(r :float, bar_size :Vector3, align :BarAlign, step_count :int,
 	var mesh := BoxMesh.new()
 	mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial()
 	var sm :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_with_color_mesh(mesh, tf_list.size(), 1.0)
+		).init_with_color_mesh(mesh, tf_list.size(), false)
 	for i in tf_list.size():
 		sm.multimesh.set_instance_transform(i,tf_list[i])
 	sm.set_color_all(co)
