@@ -11,7 +11,7 @@ static var color_list := [
 var gauge_list :Array
 var box_size :Vector3
 var count :Vector3i
-func init(sz :Vector3, counta :Vector3i, co_list :Array = color_list, gaprate :float = 0.5, alpha :float = 0.5) -> WaveGauge:
+func init(sz :Vector3, counta :Vector3i, co_list :Array = color_list, gaprate :float = 0.5, transparent :bool = false) -> WaveGauge:
 	box_size = sz
 	count = counta
 	var block_size := sz/ Vector3(count)
@@ -24,7 +24,7 @@ func init(sz :Vector3, counta :Vector3i, co_list :Array = color_list, gaprate :f
 				count.y, Vector3( block_size.x * blockrate, box_size.y, block_size.z * blockrate ),
 				lerp( lerp(co_list[0], co_list[1], irate) , lerp(co_list[2], co_list[3], irate), jrate),
 				lerp( lerp(co_list[4], co_list[5], irate) , lerp(co_list[6], co_list[7], irate), jrate),
-				alpha,
+				transparent,
 				gaprate
 				)
 			bg.position = -box_size/2 + Vector3( block_size.x * i + block_size.x/2 , block_size.y/2 , block_size.z * j + block_size.z/2)

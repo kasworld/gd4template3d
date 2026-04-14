@@ -492,8 +492,9 @@ func _on_timer_reel_timeout() -> void:
 
 var wavegauge_box :WaveGauge
 func wavegauge_box_demo(gc :GlassCabinet) -> Callable:
-	wavegauge_box = preload("res://wave_gauge/wave_gauge.tscn").instantiate(
-		).init(Vector3(gc.cabinet_size.x-1,gc.cabinet_size.y-1,gc.cabinet_size.z-1), Vector3i(32,32,32), WaveGauge.color_list, 0.1, 1.0 )
+	wavegauge_box = preload("res://wave_gauge/wave_gauge.tscn").instantiate().init(
+			Vector3(gc.cabinet_size.x,gc.cabinet_size.y,gc.cabinet_size.z/4),
+			Vector3i(32,32,8), WaveGauge.color_list, 0.1, false )
 	gc.add_child(wavegauge_box)
 	return func(_delta :float) -> void:
 		wavegauge_box.animate_wave(Time.get_unix_time_from_system())
