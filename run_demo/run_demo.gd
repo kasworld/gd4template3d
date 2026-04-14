@@ -535,8 +535,8 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 		).init_params(maze2d, cell_size, WallThick, MakeSubWallRate
 		).init_with_color(NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color()
 		).init_floor_ceiling(grid_size*4, cell_size.x*0.01, 0.9,
-		Color(NamedColors.random_color(), 0.9),
-		Color(NamedColors.random_color(), 0.9),
+		Color(NamedColors.random_color(), 0.5),
+		Color(NamedColors.random_color(), 0.5),
 		)
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Both)
@@ -657,8 +657,10 @@ func color_tile_demo(gc :GlassCabinet) -> Callable:
 	var tg_size := grid_gc.unit_size
 	tg_size.z /= 50
 	afterfn.call(0, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/red2blue.png"), 0.9) )
+	afterfn.call(1, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/mario1.png"), 0.9) )
+	afterfn.call(2, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/mario2.png"), 0.9) )
 	afterfn.call(3, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/me.png"), 0.9) )
-
+	#return Callable()
 	return AnimateList.new().init_rotate(tile_grid_list)
 
 func init_tile_grid_by_texture2d_z(tg_size :Vector3, texture2d :Texture2D, pixel_rate :float = 0.8) -> TileGrid:
@@ -669,7 +671,7 @@ func init_tile_grid_by_texture2d_z(tg_size :Vector3, texture2d :Texture2D, pixel
 	var image_scale :float = min(tg_size.x/image_size.x, tg_size.y/image_size.y)
 	var prop_size := Vector3(image_size.x*image_scale, image_size.y*image_scale, tg_size.z)
 	var tg :TileGrid = preload("res://tile_grid/tile_grid.tscn").instantiate(
-		).init_tile_grid_with_box(prop_size, image_size, pixel_rate, Color(Color.WHITE, 0.9))
+		).init_tile_grid_with_box(prop_size, image_size, pixel_rate, Color.WHITE, true)
 	tg.calc_grid.iter_ixyz(func(index:int,xi:int,yi:int,_zi:int):
 		var co :Color = image.get_pixel(xi,yi)
 		tg.set_tile_color_at(xi,image_size.y-yi-1,co)

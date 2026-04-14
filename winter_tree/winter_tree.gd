@@ -30,7 +30,7 @@ func init(h :float, w :float, y_count :int, w_branch_density :float = PI, line_w
 		var r :float= calc_radius_by_y(y, h, w, stage_count)
 		branch_list.append_array(make_lines(y, y_step, int(r * w_branch_density), 10.0*rate, r))
 	var bmesh := PrismMesh.new()
-	bmesh.material = MultiMeshShape.MakeMultiMeshColorMaterial(1.0)
+	bmesh.material = MultiMeshShape.MakeMultiMeshColorMaterial(false)
 	bmesh.size = Vector3(1,0.3,1)
 	$가지들.multi_mesh_line_by_pos(bmesh, branch_list, line_width, Color.WHITE)
 
@@ -39,7 +39,7 @@ func init(h :float, w :float, y_count :int, w_branch_density :float = PI, line_w
 		var l = branch_list.pick_random()
 		pos_list.append(l[1])
 	var sp_mesh := SphereMesh.new()
-	sp_mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial(1.0)
+	sp_mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial(false)
 	sp_mesh.material.metallic = 1.0
 	sp_mesh.material.clearcoat_enabled = true
 	sp_mesh.material.refraction_enabled = true
