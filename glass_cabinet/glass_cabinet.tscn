@@ -25,6 +25,7 @@ resource_local_to_scene = true
 script = ExtResource("1_2v0m0")
 
 [node name="WallBox" type="MeshInstance3D" parent="." unique_id=1488685636]
+visible = false
 mesh = SubResource("BoxMesh_nkhty")
 
 [node name="FixedCameraLight" parent="." unique_id=1132206210 instance=ExtResource("2_71gvw")]

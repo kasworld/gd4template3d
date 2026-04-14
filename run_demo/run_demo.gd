@@ -112,12 +112,12 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 	empty_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_unitered_slice())
 	for gc in empty_glass_cabinet_iter.get_data_array():
 		gc.add_light_animation_to_animate_func_list()
+		gc.show_wall_box(true)
 	print_debug("remain glass cabinet %d\ndemo count %s" % [
 		empty_glass_cabinet_iter.get_size(),used_glass_cabinet_iter.get_size() ])
 
 func seven_segment_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
-	gc.show_wall_box(false)
 	var grid_size := Vector2i(5,2)
 	var calc_grid := CalcGrid3D.new(gc.get_aabb(),CalcGrid3D.xy_Vector2iToVector3i(grid_size,1))
 	var seven_segment_list :Array = []
@@ -143,7 +143,6 @@ func seven_segment_demo(gc :GlassCabinet) -> Callable:
 
 func tetromino_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
-	gc.show_wall_box(false)
 	var grid_size := Vector2i(32,18)
 	var calc_grid := CalcGrid3D.new(gc.get_aabb(),CalcGrid3D.xy_Vector2iToVector3i(grid_size,1))
 	var tetromino_list :Array = []
@@ -187,7 +186,6 @@ func battle_shooter_demo(gc :GlassCabinet) -> Callable:
 
 var yutgame :윷놀이
 func yutgame_demo(gc :GlassCabinet) -> Callable:
-	gc.show_wall_box(false)
 	yutgame = preload("res://윷놀이/윷놀이.tscn").instantiate().init(gc.cabinet_size)
 	gc.add_child(yutgame)
 	yutgame.game_ended.connect(yutgame_ended)
@@ -201,7 +199,6 @@ var ladder :사다리게임
 var 길번호 :int
 var 밝은색목록 :ListIter = ListIter.new(NamedColors.filter_light_color_list())
 func ladder_demo(gc :GlassCabinet) -> Callable:
-	gc.show_wall_box(false)
 	var 참가자정보 :Array
 	for i in 8:
 		참가자정보.append( ["출발%d" % [i+1], 밝은색목록.get_current_and_step_next(), "도착%d" % [i+1] ] )
@@ -221,7 +218,6 @@ var snake_byte_game :SnakeByte
 var game_info :Dictionary
 func snakebyte_demo(gc :GlassCabinet) -> Callable:
 	#gc.get_camera_light().get_light().visible = false
-	gc.show_wall_box(false)
 	#gc.lights.set_light_energy(10, BitFlag.MakeFilledFlags( $GlassCabinet.lights.get_size() ))
 	snake_byte_game = preload("res://snake_byte/snake_byte.tscn").instantiate(
 		).init(gc.cabinet_size)
@@ -508,7 +504,6 @@ var maze_balls :Array
 var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ShortWithPillarCylinder
 func maze3d_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_axis_arrow(true)
-	#gc.show_wall_box(false)
 	var grid_size := Vector2i(16,9)*1
 	var cell_size := Vector3(
 		max(1,gc.cabinet_size.x/grid_size.x),
@@ -724,7 +719,6 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 
 
 func line2d_demo(gc :GlassCabinet) -> Callable:
-	gc.show_wall_box(false)
 	var size_pixel := Vector2i(2048,2048)
 	var ml2d = preload("res://move_line_2d/move_line_2d.tscn").instantiate()
 	ml2d.init_with_random(300, 4, 1, size_pixel)
@@ -738,7 +732,6 @@ func line2d_demo(gc :GlassCabinet) -> Callable:
 
 var orbitsphere_list :Array
 func orbit_demo(gc :GlassCabinet) -> Callable:
-	#gc.show_wall_box(false)
 	for i in 9:
 		add_orbitsphere(gc, i, 9)
 	return func (delta :float) -> void:
@@ -776,7 +769,6 @@ func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
 
 
 func clock_calendar_demo(gc :GlassCabinet) -> Callable:
-	#gc.show_wall_box(false)
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(2,1,1))
 	var calendar :Calendar3D= preload("res://calendar_3d/calendar_3d.tscn").instantiate(
 		).init(gc.cabinet_size.x/2, gc.cabinet_size.y, gc.cabinet_size.z/10, gc.cabinet_size.y/2.0/6 , true )
