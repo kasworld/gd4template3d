@@ -674,7 +674,7 @@ func init_tile_grid_by_texture2d_z(tg_size :Vector3, texture2d :Texture2D, pixel
 		var co :Color = image.get_pixel(xi,yi)
 		tg.set_tile_color_at(xi,image_size.y-yi-1,co)
 		var t :Transform3D = tg.multimesh.get_instance_transform(index)
-		t.origin.z = co.r * tg_size.z
+		t.origin.z = co.get_luminance() * tg_size.z
 		tg.multimesh.set_instance_transform(index, t)
 		)
 	return tg
