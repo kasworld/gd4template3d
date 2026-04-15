@@ -27,7 +27,7 @@ func init(field_a :PlacedThings, astar_grid_a :AStarGrid2D) -> SBSnake:
 	mesh.height = SnakeByte.tile_size.y
 	mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial()
 	var pos := SnakeByte.calc_grid.posi_to_lanepos( Vector3i(SBWalls.FieldSize.x/2,SBWalls.FieldSize.y, 0))
-	$Body.init_with_color_mesh(mesh, SBWalls.FieldSize.x*SBWalls.FieldSize.y/2, false,  pos)
+	$Body.init_with_color_mesh(mesh, SBWalls.FieldSize.x*SBWalls.FieldSize.y/2, true,  pos)
 	dest_body_len = SnakeByte.SnakeLenStart
 	pos2d_list.append(SBWalls.StartPos)
 	is_alive = true
