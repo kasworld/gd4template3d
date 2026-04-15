@@ -133,12 +133,11 @@ func seven_segment_demo(gc :GlassCabinet) -> Callable:
 		#ss.show_segment_by_flag(randi_range(0,127))
 		ss.show_segment_by_flag( SevenSegment3D.NumToFlag[i])
 	return func(_delta :float) -> void:
-		if randf() > 0.01:
+		if randf() > 0.1:
 			return
 		var nth :int = randi_range(0,9)
-		for i in seven_segment_list.size():
-			seven_segment_list[i].show_segment_by_flag(
-				SevenSegment3D.NumToFlag[(nth+i)%seven_segment_list.size()] )
+		var ss :SevenSegment3D = seven_segment_list.pick_random()
+		ss.show_segment_by_flag(SevenSegment3D.NumToFlag[nth] )
 
 
 func tetromino_demo(gc :GlassCabinet) -> Callable:
