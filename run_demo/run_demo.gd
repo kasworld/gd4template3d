@@ -651,10 +651,14 @@ func color_tile_demo(gc :GlassCabinet) -> Callable:
 
 	var tg_size := grid_gc.unit_size
 	tg_size.z /= 50
-	afterfn.call(0, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/red2blue.png"), 0.9) )
-	afterfn.call(1, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/mario1.png"), 0.9) )
-	afterfn.call(2, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/mario2.png"), 0.9) )
+	afterfn.call(0, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/vscode.png"), 0.9) )
+	afterfn.call(1, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/git.png"), 0.9) )
+	afterfn.call(2, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/github.png"), 0.9) )
 	afterfn.call(3, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/me.png"), 0.9) )
+	afterfn.call(4, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/firefox.png"), 0.9) )
+	afterfn.call(5, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/gimp.png"), 0.9) )
+	afterfn.call(6, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/blender.png"), 0.9) )
+	afterfn.call(7, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/godot.png"), 0.9) )
 	#return Callable()
 	return AnimateList.new().init_rotate(tile_grid_list)
 
