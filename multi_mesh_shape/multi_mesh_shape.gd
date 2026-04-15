@@ -38,7 +38,7 @@ func init_bar_gauge_y(count :int, sz :Vector3, co1 :Color, co2 :Color, transpare
 	var mesh := BoxMesh.new()
 	mesh.size = Vector3(sz.x, sz.y / count * (1-gaprate) , sz.z)
 	mesh.material = MakeMultiMeshColorMaterial(transparent)
-	init_with_color_mesh(mesh, count, false)
+	init_with_color_mesh(mesh, count, true)
 	for i in count:
 		var rate := (i as float) / (count as float)
 		var pos3d := Vector3(0,rate*sz.y,0) # grow upward

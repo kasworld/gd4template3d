@@ -489,9 +489,8 @@ func _on_timer_reel_timeout() -> void:
 	slot.start_rotation()
 
 
-var wavegauge_box :WaveGauge
 func wavegauge_box_demo(gc :GlassCabinet) -> Callable:
-	wavegauge_box = preload("res://wave_gauge/wave_gauge.tscn").instantiate().init(
+	var wavegauge_box :WaveGauge = preload("res://wave_gauge/wave_gauge.tscn").instantiate().init(
 			Vector3(gc.cabinet_size.x,gc.cabinet_size.y,gc.cabinet_size.z/4),
 			Vector3i(32,32,8), WaveGauge.color_list, 0.1, false )
 	gc.add_child(wavegauge_box)
