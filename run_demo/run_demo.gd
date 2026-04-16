@@ -122,7 +122,7 @@ func seven_segment_demo(gc :GlassCabinet) -> Callable:
 	var calc_grid := CalcGrid3D.new(gc.get_aabb(),CalcGrid3D.xy_Vector2iToVector3i(grid_size,1))
 	var seven_segment_list :Array = []
 	for i in calc_grid.get_grid_count():
-		var ss :SevenSegment3D = preload("res://seven_segment_3d/seven_segment_3d.tscn").instantiate()
+		var ss :SevenSegment2 = preload("res://seven_segment_2/seven_segment_2.tscn").instantiate()
 		var ss_size := calc_grid.unit_size
 		ss_size.z = (calc_grid.unit_size.z / 100) * (1+ i*1)
 		ss_size *= 0.5
@@ -131,13 +131,13 @@ func seven_segment_demo(gc :GlassCabinet) -> Callable:
 		gc.add_child(ss)
 		ss.position = calc_grid.get_n_th_lanepos(i)
 		#ss.show_segment_by_flag(randi_range(0,127))
-		ss.show_segment_by_flag( SevenSegment3D.NumToFlag[i])
+		ss.show_segment_by_flag( SevenSegment2.NumToFlag[i])
 	return func(_delta :float) -> void:
 		if randf() > 0.1:
 			return
 		var nth :int = randi_range(0,9)
-		var ss :SevenSegment3D = seven_segment_list.pick_random()
-		ss.show_segment_by_flag(SevenSegment3D.NumToFlag[nth] )
+		var ss :SevenSegment2 = seven_segment_list.pick_random()
+		ss.show_segment_by_flag(SevenSegment2.NumToFlag[nth] )
 
 
 func tetromino_demo(gc :GlassCabinet) -> Callable:
