@@ -6,9 +6,9 @@ var 강조중 :bool
 func set_color(co :Color) -> void:
 	$"글씨".mesh.material.albedo_color = co
 
-func init(각도 :float, 반지름 :float, 깊이 :float, color_text_info :Array) -> RouletteCell:
+func init(각도 :float, 반지름 :float, 깊이 :float, color_text_info :Array, text_size :float = 0.0 ) -> RouletteCell:
 	$"글씨".mesh.depth = 깊이
-	$"글씨".mesh.pixel_size = 반지름 *sin(각도) *0.04
+	$"글씨".mesh.pixel_size = 반지름 *sin(각도) *0.04 if text_size == 0.0 else text_size
 	$"글씨".mesh.horizontal_alignment = HorizontalAlignment.HORIZONTAL_ALIGNMENT_RIGHT
 	$"글씨".position = Vector3(반지름, 0, 0 )
 	$"글씨".mesh.text = color_text_info[1]

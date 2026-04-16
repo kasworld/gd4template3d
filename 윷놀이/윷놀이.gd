@@ -59,14 +59,14 @@ func init_wheel() -> void:
 	symbol_info.append([Color.BLACK, YutSet.ValueToString[0] ])
 	symbol_info.append([Color.BLACK, YutSet.ValueToString[0] ])
 	symbol_info.shuffle()
-	$Roulette.init(0,판반지름/4,판반지름/40, symbol_info )
+	$Roulette.init(0, 판반지름*1.1, 판반지름/40, symbol_info , 판반지름/200)
 	$Roulette.set_acceleration(0.1)
 	$Roulette.rotation_stopped.connect(roulette_rotation_stopped)
 	$Roulette.show_velvehandle(false)
 	$Roulette.show_bartree(false)
 	$Roulette.show_spliters(false)
 	$Roulette.show_back(false)
-	$Roulette.position = Vector3(-판반지름/3, -판반지름/3, 0)
+	#$Roulette.position = Vector3(-판반지름/3, -판반지름/3, 0)
 
 
 func new_game() -> void:

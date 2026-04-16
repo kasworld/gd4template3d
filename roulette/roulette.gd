@@ -60,12 +60,12 @@ func 색설정하기(원판색 :Color, 장식색 :Color, 화살표색 :Color) ->
 	$"Wheel/BarTree2".set_visible_count(count)
 	$"Wheel/BarTree1".set_visible_count(count)
 
-func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Array ) -> Roulette:
+func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Array, text_size :float = 0.0) -> Roulette:
 	id = ida
 	반지름 = 반지름a
 	깊이 = 깊이a
 
-	$Wheel.init(반지름, 깊이, color_text_info_list)
+	$Wheel.init(반지름, 깊이, color_text_info_list, text_size)
 	$Wheel.rotation_stopped.connect(결과가결정됨)
 
 	$Wheel/Spliters.init_집중선(반지름, 선시작비, 선끝비, 깊이, color_text_info_list.size(), Color.WHITE )
