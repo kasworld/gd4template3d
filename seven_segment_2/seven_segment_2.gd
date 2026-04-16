@@ -41,19 +41,16 @@ var material : StandardMaterial3D
 func init(sz :Vector3, seg_w :float, co :Color) -> SevenSegment2:
 	full_size = sz
 	segment_thick = seg_w
-
-	var h_size := Vector3( calc_H_segment_size(), segment_thick, full_size.z)
-	var v_size := Vector3( segment_thick, calc_V_segment_size(), full_size.z)
 	material = MakeColorMaterialWithAlpha(co, 1.0)
 
 	for y in 3:
-		var sg := make_H_segment(h_size)
+		var sg := make_H_segment()
 		segment_list.append(sg)
 		add_child(sg)
 		sg.position = calc_H_segment_pos(y)
 	for x in 2:
 		for y in 2:
-			var sg := make_V_segment(v_size)
+			var sg := make_V_segment()
 			segment_list.append(sg)
 			add_child(sg)
 			sg.position = calc_V_segment_pos(x,y)
@@ -96,16 +93,23 @@ func calc_V_segment_pos(x :int, y :int) -> Vector3:
 	var y_pos :float = [-full_size.y/2+v_seg_size/2+segment_thick/2,full_size.y/2 - v_seg_size/2-segment_thick/2][y]
 	return Vector3(x_pos, y_pos, 0)
 
-func make_H_segment(sz :Vector3) -> MeshInstance3D:
+func make_H_segment() -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
-	mi.mesh = BoxMesh.new()
-	mi.mesh.size = sz
+	mi.mesh = CapsuleMesh.new()
+	mi.mesh.height = calc_H_segment_size()
+	mi.mesh.radius = segment_thick/2
+	#mi.mesh.radial_segments = 6
+	#mi.mesh.rings = 4
 	mi.mesh.material = material
+	mi.rotate_z(PI/2)
 	return mi
 
-func make_V_segment(sz :Vector3) -> MeshInstance3D:
+func make_V_segment() -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
-	mi.mesh = BoxMesh.new()
-	mi.mesh.size = sz
+	mi.mesh = CapsuleMesh.new()
+	mi.mesh.height = calc_V_segment_size()
+	mi.mesh.radius = segment_thick/2
+	#mi.mesh.radial_segments = 6
+	#mi.mesh.rings = 4
 	mi.mesh.material = material
 	return mi
