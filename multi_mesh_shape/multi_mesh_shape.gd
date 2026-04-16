@@ -18,10 +18,10 @@ static func MakeMultiMeshColorMaterial(transparent :bool = false, co :Color = Co
 
 # example usage ################################################################
 
-func init_집중선(r :float, start:float, end:float, depth :float, count :int, co :Color, transparent :bool = false) -> MultiMeshShape:
+func init_집중선(r :float, start:float, end:float, width :float, depth :float, count :int, co :Color, transparent :bool = false) -> MultiMeshShape:
 	var 구분선 := BoxMesh.new()
 	var 길이 := r*(end-start)
-	구분선.size = Vector3(길이, depth/10, depth )
+	구분선.size = Vector3(길이, width, depth )
 	var cell각도 := 2.0*PI / count
 	var radius := r-길이/2
 	구분선.material = MakeMultiMeshColorMaterial(transparent)

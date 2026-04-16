@@ -59,7 +59,7 @@ func init_wheel() -> void:
 	symbol_info.append([Color.BLACK, YutSet.ValueToString[0] ])
 	symbol_info.append([Color.BLACK, YutSet.ValueToString[0] ])
 	symbol_info.shuffle()
-	$Roulette.init_spliter_rate(0.9,1.0)
+	$Roulette.init_spliter_setting(0.9,1.0,판반지름/40)
 	$Roulette.init(0, 판반지름*1.1, 판반지름/40, symbol_info , 판반지름/200)
 	$Roulette.set_acceleration(0.1)
 	$Roulette.rotation_stopped.connect(roulette_rotation_stopped)
