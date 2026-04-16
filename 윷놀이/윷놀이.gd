@@ -59,12 +59,13 @@ func init_wheel() -> void:
 	symbol_info.append([Color.BLACK, YutSet.ValueToString[0] ])
 	symbol_info.append([Color.BLACK, YutSet.ValueToString[0] ])
 	symbol_info.shuffle()
+	$Roulette.init_spliter_rate(0.9,1.0)
 	$Roulette.init(0, 판반지름*1.1, 판반지름/40, symbol_info , 판반지름/200)
 	$Roulette.set_acceleration(0.1)
 	$Roulette.rotation_stopped.connect(roulette_rotation_stopped)
 	$Roulette.show_velvehandle(false)
 	$Roulette.show_bartree(false)
-	$Roulette.show_spliters(false)
+	#$Roulette.show_spliters(false)
 	$Roulette.show_back(false)
 	#$Roulette.position = Vector3(-판반지름/3, -판반지름/3, 0)
 
@@ -128,7 +129,7 @@ func 윷던지기() -> void:
 
 func _process(_delta: float) -> void:
 	animation.handle_animation()
-	#$Roulette.선택된cell강조상태켜기()
+	$Roulette.선택된cell강조상태켜기()
 
 #func animation_ended(_st :Node, _ani :Dictionary) -> void:
 	#pass

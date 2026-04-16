@@ -6,8 +6,8 @@ signal rotation_stopped(rl :Roulette)
 var id :int
 var 반지름 :float
 var 깊이 :float
-const 선시작비 := 0.5
-const 선끝비 := 1.0
+var spliter_시작비율 := 0.5
+var spliter_끝비율 := 1.0
 
 func get_wheel() -> RouletteWheel:
 	return $Wheel
@@ -60,6 +60,12 @@ func 색설정하기(원판색 :Color, 장식색 :Color, 화살표색 :Color) ->
 	$"Wheel/BarTree2".set_visible_count(count)
 	$"Wheel/BarTree1".set_visible_count(count)
 
+## call BEFORE init
+func init_spliter_rate(begin_rate:float, end_rate :float) -> Roulette:
+	spliter_시작비율 = begin_rate
+	spliter_끝비율 = end_rate
+	return self
+
 func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Array, text_size :float = 0.0) -> Roulette:
 	id = ida
 	반지름 = 반지름a
@@ -68,7 +74,7 @@ func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Arr
 	$Wheel.init(반지름, 깊이, color_text_info_list, text_size)
 	$Wheel.rotation_stopped.connect(결과가결정됨)
 
-	$Wheel/Spliters.init_집중선(반지름, 선시작비, 선끝비, 깊이, color_text_info_list.size(), Color.WHITE )
+	$Wheel/Spliters.init_집중선(반지름, spliter_시작비율, spliter_끝비율, 깊이, color_text_info_list.size(), Color.WHITE )
 
 	# for debug
 	$IDLabel.text = "%s" % id
