@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://cfg124pgk3k6u"]
+
+[ext_resource type="Script" uid="uid://bqt7mbrb6unvq" path="res://manhwa_eye/manhwa_eye.gd" id="1_5pmyj"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s5ajn"]
+resource_local_to_scene = true
+cull_mode = 1
+albedo_color = Color(1, 1, 1, 0.49803922)
+clearcoat_enabled = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_c8fwn"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_s5ajn")
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mp6ec"]
+resource_local_to_scene = true
+albedo_color = Color(0, 0, 0, 0.5019608)
+clearcoat_enabled = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_t0f1r"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_mp6ec")
+radius = 0.3
+height = 0.2
+
+[node name="ManhwaEye" type="Node3D" unique_id=900978946]
+script = ExtResource("1_5pmyj")
+
+[node name="Outer" type="MeshInstance3D" parent="." unique_id=2095377300]
+mesh = SubResource("SphereMesh_c8fwn")
+
+[node name="Inner" type="MeshInstance3D" parent="." unique_id=1724080969]
+mesh = SubResource("SphereMesh_t0f1r")

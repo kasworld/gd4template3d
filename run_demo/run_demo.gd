@@ -102,6 +102,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		[tetromino_demo, "Tetromino"],
 		[seven_segment_demo, "Seven Segment 3D"],
 		[color_tile_demo, "Color Tile"],
+		[manhwa_eyes_demo, "Eyes"],
 	]
 	if not run1.is_empty():
 		run_all = [ run1 ]
@@ -109,12 +110,30 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		run_demo.call(run[0], run[1])
 
 	used_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_itered_slice())
-	empty_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_unitered_slice())
-	for gc in empty_glass_cabinet_iter.get_data_array():
-		gc.add_light_animation_to_animate_func_list()
-		gc.show_wall_box(true)
+	if run_all.size() < glass_cabinet_iter.get_size():
+		empty_glass_cabinet_iter = ListIter.new(glass_cabinet_iter.get_unitered_slice())
+		for gc in empty_glass_cabinet_iter.get_data_array():
+			gc.add_light_animation_to_animate_func_list()
+			gc.show_wall_box(true)
+	else :
+		empty_glass_cabinet_iter = ListIter.new([])
 	print_debug("remain glass cabinet %d\ndemo count %s" % [
 		empty_glass_cabinet_iter.get_size(),used_glass_cabinet_iter.get_size() ])
+
+func manhwa_eyes_demo(gc :GlassCabinet) -> Callable:
+	var grid_gc := gc.make_CalcGrid3D( Vector3i(2,1,1))
+	var eye_list :Array = []
+	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
+		node3d.position = grid_gc.get_n_th_lanepos(n)
+		gc.add_child(node3d)
+		eye_list.append(node3d)
+		return node3d
+	for i in grid_gc.get_grid_count():
+		var eye :ManhwaEye = preload("res://manhwa_eye/manhwa_eye.tscn").instantiate()
+		eye.set_radius(grid_gc.unit_size.x/3)
+		eye.rotate_x(PI/2)
+		afterfn.call(i, eye)
+	return Callable()
 
 func seven_segment_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
