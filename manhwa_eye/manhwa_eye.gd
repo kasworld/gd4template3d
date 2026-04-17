@@ -41,6 +41,11 @@ func get_Outer() -> MultiMeshInstance3D:
 func get_Inner_move_range() -> float:
 	return get_Outer_radius() - get_Inner_radius()
 
+## for scale Inner in Outer boundary
+func get_Inner_scale_range() -> float:
+	return get_Outer_radius()/get_Inner_radius()
+
+
 ## x_rate, y_rate : -1 ~ 1
 func move_Inner(x_rate :float, y_rate :float) -> void:
 	$Inner.position.x = get_Inner_move_range() * x_rate
