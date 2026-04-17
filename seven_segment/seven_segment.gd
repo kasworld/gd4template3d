@@ -1,5 +1,5 @@
 extends Node3D
-class_name SevenSegment2
+class_name SevenSegment
 
 static func MakeColorMaterialWithAlpha(co :Color = Color.WHITE, alpha :float = 1.0) -> StandardMaterial3D:
 	var mat := StandardMaterial3D.new()
@@ -38,7 +38,7 @@ var segment_list :Array[MeshInstance3D] = []
 var material : StandardMaterial3D
 
 ## face Z
-func init(sz :Vector3, seg_w :float, co :Color) -> SevenSegment2:
+func init(sz :Vector3, seg_w :float, co :Color) -> SevenSegment:
 	full_size = sz
 	segment_thick = seg_w
 	material = MakeColorMaterialWithAlpha(co, 1.0)

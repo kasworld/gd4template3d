@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b84lcfw17fosu"]
+
+[ext_resource type="Script" uid="uid://ih7f3bt86q05" path="res://seven_segment/seven_segment.gd" id="1_fnd1n"]
+
+[node name="SevenSegment" type="Node3D" unique_id=157428467]
+script = ExtResource("1_fnd1n")
