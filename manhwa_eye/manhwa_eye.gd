@@ -3,6 +3,12 @@ class_name ManhwaEye
 
 ## face y+ , use rotate_x for face z
 
+var animation := SimpleAnimation.new()
+
+func add_Inner_move_animation(x_rate :float, y_rate :float, ani_dur :float):
+	var new_pos := Vector3(get_Inner_move_range() * x_rate, 0 , get_Inner_move_range() * y_rate)
+	animation.start_move("ani_move", $Inner, $Inner.position, new_pos, ani_dur)
+
 func set_radius(Outer_radius :float, Inner_radius_rate :float = 0.6) -> void:
 	$Outer.mesh.radius = Outer_radius
 	$Outer.mesh.height = Outer_radius * 0.4

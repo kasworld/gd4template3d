@@ -132,6 +132,7 @@ func manhwa_eyes_demo(gc :GlassCabinet) -> Callable:
 		var eye :ManhwaEye = preload("res://manhwa_eye/manhwa_eye.tscn").instantiate()
 		eye.set_radius(grid_gc.unit_size.x/3)
 		eye.rotate_x(PI/2)
+		eye.move_Inner(randf_range(-1,1),randf_range(-1,1))
 		afterfn.call(i, eye)
 	#return AnimateList.new().init_rotate(eye_list)
 	return Callable()
