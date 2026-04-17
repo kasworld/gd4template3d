@@ -133,6 +133,7 @@ func manhwa_eyes_demo(gc :GlassCabinet) -> Callable:
 		eye.set_radius(grid_gc.unit_size.x/3)
 		eye.rotate_x(PI/2)
 		afterfn.call(i, eye)
+	#return AnimateList.new().init_rotate(eye_list)
 	return Callable()
 
 func seven_segment_demo(gc :GlassCabinet) -> Callable:

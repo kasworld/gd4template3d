@@ -1,12 +1,41 @@
 extends Node3D
 class_name ManhwaEye
 
-func set_radius(outer_r :float, inner_rate :float = 0.6) -> void:
-	$Outer.mesh.radius = outer_r
-	$Outer.mesh.height = outer_r * 0.4
-	$Inner.mesh.radius = outer_r * inner_rate
-	$Inner.mesh.height = outer_r * 0.4
+## face y+ , use rotate_x for face z
 
-func set_color(outer_co :Color, inner_co :Color) -> void:
-	$Outer.mesh.material.albedo_color = outer_co
-	$Inner.mesh.material.albedo_color = inner_co
+func set_radius(Outer_radius :float, Inner_radius_rate :float = 0.6) -> void:
+	$Outer.mesh.radius = Outer_radius
+	$Outer.mesh.height = Outer_radius * 0.4
+	$Inner.mesh.radius = Outer_radius * Inner_radius_rate
+	$Inner.mesh.height = Outer_radius * 0.4
+
+func set_color(Outer_color :Color, Inner_color :Color) -> void:
+	$Outer.mesh.material.albedo_color = Outer_color
+	$Inner.mesh.material.albedo_color = Inner_color
+
+func get_Inner_radius() -> float:
+	return $Inner.mesh.radius
+
+func get_Outer_radius() -> float:
+	return $Outer.mesh.radius
+
+func get_Inner_color() -> Color:
+	return $Inner.mesh.material.albedo_color
+
+func get_Outer_color() -> Color:
+	return $Outer.mesh.material.albedo_color
+
+func get_Inner() -> MultiMeshInstance3D:
+	return $Inner
+
+func get_Outer() -> MultiMeshInstance3D:
+	return $Outer
+
+## for move Inner in Outer boundary
+func get_Inner_move_range() -> float:
+	return get_Outer_radius() - get_Inner_radius()
+
+## x_rate, y_rate : -1 ~ 1
+func move_Inner(x_rate :float, y_rate :float) -> void:
+	$Inner.position.x = get_Inner_move_range() * x_rate
+	$Inner.position.z = get_Inner_move_range() * y_rate
