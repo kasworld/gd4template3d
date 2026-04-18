@@ -86,7 +86,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		[dialgauge_demo, "Dial Gauge"],
 		[ladder_demo, "사다리게임"],
 		[line2d_demo, "MoveLine2d"],
-		[manhwa_eyes_demo, "Eyes"],
+		[manhwa_eyes_demo, "만화 눈"],
 		[maze3d_demo, "Maze3D"],
 		[meshtrail_demo, "MeshTrail"],
 		[orbit_demo, "Orbit"],
@@ -134,8 +134,14 @@ func manhwa_eyes_demo(gc :GlassCabinet) -> Callable:
 		eye.rotate_x(PI/2)
 		eye.move_Inner(randf_range(-1,1),randf_range(-1,1))
 		afterfn.call(i, eye)
-	#return AnimateList.new().init_rotate(node3d_list)
-	return Callable()
+
+	var animation := SimpleAnimation.new()
+	animation.animation_ended.connect(func(node :Node3D, _ani :Dictionary) -> void:
+			AddRotateRandomAnimation(animation, node))
+	for node in node3d_list:
+		AddRotateRandomAnimation(animation, node)
+	return func(_delta:float):
+		animation.handle_animation()
 
 func seven_segment_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()

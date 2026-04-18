@@ -3,8 +3,6 @@ class_name ManhwaEye
 
 ## face y+ , use rotate_x for face z
 
-var animation := SimpleAnimation.new()
-
 var Inner_radius :float :
 	set(value):
 		$Inner.mesh.radius = value
