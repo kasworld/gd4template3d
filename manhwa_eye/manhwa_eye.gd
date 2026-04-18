@@ -10,14 +10,14 @@ var Inner_radius :float :
 		$Inner.mesh.radius = value
 
 ## rate to Outer radius
-func add_Inner_move_animation(x_rate :float, y_rate :float, ani_dur :float):
+func make_Inner_move_animation(x_rate :float, y_rate :float, ani_dur :float) -> Dictionary:
 	var new_pos := Vector3(get_Inner_move_range() * x_rate, 0 , get_Inner_move_range() * y_rate)
-	animation.start_move("ani_move", $Inner, $Inner.position, new_pos, ani_dur)
+	return SimpleAnimation.MakeAnimation( "ani_move", $Inner, "position", $Inner.position, new_pos, ani_dur)
 
 ## rate to Outer radius
-func add_Inner_scale_animation(rate :float, ani_dur :float):
+func make_Inner_scale_animation(rate :float, ani_dur :float) -> Dictionary:
 	var new_radius := get_Outer_radius() * rate
-	SimpleAnimation.MakeAnimation("ani_scale", $Inner, "Inner_radius", $Inner.mesh.radius,  new_radius, ani_dur)
+	return SimpleAnimation.MakeAnimation("ani_scale", $Inner, "Inner_radius", $Inner.mesh.radius,  new_radius, ani_dur)
 
 func set_radius(Outer_radius :float, Inner_radius_rate :float = 0.6) -> void:
 	$Outer.mesh.radius = Outer_radius
