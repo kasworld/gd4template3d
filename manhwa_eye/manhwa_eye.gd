@@ -9,12 +9,12 @@ var Inner_radius :float :
 	set(value):
 		$Inner.mesh.radius = value
 
-## rate to Outer radius
+## rate (-1.0 ~ 1.0) to Outer boundary
 func make_Inner_move_animation(x_rate :float, y_rate :float, ani_dur :float) -> Dictionary:
 	var new_pos := Vector3(get_Inner_move_range() * x_rate, 0 , get_Inner_move_range() * y_rate)
 	return SimpleAnimation.MakeAnimation( "ani_move", $Inner, "position", $Inner.position, new_pos, ani_dur)
 
-## rate to Outer radius
+## rate (0 ~ 1.0) to Outer radius
 func make_Inner_scale_animation(rate :float, ani_dur :float) -> Dictionary:
 	var new_radius := get_Outer_radius() * rate
 	return SimpleAnimation.MakeAnimation("ani_scale", $Inner, "Inner_radius", $Inner.mesh.radius,  new_radius, ani_dur)

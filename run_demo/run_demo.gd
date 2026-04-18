@@ -139,20 +139,21 @@ func manhwa_eyes_demo(gc :GlassCabinet) -> Callable:
 
 func seven_segment_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
-	var grid_size := Vector2i(5,2)
-	var calc_grid := CalcGrid3D.new(gc.get_aabb(),CalcGrid3D.xy_Vector2iToVector3i(grid_size,1))
+	var grid_gc := gc.make_CalcGrid3D( Vector3i(5,2,1))
 	var seven_segment_list :Array = []
-	for i in calc_grid.get_grid_count():
+	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
+		node3d.position = grid_gc.get_n_th_lanepos(n)
+		gc.add_child(node3d)
+		seven_segment_list.append(node3d)
+		return node3d
+	for i in grid_gc.get_grid_count():
 		var ss :SevenSegment = preload("res://seven_segment/seven_segment.tscn").instantiate()
-		var ss_size := calc_grid.unit_size
-		ss_size.z = (calc_grid.unit_size.z / 100) * (1+ i*1)
+		var ss_size := grid_gc.unit_size
+		ss_size.z = (grid_gc.unit_size.z / 100) * (1+ i*1)
 		ss_size *= 0.5
 		ss.init(ss_size, ss_size.x /(i+4.0),  NamedColors.random_color())
-		seven_segment_list.append(ss)
-		gc.add_child(ss)
-		ss.position = calc_grid.get_n_th_lanepos(i)
-		#ss.show_segment_by_flag(randi_range(0,127))
 		ss.show_segment_by_flag( SevenSegment.NumToFlag[i])
+		afterfn.call(i, ss)
 	return func(_delta :float) -> void:
 		if randf() > 0.1:
 			return
