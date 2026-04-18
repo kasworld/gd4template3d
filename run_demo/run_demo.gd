@@ -122,11 +122,11 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 
 func manhwa_eyes_demo(gc :GlassCabinet) -> Callable:
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(2,1,1))
-	var eye_list :Array = []
+	var node3d_list :Array = []
 	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
 		node3d.position = grid_gc.get_n_th_lanepos(n)
 		gc.add_child(node3d)
-		eye_list.append(node3d)
+		node3d_list.append(node3d)
 		return node3d
 	for i in grid_gc.get_grid_count():
 		var eye :ManhwaEye = preload("res://manhwa_eye/manhwa_eye.tscn").instantiate()
@@ -134,17 +134,17 @@ func manhwa_eyes_demo(gc :GlassCabinet) -> Callable:
 		eye.rotate_x(PI/2)
 		eye.move_Inner(randf_range(-1,1),randf_range(-1,1))
 		afterfn.call(i, eye)
-	#return AnimateList.new().init_rotate(eye_list)
+	#return AnimateList.new().init_rotate(node3d_list)
 	return Callable()
 
 func seven_segment_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(5,2,1))
-	var seven_segment_list :Array = []
+	var node3d_list :Array = []
 	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
 		node3d.position = grid_gc.get_n_th_lanepos(n)
 		gc.add_child(node3d)
-		seven_segment_list.append(node3d)
+		node3d_list.append(node3d)
 		return node3d
 	for i in grid_gc.get_grid_count():
 		var ss :SevenSegment = preload("res://seven_segment/seven_segment.tscn").instantiate()
@@ -158,7 +158,7 @@ func seven_segment_demo(gc :GlassCabinet) -> Callable:
 		if randf() > 0.1:
 			return
 		var nth :int = randi_range(0,9)
-		var ss :SevenSegment = seven_segment_list.pick_random()
+		var ss :SevenSegment = node3d_list.pick_random()
 		ss.show_segment_by_flag(SevenSegment.NumToFlag[nth] )
 
 
@@ -618,12 +618,12 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	return Bounce.v3f(pos, bound_aabb, radius)
 
 func props_demo(gc :GlassCabinet) -> Callable:
-	var prop_list :Array
+	var node3d_list :Array
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(4,2,1))
 	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
 		node3d.position = grid_gc.get_n_th_lanepos(n)
 		gc.add_child(node3d)
-		prop_list.append(node3d)
+		node3d_list.append(node3d)
 		return node3d
 	var prop
 	prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
@@ -657,17 +657,17 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), Vector2i(16,1), grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.1, NamedColors.random_color())
 	prop.wire_V_rotation_y = PI/4
 	afterfn.call(7, prop)
-	return AnimateList.new().init_rotate(prop_list)
+	return AnimateList.new().init_rotate(node3d_list)
 
 
 func color_tile_demo(gc :GlassCabinet) -> Callable:
 	gc.show_wall_box(false)
-	var tile_grid_list :Array
+	var node3d_list :Array
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(4,2,1))
 	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
 		node3d.position = grid_gc.get_n_th_lanepos(n)
 		gc.add_child(node3d)
-		tile_grid_list.append(node3d)
+		node3d_list.append(node3d)
 		return node3d
 
 	var tg_size := grid_gc.unit_size
@@ -681,7 +681,7 @@ func color_tile_demo(gc :GlassCabinet) -> Callable:
 	afterfn.call(6, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/blender.png"), 0.9) )
 	afterfn.call(7, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/godot.png"), 0.9) )
 	#return Callable()
-	return AnimateList.new().init_rotate(tile_grid_list)
+	return AnimateList.new().init_rotate(node3d_list)
 
 func init_tile_grid_by_texture2d_z(tg_size :Vector3, texture2d :Texture2D, pixel_rate :float = 0.8) -> TileGrid:
 	var image := texture2d.get_image()
@@ -703,12 +703,12 @@ func init_tile_grid_by_texture2d_z(tg_size :Vector3, texture2d :Texture2D, pixel
 
 
 func tile_grid_demo(gc :GlassCabinet) -> Callable:
-	var tile_grid_list :Array
+	var node3d_list :Array
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(3,2,1))
 	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
 		node3d.position = grid_gc.get_n_th_lanepos(n)
 		gc.add_child(node3d)
-		tile_grid_list.append(node3d)
+		node3d_list.append(node3d)
 		return node3d
 	var tg_inst := preload("res://tile_grid/tile_grid.tscn").instantiate
 	var prop_size := Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200)
@@ -734,12 +734,12 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 	var animation := SimpleAnimation.new()
 	animation.animation_ended.connect(func(node :Node3D, _ani :Dictionary) -> void:
 			AddRotateRandomAnimation(animation, node))
-	for node in tile_grid_list:
+	for node in node3d_list:
 		AddRotateRandomAnimation(animation, node)
 	return func(_delta:float):
 		animation.handle_animation()
 		var now := Time.get_unix_time_from_system()
-		for ps in tile_grid_list:
+		for ps in node3d_list:
 			WaveColorTileGrid(ps, now, ps.calc_grid.unit_size.length()/3 )
 
 
