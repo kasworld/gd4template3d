@@ -136,10 +136,18 @@ func manhwa_eyes_demo(gc :GlassCabinet) -> Callable:
 		afterfn.call(i, eye)
 
 	var animation := SimpleAnimation.new()
-	animation.animation_ended.connect(func(node :Node3D, _ani :Dictionary) -> void:
-			AddRotateRandomAnimation(animation, node))
+	var ani_dur := 1.0
+	animation.animation_ended.connect(func(node :Node3D, ani :Dictionary) -> void:
+		var eye :ManhwaEye = node
+		match ani.Name:
+			"ani_move":
+				animation.add_animation( eye.make_Inner_scale_animation(randf_range(0.1,1), ani_dur )  )
+			"ani_scale":
+				animation.add_animation( eye.make_Inner_move_animation(randf_range(-1,1),randf_range(-1,1), ani_dur )  )
+		)
 	for node in node3d_list:
-		AddRotateRandomAnimation(animation, node)
+		var eye :ManhwaEye = node
+		animation.add_animation( eye.make_Inner_move_animation(randf_range(-1,1),randf_range(-1,1), ani_dur )  )
 	return func(_delta:float):
 		animation.handle_animation()
 
