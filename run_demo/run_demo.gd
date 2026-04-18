@@ -164,14 +164,13 @@ func seven_segment_demo(gc :GlassCabinet) -> Callable:
 
 func tetromino_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
-	var grid_size := Vector2i(32,18)
-	var calc_grid := CalcGrid3D.new(gc.get_aabb(),CalcGrid3D.xy_Vector2iToVector3i(grid_size,1))
+	var grid_gc := gc.make_CalcGrid3D( Vector3i(32,18,1) )
 	var tetromino_list :Array = []
 	for t in Tetromino.Type.size():
 		var tetromino :Tetromino = preload("res://polyomino/tetromino/tetromino.tscn").instantiate(
-			).init(t, 0, calc_grid.unit_size.x)
+			).init(t, 0, grid_gc.unit_size.x)
 		gc.add_child(tetromino)
-		tetromino.position = calc_grid.get_n_th_lanepos( randi_range(0, calc_grid.get_grid_count()-1) )
+		tetromino.position = grid_gc.get_n_th_lanepos( randi_range(0, grid_gc.get_grid_count()-1) )
 		tetromino_list.append(tetromino)
 	var tetromino_iter := ListIter.new(tetromino_list)
 	return func(_delta :float) -> void:
@@ -185,8 +184,8 @@ func tetromino_demo(gc :GlassCabinet) -> Callable:
 					var dir :Vector3 = [Vector3.UP, Vector3.DOWN, Vector3.LEFT, Vector3.RIGHT, Vector3.FORWARD, Vector3.BACK][n]
 					tet.animate_rotation_to_dir(dir)
 					if dir.z == 0:
-						var dstpos := tet.position + dir*calc_grid.unit_size
-						if calc_grid.has_point(dstpos):
+						var dstpos := tet.position + dir*grid_gc.unit_size
+						if grid_gc.has_point(dstpos):
 							tet.animate_move_to( dstpos )
 				6:
 					tet.animate_morph_to(tet.tetromino_type, tet.get_right_rotation())
@@ -297,7 +296,6 @@ func new_dialgauge(radius :float, cabinet_size :Vector3) -> DialGauge:
 		)
 var dialgauge_list :Array
 func dialgauge_demo(gc :GlassCabinet) -> Callable:
-	#gc.show_wall_box(false)
 	var radius := gc.cabinet_size.x/5
 	var grid21 := gc.make_CalcGrid3D(Vector3i(2,1,1))
 	var grid33 := gc.make_CalcGrid3D(Vector3i(3,3,1))
@@ -391,9 +389,13 @@ func random_color2(_arg ) -> Color:
 
 
 func platonic_solids_demo(gc :GlassCabinet) -> Callable:
-	#gc.show_wall_box(false)
-	var platonic_solid_list :Array = []
-	var grid43 := gc.make_CalcGrid3D(Vector3i(4,3,1))
+	var node3d_list :Array = []
+	var grid_gc := gc.make_CalcGrid3D(Vector3i(4,3,1))
+	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
+		node3d.position = grid_gc.get_n_th_lanepos(n)
+		gc.add_child(node3d)
+		node3d_list.append(node3d)
+		return node3d
 	var i:= 0
 	for ll in [
 		[4, 0.5,  0, 3 ],
@@ -414,17 +416,14 @@ func platonic_solids_demo(gc :GlassCabinet) -> Callable:
 		var from :int = ll[2]
 		var to :int = ll[3]
 		var ws :WireSolid = preload("res://wire_solid/wire_solid.tscn").instantiate(
-			).init(face, from, to, grid43.unit_size.y/2-wire_width , wire_width, NamedColors.random_color(), wire_width )
-		gc.add_child(ws)
-		platonic_solid_list.append(ws)
-		ws.position = grid43.get_n_th_lanepos(i)
+			).init(face, from, to, grid_gc.unit_size.y/2-wire_width , wire_width, NamedColors.random_color(), wire_width )
+		afterfn.call(i,ws)
 		i +=1
-	return AnimateList.new().init_rotate(platonic_solid_list)
+	return AnimateList.new().init_rotate(node3d_list)
 
 
 var tornado_list :Array # [ tornado , AnimateGradient , AnimateGradient ]
 func tornado_demo(gc :GlassCabinet) -> Callable:
-	#gc.show_wall_box(false)
 	for i in 4:
 		var tb = preload("res://tornado/tornado.tscn").instantiate(
 			).init_sample(gc.cabinet_size.x/2, gc.cabinet_size.y*0.3, 0.5, NamedColors.random_color(),NamedColors.random_color())
@@ -618,7 +617,7 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	return Bounce.v3f(pos, bound_aabb, radius)
 
 func props_demo(gc :GlassCabinet) -> Callable:
-	var node3d_list :Array
+	var node3d_list :Array = []
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(4,2,1))
 	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
 		node3d.position = grid_gc.get_n_th_lanepos(n)
@@ -662,7 +661,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 
 func color_tile_demo(gc :GlassCabinet) -> Callable:
 	gc.show_wall_box(false)
-	var node3d_list :Array
+	var node3d_list :Array = []
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(4,2,1))
 	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
 		node3d.position = grid_gc.get_n_th_lanepos(n)
@@ -703,7 +702,7 @@ func init_tile_grid_by_texture2d_z(tg_size :Vector3, texture2d :Texture2D, pixel
 
 
 func tile_grid_demo(gc :GlassCabinet) -> Callable:
-	var node3d_list :Array
+	var node3d_list :Array = []
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(3,2,1))
 	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
 		node3d.position = grid_gc.get_n_th_lanepos(n)
