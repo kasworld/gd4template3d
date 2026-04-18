@@ -11,9 +11,6 @@ var Inner_position :Vector3 :
 	set(value):
 		$Inner.position = value
 
-
-
-
 ## rate (-1.0 ~ 1.0) to Outer boundary
 func make_Inner_move_animation(x_rate :float, y_rate :float, ani_dur :float) -> Dictionary:
 	var new_pos := Vector3(get_Inner_move_range() * x_rate, 0 , get_Inner_move_range() * y_rate)

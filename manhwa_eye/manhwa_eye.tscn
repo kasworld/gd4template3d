@@ -4,18 +4,17 @@
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s5ajn"]
 resource_local_to_scene = true
-cull_mode = 1
-albedo_color = Color(1, 1, 1, 0.49803922)
 clearcoat_enabled = true
 
 [sub_resource type="SphereMesh" id="SphereMesh_c8fwn"]
 resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_s5ajn")
+flip_faces = true
 height = 0.2
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mp6ec"]
 resource_local_to_scene = true
-albedo_color = Color(0, 0, 0, 0.5019608)
+albedo_color = Color(0, 0, 0, 1)
 clearcoat_enabled = true
 
 [sub_resource type="SphereMesh" id="SphereMesh_t0f1r"]
