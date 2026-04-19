@@ -120,18 +120,30 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 	print_debug("remain glass cabinet %d\ndemo count %s" % [
 		empty_glass_cabinet_iter.get_size(),used_glass_cabinet_iter.get_size() ])
 
+var colors_dark := NamedColors.filter_dark_color_list()
+var colors_light := NamedColors.filter_light_color_list()
+
 func manhwa_eyes_demo(gc :GlassCabinet) -> Callable:
-	var grid_gc := gc.make_CalcGrid3D( Vector3i(4,2,1))
+	var grid_gc := gc.make_CalcGrid3D( Vector3i(16,9,1))
 	var node3d_list :Array = []
 	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
 		node3d.position = grid_gc.get_n_th_lanepos(n)
 		gc.add_child(node3d)
 		node3d_list.append(node3d)
 		return node3d
+	var co1 :Color
+	var co2 :Color
+	var scale_outer :Vector3
 	for i in grid_gc.get_grid_count():
+		if i % 2 == 0:
+			co1 = colors_light.pick_random()
+			co2 = colors_dark.pick_random()
+			scale_outer = Vector3(randf_range(0.5,1.5) , 1, randf_range(0.5,1.5))
 		var eye :ManhwaEye = preload("res://manhwa_eye/manhwa_eye.tscn").instantiate()
 		eye.set_radius(grid_gc.unit_size.x/3)
 		eye.rotate_x(PI/2)
+		eye.set_color(co1,co2)
+		eye.get_Outer().scale = scale_outer
 		afterfn.call(i, eye)
 
 	return func(_delta:float):
