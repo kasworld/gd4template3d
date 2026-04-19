@@ -121,7 +121,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		empty_glass_cabinet_iter.get_size(),used_glass_cabinet_iter.get_size() ])
 
 func manhwa_eyes_demo(gc :GlassCabinet) -> Callable:
-	var grid_gc := gc.make_CalcGrid3D( Vector3i(4,1,1))
+	var grid_gc := gc.make_CalcGrid3D( Vector3i(4,2,1))
 	var node3d_list :Array = []
 	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
 		node3d.position = grid_gc.get_n_th_lanepos(n)
@@ -132,37 +132,23 @@ func manhwa_eyes_demo(gc :GlassCabinet) -> Callable:
 		var eye :ManhwaEye = preload("res://manhwa_eye/manhwa_eye.tscn").instantiate()
 		eye.set_radius(grid_gc.unit_size.x/3)
 		eye.rotate_x(PI/2)
-		#eye.set_color(Color.CORNFLOWER_BLUE, Color.NAVY_BLUE)
-		#eye.move_Inner(randf_range(-1,1),randf_range(-1,1))
 		afterfn.call(i, eye)
 
-	#var animation := SimpleAnimation.new()
-	#var ani_dur := 1.0
-	#animation.animation_ended.connect(func(node :Node3D, ani :Dictionary) -> void:
-		#var eye :ManhwaEye = node
-		#match ani.Name:
-			#"ani_move":
-				#animation.add_animation( eye.make_Inner_scale_animation(randf_range(0.1,1), ani_dur )  )
-			#"ani_scale":
-				#animation.add_animation( eye.make_Inner_move_animation(randf_range(-1,1),randf_range(-1,1), ani_dur )  )
-		#)
-	#for node in node3d_list:
-		#var eye :ManhwaEye = node
-		#animation.add_animation( eye.make_Inner_move_animation(randf_range(-1,1),randf_range(-1,1), ani_dur )  )
 	return func(_delta:float):
-		var now := Time.get_unix_time_from_system()
+		var now := Time.get_unix_time_from_system() * PI
 		for i in node3d_list.size():
 			var node :ManhwaEye = node3d_list[i]
-			match i %4 :
+			match i %8 :
 				0:
-					node.move_Inner(cos(now*2), sin(now*2) )
+					node.move_Inner(cos(now), sin(now) )
 				1:
-					node.move_Inner(-cos(now*2), sin(now*2))
-				2:
+					node.move_Inner(-cos(now), sin(now))
+				2,3:
 					node.set_Inner_radius_rate( abs(cos(now)) )
-				3:
-					node.set_Inner_radius_rate( abs(cos(now)) )
-		#animation.handle_animation()
+				4,5:
+					node.move_Inner(cos(now), 0 )
+				6,7:
+					node.move_Inner(0, sin(now))
 
 func seven_segment_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
