@@ -15,6 +15,8 @@ func show_face(b :bool) -> void:
 
 func set_face_color(co :Color) -> void:
 	$Face.mesh.material.albedo_color = co
+	$Face/LeftEar.mesh.material.albedo_color = co
+	$Face/RightEar.mesh.material.albedo_color = co
 
 func set_eye_color(Outer_color :Color, Inner_color :Color) -> void:
 	$LeftEye.set_color(Outer_color,Inner_color)
@@ -28,6 +30,14 @@ func set_eye_scale(scale_outer :Vector3) ->void:
 func set_radius(r :float) -> void:
 	$Face.mesh.radius = r
 	$Face.mesh.height = r/5
+	$Face/LeftEar.mesh.radius = r/2
+	$Face/LeftEar.mesh.height = r/5
+	$Face/RightEar.mesh.radius = r/2
+	$Face/RightEar.mesh.height = r/5
+	var sq_len := sqrt(2)/2*(r+r/2)
+	$Face/LeftEar.position = Vector3( -sq_len, 0, sq_len )
+	$Face/RightEar.position = Vector3( sq_len,0, sq_len )
+
 	$LeftEye.set_radius(r/2)
 	$LeftEye.position.x = -r/2
 	$RightEye.set_radius(r/2)

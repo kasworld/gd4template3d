@@ -15,12 +15,36 @@ radius = 1.0
 height = 0.2
 is_hemisphere = true
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hvy2c"]
+resource_local_to_scene = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_v2xun"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_hvy2c")
+height = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j07hl"]
+resource_local_to_scene = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_oq2ne"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_j07hl")
+height = 0.2
+
 [node name="ManhwaFace" type="Node3D" unique_id=1004604187]
 script = ExtResource("1_lvah5")
 
 [node name="Face" type="MeshInstance3D" parent="." unique_id=466923686]
 transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0)
 mesh = SubResource("SphereMesh_lvah5")
+
+[node name="LeftEar" type="MeshInstance3D" parent="Face" unique_id=1328752049]
+transform = Transform3D(0.35355338, 0, -0.70710677, 0, 1, 0, 0.35355338, 0, 0.70710677, -1, 0, 1)
+mesh = SubResource("SphereMesh_v2xun")
+
+[node name="RightEar" type="MeshInstance3D" parent="Face" unique_id=2070232070]
+transform = Transform3D(0.35355338, 0, 0.70710677, 0, 1, 0, -0.35355338, 0, 0.70710677, 1, 0, 1)
+mesh = SubResource("SphereMesh_oq2ne")
 
 [node name="LeftEye" parent="." unique_id=900978946 instance=ExtResource("2_lvah5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 0)
