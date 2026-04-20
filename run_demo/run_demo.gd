@@ -86,7 +86,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		[dialgauge_demo, "Dial Gauge"],
 		[ladder_demo, "사다리게임"],
 		[line2d_demo, "MoveLine2d"],
-		[manhwa_eyes_demo, "만화 눈"],
+		[manhwa_face_demo, "만화 얼굴"],
 		[maze3d_demo, "Maze3D"],
 		[meshtrail_demo, "MeshTrail"],
 		[orbit_demo, "Orbit"],
@@ -123,8 +123,8 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 var colors_dark := NamedColors.filter_dark_color_list()
 var colors_light := NamedColors.filter_light_color_list()
 
-func manhwa_eyes_demo(gc :GlassCabinet) -> Callable:
-	var grid_gc := gc.make_CalcGrid3D( Vector3i(16,9,1))
+func manhwa_face_demo(gc :GlassCabinet) -> Callable:
+	var grid_gc := gc.make_CalcGrid3D( Vector3i(8,4,1))
 	var node3d_list :Array = []
 	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
 		node3d.position = grid_gc.get_n_th_lanepos(n)
@@ -132,16 +132,14 @@ func manhwa_eyes_demo(gc :GlassCabinet) -> Callable:
 		node3d_list.append(node3d)
 		return node3d
 	for i in grid_gc.get_grid_count():
-		var scale_outer := Vector3(randf_range(0.5,1.5) , 1, randf_range(0.5,1.5))
-		var scale_inner := randf_range(0.1,0.9)
-		var eye :ManhwaFace = preload("res://manhwa_face/manhwa_face.tscn").instantiate()
-		eye.set_radius(grid_gc.unit_size.x/3)
-		eye.rotate_x(PI/2)
-		eye.set_face_color(NamedColors.random_color())
-		eye.set_eye_color(colors_light.pick_random(),colors_dark.pick_random())
-		eye.set_eye_scale(scale_outer)
-		eye.set_Inner_radius_rate(scale_inner)
-		afterfn.call(i, eye)
+		var face :ManhwaFace = preload("res://manhwa_face/manhwa_face.tscn").instantiate()
+		face.set_radius(grid_gc.unit_size.x/3)
+		face.rotate_x(PI/2)
+		face.set_face_color(NamedColors.random_color())
+		face.set_eye_color(colors_light.pick_random(),colors_dark.pick_random())
+		face.set_eye_scale(Vector3(randf_range(0.5,1.5) , 1, randf_range(0.5,1.5)))
+		face.set_Inner_radius_rate(randf_range(0.1,0.9))
+		afterfn.call(i, face)
 
 	return func(_delta:float):
 		var now := Time.get_unix_time_from_system() * PI
