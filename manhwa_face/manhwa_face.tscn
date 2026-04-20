@@ -4,9 +4,11 @@
 [ext_resource type="PackedScene" uid="uid://cfg124pgk3k6u" path="res://manhwa_eye/manhwa_eye.tscn" id="2_lvah5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lvah5"]
+resource_local_to_scene = true
 albedo_color = Color(1, 1, 1, 0.49803922)
 
 [sub_resource type="SphereMesh" id="SphereMesh_lvah5"]
+resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_lvah5")
 flip_faces = true
 radius = 1.0

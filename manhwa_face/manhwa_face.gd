@@ -13,6 +13,18 @@ func get_face() -> MeshInstance3D:
 func show_face(b :bool) -> void:
 	$Face.visible = b
 
+func set_face_color(co :Color) -> void:
+	$Face.mesh.material.albedo_color = co
+
+func set_eye_color(Outer_color :Color, Inner_color :Color) -> void:
+	$LeftEye.set_color(Outer_color,Inner_color)
+	$RightEye.set_color(Outer_color,Inner_color)
+
+func set_eye_scale(scale_outer :Vector3) ->void:
+	$LeftEye.get_Outer().scale = scale_outer
+	$RightEye.get_Outer().scale = scale_outer
+
+
 func set_radius(r :float) -> void:
 	$Face.mesh.radius = r
 	$Face.mesh.height = r/5
