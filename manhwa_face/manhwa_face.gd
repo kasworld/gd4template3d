@@ -17,6 +17,8 @@ func set_face_color(co :Color) -> void:
 	$Face.mesh.material.albedo_color = co
 	$Face/LeftEar.mesh.material.albedo_color = co
 	$Face/RightEar.mesh.material.albedo_color = co
+	$Face/LeftEar/Inner.mesh.material.albedo_color = co.darkened(0.2)
+	$Face/RightEar/Inner.mesh.material.albedo_color = co.lightened(0.2)
 
 func set_eye_color(Outer_color :Color, Inner_color :Color) -> void:
 	$LeftEye.set_color(Outer_color,Inner_color)
@@ -34,16 +36,25 @@ func set_ear_rad(rad :float) -> void:
 	$Face/RightEar.rotation.y = -rad
 
 func set_bunny_ear() -> void:
-	$Face/LeftEar.scale = Vector3(0.5,1,1)
-	$Face/RightEar.scale = Vector3(0.5,1,1)
+	var ear_scale := Vector3(0.5,1,1)
+	$Face/LeftEar.scale = ear_scale
+	$Face/RightEar.scale = ear_scale
+	$Face/LeftEar/Inner.scale = ear_scale
+	$Face/RightEar/Inner.scale = ear_scale
 
 func set_round_ear() -> void:
-	$Face/LeftEar.scale = Vector3(1,1,1)
-	$Face/RightEar.scale = Vector3(1,1,1)
+	var ear_scale := Vector3(1,1,1)
+	$Face/LeftEar.scale = ear_scale
+	$Face/RightEar.scale = ear_scale
+	$Face/LeftEar/Inner.scale = ear_scale
+	$Face/RightEar/Inner.scale = ear_scale
 
 func set_puppy_ear() -> void:
-	$Face/LeftEar.scale = Vector3(1,1,0.5)
-	$Face/RightEar.scale = Vector3(1,1,0.5)
+	var ear_scale := Vector3(1,1,0.5)
+	$Face/LeftEar.scale = ear_scale
+	$Face/RightEar.scale = ear_scale
+	$Face/LeftEar/Inner.scale = ear_scale
+	$Face/RightEar/Inner.scale = ear_scale
 
 
 func set_radius(r :float) -> void:
@@ -51,8 +62,12 @@ func set_radius(r :float) -> void:
 	$Face.mesh.height = r/5
 	$Face/LeftEar.mesh.radius = r/2
 	$Face/LeftEar.mesh.height = r/5
+	$Face/LeftEar/Inner.mesh.radius = r/2 * 0.8
+	$Face/LeftEar/Inner.mesh.height = r/5
 	$Face/RightEar.mesh.radius = r/2
 	$Face/RightEar.mesh.height = r/5
+	$Face/RightEar/Inner.mesh.radius = r/2 * 0.8
+	$Face/RightEar/Inner.mesh.height = r/5
 	set_ear_rad(PI/4)
 
 	$LeftEye.set_radius(r/2)

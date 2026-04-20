@@ -21,7 +21,20 @@ resource_local_to_scene = true
 [sub_resource type="SphereMesh" id="SphereMesh_v2xun"]
 resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_hvy2c")
+flip_faces = true
 height = 0.2
+is_hemisphere = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_v2xun"]
+resource_local_to_scene = true
+albedo_color = Color(0.19195786, 0.19195786, 0.19195786, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_j07hl"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_v2xun")
+radius = 0.4
+height = 0.1
+is_hemisphere = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_j07hl"]
 resource_local_to_scene = true
@@ -29,7 +42,20 @@ resource_local_to_scene = true
 [sub_resource type="SphereMesh" id="SphereMesh_oq2ne"]
 resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_j07hl")
+flip_faces = true
 height = 0.2
+is_hemisphere = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oq2ne"]
+resource_local_to_scene = true
+albedo_color = Color(0.26657522, 0.2665752, 0.2665752, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_lmv2m"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_oq2ne")
+radius = 0.4
+height = 0.1
+is_hemisphere = true
 
 [node name="ManhwaFace" type="Node3D" unique_id=1004604187]
 script = ExtResource("1_lvah5")
@@ -39,12 +65,18 @@ transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0
 mesh = SubResource("SphereMesh_lvah5")
 
 [node name="LeftEar" type="MeshInstance3D" parent="Face" unique_id=1328752049]
-transform = Transform3D(0.35355338, 0, -0.70710677, 0, 1, 0, 0.35355338, 0, 0.70710677, -1, 0, 1)
+transform = Transform3D(0.49999997, 0, 0, 0, 1, 0, 0, 0, 0.99999994, -1, 0, 1)
 mesh = SubResource("SphereMesh_v2xun")
 
+[node name="Inner" type="MeshInstance3D" parent="Face/LeftEar" unique_id=863903191]
+mesh = SubResource("SphereMesh_j07hl")
+
 [node name="RightEar" type="MeshInstance3D" parent="Face" unique_id=2070232070]
-transform = Transform3D(0.35355338, 0, 0.70710677, 0, 1, 0, -0.35355338, 0, 0.70710677, 1, 0, 1)
+transform = Transform3D(0.49999997, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 1, 0, 1)
 mesh = SubResource("SphereMesh_oq2ne")
+
+[node name="Inner" type="MeshInstance3D" parent="Face/RightEar" unique_id=1937348302]
+mesh = SubResource("SphereMesh_lmv2m")
 
 [node name="LeftEye" parent="." unique_id=900978946 instance=ExtResource("2_lvah5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 0)
