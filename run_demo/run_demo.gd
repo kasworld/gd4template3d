@@ -134,6 +134,14 @@ func manhwa_face_demo(gc :GlassCabinet) -> Callable:
 	for i in grid_gc.get_grid_count():
 		var face :ManhwaFace = preload("res://manhwa_face/manhwa_face.tscn").instantiate()
 		face.set_radius(grid_gc.unit_size.x/3)
+		match randi_range(0,2):
+			0:
+				face.set_bunny_ear()
+			1:
+				face.set_round_ear()
+			2:
+				face.set_puppy_ear()
+		face.set_ear_rad(randf_range(PI/16, PI/3))
 		face.rotate_x(PI/2)
 		face.set_face_color(NamedColors.random_color())
 		face.set_eye_color(colors_light.pick_random(),colors_dark.pick_random())
