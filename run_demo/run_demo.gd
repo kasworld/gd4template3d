@@ -134,16 +134,19 @@ func manhwa_eyes_demo(gc :GlassCabinet) -> Callable:
 	var co1 :Color
 	var co2 :Color
 	var scale_outer :Vector3
+	var scale_inner :float
 	for i in grid_gc.get_grid_count():
 		if i % 2 == 0:
 			co1 = colors_light.pick_random()
 			co2 = colors_dark.pick_random()
 			scale_outer = Vector3(randf_range(0.5,1.5) , 1, randf_range(0.5,1.5))
+			scale_inner = randf_range(0.1,0.9)
 		var eye :ManhwaEye = preload("res://manhwa_eye/manhwa_eye.tscn").instantiate()
 		eye.set_radius(grid_gc.unit_size.x/3)
 		eye.rotate_x(PI/2)
 		eye.set_color(co1,co2)
 		eye.get_Outer().scale = scale_outer
+		eye.set_Inner_radius_rate(scale_inner)
 		afterfn.call(i, eye)
 
 	return func(_delta:float):
@@ -151,12 +154,10 @@ func manhwa_eyes_demo(gc :GlassCabinet) -> Callable:
 		for i in node3d_list.size():
 			var node :ManhwaEye = node3d_list[i]
 			match i %8 :
-				0:
+				0,3:
 					node.move_Inner(cos(now), sin(now) )
-				1:
+				1,2:
 					node.move_Inner(-cos(now), sin(now))
-				2,3:
-					node.set_Inner_radius_rate( abs(cos(now)) )
 				4,5:
 					node.move_Inner(cos(now), 0 )
 				6,7:

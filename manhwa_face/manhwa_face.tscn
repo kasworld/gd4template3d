@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://da4ukbfbnr1cg"]
+
+[ext_resource type="Script" uid="uid://co5qdelsxu64n" path="res://manhwa_face/manhwa_face.gd" id="1_lvah5"]
+[ext_resource type="PackedScene" uid="uid://cfg124pgk3k6u" path="res://manhwa_eye/manhwa_eye.tscn" id="2_lvah5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lvah5"]
+albedo_color = Color(1, 1, 1, 0.49803922)
+
+[sub_resource type="SphereMesh" id="SphereMesh_lvah5"]
+material = SubResource("StandardMaterial3D_lvah5")
+flip_faces = true
+radius = 1.0
+height = 0.2
+is_hemisphere = true
+
+[node name="ManhwaFace" type="Node3D" unique_id=1004604187]
+script = ExtResource("1_lvah5")
+
+[node name="Face" type="MeshInstance3D" parent="." unique_id=466923686]
+transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0)
+mesh = SubResource("SphereMesh_lvah5")
+
+[node name="LeftEye" parent="." unique_id=900978946 instance=ExtResource("2_lvah5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 0)
+
+[node name="RightEye" parent="." unique_id=1167787779 instance=ExtResource("2_lvah5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0)
