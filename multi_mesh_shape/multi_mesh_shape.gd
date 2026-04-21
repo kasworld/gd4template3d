@@ -95,17 +95,17 @@ func init_meshs_by_point_list(mesh :Mesh, point_list :Array, co :Color) -> Multi
 		multimesh.set_instance_transform(i, Transform3D(Basis(), point_list[i]))
 	return self
 
-func multi_line_by_pos(pos_list:Array, wire_width :float, co :Color, transparent :bool = false) -> MultiMeshShape:
+func multi_line_by_pos(line_list:Array, wire_width :float, co :Color, transparent :bool = false) -> MultiMeshShape:
 	var mesh := BoxMesh.new()
 	mesh.material = MakeMultiMeshColorMaterial(transparent)
-	return multi_mesh_line_by_pos(mesh, pos_list, wire_width, co)
+	return multi_mesh_line_by_pos(mesh, line_list, wire_width, co)
 
-func multi_mesh_line_by_pos(mesh :Mesh, pos_list:Array, wire_width :float, co :Color) -> MultiMeshShape:
-	init_with_color_mesh(mesh, pos_list.size(), false)
+func multi_mesh_line_by_pos(mesh :Mesh, line_list:Array, wire_width :float, co :Color) -> MultiMeshShape:
+	init_with_color_mesh(mesh, line_list.size(), false)
 	set_color_all(co)
-	for i in pos_list.size():
-		var p1 :Vector3 = pos_list[i][0]
-		var p2 :Vector3 = pos_list[i][1]
+	for i in line_list.size():
+		var p1 :Vector3 = line_list[i][0]
+		var p2 :Vector3 = line_list[i][1]
 		var center := (p1+p2)/2
 		var l := p1.distance_to(p2)
 		var wire_scale := Vector3(wire_width, wire_width, l)
@@ -181,9 +181,7 @@ func calc_visible_rate() -> float:
 
 # init functions
 
-func init_with_mesh( mesh :Mesh, count :int,
-		callinit_transform :bool = true,
-		pos :Vector3 = Vector3.ZERO ) -> MultiMeshShape:
+func init_with_mesh( mesh :Mesh, count :int, callinit_transform :bool = true, pos :Vector3 = Vector3.ZERO ) -> MultiMeshShape:
 	_init_multimesh(mesh)
 	# Then resize (otherwise, changing the format is not allowed).
 	_set_count(count)
