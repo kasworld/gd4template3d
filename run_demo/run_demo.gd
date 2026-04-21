@@ -140,7 +140,7 @@ func manhwa_face_demo(gc :GlassCabinet) -> Callable:
 		face.set_face_color(NamedColors.random_color())
 		face.set_eye_color(colors_light.pick_random(),colors_dark.pick_random())
 		face.set_eye_scale(Vector3(randf_range(0.5,1.5) , 1, randf_range(0.5,1.5)))
-		face.set_Inner_radius_rate(randf_range(0.1,0.9))
+		face.set_eye_Inner_radius_rate(randf_range(0.1,0.9))
 		afterfn.call(i, face)
 
 	return func(_delta:float):
@@ -149,13 +149,13 @@ func manhwa_face_demo(gc :GlassCabinet) -> Callable:
 			var node :ManhwaFace = node3d_list[i]
 			match i %4 :
 				0:
-					node.move_Inner(cos(now), sin(now) )
+					node.move_eye_Inner(cos(now), sin(now) )
 				1:
-					node.move_Inner(-cos(now), sin(now))
+					node.move_eye_Inner(-cos(now), sin(now))
 				2:
-					node.move_Inner(cos(now), 0 )
+					node.move_eye_Inner(cos(now), 0 )
 				3:
-					node.move_Inner(0, sin(now))
+					node.move_eye_Inner(0, sin(now))
 
 func seven_segment_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()

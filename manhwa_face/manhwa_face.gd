@@ -28,12 +28,6 @@ func set_eye_scale(scale_outer :Vector3) ->void:
 	$LeftEye.get_Outer().scale = scale_outer
 	$RightEye.get_Outer().scale = scale_outer
 
-func set_ear_rad(rad :float) -> void:
-	var sq_len :float = $Face.mesh.radius + $Face/LeftEar.mesh.radius * $Face/LeftEar.scale.z
-	$Face/LeftEar.position = Vector3( sin(rad), 0, cos(rad) ) * sq_len
-	$Face/LeftEar.rotation.y = rad
-	$Face/RightEar.position = Vector3( -sin(rad), 0, cos(rad) ) * sq_len
-	$Face/RightEar.rotation.y = -rad
 
 enum EarType {Round, Bunny, Puppy}
 
@@ -43,7 +37,8 @@ const EarTypeToScale :Dictionary[EarType,Vector3] = {
 	EarType.Puppy : Vector3(1.0, 1.0, 0.5),
 }
 
-var ear_type :EarType
+var ear_type :EarType = EarType.Round
+var ear_rad :float = PI/4
 
 func set_ear_type(et :EarType) -> void:
 	ear_type = et
@@ -53,37 +48,41 @@ func set_ear_type(et :EarType) -> void:
 	$Face/LeftEar/Inner.scale = ear_scale
 	$Face/RightEar/Inner.scale = ear_scale
 
-func set_bunny_ear() -> void:
-	set_ear_type(EarType.Bunny)
+func set_ear_rad(rad :float) -> void:
+	ear_rad = rad
+	var sq_len :float = $Face.mesh.radius + $Face/LeftEar.mesh.radius * $Face/LeftEar.scale.z
+	$Face/LeftEar.position = Vector3( sin(rad), 0, cos(rad) ) * sq_len
+	$Face/LeftEar.rotation.y = rad
+	$Face/RightEar.position = Vector3( -sin(rad), 0, cos(rad) ) * sq_len
+	$Face/RightEar.rotation.y = -rad
 
-func set_round_ear() -> void:
-	set_ear_type(EarType.Round)
-
-func set_puppy_ear() -> void:
-	set_ear_type(EarType.Puppy)
+func set_ear_radius(r :float) -> void:
+	var ear_radius := r
+	var ear_height := r/2.5
+	$Face/LeftEar.mesh.radius = ear_radius
+	$Face/LeftEar.mesh.height = ear_height
+	$Face/LeftEar/Inner.mesh.radius = ear_radius * 0.8
+	$Face/LeftEar/Inner.mesh.height = ear_height
+	$Face/RightEar.mesh.radius = ear_radius
+	$Face/RightEar.mesh.height = ear_height
+	$Face/RightEar/Inner.mesh.radius = ear_radius * 0.8
+	$Face/RightEar/Inner.mesh.height = ear_height
+	set_ear_rad(ear_rad)
 
 func set_radius(r :float) -> void:
 	$Face.mesh.radius = r
 	$Face.mesh.height = r/5
-	$Face/LeftEar.mesh.radius = r/2
-	$Face/LeftEar.mesh.height = r/5
-	$Face/LeftEar/Inner.mesh.radius = r/2 * 0.8
-	$Face/LeftEar/Inner.mesh.height = r/5
-	$Face/RightEar.mesh.radius = r/2
-	$Face/RightEar.mesh.height = r/5
-	$Face/RightEar/Inner.mesh.radius = r/2 * 0.8
-	$Face/RightEar/Inner.mesh.height = r/5
-	set_ear_rad(PI/4)
+	set_ear_radius(r/2)
 
 	$LeftEye.set_radius(r/2)
 	$LeftEye.position.x = -r/2
 	$RightEye.set_radius(r/2)
 	$RightEye.position.x = r/2
 
-func move_Inner(x_rate :float, y_rate :float) -> void:
+func move_eye_Inner(x_rate :float, y_rate :float) -> void:
 	$LeftEye.move_Inner(x_rate,y_rate)
 	$RightEye.move_Inner(x_rate,y_rate)
 
-func set_Inner_radius_rate(rate :float) -> void:
+func set_eye_Inner_radius_rate(rate :float) -> void:
 	$LeftEye.set_Inner_radius_rate(rate)
 	$RightEye.set_Inner_radius_rate(rate)
