@@ -150,12 +150,16 @@ func manhwa_face_demo(gc :GlassCabinet) -> Callable:
 			match i %4 :
 				0:
 					node.move_eye_Inner(cos(now), sin(now) )
+					node.set_ear_rad(cos(now))
 				1:
 					node.move_eye_Inner(-cos(now), sin(now))
+					node.set_ear_rad(sin(now))
 				2:
 					node.move_eye_Inner(cos(now), 0 )
+					node.set_ear_rad(cos(now))
 				3:
 					node.move_eye_Inner(0, sin(now))
+					node.set_ear_rad(sin(now))
 
 func seven_segment_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()

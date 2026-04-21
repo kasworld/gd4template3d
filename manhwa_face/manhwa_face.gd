@@ -49,7 +49,7 @@ func set_ear_type(et :EarType) -> void:
 	$Face/LeftEar/Inner.scale = ear_scale
 	$Face/RightEar/Inner.scale = ear_scale
 
-func set_ear_rad(rad :float, overlap :float = 0.0) -> void:
+func set_ear_rad(rad :float, overlap :float = ear_overlap_rate) -> void:
 	ear_rad = rad
 	ear_overlap_rate = overlap
 	var sq_len :float = $Face.mesh.radius + $Face/LeftEar.mesh.radius * $Face/LeftEar.scale.z
