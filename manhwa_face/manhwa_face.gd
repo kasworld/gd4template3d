@@ -35,27 +35,32 @@ func set_ear_rad(rad :float) -> void:
 	$Face/RightEar.position = Vector3( -sin(rad), 0, cos(rad) ) * sq_len
 	$Face/RightEar.rotation.y = -rad
 
-func set_bunny_ear() -> void:
-	var ear_scale := Vector3(0.5,1,1)
+enum EarType {Round, Bunny, Puppy}
+
+const EarTypeToScale :Dictionary[EarType,Vector3] = {
+	EarType.Round : Vector3(1.0, 1.0, 1.0),
+	EarType.Bunny : Vector3(0.5, 1.0, 1.0),
+	EarType.Puppy : Vector3(1.0, 1.0, 0.5),
+}
+
+var ear_type :EarType
+
+func set_ear_type(et :EarType) -> void:
+	ear_type = et
+	var ear_scale := EarTypeToScale[ear_type]
 	$Face/LeftEar.scale = ear_scale
 	$Face/RightEar.scale = ear_scale
 	$Face/LeftEar/Inner.scale = ear_scale
 	$Face/RightEar/Inner.scale = ear_scale
+
+func set_bunny_ear() -> void:
+	set_ear_type(EarType.Bunny)
 
 func set_round_ear() -> void:
-	var ear_scale := Vector3(1,1,1)
-	$Face/LeftEar.scale = ear_scale
-	$Face/RightEar.scale = ear_scale
-	$Face/LeftEar/Inner.scale = ear_scale
-	$Face/RightEar/Inner.scale = ear_scale
+	set_ear_type(EarType.Round)
 
 func set_puppy_ear() -> void:
-	var ear_scale := Vector3(1,1,0.5)
-	$Face/LeftEar.scale = ear_scale
-	$Face/RightEar.scale = ear_scale
-	$Face/LeftEar/Inner.scale = ear_scale
-	$Face/RightEar/Inner.scale = ear_scale
-
+	set_ear_type(EarType.Puppy)
 
 func set_radius(r :float) -> void:
 	$Face.mesh.radius = r
