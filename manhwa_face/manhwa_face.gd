@@ -39,6 +39,7 @@ const EarTypeToScale :Dictionary[EarType,Vector3] = {
 
 var ear_type :EarType = EarType.Round
 var ear_rad :float = PI/4
+var ear_overlap_rate :float = 0.1
 
 func set_ear_type(et :EarType) -> void:
 	ear_type = et
@@ -48,9 +49,11 @@ func set_ear_type(et :EarType) -> void:
 	$Face/LeftEar/Inner.scale = ear_scale
 	$Face/RightEar/Inner.scale = ear_scale
 
-func set_ear_rad(rad :float) -> void:
+func set_ear_rad(rad :float, overlap :float = 0.0) -> void:
 	ear_rad = rad
+	ear_overlap_rate = overlap
 	var sq_len :float = $Face.mesh.radius + $Face/LeftEar.mesh.radius * $Face/LeftEar.scale.z
+	sq_len *= (1-ear_overlap_rate)
 	$Face/LeftEar.position = Vector3( sin(rad), 0, cos(rad) ) * sq_len
 	$Face/LeftEar.rotation.y = rad
 	$Face/RightEar.position = Vector3( -sin(rad), 0, cos(rad) ) * sq_len
@@ -67,7 +70,7 @@ func set_ear_radius(r :float) -> void:
 	$Face/RightEar.mesh.height = ear_height
 	$Face/RightEar/Inner.mesh.radius = ear_radius * 0.8
 	$Face/RightEar/Inner.mesh.height = ear_height
-	set_ear_rad(ear_rad)
+	set_ear_rad(ear_rad, ear_overlap_rate)
 
 func set_radius(r :float) -> void:
 	$Face.mesh.radius = r
