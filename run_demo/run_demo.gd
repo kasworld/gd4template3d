@@ -131,12 +131,13 @@ func flower_demo(gc :GlassCabinet) -> Callable:
 		return node3d
 	for i in grid_gc.get_grid_count():
 		var fl :Flower = preload("res://flower/flower.tscn").instantiate()
-		fl.init(grid_gc.unit_size.x/3,
-			randi_range(5,20), randf_range(0.1,0.3), randf_range(-0.1,0.3),
-			NamedColors.random_color(), NamedColors.random_color())
+		var flower_r := grid_gc.unit_size.x/3
+		fl.init_center(randf_range(flower_r*0.1,flower_r*0.5), NamedColors.random_color())
+		fl.init_petal(flower_r, randf_range(flower_r*0.2,flower_r*0.5),
+			randi_range(3,16), NamedColors.random_color(), randf_range(0.1, 1.0))
 		fl.rotate_x(-PI/2)
 		afterfn.call(i,fl)
-	return Callable()
+	return AnimateList.new().init_rotate(node3d_list)
 
 var colors_dark := NamedColors.filter_dark_color_list()
 var colors_light := NamedColors.filter_light_color_list()

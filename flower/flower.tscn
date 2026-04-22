@@ -21,6 +21,7 @@ script = ExtResource("1_l8ytj")
 
 [node name="Center" type="MeshInstance3D" parent="." unique_id=1093541967]
 transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, 0)
+visible = false
 mesh = SubResource("SphereMesh_e74jf")
 
 [node name="Petal" parent="." unique_id=211187273 instance=ExtResource("2_qc4up")]
