@@ -84,6 +84,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		[clock_calendar_demo, "Clock Calender"],
 		[color_tile_demo, "Color Tile"],
 		[dialgauge_demo, "Dial Gauge"],
+		[flower_demo, "꽃"],
 		[ladder_demo, "사다리게임"],
 		[line2d_demo, "MoveLine2d"],
 		[manhwa_face_demo, "만화 얼굴"],
@@ -119,6 +120,21 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		empty_glass_cabinet_iter = ListIter.new([])
 	print_debug("remain glass cabinet %d\ndemo count %s" % [
 		empty_glass_cabinet_iter.get_size(),used_glass_cabinet_iter.get_size() ])
+
+func flower_demo(gc :GlassCabinet) -> Callable:
+	var grid_gc := gc.make_CalcGrid3D( Vector3i(2,1,1))
+	var node3d_list :Array = []
+	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
+		node3d.position = grid_gc.get_n_th_lanepos(n)
+		gc.add_child(node3d)
+		node3d_list.append(node3d)
+		return node3d
+	for i in grid_gc.get_grid_count():
+		var fl :Flower = preload("res://flower/flower.tscn").instantiate()
+		fl.init(grid_gc.unit_size.x/3, 8, 0.3, 0.1, NamedColors.random_color(), NamedColors.random_color())
+		fl.rotate_x(-PI/2)
+		afterfn.call(i,fl)
+	return Callable()
 
 var colors_dark := NamedColors.filter_dark_color_list()
 var colors_light := NamedColors.filter_light_color_list()
