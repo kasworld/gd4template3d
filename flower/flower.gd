@@ -7,7 +7,7 @@ func make_petal_mesh_sphere(radius :float) -> Mesh:
 	mesh.height = radius/5
 	mesh.is_hemisphere = true
 	#mesh.radial_segments = 6
-	#mesh.rings = 4
+	mesh.rings = 4
 	mesh.flip_faces = true
 	mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial(true)
 	return mesh
@@ -41,6 +41,7 @@ func init_petal(flower_radius :float, petal_radius :float, count :int, co :Color
 
 func init_center(radius :float, co :Color) -> Flower:
 	$Center.mesh.radius = radius
+	$Center.mesh.height = radius / 5
 	$Center.mesh.material.albedo_color = co
 	$Center.visible = true
 	return self
