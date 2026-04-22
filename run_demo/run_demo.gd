@@ -27,6 +27,15 @@ static func AddRotateRandomAnimation(animation :SimpleAnimation, node3d :Node3D,
 	animation.start_rotation_subfield(
 		"ani_rot", node3d, axis , node3d.rotation[axis], node3d.rotation[axis] + diff, ani_dur)
 
+static func AddRotateRandomAnimationAxis(animation :SimpleAnimation, node3d :Node3D, axis :int, rotate_range :float = PI) -> void:
+	var diff :float =  randf_range(-rotate_range, rotate_range)
+	var ani_dur := absf(diff)
+	var ani := SimpleAnimation.MakeAnimationSubfield(
+		"ani_rot", node3d, "rotation", axis,
+		node3d.rotation[axis], node3d.rotation[axis] + diff, ani_dur)
+	animation.add_animation(ani)
+
+
 ## z offset : -zrange ~ zrange
 static func WaveColorTileGrid(tg :TileGrid, now :float, zrange :float) -> void:
 	var cg := tg.calc_grid
@@ -60,6 +69,15 @@ class AnimateList:
 			RunDemo.AddRotateRandomAnimation(animation, node, rotate_range))
 		for node in node3d_list:
 			RunDemo.AddRotateRandomAnimation(animation, node, rotate_range)
+		return func(_delta:float):
+			animation.handle_animation()
+
+	func init_rotate_axis(olist :Array, axis :int, rotate_range :float = PI) -> Callable:
+		set_list(olist)
+		animation.animation_ended.connect(func(node :Node3D, _ani :Dictionary) -> void:
+			RunDemo.AddRotateRandomAnimationAxis(animation, node, axis, rotate_range))
+		for node in node3d_list:
+			RunDemo.AddRotateRandomAnimationAxis(animation, node, axis, rotate_range)
 		return func(_delta:float):
 			animation.handle_animation()
 
@@ -132,16 +150,17 @@ func flower_demo(gc :GlassCabinet) -> Callable:
 	for i in grid_gc.get_grid_count():
 		var fl :Flower = preload("res://flower/flower.tscn").instantiate()
 		var flower_r := grid_gc.unit_size.x/3
-		fl.init_center(randf_range(flower_r*0.1,flower_r*0.5), NamedColors.random_color())
 		var petal_count := randi_range(3,16)
 		var petal_width_scale := randf_range(0.1, 1.0)
+		var petal_radial :int = [4,5,6,32].pick_random()
 		if petal_count > 8 :
 			petal_width_scale = randf_range(0.1, 0.5)
 		fl.init_petal(flower_r, randf_range(flower_r*0.2,flower_r*0.5),
-			petal_count, NamedColors.random_color(), petal_width_scale)
-		fl.rotate_x(-PI/2)
+			petal_count, NamedColors.random_color(), petal_width_scale, petal_radial)
+		fl.init_center(randf_range(flower_r*0.1,flower_r*0.5), NamedColors.random_color(), petal_count)
+		fl.rotation_axis(Vector3.Axis.AXIS_X)
 		afterfn.call(i,fl)
-	return AnimateList.new().init_rotate(node3d_list)
+	return AnimateList.new().init_rotate_axis(node3d_list, Vector3.Axis.AXIS_Z)
 
 var colors_dark := NamedColors.filter_dark_color_list()
 var colors_light := NamedColors.filter_light_color_list()
