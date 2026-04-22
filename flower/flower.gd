@@ -49,6 +49,7 @@ func init_center(radius :float, co :Color, radial_segment :int = 64) -> Flower:
 	$Center.visible = true
 	return self
 
-func rotation_axis(axis :int) -> void:
-	$Petal.rotation[axis] = PI/2
-	$Center.rotation[axis] = -PI/2
+## rotate inner node3d
+func rotation_axis(axis :int, rad :float = PI/2) -> void:
+	$Petal.rotation[axis] = rad
+	$Center.rotation[axis] = -rad

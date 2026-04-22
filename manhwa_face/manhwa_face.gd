@@ -89,3 +89,9 @@ func move_eye_Inner(x_rate :float, y_rate :float) -> void:
 func set_eye_Inner_radius_rate(rate :float) -> void:
 	$LeftEye.set_Inner_radius_rate(rate)
 	$RightEye.set_Inner_radius_rate(rate)
+
+## rotate inner node3d
+func rotation_axis(axis :int, rad :float = PI/2) -> void:
+	$Face.rotation[axis] = rad
+	$LeftEye.rotation[axis] = rad
+	$RightEye.rotation[axis] = rad

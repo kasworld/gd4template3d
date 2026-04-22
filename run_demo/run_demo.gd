@@ -157,6 +157,8 @@ func flower_demo(gc :GlassCabinet) -> Callable:
 			petal_width_scale = randf_range(0.1, 0.5)
 		fl.init_petal(flower_r, randf_range(flower_r*0.2,flower_r*0.5),
 			petal_count, NamedColors.random_color(), petal_width_scale, petal_radial)
+		if petal_count <= 3:
+			petal_count *=2
 		fl.init_center(randf_range(flower_r*0.1,flower_r*0.5), NamedColors.random_color(), petal_count)
 		fl.rotation_axis(Vector3.Axis.AXIS_X)
 		afterfn.call(i,fl)
@@ -178,11 +180,12 @@ func manhwa_face_demo(gc :GlassCabinet) -> Callable:
 		face.set_radius(grid_gc.unit_size.x/4)
 		face.set_ear_type(randi_range(0,2))
 		face.set_ear_rad(randf_range(PI/16, PI/3), randf_range(-0.1,0.1))
-		face.rotate_x(PI/2)
 		face.set_face_color(NamedColors.random_color())
 		face.set_eye_color(colors_light.pick_random(),colors_dark.pick_random())
 		face.set_eye_scale(Vector3(randf_range(0.5,1.5) , 1, randf_range(0.5,1.5)))
 		face.set_eye_Inner_radius_rate(randf_range(0.1,0.9))
+		face.rotation_axis(Vector3.Axis.AXIS_X, -PI/2)
+
 		afterfn.call(i, face)
 
 	return func(_delta:float):
