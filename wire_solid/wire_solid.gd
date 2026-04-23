@@ -12,7 +12,7 @@ const FaceEdgeData = {
 func init(face :int, edge_from:int, edge_to :int, outer_radius :float, wire_width :float, wire_color :Color, ball_radius :float) -> WireSolid:
 	var points := PlatonicSolids.ScalePointList( PlatonicSolids.PointEdge[face][0], outer_radius )
 	var lines := PlatonicSolids.PointListToLineList2(points, edge_from, edge_to )
-	$Wires.multi_line_by_pos(lines, wire_width, wire_color)
+	$Wires.multi_by_line_list(lines, wire_width, wire_color)
 
 	var sp_mesh := SphereMesh.new()
 	sp_mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial(false)
@@ -22,7 +22,7 @@ func init(face :int, edge_from:int, edge_to :int, outer_radius :float, wire_widt
 	sp_mesh.material.rim_enabled = true
 	sp_mesh.radius = ball_radius
 	sp_mesh.height = ball_radius *2
-	$Spheres.init_meshs_by_point_list(sp_mesh, points, wire_color)
+	$Spheres.init_meshs_by_position_list(sp_mesh, points, wire_color)
 
 	outer_radius += wire_width
 	$OuterSphere.mesh.radius = outer_radius

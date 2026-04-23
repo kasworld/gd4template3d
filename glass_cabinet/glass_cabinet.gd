@@ -28,7 +28,7 @@ func init(cabinet_size_a :Vector3) -> GlassCabinet:
 	$Description.pixel_size = cabinet_size.y/600
 	$Description.position = Vector3(cabinet_size.x/2,-cabinet_size.y/2,cabinet_size.z/2)
 	$WireBox.init_wire_box( cabinet_size, cabinet_size.length()/200, Color.WHITE)
-	$Points.init_spheres_by_point_list(
+	$Points.init_spheres_by_position_list(
 		PlatonicSolids.MultiplyPointList(PlatonicSolids.CubePoints, cabinet_size/2),
 		cabinet_size.length()/200, Color.WHITE,
 	)

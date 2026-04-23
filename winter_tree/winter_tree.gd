@@ -32,7 +32,7 @@ func init(h :float, w :float, y_count :int, w_branch_density :float = PI, line_w
 	var bmesh := PrismMesh.new()
 	bmesh.material = MultiMeshShape.MakeMultiMeshColorMaterial(false)
 	bmesh.size = Vector3(1,0.3,1)
-	$가지들.multi_mesh_line_by_pos(bmesh, branch_list, line_width, Color.WHITE)
+	$가지들.multi_mesh_by_line_list(bmesh, branch_list, line_width, Color.WHITE)
 
 	var pos_list := []
 	for i in 500:
@@ -46,7 +46,7 @@ func init(h :float, w :float, y_count :int, w_branch_density :float = PI, line_w
 	sp_mesh.material.rim_enabled = true
 	sp_mesh.radius = 0.5
 	sp_mesh.height = 0.5*2
-	$"장식들".init_meshs_by_point_list(sp_mesh, pos_list, Color.WHITE)
+	$"장식들".init_meshs_by_position_list(sp_mesh, pos_list, Color.WHITE)
 
 	return self
 

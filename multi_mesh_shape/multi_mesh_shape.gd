@@ -81,26 +81,30 @@ func init_wire_box(box_size :Vector3, wire_width :float, co :Color, transparent 
 			i += 1
 	return self
 
-func init_spheres_by_point_list(point_list :Array, point_radius :float, co :Color, transparent :bool = false) -> MultiMeshShape:
+## sphere position list
+func init_spheres_by_position_list(position_list :Array, sphere_radius :float, co :Color, transparent :bool = false) -> MultiMeshShape:
 	var sp_mesh := SphereMesh.new()
 	sp_mesh.material = MakeMultiMeshColorMaterial(transparent)
-	sp_mesh.radius = point_radius
-	sp_mesh.height = point_radius*2
-	return init_meshs_by_point_list(sp_mesh, point_list, co)
+	sp_mesh.radius = sphere_radius
+	sp_mesh.height = sphere_radius*2
+	return init_meshs_by_position_list(sp_mesh, position_list, co)
 
-func init_meshs_by_point_list(mesh :Mesh, point_list :Array, co :Color) -> MultiMeshShape:
-	init_with_color_mesh(mesh, point_list.size(), false)
+## instance position list
+func init_meshs_by_position_list(mesh :Mesh, position_list :Array, co :Color) -> MultiMeshShape:
+	init_with_color_mesh(mesh, position_list.size(), false)
 	set_color_all(co)
-	for i in point_list.size():
-		multimesh.set_instance_transform(i, Transform3D(Basis(), point_list[i]))
+	for i in position_list.size():
+		multimesh.set_instance_transform(i, Transform3D(Basis(), position_list[i]))
 	return self
 
-func multi_line_by_pos(line_list:Array, wire_width :float, co :Color, transparent :bool = false) -> MultiMeshShape:
+## line_list : Array[[position, position]]
+func multi_by_line_list(line_list:Array, wire_width :float, co :Color, transparent :bool = false) -> MultiMeshShape:
 	var mesh := BoxMesh.new()
 	mesh.material = MakeMultiMeshColorMaterial(transparent)
-	return multi_mesh_line_by_pos(mesh, line_list, wire_width, co)
+	return multi_mesh_by_line_list(mesh, line_list, wire_width, co)
 
-func multi_mesh_line_by_pos(mesh :Mesh, line_list:Array, wire_width :float, co :Color) -> MultiMeshShape:
+## line_list : Array[[position, position]]
+func multi_mesh_by_line_list(mesh :Mesh, line_list:Array, wire_width :float, co :Color) -> MultiMeshShape:
 	init_with_color_mesh(mesh, line_list.size(), false)
 	set_color_all(co)
 	for i in line_list.size():
