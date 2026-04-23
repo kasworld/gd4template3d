@@ -64,12 +64,16 @@ func set_ear_radius(r :float) -> void:
 	var ear_height := r/2.5
 	$Face/LeftEar.mesh.radius = ear_radius
 	$Face/LeftEar.mesh.height = ear_height
+	$Face/LeftEar.mesh.rings = 4
 	$Face/LeftEar/Inner.mesh.radius = ear_radius * 0.8
 	$Face/LeftEar/Inner.mesh.height = ear_height
+	$Face/LeftEar/Inner.mesh.rings = 4
 	$Face/RightEar.mesh.radius = ear_radius
 	$Face/RightEar.mesh.height = ear_height
+	$Face/RightEar.mesh.rings = 4
 	$Face/RightEar/Inner.mesh.radius = ear_radius * 0.8
 	$Face/RightEar/Inner.mesh.height = ear_height
+	$Face/RightEar/Inner.mesh.rings = 4
 	set_ear_rad(ear_rad, ear_overlap_rate)
 
 func set_radius(r :float) -> void:
