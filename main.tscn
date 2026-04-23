@@ -69,19 +69,23 @@ theme = SubResource("Theme_h2yge")
 
 [node name="끝내기" type="Button" parent="오른쪽패널" unique_id=1048553347]
 layout_mode = 2
-text = "끝내기"
+text = "ESC : 끝내기"
 
 [node name="카메라변경" type="Button" parent="오른쪽패널" unique_id=1262545182]
 layout_mode = 2
-text = "카메라변경"
+text = "Enter : 카메라변경"
+
+[node name="UI숨기기" type="Button" parent="오른쪽패널" unique_id=1866846600]
+layout_mode = 2
+text = "1 : UI 숨기기"
 
 [node name="FOV inc" type="Button" parent="오른쪽패널" unique_id=707752656]
 layout_mode = 2
-text = "FOV inc"
+text = "PgUp : FOV inc"
 
 [node name="FOV dec" type="Button" parent="오른쪽패널" unique_id=96130199]
 layout_mode = 2
-text = "FOV dec"
+text = "PgDn : FOV dec"
 
 [node name="LabelPerformance" type="Label" parent="오른쪽패널" unique_id=1366601294]
 layout_mode = 2
@@ -117,5 +121,6 @@ environment = SubResource("Environment_7mycd")
 [connection signal="item_selected" from="왼쪽패널/SelectCamera" to="." method="_on_select_camera_item_selected"]
 [connection signal="pressed" from="오른쪽패널/끝내기" to="." method="_on_끝내기_pressed"]
 [connection signal="pressed" from="오른쪽패널/카메라변경" to="." method="_on_카메라변경_pressed"]
+[connection signal="pressed" from="오른쪽패널/UI숨기기" to="." method="_on_ui숨기기_pressed"]
 [connection signal="pressed" from="오른쪽패널/FOV inc" to="." method="_on_fov_inc_pressed"]
 [connection signal="pressed" from="오른쪽패널/FOV dec" to="." method="_on_fov_dec_pressed"]

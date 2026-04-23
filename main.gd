@@ -113,6 +113,9 @@ func _ready() -> void:
 
 func _on_끝내기_pressed() -> void:
 	get_tree().quit()
+func _on_ui숨기기_pressed() -> void:
+	$"왼쪽패널".visible = not $"왼쪽패널".visible
+	$"오른쪽패널".visible = not $"오른쪽패널".visible
 func _on_fov_inc_pressed() -> void:
 	MovingCameraLight.GetCurrentCamera().fov_inc()
 func _on_fov_dec_pressed() -> void:
@@ -120,6 +123,7 @@ func _on_fov_dec_pressed() -> void:
 var key2fn :Dictionary[Key, Callable] = {
 	KEY_ESCAPE:_on_끝내기_pressed,
 	KEY_ENTER:_on_카메라변경_pressed,
+	KEY_1 : _on_ui숨기기_pressed,
 	KEY_PAGEUP:_on_fov_inc_pressed,
 	KEY_PAGEDOWN:_on_fov_dec_pressed,
 }
