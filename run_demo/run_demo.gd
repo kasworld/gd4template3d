@@ -150,13 +150,15 @@ func flower_demo(gc :GlassCabinet) -> Callable:
 	for i in grid_gc.get_grid_count():
 		var fl :Flower = preload("res://flower/flower.tscn").instantiate()
 		var flower_r := grid_gc.unit_size.x/3
-		var petal_count := randi_range(3,16)
-		var petal_width_scale := randf_range(0.1, 1.0)
+		var petal_count :int = [2,3,4,5,6,8,10,12,16,20,24].pick_random()
+		var petal_width_scale := randf_range(0.3, 0.8)
 		var petal_radial :int = [4,5,6,32].pick_random()
+		var interleave_petal := false
 		if petal_count > 8 :
-			petal_width_scale = randf_range(0.1, 0.5)
-		fl.init_petal(flower_r, randf_range(flower_r*0.2,flower_r*0.5),
-			petal_count, NamedColors.random_color(), petal_width_scale, petal_radial)
+			petal_width_scale = randf_range(0.2, 0.5)
+			#interleave_petal = true
+		fl.init_petal(flower_r, randf_range(flower_r*0.3,flower_r*0.6),
+			petal_count, NamedColors.random_color(), petal_width_scale, petal_radial, interleave_petal)
 		if petal_count <= 3:
 			petal_count *=2
 		fl.init_center(randf_range(flower_r*0.1,flower_r*0.5), NamedColors.random_color(), petal_count)

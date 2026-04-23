@@ -24,19 +24,22 @@ func make_petal_mesh_sphere(radius :float, radial_segment :int = 64) -> Mesh:
 	mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial(true)
 	return mesh
 
-func transform_petal(index :int, radius :float, rad :float, petal_width_scale :float = 0.5) -> void:
+func transform_petal(index :int, radius :float, rad :float, petal_width_scale :float = 0.5, interleave_y :bool = false) -> void:
 	var scale_petal := Vector3(petal_width_scale, 1.0, 1.0)
 	var pos := Vector3(sin(rad), 0, cos(rad)) * radius
+	if interleave_y and index % 2 == 1:
+		pos.y = -radius*0.1
 	var t := Transform3D(Basis(), pos)
 	t = t.rotated_local(Vector3.UP, rad)
 	t = t.scaled_local(scale_petal)
 	$Petal.multimesh.set_instance_transform(index,t)
 
-func init_petal(flower_radius :float, petal_radius :float, count :int, co :Color, petal_width_scale :float = 0.5, petal_radial_segment :int = 64) -> Flower:
+func init_petal(flower_radius :float, petal_radius :float, count :int, co :Color,
+		petal_width_scale :float = 0.5, petal_radial_segment :int = 64, interleave_y :bool = false) -> Flower:
 	$Petal.init_with_color_mesh(make_petal_mesh_sphere(petal_radius,petal_radial_segment), count, false)
 	var unit_rad := 2.0*PI/count
 	for i in count:
-		transform_petal(i, flower_radius - petal_radius, i*unit_rad, petal_width_scale)
+		transform_petal(i, flower_radius - petal_radius, i*unit_rad, petal_width_scale,interleave_y)
 		$Petal.multimesh.set_instance_color(i,co)
 	return self
 
