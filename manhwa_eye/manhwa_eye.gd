@@ -1,62 +1,68 @@
 extends Node3D
 class_name ManhwaEye
 
+## Sclera : 눈전체 - 희자위
+## Iris : 홍채 - 검은자위
+## Pupil : 동공
+
+
 ## face y+ , use rotate_x for face z
 
-var Inner_radius :float :
+
+var Iris_radius :float :
 	set(value):
-		$Inner.mesh.radius = value
+		$Iris.mesh.radius = value
 
-var Inner_position :Vector3 :
+var Iris_position :Vector3 :
 	set(value):
-		$Inner.position = value
+		$Iris.position = value
 
-## rate (-1.0 ~ 1.0) to Outer boundary
-func make_Inner_move_animation(x_rate :float, y_rate :float, ani_dur :float) -> Dictionary:
-	var new_pos := Vector3(get_Inner_move_range() * x_rate, 0 , get_Inner_move_range() * y_rate)
-	return SimpleAnimation.MakeAnimation( "ani_move", self, "Inner_position", $Inner.position, new_pos, ani_dur)
+## rate (-1.0 ~ 1.0) to Sclera boundary
+func make_Iris_move_animation(x_rate :float, y_rate :float, ani_dur :float) -> Dictionary:
+	var new_pos := Vector3(get_Iris_move_range() * x_rate, 0 , get_Iris_move_range() * y_rate)
+	return SimpleAnimation.MakeAnimation( "ani_move", self, "Iris_position", $Iris.position, new_pos, ani_dur)
 
-## rate (0 ~ 1.0) to Outer radius
-func make_Inner_scale_animation(rate :float, ani_dur :float) -> Dictionary:
-	var new_radius := get_Outer_radius() * rate
-	return SimpleAnimation.MakeAnimation("ani_scale", self, "Inner_radius", $Inner.mesh.radius,  new_radius, ani_dur)
+## rate (0 ~ 1.0) to Sclera radius
+func make_Iris_scale_animation(rate :float, ani_dur :float) -> Dictionary:
+	var new_radius := get_Sclera_radius() * rate
+	return SimpleAnimation.MakeAnimation("ani_scale", self, "Iris_radius", $Iris.mesh.radius,  new_radius, ani_dur)
 
-func set_radius(Outer_radius :float, Inner_radius_rate :float = 0.6) -> void:
-	$Outer.mesh.radius = Outer_radius
-	$Outer.mesh.height = Outer_radius * 0.4
-	$Inner.mesh.radius = Outer_radius * Inner_radius_rate
-	$Inner.mesh.height = Outer_radius * 0.4
+func set_radius(Sclera_radius :float, Iris_radius_rate :float = 0.6) -> void:
+	$Sclera.mesh.radius = Sclera_radius
+	$Sclera.mesh.height = Sclera_radius * 0.4
+	$Iris.mesh.radius = Sclera_radius * Iris_radius_rate
+	$Iris.mesh.height = Sclera_radius * 0.4
 
-func set_color(Outer_color :Color, Inner_color :Color) -> void:
-	$Outer.mesh.material.albedo_color = Outer_color
-	$Inner.mesh.material.albedo_color = Inner_color
+func set_color(Sclera_color :Color, Iris_color :Color) -> void:
+	$Sclera.mesh.material.albedo_color = Sclera_color
+	$Iris.mesh.material.albedo_color = Iris_color
 
-func get_Inner_radius() -> float:
-	return $Inner.mesh.radius
+func get_Iris_radius() -> float:
+	return $Iris.mesh.radius
 
-func get_Outer_radius() -> float:
-	return $Outer.mesh.radius
+func get_Sclera_radius() -> float:
+	return $Sclera.mesh.radius
 
-func get_Inner_color() -> Color:
-	return $Inner.mesh.material.albedo_color
+func get_Iris_color() -> Color:
+	return $Iris.mesh.material.albedo_color
 
-func get_Outer_color() -> Color:
-	return $Outer.mesh.material.albedo_color
+func get_Sclera_color() -> Color:
+	return $Sclera.mesh.material.albedo_color
 
-func get_Inner() -> MultiMeshInstance3D:
-	return $Inner
+func get_Iris() -> MultiMeshInstance3D:
+	return $Iris
 
-func get_Outer() -> MultiMeshInstance3D:
-	return $Outer
+func get_Sclera() -> MultiMeshInstance3D:
+	return $Sclera
 
-## for move Inner in Outer boundary
-func get_Inner_move_range() -> float:
-	return get_Outer_radius() - get_Inner_radius()
+## for move Iris in Sclera boundary
+func get_Iris_move_range() -> float:
+	return get_Sclera_radius() - get_Iris_radius()
 
 ## x_rate, y_rate : -1 ~ 1
-func move_Inner(x_rate :float, y_rate :float) -> void:
-	$Inner.position.x = get_Inner_move_range() * x_rate
-	$Inner.position.z = get_Inner_move_range() * y_rate
+func move_Iris(x_rate :float, y_rate :float) -> void:
+	$Iris.position.x = get_Iris_move_range() * x_rate
+	$Iris.position.z = get_Iris_move_range() * y_rate
 
-func set_Inner_radius_rate(rate :float) -> void:
-	$Inner.mesh.radius = get_Outer_radius() * rate
+func set_Iris_radius_rate(rate :float) -> void:
+	$Iris.mesh.radius = get_Sclera_radius() * rate

@@ -1,6 +1,11 @@
 extends Node3D
 class_name ManhwaFace
 
+## Sclera : 눈전체 - 희자위
+## Iris : 홍채 - 검은자위
+## Pupil : 동공
+
+
 func get_left_eye() -> ManhwaEye:
 	return $LeftEye
 
@@ -25,8 +30,8 @@ func set_eye_color(Outer_color :Color, Inner_color :Color) -> void:
 	$RightEye.set_color(Outer_color,Inner_color)
 
 func set_eye_scale(scale_outer :Vector3) ->void:
-	$LeftEye.get_Outer().scale = scale_outer
-	$RightEye.get_Outer().scale = scale_outer
+	$LeftEye.get_Sclera().scale = scale_outer
+	$RightEye.get_Sclera().scale = scale_outer
 
 
 enum EarType {Round, Bunny, Puppy}
@@ -87,12 +92,12 @@ func set_radius(r :float) -> void:
 	$RightEye.position.x = r/2
 
 func move_eye_Inner(x_rate :float, y_rate :float) -> void:
-	$LeftEye.move_Inner(x_rate,y_rate)
-	$RightEye.move_Inner(x_rate,y_rate)
+	$LeftEye.move_Iris(x_rate,y_rate)
+	$RightEye.move_Iris(x_rate,y_rate)
 
 func set_eye_Inner_radius_rate(rate :float) -> void:
-	$LeftEye.set_Inner_radius_rate(rate)
-	$RightEye.set_Inner_radius_rate(rate)
+	$LeftEye.set_Iris_radius_rate(rate)
+	$RightEye.set_Iris_radius_rate(rate)
 
 ## rotate inner node3d
 func rotation_axis(axis :int, rad :float = PI/2) -> void:

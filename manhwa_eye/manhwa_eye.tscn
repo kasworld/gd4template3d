@@ -26,8 +26,8 @@ height = 0.2
 [node name="ManhwaEye" type="Node3D" unique_id=900978946]
 script = ExtResource("1_5pmyj")
 
-[node name="Outer" type="MeshInstance3D" parent="." unique_id=2095377300]
+[node name="Sclera" type="MeshInstance3D" parent="." unique_id=2095377300]
 mesh = SubResource("SphereMesh_c8fwn")
 
-[node name="Inner" type="MeshInstance3D" parent="." unique_id=1724080969]
+[node name="Iris" type="MeshInstance3D" parent="." unique_id=1724080969]
 mesh = SubResource("SphereMesh_t0f1r")
