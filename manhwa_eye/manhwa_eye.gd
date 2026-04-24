@@ -49,10 +49,10 @@ func get_Iris_color() -> Color:
 func get_Sclera_color() -> Color:
 	return $Sclera.mesh.material.albedo_color
 
-func get_Iris() -> MultiMeshInstance3D:
+func get_Iris() -> MeshInstance3D:
 	return $Iris
 
-func get_Sclera() -> MultiMeshInstance3D:
+func get_Sclera() -> MeshInstance3D:
 	return $Sclera
 
 ## for move Iris in Sclera boundary
