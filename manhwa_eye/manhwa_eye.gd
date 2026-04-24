@@ -50,7 +50,7 @@ func make_Iris_scale_animation(rate :float, ani_dur :float) -> Dictionary:
 
 func set_radius(Sclera_radius :float, Iris_rate :float = 0.6) -> void:
 	$Sclera.mesh.radius = Sclera_radius
-	$Sclera.mesh.height = Sclera_radius * 0.4
+	$Sclera.mesh.height = Sclera_radius * 0.1
 	set_Iris_radius_rate(Iris_rate)
 
 func set_color(Sclera_color :Color, Iris_color :Color) -> void:
