@@ -32,6 +32,22 @@ var Iris_radius_rate :float :
 	set(rate):
 		set_Iris_radius_rate(rate)
 
+## rate (0 ~ 1.0) to Sclera radius
+func make_Iris_scale_animation(rate :float, ani_dur :float) -> Dictionary:
+	var current_rate :float = $Iris.mesh.radius / $Sclera.mesh.radius
+	return SimpleAnimation.MakeAnimation("ani_scale", self, "Iris_radius_rate", current_rate, rate, ani_dur)
+
+## for animation
+var Pupil_radius_rate :float :
+	set(rate):
+		set_Pupil_radius_rate(rate)
+
+## rate (0 ~ 1.0) to Iris radius
+func make_Pupil_scale_animation(rate :float, ani_dur :float) -> Dictionary:
+	var current_rate :float = $Pupil.mesh.radius / $Iris.mesh.radius
+	return SimpleAnimation.MakeAnimation("ani_scale", self, "Pupil_radius_rate", current_rate, rate, ani_dur)
+
+
 ## for animation
 var Iris_position :Vector3 :
 	set(value):
@@ -43,34 +59,64 @@ func make_Iris_move_animation(x_rate :float, y_rate :float, ani_dur :float) -> D
 	var new_pos := Vector3(get_Iris_move_range() * x_rate, 0 , get_Iris_move_range() * y_rate)
 	return SimpleAnimation.MakeAnimation( "ani_move", self, "Iris_position", $Iris.position, new_pos, ani_dur)
 
-## rate (0 ~ 1.0) to Sclera radius
-func make_Iris_scale_animation(rate :float, ani_dur :float) -> Dictionary:
-	var current_rate :float = $Iris.mesh.radius / $Sclera.mesh.radius
-	return SimpleAnimation.MakeAnimation("ani_scale", self, "Iris_radius_rate", current_rate, rate, ani_dur)
-
 func set_radius(Sclera_radius :float, Iris_rate :float = 0.6) -> void:
 	$Sclera.mesh.radius = Sclera_radius
 	$Sclera.mesh.height = Sclera_radius * 0.2
 	set_Iris_radius_rate(Iris_rate)
 
 func set_color(Sclera_color :Color, Iris_color :Color) -> void:
-	$Sclera.mesh.material.albedo_color = Sclera_color
-	$Iris.mesh.material.albedo_color = Color(Iris_color, 0.9)
-	$Pupil.mesh.material.albedo_color = Iris_color #.darkened(0.5)
+	set_Sclera_color(Sclera_color)
+	set_Iris_color(Iris_color)
+	set_Pupil_color(Iris_color)
+
+func set_Sclera_color(color :Color) -> void:
+	$Sclera.mesh.material.albedo_color = color
+
+## with alpha 0.9
+func set_Iris_color(color :Color) -> void:
+	$Iris.mesh.material.albedo_color = Color(color, 0.9)
+
+func set_Pupil_color(color :Color) -> void:
+	$Pupil.mesh.material.albedo_color = color
+
 
 ## for move Iris in Sclera boundary
 func get_Iris_move_range() -> float:
-	return get_Sclera_radius() - get_Iris_radius()
+	return $Sclera.mesh.radius - $Iris.mesh.radius
 
 ## x_rate, y_rate : -1 ~ 1
 func move_Iris(x_rate :float, y_rate :float) -> void:
 	$Iris.position.x = get_Iris_move_range() * x_rate
 	$Iris.position.z = get_Iris_move_range() * y_rate
 	$Pupil.position = $Iris.position
-	#$Pupil.position.y = $Iris.position.y - $Iris.mesh.height/2
 
+## rate_vt : -1 ~ 1 : use x,z
+func move_Iris_vt3(rate_vt :Vector3) -> void:
+	$Iris.position = rate_vt * get_Iris_move_range()
+	$Pupil.position = $Iris.position
+
+## for move Pupil in Iris boundary
+func get_Pupil_move_range() -> float:
+	return $Iris.mesh.radius - $Pupil.mesh.radius
+
+## x_rate, y_rate : -1 ~ 1
+func move_Pupil(x_rate :float, y_rate :float) -> void:
+	$Pupil.position.x = get_Pupil_move_range() * x_rate
+	$Pupil.position.z = get_Pupil_move_range() * y_rate
+	$Pupil.position += $Iris.position
+
+## rate_vt : -1 ~ 1 : use x,z
+func move_Pupil_vt3(rate_vt :Vector3) -> void:
+	$Pupil.position = rate_vt * get_Pupil_move_range()
+	$Pupil.position += $Iris.position
+
+
+## rate to
 func set_Iris_radius_rate(rate :float) -> void:
-	$Iris.mesh.radius = get_Sclera_radius() * rate
+	$Iris.mesh.radius = $Sclera.mesh.radius * rate
 	$Iris.mesh.height = $Sclera.mesh.height
-	$Pupil.mesh.radius = $Iris.mesh.radius /2
-	$Pupil.mesh.height = $Iris.mesh.height /2
+	set_Pupil_radius_rate(0.5)
+
+func set_Pupil_radius_rate(rate :float) -> void:
+	$Pupil.mesh.radius = $Iris.mesh.radius * rate
+	$Pupil.mesh.height = $Iris.mesh.height
