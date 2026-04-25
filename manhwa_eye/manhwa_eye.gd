@@ -50,13 +50,13 @@ func make_Iris_scale_animation(rate :float, ani_dur :float) -> Dictionary:
 
 func set_radius(Sclera_radius :float, Iris_rate :float = 0.6) -> void:
 	$Sclera.mesh.radius = Sclera_radius
-	$Sclera.mesh.height = Sclera_radius * 0.1
+	$Sclera.mesh.height = Sclera_radius * 0.2
 	set_Iris_radius_rate(Iris_rate)
 
 func set_color(Sclera_color :Color, Iris_color :Color) -> void:
 	$Sclera.mesh.material.albedo_color = Sclera_color
-	$Iris.mesh.material.albedo_color = Iris_color
-	$Pupil.mesh.material.albedo_color = Iris_color.darkened(0.5)
+	$Iris.mesh.material.albedo_color = Color(Iris_color, 0.9)
+	$Pupil.mesh.material.albedo_color = Iris_color #.darkened(0.5)
 
 ## for move Iris in Sclera boundary
 func get_Iris_move_range() -> float:
@@ -67,7 +67,7 @@ func move_Iris(x_rate :float, y_rate :float) -> void:
 	$Iris.position.x = get_Iris_move_range() * x_rate
 	$Iris.position.z = get_Iris_move_range() * y_rate
 	$Pupil.position = $Iris.position
-	$Pupil.position.y = $Iris.position.y - $Iris.mesh.height/2
+	#$Pupil.position.y = $Iris.position.y - $Iris.mesh.height/2
 
 func set_Iris_radius_rate(rate :float) -> void:
 	$Iris.mesh.radius = get_Sclera_radius() * rate
