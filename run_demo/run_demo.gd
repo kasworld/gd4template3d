@@ -181,7 +181,7 @@ func manhwa_face_demo(gc :GlassCabinet) -> Callable:
 		var face :ManhwaFace = preload("res://manhwa_face/manhwa_face.tscn").instantiate()
 		face.set_radius(grid_gc.unit_size.x/4)
 		face.set_ear_type(randi_range(0,2))
-		face.set_ear_rad(randf_range(PI/16, PI/3), randf_range(-0.1,0.1))
+		face.set_ear_rad(randf_range(PI/16, PI/3), randfn(0.0,0.1))
 		face.set_face_color(NamedColors.random_color())
 		face.set_eye_color(colors_light.pick_random(),colors_dark.pick_random())
 		face.set_eye_scale(Vector3(randfn(1.0,0.1) , 1, randfn(1.0,0.1)))
