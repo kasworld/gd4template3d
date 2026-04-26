@@ -185,6 +185,7 @@ func manhwa_face_demo(gc :GlassCabinet) -> Callable:
 		face.set_face_color(NamedColors.random_color())
 		face.set_eye_color(colors_light.pick_random(),colors_dark.pick_random())
 		face.set_eye_Sclera_scale(Vector3(randfn(1.0,0.1) , 1, randfn(1.0,0.1)))
+		face.set_eye_Iris_scale(Vector3(randfn(1.0,0.1) , 1, randfn(1.0,0.1)))
 		face.set_eye_Iris_radius_rate(randfn(0.5,0.2))
 		face.rotation_axis(Vector3.Axis.AXIS_X, -PI/2)
 

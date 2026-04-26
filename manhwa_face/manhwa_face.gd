@@ -33,6 +33,15 @@ func set_eye_Sclera_scale(Sclera_scale :Vector3) ->void:
 	$LeftEye.get_Sclera().scale = Sclera_scale
 	$RightEye.get_Sclera().scale = Sclera_scale
 
+func set_eye_Iris_scale(Iris_scale :Vector3) ->void:
+	$LeftEye.get_Iris().scale = Iris_scale
+	$RightEye.get_Iris().scale = Iris_scale
+	set_eye_Pupil_scale(Iris_scale)
+
+func set_eye_Pupil_scale(Pupil_scale :Vector3) ->void:
+	$LeftEye.get_Pupil().scale = Pupil_scale
+	$RightEye.get_Pupil().scale = Pupil_scale
+
 
 enum EarType {Round, Bunny, Puppy}
 
