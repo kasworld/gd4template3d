@@ -33,7 +33,7 @@ var Iris_radius_rate :float :
 		set_Iris_radius_rate(rate)
 
 ## rate (0 ~ 1.0) to Sclera radius
-func make_Iris_scale_animation(rate :float, ani_dur :float) -> Dictionary:
+func make_Iris_radius_animation(rate :float, ani_dur :float) -> Dictionary:
 	var current_rate :float = $Iris.mesh.radius / $Sclera.mesh.radius
 	return SimpleAnimation.MakeAnimation("ani_scale", self, "Iris_radius_rate", current_rate, rate, ani_dur)
 
@@ -43,7 +43,7 @@ var Pupil_radius_rate :float :
 		set_Pupil_radius_rate(rate)
 
 ## rate (0 ~ 1.0) to Iris radius
-func make_Pupil_scale_animation(rate :float, ani_dur :float) -> Dictionary:
+func make_Pupil_radius_animation(rate :float, ani_dur :float) -> Dictionary:
 	var current_rate :float = $Pupil.mesh.radius / $Iris.mesh.radius
 	return SimpleAnimation.MakeAnimation("ani_scale", self, "Pupil_radius_rate", current_rate, rate, ani_dur)
 

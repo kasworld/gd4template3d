@@ -184,8 +184,8 @@ func manhwa_face_demo(gc :GlassCabinet) -> Callable:
 		face.set_ear_rad(randf_range(PI/16, PI/3), randfn(0.0,0.1))
 		face.set_face_color(NamedColors.random_color())
 		face.set_eye_color(colors_light.pick_random(),colors_dark.pick_random())
-		face.set_eye_scale(Vector3(randfn(1.0,0.1) , 1, randfn(1.0,0.1)))
-		face.set_eye_Inner_radius_rate(randfn(0.5,0.2))
+		face.set_eye_Sclera_scale(Vector3(randfn(1.0,0.1) , 1, randfn(1.0,0.1)))
+		face.set_eye_Iris_radius_rate(randfn(0.5,0.2))
 		face.rotation_axis(Vector3.Axis.AXIS_X, -PI/2)
 
 		afterfn.call(i, face)
@@ -196,16 +196,16 @@ func manhwa_face_demo(gc :GlassCabinet) -> Callable:
 			var node :ManhwaFace = node3d_list[i]
 			match i %4 :
 				0:
-					node.move_eye_Inner(cos(now), sin(now) )
+					node.move_eye_Iris(cos(now), sin(now) )
 					node.set_ear_rad(cos(now))
 				1:
-					node.move_eye_Inner(-cos(now), sin(now))
+					node.move_eye_Iris(-cos(now), sin(now))
 					node.set_ear_rad(sin(now))
 				2:
-					node.move_eye_Inner(cos(now), 0 )
+					node.move_eye_Iris(cos(now), 0 )
 					node.set_ear_rad(cos(now))
 				3:
-					node.move_eye_Inner(0, sin(now))
+					node.move_eye_Iris(0, sin(now))
 					node.set_ear_rad(sin(now))
 
 func seven_segment_demo(gc :GlassCabinet) -> Callable:
