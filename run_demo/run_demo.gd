@@ -170,7 +170,7 @@ var colors_dark := NamedColors.filter_dark_color_list()
 var colors_light := NamedColors.filter_light_color_list()
 
 func manhwa_face_demo(gc :GlassCabinet) -> Callable:
-	var grid_gc := gc.make_CalcGrid3D( Vector3i(8,4,1))
+	var grid_gc := gc.make_CalcGrid3D( Vector3i(16,9,1))
 	var node3d_list :Array = []
 	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
 		node3d.position = grid_gc.get_n_th_lanepos(n)
