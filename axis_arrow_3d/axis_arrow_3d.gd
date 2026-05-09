@@ -24,10 +24,18 @@ func set_label_text(text_list :Array = label_text) -> AxisArrow3D:
 		$Labels.get_child(i).text = text_list[i]
 	return self
 
-func set_size(l :float) -> AxisArrow3D:
+func set_size(l :float, body_width :float = 0, head_width :float = 0, body_rate :float = 0, font_size :float = 0) -> AxisArrow3D:
+	if body_width == 0:
+		body_width = l/ 50
+	if head_width == 0:
+		head_width = l/ 20
+	if body_rate == 0:
+		body_rate = 0.9
+	if font_size == 0:
+		font_size = l * 50
 	for i in 3:
-		$Arrows.get_child(i).set_size(l, l/50, l/20, 0.9)
+		$Arrows.get_child(i).set_size(l, body_width, head_width, body_rate)
 		$Arrows.get_child(i).position[i] = l/2
 		$Labels.get_child(i).position[i] = l/2
-		$Labels.get_child(i).font_size = l * 50
+		$Labels.get_child(i).font_size = font_size
 	return self

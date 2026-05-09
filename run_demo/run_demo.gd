@@ -153,7 +153,7 @@ func plot3d_demo(gc :GlassCabinet) -> Callable:
 		var pos := grid_gc.get_n_th_lanepos(i)
 		var t := Transform3D(Basis(), pos)
 		mms.multimesh.set_instance_transform(i,t)
-		mms.multimesh.set_instance_color(i, NamedColors.random_color())
+		mms.multimesh.set_instance_color(i, RandomColor.random_color())
 	gc.add_child(mms)
 	return Callable()
 
