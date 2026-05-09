@@ -98,7 +98,7 @@ func _ready() -> void:
 	add_child(rundemo)
 
 	var run1 := []
-	#run1 = [rundemo.wavegauge_box_demo, "color tile"]
+	run1 = [rundemo.plot3d_demo, "plot3d"]
 	if not run1.is_empty() :
 		rundemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict, run1)
 		var gc :GlassCabinet = rundemo.used_glass_cabinet_iter.get_current()

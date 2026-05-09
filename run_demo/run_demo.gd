@@ -110,6 +110,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		[meshtrail_demo, "MeshTrail"],
 		[orbit_demo, "Orbit"],
 		[platonic_solids_demo, "Platonic Solids"],
+		[plot3d_demo, "Plot3d"],
 		[props_demo, "Props"],
 		[same_game_demo, "Same Game"],
 		[seven_segment_demo, "Seven Segment 3D"],
@@ -138,6 +139,23 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		empty_glass_cabinet_iter = ListIter.new([])
 	print_debug("remain glass cabinet %d\ndemo count %s" % [
 		empty_glass_cabinet_iter.get_size(),used_glass_cabinet_iter.get_size() ])
+
+func plot3d_demo(gc :GlassCabinet) -> Callable:
+	gc.show_axis_arrow(true)
+	var grid_gc := gc.make_CalcGrid3D( gc.cabinet_size)
+	#var co := Color(Color.WHITE,0.5)
+	var mesh := BoxMesh.new()
+	mesh.size = grid_gc.unit_size * 0.1
+	mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial(true)
+	var mms :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate()
+	mms.init_with_color_mesh(mesh, grid_gc.get_grid_count(), false)
+	for i in grid_gc.get_grid_count():
+		var pos := grid_gc.get_n_th_lanepos(i)
+		var t := Transform3D(Basis(), pos)
+		mms.multimesh.set_instance_transform(i,t)
+		mms.multimesh.set_instance_color(i, NamedColors.random_color())
+	gc.add_child(mms)
+	return Callable()
 
 func flower_demo(gc :GlassCabinet) -> Callable:
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(16,9,1))
