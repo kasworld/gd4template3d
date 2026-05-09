@@ -82,6 +82,9 @@ func add_spot_lights() -> GlassCabinet:
 	#Vector3(-1,-1,-1),
 #]
 
+func get_axis_arrow() -> AxisArrow3D:
+	return $AxisArrow3D
+
 func show_axis_arrow(b :bool = true) -> GlassCabinet:
 	$AxisArrow3D.visible = b
 	return self
