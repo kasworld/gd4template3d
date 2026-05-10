@@ -30,3 +30,22 @@ func plot_at(posi :Vector3i, co :Color) -> void:
 	multimesh.set_instance_transform(index,t)
 	multimesh.set_instance_color(index, co)
 	set_visible_count(plotted.size())
+
+## return success or fail
+func del_at(posi :Vector3i) -> bool:
+	if not plotted.has(posi):
+		return false
+	var todel_index := plotted[posi]
+	plotted.erase(posi)
+	set_visible_count(plotted.size())
+	if plotted.size() == 0:
+		return true
+	var last_index := plotted.size()
+	copy_instance(last_index, todel_index)
+	return true
+
+func copy_instance(from:int, to:int) -> void:
+	var from_tr := multimesh.get_instance_transform(from)
+	multimesh.set_instance_transform(to, from_tr)
+	var from_co := multimesh.get_instance_color(from)
+	multimesh.set_instance_color(to, from_co)

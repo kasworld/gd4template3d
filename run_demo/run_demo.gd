@@ -144,11 +144,17 @@ func plot3d_demo(gc :GlassCabinet) -> Callable:
 	gc.show_axis_arrow(true)
 	var plot3d :Plot3D = preload("res://plot_3d/plot_3d.tscn").instantiate()
 	plot3d.init_plot3d(gc.get_aabb(), gc.cabinet_size)
-	for i in 100:
+	for i in 10000:
 		var posi := Vector3i(randi_range(0,gc.cabinet_size.x), randi_range(0,gc.cabinet_size.y), randi_range(0,gc.cabinet_size.z))
 		plot3d.plot_at(posi, RandomColor.random_color())
 	gc.add_child(plot3d)
-	return Callable()
+	return func(_delta:float):
+		if randi_range(0,1) == 0:
+			var posi := Vector3i(randi_range(0,gc.cabinet_size.x), randi_range(0,gc.cabinet_size.y), randi_range(0,gc.cabinet_size.z))
+			plot3d.plot_at(posi, RandomColor.random_color())
+		else:
+			var posi :Vector3i = plot3d.plotted.keys().pick_random()
+			plot3d.del_at(posi)
 
 func flower_demo(gc :GlassCabinet) -> Callable:
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(16,9,1))
