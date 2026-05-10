@@ -144,11 +144,23 @@ func plot3d_demo(gc :GlassCabinet) -> Callable:
 	gc.show_axis_arrow(true)
 	var plot3d :Plot3D = preload("res://plot_3d/plot_3d.tscn").instantiate()
 	plot3d.init_plot3d(gc.get_aabb(), gc.cabinet_size)
-	for i in 10000:
-		var posi := Vector3i(randi_range(0,gc.cabinet_size.x), randi_range(0,gc.cabinet_size.y), randi_range(0,gc.cabinet_size.z))
-		plot3d.plot_at(posi, RandomColor.random_color())
+	const PI2 = 2*PI
+	const sqrt2 := sqrt(2) *2
+	var cg := plot3d.calc_grid
+	for xi in cg.grid_size.x:
+		for zi in cg.grid_size.z:
+			var xrate :float= cg.rate_xi(xi)
+			var zrate :float= cg.rate_yi(zi)
+			var yrate :=  ( sin( xrate*PI2 ) + cos( zrate*PI2 ) ) / sqrt2 + 0.5
+			var posi := Vector3i(xi, cg.yi_by_rate(yrate) , zi)
+			plot3d.plot_at(posi, RandomColor.random_color())
+
+	#for i in 10000:
+		#var posi := Vector3i(randi_range(0,gc.cabinet_size.x), randi_range(0,gc.cabinet_size.y), randi_range(0,gc.cabinet_size.z))
+		#plot3d.plot_at(posi, RandomColor.random_color())
 	gc.add_child(plot3d)
 	return func(_delta:float):
+		return
 		if randi_range(0,1) == 0:
 			var posi := Vector3i(randi_range(0,gc.cabinet_size.x), randi_range(0,gc.cabinet_size.y), randi_range(0,gc.cabinet_size.z))
 			plot3d.plot_at(posi, RandomColor.random_color())
