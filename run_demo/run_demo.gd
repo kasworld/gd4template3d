@@ -152,7 +152,8 @@ func plot3d_demo(gc :GlassCabinet) -> Callable:
 			var zrate :float= cg.rate_yi(zi)
 			var yrate :=  ( sin( xrate*PI2 ) + cos( zrate*PI2 ) ) / 4 + 0.5
 			var posi := Vector3i(xi, cg.yi_by_rate(yrate) , zi)
-			plot3d.plot_at(posi, RandomColor.random_color())
+			var co := Color(xrate,yrate,zrate)
+			plot3d.plot_at(posi, co)
 	gc.add_child(plot3d)
 	return Callable()
 
