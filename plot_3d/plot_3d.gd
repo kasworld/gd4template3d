@@ -6,6 +6,10 @@ var calc_grid :CalcGrid3D
 ## posi to instance index
 var plotted :Dictionary[Vector3i,int] = {}
 
+func clear() -> void:
+	set_visible_count(0)
+	plotted.clear()
+
 func init_plot3d(aabb: AABB, cell_count :Vector3i, cell_scale :float = 1.0, transparent :bool = false) -> Plot3D:
 	calc_grid = CalcGrid3D.new(aabb, cell_count)
 	var mesh := BoxMesh.new()
