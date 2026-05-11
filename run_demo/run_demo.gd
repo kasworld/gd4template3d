@@ -144,18 +144,20 @@ func plot3d_demo(gc :GlassCabinet) -> Callable:
 	gc.show_axis_arrow(true)
 	var plot3d :Plot3D = preload("res://plot_3d/plot_3d.tscn").instantiate()
 	plot3d.init_plot3d(gc.get_aabb(), gc.cabinet_size)
-	const PI2 = 2*PI
-	var cg := plot3d.calc_grid
-	for xi in cg.grid_size.x:
-		for zi in cg.grid_size.z:
-			var xrate :float= cg.rate_xi(xi)
-			var zrate :float= cg.rate_yi(zi)
-			var yrate :=  ( sin( xrate*PI2 ) + cos( zrate*PI2 ) ) / 4 + 0.5
-			var posi := Vector3i(xi, cg.yi_by_rate(yrate) , zi)
-			var co := Color(xrate,yrate,zrate)
-			plot3d.plot_at(posi, co)
 	gc.add_child(plot3d)
-	return Callable()
+	return func(_delta:float):
+		plot3d.clear()
+		var now := Time.get_unix_time_from_system() * PI
+		const PI2 = 2*PI
+		var cg := plot3d.calc_grid
+		for xi in cg.grid_size.x:
+			for zi in cg.grid_size.z:
+				var xrate :float= cg.rate_xi(xi)
+				var zrate :float= cg.rate_yi(zi)
+				var yrate :=  ( sin( xrate*PI2 +now) + cos( zrate*PI2 +now) ) / 4 + 0.5
+				var posi := Vector3i(xi, cg.yi_by_rate(yrate) , zi)
+				var co := Color(xrate,yrate,zrate)
+				plot3d.plot_at(posi, co)
 
 func flower_demo(gc :GlassCabinet) -> Callable:
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(16,9,1))
