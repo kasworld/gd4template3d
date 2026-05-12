@@ -210,12 +210,11 @@ func manhwa_face_demo(gc :GlassCabinet) -> Callable:
 		face.set_eye_Iris_scale(Vector3(randfn(1.0,0.1) , 1, randfn(1.0,0.1)))
 		face.set_eye_Iris_radius_rate(randfn(0.5,0.2))
 		face.rotation_axis(Vector3.Axis.AXIS_X, -PI/2)
-
 		afterfn.call(i, face)
 
-	return func(_delta:float):
-		var now := Time.get_unix_time_from_system() * PI
+	var animate := func() -> void:
 		for i in node3d_list.size():
+			var now := randf_range(0, 2*PI)
 			var node :ManhwaFace = node3d_list[i]
 			match i %4 :
 				0:
@@ -230,6 +229,8 @@ func manhwa_face_demo(gc :GlassCabinet) -> Callable:
 				3:
 					node.move_eye_Iris(0, sin(now))
 					node.set_ear_rad(sin(now))
+	animate.call()
+	return Callable()
 
 func seven_segment_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
@@ -829,11 +830,13 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 			AddRotateRandomAnimation(animation, node))
 	for node in node3d_list:
 		AddRotateRandomAnimation(animation, node)
+
+	for ps in node3d_list:
+		var now := randf_range(0,2*PI)
+		WaveColorTileGrid(ps, now, ps.calc_grid.unit_size.length()/3 )
+
 	return func(_delta:float):
 		animation.handle_animation()
-		var now := Time.get_unix_time_from_system()
-		for ps in node3d_list:
-			WaveColorTileGrid(ps, now, ps.calc_grid.unit_size.length()/3 )
 
 
 func line2d_demo(gc :GlassCabinet) -> Callable:
