@@ -141,13 +141,13 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		empty_glass_cabinet_iter.get_size(),used_glass_cabinet_iter.get_size() ])
 
 func plot3d_demo(gc :GlassCabinet) -> Callable:
-	gc.show_axis_arrow(true)
+	#gc.show_axis_arrow(true)
 	var plot3d :Plot3D = preload("res://plot_3d/plot_3d.tscn").instantiate()
 	plot3d.init_plot3d(gc.get_aabb(), gc.cabinet_size)
 	gc.add_child(plot3d)
-	return func(_delta:float):
+
+	var animate := func(now :float) -> void:
 		plot3d.clear()
-		var now := Time.get_unix_time_from_system() * PI
 		const PI2 = 2*PI
 		var cg := plot3d.calc_grid
 		for xi in cg.grid_size.x:
@@ -158,6 +158,8 @@ func plot3d_demo(gc :GlassCabinet) -> Callable:
 				var posi := Vector3i(xi, cg.yi_by_rate(yrate) , zi)
 				var co := Color(xrate,yrate,zrate)
 				plot3d.plot_at(posi, co)
+	animate.call( Time.get_unix_time_from_system() * PI )
+	return Callable()
 
 func flower_demo(gc :GlassCabinet) -> Callable:
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(16,9,1))
