@@ -142,7 +142,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 
 func plot3d_demo(gc :GlassCabinet) -> Callable:
 	var plot3d :Plot3D = preload("res://plot_3d/plot_3d.tscn").instantiate()
-	plot3d.init_plot3d_box(gc.get_aabb(), gc.cabinet_size, 0.9, true)
+	plot3d.init_plot3d_box(gc.get_aabb(), gc.cabinet_size, 0.9, false)
 	gc.add_child(plot3d)
 
 	plot3d.draw_texture2d_face_x(Vector3i(0,0,0), preload("res://image/blender.png"))
