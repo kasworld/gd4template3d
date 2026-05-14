@@ -148,6 +148,10 @@ func plot3d_demo(gc :GlassCabinet) -> Callable:
 	plot3d.draw_texture2d_face_x(Vector3i(0,0,0), preload("res://image/blender.png"))
 	plot3d.draw_texture2d_face_y(Vector3i(0,0,0), preload("res://image/gimp.png"))
 	plot3d.draw_texture2d_face_z(Vector3i(0,0,0), preload("res://image/me.png"))
+	var cg := plot3d.calc_grid
+	plot3d.draw_x_line(0, cg.grid_size.x, cg.grid_size.y/2, cg.grid_size.z/2, Color.RED)
+	plot3d.draw_y_line(cg.grid_size.x/2, 0, cg.grid_size.y, cg.grid_size.z/2, Color.GREEN)
+	plot3d.draw_z_line(cg.grid_size.x/2, cg.grid_size.y/2,0, cg.grid_size.z, Color.BLUE)
 	return Callable()
 
 func flower_demo(gc :GlassCabinet) -> Callable:
