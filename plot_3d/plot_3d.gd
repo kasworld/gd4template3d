@@ -10,18 +10,17 @@ func clear() -> void:
 	set_visible_count(0)
 	plotted.clear()
 
-func init_plot3d(aabb: AABB, cell_count :Vector3i, cell_scale :float = 1.0, transparent :bool = false) -> Plot3D:
-	calc_grid = CalcGrid3D.new(aabb, cell_count)
+func init_plot3d_box(aabb: AABB, cell_count :Vector3i, cell_scale :float = 1.0, transparent :bool = false) -> Plot3D:
+	var cg = CalcGrid3D.new(aabb, cell_count)
 	var mesh := BoxMesh.new()
-	mesh.size = calc_grid.unit_size * cell_scale
+	mesh.size = cg.unit_size * cell_scale
 	mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial(transparent)
+	return init_plot3d_mesh_calcgrid(mesh, cg)
+
+func init_plot3d_mesh_calcgrid(mesh :Mesh, cg :CalcGrid3D) -> Plot3D:
+	calc_grid = cg
 	init_with_color_mesh(mesh, calc_grid.get_grid_count(), false)
 	set_visible_count(0)
-	#for i in calc_grid.get_grid_count():
-		#var pos := calc_grid.get_n_th_lanepos(i)
-		#var t := Transform3D(Basis(), pos)
-		#multimesh.set_instance_transform(i,t)
-		#multimesh.set_instance_color(i, RandomColor.random_color())
 	return self
 
 func plot_at(posi :Vector3i, co :Color) -> void:
@@ -53,6 +52,34 @@ func copy_instance(from:int, to:int) -> void:
 	multimesh.set_instance_transform(to, from_tr)
 	var from_co := multimesh.get_instance_color(from)
 	multimesh.set_instance_color(to, from_co)
+
+## include x2
+func draw_x_line(x1 :int, x2 :int, y :int, z :int, co :Color):
+	if x1 > x2 :
+		var t := x1
+		x1 = x2
+		x2 = t
+	for x in range(x1,x2+1):
+		plot_at(Vector3i(x,y,z), co)
+
+## include y2
+func draw_y_line(x :int, y1 :int, y2 :int, z :int, co :Color):
+	if y1 > y2 :
+		var t := y1
+		y1 = y2
+		y2 = t
+	for y in range(y1,y2+1):
+		plot_at(Vector3i(x,y,z), co)
+
+## include z2
+func draw_z_line(x :int, y :int, z1 :int, z2 :int, co :Color):
+	if z1 > z2 :
+		var t := z1
+		z1 = z2
+		z2 = t
+	for z in range(z1,z2+1):
+		plot_at(Vector3i(x,y,z), co)
+
 
 
 func draw_wave(now :float, period :Vector2 = Vector2.ONE) -> void:
