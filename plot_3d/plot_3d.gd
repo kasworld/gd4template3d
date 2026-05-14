@@ -27,7 +27,7 @@ func plot_at(posi :Vector3i, co :Color) -> void:
 	var pos := calc_grid.posi_to_lanepos(posi)
 	var index := plotted.size()
 	if plotted.has(posi):
-		index -= 1
+		index = plotted[posi]
 	plotted[posi] = index
 	var t := Transform3D(Basis(), pos)
 	multimesh.set_instance_transform(index,t)
