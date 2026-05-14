@@ -24,6 +24,8 @@ func init_plot3d_mesh_calcgrid(mesh :Mesh, cg :CalcGrid3D) -> Plot3D:
 	return self
 
 func plot_at(posi :Vector3i, co :Color) -> void:
+	if co.a <= 0.0 :
+		return
 	var pos := calc_grid.posi_to_lanepos(posi)
 	var index := plotted.size()
 	if plotted.has(posi):
