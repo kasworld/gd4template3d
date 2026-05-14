@@ -752,38 +752,19 @@ func color_tile_demo(gc :GlassCabinet) -> Callable:
 		gc.add_child(node3d)
 		node3d_list.append(node3d)
 		return node3d
-
+	var tginit := preload("res://tile_grid/tile_grid.tscn").instantiate
 	var tg_size := grid_gc.unit_size
 	tg_size.z /= 50
-	afterfn.call(0, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/vscode.png"), 0.9) )
-	afterfn.call(1, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/git.png"), 0.9) )
-	afterfn.call(2, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/github.png"), 0.9) )
-	afterfn.call(3, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/me.png"), 0.9) )
-	afterfn.call(4, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/firefox.png"), 0.9) )
-	afterfn.call(5, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/gimp.png"), 0.9) )
-	afterfn.call(6, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/blender.png"), 0.9) )
-	afterfn.call(7, init_tile_grid_by_texture2d_z(tg_size, preload("res://image/godot.png"), 0.9) )
+	afterfn.call(0, tginit.call().init_tile_grid_by_texture2d(tg_size, preload("res://image/vscode.png"), 0.9) )
+	afterfn.call(1, tginit.call().init_tile_grid_by_texture2d(tg_size, preload("res://image/git.png"), 0.9) )
+	afterfn.call(2, tginit.call().init_tile_grid_by_texture2d(tg_size, preload("res://image/github.png"), 0.9) )
+	afterfn.call(3, tginit.call().init_tile_grid_by_texture2d(tg_size, preload("res://image/me.png"), 0.9) )
+	afterfn.call(4, tginit.call().init_tile_grid_by_texture2d(tg_size, preload("res://image/firefox.png"), 0.9) )
+	afterfn.call(5, tginit.call().init_tile_grid_by_texture2d(tg_size, preload("res://image/gimp.png"), 0.9) )
+	afterfn.call(6, tginit.call().init_tile_grid_by_texture2d(tg_size, preload("res://image/blender.png"), 0.9) )
+	afterfn.call(7, tginit.call().init_tile_grid_by_texture2d(tg_size, preload("res://image/godot.png"), 0.9) )
 	#return Callable()
 	return AnimateList.new().init_rotate(node3d_list)
-
-func init_tile_grid_by_texture2d_z(tg_size :Vector3, texture2d :Texture2D, pixel_rate :float = 0.8) -> TileGrid:
-	var image := texture2d.get_image()
-	if image.is_compressed():
-		image.decompress()
-	var image_size := image.get_size()
-	var image_scale :float = min(tg_size.x/image_size.x, tg_size.y/image_size.y)
-	var prop_size := Vector3(image_size.x*image_scale, image_size.y*image_scale, tg_size.z)
-	var tg :TileGrid = preload("res://tile_grid/tile_grid.tscn").instantiate(
-		).init_tile_grid_with_box(prop_size, image_size, pixel_rate, Color.WHITE, true)
-	tg.calc_grid.iter_ixyz(func(index:int,xi:int,yi:int,_zi:int):
-		var co :Color = image.get_pixel(xi,yi)
-		tg.set_tile_color_at(xi,image_size.y-yi-1,co)
-		var t :Transform3D = tg.multimesh.get_instance_transform(index)
-		t.origin.z = co.get_luminance() * tg_size.z
-		tg.multimesh.set_instance_transform(index, t)
-		)
-	return tg
-
 
 func tile_grid_demo(gc :GlassCabinet) -> Callable:
 	var node3d_list :Array = []
