@@ -54,6 +54,19 @@ func copy_instance(from:int, to:int) -> void:
 	var from_co := multimesh.get_instance_color(from)
 	multimesh.set_instance_color(to, from_co)
 
+
+func draw_wave(now :float, period :Vector2 = Vector2.ONE) -> void:
+	var wavelen := Vector2.ONE * 2*PI / period
+	for xi in calc_grid.grid_size.x:
+		for zi in calc_grid.grid_size.z:
+			var xrate :float= calc_grid.rate_xi(xi)
+			var zrate :float= calc_grid.rate_yi(zi)
+			var yrate :=  ( sin( xrate*wavelen.x +now) + cos( zrate*wavelen.y +now) ) / 4 + 0.5
+			var posi := Vector3i(xi, calc_grid.yi_by_rate(yrate) , zi)
+			var co := Color(xrate,yrate,zrate)
+			plot_at(posi, co)
+
+
 func draw_texture2d_face_z(posi :Vector3i, texture2d :Texture2D) -> void:
 	var image := texture2d.get_image()
 	if image.is_compressed():
@@ -63,3 +76,23 @@ func draw_texture2d_face_z(posi :Vector3i, texture2d :Texture2D) -> void:
 		for yi in image_size.y:
 			var co :Color = image.get_pixel(xi,yi)
 			plot_at(Vector3i(xi,image_size.y-yi-1,0) + posi ,co)
+
+func draw_texture2d_face_y(posi :Vector3i, texture2d :Texture2D) -> void:
+	var image := texture2d.get_image()
+	if image.is_compressed():
+		image.decompress()
+	var image_size := image.get_size()
+	for xi in image_size.x:
+		for yi in image_size.y:
+			var co :Color = image.get_pixel(xi,yi)
+			plot_at(Vector3i(xi,0,image_size.y-yi-1) + posi ,co)
+
+func draw_texture2d_face_x(posi :Vector3i, texture2d :Texture2D) -> void:
+	var image := texture2d.get_image()
+	if image.is_compressed():
+		image.decompress()
+	var image_size := image.get_size()
+	for xi in image_size.x:
+		for yi in image_size.y:
+			var co :Color = image.get_pixel(xi,yi)
+			plot_at(Vector3i(0,xi,image_size.y-yi-1) + posi ,co)
