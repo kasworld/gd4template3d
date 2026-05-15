@@ -82,8 +82,6 @@ func draw_z_line(x :int, y :int, z1 :int, z2 :int, co :Color):
 	for z in range(z1,z2+1):
 		plot_at(Vector3i(x,y,z), co)
 
-
-
 func draw_wave(now :float, period :Vector2 = Vector2.ONE) -> void:
 	var wavelen := Vector2.ONE * 2*PI / period
 	for xi in calc_grid.grid_size.x:
@@ -94,7 +92,6 @@ func draw_wave(now :float, period :Vector2 = Vector2.ONE) -> void:
 			var posi := Vector3i(xi, calc_grid.yi_by_rate(yrate) , zi)
 			var co := Color(xrate,yrate,zrate)
 			plot_at(posi, co)
-
 
 func draw_texture2d_face_z(posi :Vector3i, texture2d :Texture2D) -> void:
 	var image := texture2d.get_image()
@@ -125,3 +122,35 @@ func draw_texture2d_face_x(posi :Vector3i, texture2d :Texture2D) -> void:
 		for yi in image_size.y:
 			var co :Color = image.get_pixel(xi,yi)
 			plot_at(Vector3i(0,xi,image_size.y-yi-1) + posi ,co)
+
+## for animation
+var cell_rotation_x :float:
+	set(rad):
+		for i in calc_grid.get_grid_count():
+			set_inst_rotation(i, Vector3.RIGHT, rad)
+
+var cell_rotation_y :float:
+	set(rad):
+		for i in calc_grid.get_grid_count():
+			set_inst_rotation(i, Vector3.UP, rad)
+
+var cell_rotation_z :float:
+	set(rad):
+		for i in calc_grid.get_grid_count():
+			set_inst_rotation(i, Vector3.FORWARD, rad)
+
+func make_ani_cell_rotate(aniname :String, axis :int, from :float, to :float, dur_sec :float) -> Dictionary:
+	return SimpleAnimation.MakeAnimation(
+		aniname, self,
+		["cell_rotation_x", "cell_rotation_y", "cell_rotation_z"][axis],
+		from , to, dur_sec
+	)
+
+func make_ani_cell_rotate_x(aniname :String, from :float, to :float, dur_sec :float) -> Dictionary:
+	return SimpleAnimation.MakeAnimation(aniname, self, "cell_rotation_x", from , to, dur_sec)
+
+func make_ani_cell_rotate_y(aniname :String, from :float, to :float, dur_sec :float) -> Dictionary:
+	return SimpleAnimation.MakeAnimation(aniname, self, "cell_rotation_y", from , to, dur_sec)
+
+func make_ani_cell_rotate_z(aniname :String, from :float, to :float, dur_sec :float) -> Dictionary:
+	return SimpleAnimation.MakeAnimation(aniname, self, "cell_rotation_z", from , to, dur_sec)
