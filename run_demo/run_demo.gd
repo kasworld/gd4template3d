@@ -756,17 +756,18 @@ func color_tile_demo(gc :GlassCabinet) -> Callable:
 		gc.add_child(node3d)
 		node3d_list.append(node3d)
 		return node3d
-	var tginit := preload("res://tile_grid/tile_grid.tscn").instantiate
+	var tginit := preload("res://plot_3d/plot_3d.tscn").instantiate
 	var tg_size := grid_gc.unit_size
 	tg_size.z /= 50
-	afterfn.call(0, tginit.call().init_tile_grid_by_texture2d(tg_size, preload("res://image/vscode.png"), 0.9) )
-	afterfn.call(1, tginit.call().init_tile_grid_by_texture2d(tg_size, preload("res://image/git.png"), 0.9) )
-	afterfn.call(2, tginit.call().init_tile_grid_by_texture2d(tg_size, preload("res://image/github.png"), 0.9) )
-	afterfn.call(3, tginit.call().init_tile_grid_by_texture2d(tg_size, preload("res://image/me.png"), 0.9) )
-	afterfn.call(4, tginit.call().init_tile_grid_by_texture2d(tg_size, preload("res://image/firefox.png"), 0.9) )
-	afterfn.call(5, tginit.call().init_tile_grid_by_texture2d(tg_size, preload("res://image/gimp.png"), 0.9) )
-	afterfn.call(6, tginit.call().init_tile_grid_by_texture2d(tg_size, preload("res://image/blender.png"), 0.9) )
-	afterfn.call(7, tginit.call().init_tile_grid_by_texture2d(tg_size, preload("res://image/godot.png"), 0.9) )
+	var aabb := CalcGrid3D.SizeToAABB(tg_size)
+	afterfn.call(0, tginit.call().init_plot3d_by_texture2d_face_z(aabb, preload("res://image/vscode.png"), 0.9) )
+	afterfn.call(1, tginit.call().init_plot3d_by_texture2d_face_z(aabb, preload("res://image/git.png"), 0.9) )
+	afterfn.call(2, tginit.call().init_plot3d_by_texture2d_face_z(aabb, preload("res://image/github.png"), 0.9) )
+	afterfn.call(3, tginit.call().init_plot3d_by_texture2d_face_z(aabb, preload("res://image/me.png"), 0.9) )
+	afterfn.call(4, tginit.call().init_plot3d_by_texture2d_face_z(aabb, preload("res://image/firefox.png"), 0.9) )
+	afterfn.call(5, tginit.call().init_plot3d_by_texture2d_face_z(aabb, preload("res://image/gimp.png"), 0.9) )
+	afterfn.call(6, tginit.call().init_plot3d_by_texture2d_face_z(aabb, preload("res://image/blender.png"), 0.9) )
+	afterfn.call(7, tginit.call().init_plot3d_by_texture2d_face_z(aabb, preload("res://image/godot.png"), 0.9) )
 	#return Callable()
 	return AnimateList.new().init_rotate(node3d_list)
 

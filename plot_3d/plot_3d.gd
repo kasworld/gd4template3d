@@ -10,6 +10,19 @@ func clear() -> void:
 	set_visible_count(0)
 	plotted.clear()
 
+func init_plot3d_by_texture2d_face_z(aabb: AABB, texture2d :Texture2D, cell_scale :float = 1.0) -> Plot3D:
+	var image := texture2d.get_image()
+	if image.is_compressed():
+		image.decompress()
+	var image_size := image.get_size()
+	var cell_count := Vector3i(image_size.x, image_size.y, 1)
+	var image_scale :float = min(aabb.size.x/image_size.x, aabb.size.y/image_size.y)
+	var prop_size := Vector3(image_size.x*image_scale, image_size.y*image_scale, aabb.size.z)
+	aabb = CalcGrid3D.SizeToAABB(prop_size)
+	init_plot3d_box(aabb, cell_count, cell_scale, true)
+	draw_texture2d_face_z(Vector3i.ZERO, texture2d)
+	return self
+
 func init_plot3d_box(aabb: AABB, cell_count :Vector3i, cell_scale :float = 1.0, transparent :bool = false) -> Plot3D:
 	var cg = CalcGrid3D.new(aabb, cell_count)
 	var mesh := BoxMesh.new()
