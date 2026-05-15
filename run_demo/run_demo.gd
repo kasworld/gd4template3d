@@ -36,23 +36,6 @@ static func AddRotateRandomAnimationAxis(animation :SimpleAnimation, node3d :Nod
 	animation.add_animation(ani)
 
 
-## z offset : -zrange ~ zrange
-static func WaveColorTileGrid(tg :TileGrid, now :float, zrange :float) -> void:
-	var cg := tg.calc_grid
-	const PI2 = 2*PI
-	const sqrt2 := sqrt(2)
-	cg.iter_ixyz(func(index:int,xi:int,yi:int,_zi:int):
-		var xrate :float= cg.rate_xi(xi)
-		var yrate :float= cg.rate_yi(yi)
-		# make -1.0 ~ 1.0
-		var zrate :=  ( sin( xrate*PI2 +now ) + cos( yrate*PI2 +now) ) / sqrt2
-		var t :Transform3D = tg.multimesh.get_instance_transform(index)
-		t.origin.z = zrate * zrange
-		tg.multimesh.set_instance_transform(index, t)
-		var co := Color(xrate,yrate, absf(zrate) )
-		tg.multimesh.set_instance_color(index,co)
-		)
-
 static func WaveColorPlot3D(tg :Plot3D, now :float, zrange :float) -> void:
 	var cg := tg.calc_grid
 	const PI2 = 2*PI
