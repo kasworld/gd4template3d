@@ -1,39 +1,44 @@
 extends MultiMeshShape
 class_name Plot3D
 
+static func MakeCalcGrid(total_size :Vector3, cell_count :Vector3i) -> CalcGrid3D:
+	return CalcGrid3D.new(
+		CalcGrid3D.SizeToAABB(total_size),
+		cell_count,
+	)
+
 var calc_grid :CalcGrid3D
 ## posi to instance index
 var plotted :Dictionary[Vector3i,int] = {}
 
-func init_plot3d_by_texture2d_face_z(aabb: AABB, texture2d :Texture2D, cell_scale :float = 1.0) -> Plot3D:
+func init_plot3d_by_texture2d_face_z(total_size: Vector3, texture2d :Texture2D, cell_scale :float = 1.0) -> Plot3D:
 	var image := texture2d.get_image()
 	if image.is_compressed():
 		image.decompress()
 	var image_size := image.get_size()
 	var cell_count := Vector3i(image_size.x, image_size.y, 1)
-	var image_scale :float = min(aabb.size.x/image_size.x, aabb.size.y/image_size.y)
-	var prop_size := Vector3(image_size.x*image_scale, image_size.y*image_scale, aabb.size.z)
-	aabb = CalcGrid3D.SizeToAABB(prop_size)
-	init_plot3d_box(aabb, cell_count, cell_scale, true)
+	var image_scale :float = min(total_size.x/image_size.x, total_size.y/image_size.y)
+	var prop_size := Vector3(image_size.x*image_scale, image_size.y*image_scale, total_size.z)
+	init_plot3d_box(prop_size, cell_count, cell_scale, true)
 	draw_texture2d_face_z(Vector3i.ZERO, texture2d)
 	return self
 
-func init_plot3d_box(aabb: AABB, cell_count :Vector3i, cell_scale :float = 1.0, transparent :bool = false) -> Plot3D:
-	var cg = CalcGrid3D.new(aabb, cell_count)
+func init_plot3d_box(total_size: Vector3, cell_count :Vector3i, cell_scale :float = 1.0, transparent :bool = false) -> Plot3D:
+	var cg = MakeCalcGrid(total_size, cell_count)
 	var mesh := BoxMesh.new()
 	mesh.size = cg.unit_size * cell_scale
 	mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial(transparent)
 	return init_plot3d_mesh_calcgrid(mesh, cg)
 
-func init_plot3d_plane(aabb: AABB, cell_count :Vector3i, cell_scale :float = 1.0, transparent :bool = false) -> Plot3D:
-	var cg = CalcGrid3D.new(aabb, cell_count)
+func init_plot3d_plane(total_size: Vector3, cell_count :Vector3i, cell_scale :float = 1.0, transparent :bool = false) -> Plot3D:
+	var cg = MakeCalcGrid(total_size, cell_count)
 	var mesh := PlaneMesh.new()
 	mesh.size = Vector2(cg.unit_size.x,cg.unit_size.y) *cell_scale
 	mesh.material = MakeMultiMeshColorMaterial(transparent)
 	return init_plot3d_mesh_calcgrid(mesh, cg)
 
-func init_plot3d_cylinder(aabb: AABB, cell_count :Vector3i, cell_scale :float = 1.0, radial_segments :int = 64, transparent :bool = false) -> Plot3D:
-	var cg = CalcGrid3D.new(aabb, cell_count)
+func init_plot3d_cylinder(total_size: Vector3, cell_count :Vector3i, cell_scale :float = 1.0, radial_segments :int = 64, transparent :bool = false) -> Plot3D:
+	var cg = MakeCalcGrid(total_size, cell_count)
 	var mesh := CylinderMesh.new()
 	var v2 := Vector2(cg.unit_size.x, cg.unit_size.y)
 	mesh.top_radius = v2.length() / 2 * cell_scale
@@ -43,8 +48,8 @@ func init_plot3d_cylinder(aabb: AABB, cell_count :Vector3i, cell_scale :float = 
 	mesh.material = MakeMultiMeshColorMaterial(transparent)
 	return init_plot3d_mesh_calcgrid(mesh, cg)
 
-func init_plot3d_sphere(aabb: AABB, cell_count :Vector3i, cell_scale :float = 1.0, transparent :bool = false) -> Plot3D:
-	var cg = CalcGrid3D.new(aabb, cell_count)
+func init_plot3d_sphere(total_size: Vector3, cell_count :Vector3i, cell_scale :float = 1.0, transparent :bool = false) -> Plot3D:
+	var cg = MakeCalcGrid(total_size, cell_count)
 	var mesh := SphereMesh.new()
 	mesh.radius = cg.unit_size.x *cell_scale /2
 	mesh.height = cg.unit_size.y *cell_scale
@@ -63,10 +68,11 @@ func clear() -> void:
 	set_visible_count(0)
 	plotted.clear()
 
-func fill_all(co :Color) -> void:
+func fill_all(co :Color) -> Plot3D:
 	for i in calc_grid.get_grid_count():
-		var posi := calc_grid.get_n_th_lanepos(i)
+		var posi := calc_grid.get_n_th_posi(i)
 		plot_at(posi, co)
+	return self
 
 func plot_at(posi :Vector3i, co :Color) -> void:
 	if co.a <= 0.0 :

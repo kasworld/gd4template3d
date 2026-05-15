@@ -53,6 +53,22 @@ static func WaveColorTileGrid(tg :TileGrid, now :float, zrange :float) -> void:
 		tg.multimesh.set_instance_color(index,co)
 		)
 
+static func WaveColorPlot3D(tg :Plot3D, now :float, zrange :float) -> void:
+	var cg := tg.calc_grid
+	const PI2 = 2*PI
+	const sqrt2 := sqrt(2)
+	cg.iter_ixyz(func(index:int,xi:int,yi:int,_zi:int):
+		var xrate :float= cg.rate_xi(xi)
+		var yrate :float= cg.rate_yi(yi)
+		# make -1.0 ~ 1.0
+		var zrate :=  ( sin( xrate*PI2 +now ) + cos( yrate*PI2 +now) ) / sqrt2
+		var t :Transform3D = tg.multimesh.get_instance_transform(index)
+		t.origin.z = zrate * zrange
+		tg.multimesh.set_instance_transform(index, t)
+		var co := Color(xrate,yrate, absf(zrate) )
+		tg.multimesh.set_instance_color(index,co)
+		)
+
 
 class AnimateList:
 	var animation :SimpleAnimation
@@ -100,7 +116,6 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		[bartree_demo, "BarTree"],
 		[battle_shooter_demo, "Battle Shooter"],
 		[clock_calendar_demo, "Clock Calender"],
-		[color_tile_demo, "Color Tile"],
 		[dialgauge_demo, "Dial Gauge"],
 		[flower_demo, "꽃"],
 		[ladder_demo, "사다리게임"],
@@ -111,13 +126,14 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		[orbit_demo, "Orbit"],
 		[platonic_solids_demo, "Platonic Solids"],
 		[plot3d_demo, "Plot3d"],
+		[plot3d_grid_demo, "Plot3d Grid"],
+		[plot3d_image_demo, "Plot3d Image"],
 		[props_demo, "Props"],
 		[same_game_demo, "Same Game"],
 		[seven_segment_demo, "Seven Segment 3D"],
 		[slotreel_demo, "SlotReel"],
 		[snakebyte_demo, "Snakebyte Game"],
 		[tetromino_demo, "Tetromino"],
-		[tile_grid_demo, "TileGrid"],
 		[tornado_demo, "Tornado"],
 		[wavegauge_box_demo, "WaveGaugeBox"],
 		[wheel_demo, "RouletteWheel" ],
@@ -142,7 +158,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 
 func plot3d_demo(gc :GlassCabinet) -> Callable:
 	var plot3d :Plot3D = preload("res://plot_3d/plot_3d.tscn").instantiate()
-	plot3d.init_plot3d_box(gc.get_aabb(), gc.cabinet_size, 0.9, false)
+	plot3d.init_plot3d_box(gc.get_aabb().size, gc.cabinet_size, 0.9, false)
 	gc.add_child(plot3d)
 
 	plot3d.draw_texture2d_face_x(Vector3i(0,0,0), preload("res://image/blender.png"))
@@ -747,7 +763,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	return AnimateList.new().init_rotate(node3d_list)
 
 
-func color_tile_demo(gc :GlassCabinet) -> Callable:
+func plot3d_image_demo(gc :GlassCabinet) -> Callable:
 	gc.show_wall_box(false)
 	var node3d_list :Array = []
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(4,2,1))
@@ -756,22 +772,21 @@ func color_tile_demo(gc :GlassCabinet) -> Callable:
 		gc.add_child(node3d)
 		node3d_list.append(node3d)
 		return node3d
-	var tginit := preload("res://plot_3d/plot_3d.tscn").instantiate
+	var p3_inst := preload("res://plot_3d/plot_3d.tscn").instantiate
 	var tg_size := grid_gc.unit_size
 	tg_size.z /= 50
-	var aabb := CalcGrid3D.SizeToAABB(tg_size)
-	afterfn.call(0, tginit.call().init_plot3d_by_texture2d_face_z(aabb, preload("res://image/vscode.png"), 0.9) )
-	afterfn.call(1, tginit.call().init_plot3d_by_texture2d_face_z(aabb, preload("res://image/git.png"), 0.9) )
-	afterfn.call(2, tginit.call().init_plot3d_by_texture2d_face_z(aabb, preload("res://image/github.png"), 0.9) )
-	afterfn.call(3, tginit.call().init_plot3d_by_texture2d_face_z(aabb, preload("res://image/me.png"), 0.9) )
-	afterfn.call(4, tginit.call().init_plot3d_by_texture2d_face_z(aabb, preload("res://image/firefox.png"), 0.9) )
-	afterfn.call(5, tginit.call().init_plot3d_by_texture2d_face_z(aabb, preload("res://image/gimp.png"), 0.9) )
-	afterfn.call(6, tginit.call().init_plot3d_by_texture2d_face_z(aabb, preload("res://image/blender.png"), 0.9) )
-	afterfn.call(7, tginit.call().init_plot3d_by_texture2d_face_z(aabb, preload("res://image/godot.png"), 0.9) )
+	afterfn.call(0, p3_inst.call().init_plot3d_by_texture2d_face_z(tg_size, preload("res://image/vscode.png"), 0.9) )
+	afterfn.call(1, p3_inst.call().init_plot3d_by_texture2d_face_z(tg_size, preload("res://image/git.png"), 0.9) )
+	afterfn.call(2, p3_inst.call().init_plot3d_by_texture2d_face_z(tg_size, preload("res://image/github.png"), 0.9) )
+	afterfn.call(3, p3_inst.call().init_plot3d_by_texture2d_face_z(tg_size, preload("res://image/me.png"), 0.9) )
+	afterfn.call(4, p3_inst.call().init_plot3d_by_texture2d_face_z(tg_size, preload("res://image/firefox.png"), 0.9) )
+	afterfn.call(5, p3_inst.call().init_plot3d_by_texture2d_face_z(tg_size, preload("res://image/gimp.png"), 0.9) )
+	afterfn.call(6, p3_inst.call().init_plot3d_by_texture2d_face_z(tg_size, preload("res://image/blender.png"), 0.9) )
+	afterfn.call(7, p3_inst.call().init_plot3d_by_texture2d_face_z(tg_size, preload("res://image/godot.png"), 0.9) )
 	#return Callable()
 	return AnimateList.new().init_rotate(node3d_list)
 
-func tile_grid_demo(gc :GlassCabinet) -> Callable:
+func plot3d_grid_demo(gc :GlassCabinet) -> Callable:
 	var node3d_list :Array = []
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(3,2,1))
 	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
@@ -779,20 +794,28 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 		gc.add_child(node3d)
 		node3d_list.append(node3d)
 		return node3d
-	var tg_inst := preload("res://tile_grid/tile_grid.tscn").instantiate
+	var tg_inst := preload("res://plot_3d/plot_3d.tscn").instantiate
 	var prop_size := Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/200)
 	var prop_size2 := Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/5)
-	afterfn.call(0, tg_inst.call().init_tile_grid_with_box(prop_size2, Vector2i(16,16), 0.5, Color.WHITE))
-	afterfn.call(1, tg_inst.call().init_tile_grid_with_plane(prop_size, Vector2i(16,9), 0.9, Color.WHITE))
-	var prop = afterfn.call(2, tg_inst.call().init_tile_grid_with_sphere(prop_size, Vector2i(14,12), 1.5, Color.WHITE))
-	prop.tile_rotation_z = PI/4
-	afterfn.call(3, tg_inst.call().init_tile_grid_with_cylinder(prop_size, Vector2i(14,12), 0.7, 6, Color.WHITE))
-	prop = afterfn.call(4, tg_inst.call().init_tile_grid_with_cylinder(prop_size, Vector2i(14,12), 0.7, 8, Color.WHITE))
+	afterfn.call(0, tg_inst.call().init_plot3d_box(prop_size2, Vector3i(16,16,1), 0.5)).fill_all(Color.WHITE)
+
+	var prop = afterfn.call(1, tg_inst.call().init_plot3d_plane(prop_size, Vector3i(16,9,1), 0.9)).fill_all(Color.WHITE)
+	prop.cell_rotation_x = PI/2
+
+	prop = afterfn.call(2, tg_inst.call().init_plot3d_sphere(prop_size, Vector3i(14,12,1), 1.5)).fill_all(Color.WHITE)
+	prop.cell_rotation_z = PI/4
+
+	prop = afterfn.call(3, tg_inst.call().init_plot3d_cylinder(prop_size, Vector3i(14,12,1), 0.7, 6)).fill_all(Color.WHITE)
+	prop.cell_rotation_x = PI/2
+
+	prop = afterfn.call(4, tg_inst.call().init_plot3d_cylinder(prop_size, Vector3i(14,12,1), 0.7, 8)).fill_all(Color.WHITE)
+	prop.cell_rotation_x = PI/2
 	for i in prop.calc_grid.get_grid_count():
 		prop.set_inst_rotate(i, Vector3.UP, PI/8)
-	prop = afterfn.call(5, tg_inst.call().init_tile_grid_with_cylinder(
+
+	prop = afterfn.call(5, tg_inst.call().init_plot3d_cylinder(
 		Vector3(grid_gc.unit_size.x, grid_gc.unit_size.y, grid_gc.unit_size.z/20),
-		Vector2i(16,16), 0.8, 6, Color.WHITE))
+		Vector3i(16,16,1), 0.8, 6)).fill_all(Color.WHITE)
 	prop.calc_grid.iter_ixyz(func(index:int,xi:int,yi:int,zi:int):
 		var pos :Vector3 = prop.calc_grid.posi_to_lanepos(Vector3i(xi,yi,zi))
 		if yi % 2 == 1:
@@ -808,7 +831,7 @@ func tile_grid_demo(gc :GlassCabinet) -> Callable:
 
 	for ps in node3d_list:
 		var now := randf_range(0,2*PI)
-		WaveColorTileGrid(ps, now, ps.calc_grid.unit_size.length()/3 )
+		WaveColorPlot3D(ps, now, ps.calc_grid.unit_size.length()/3 )
 
 	return func(_delta:float):
 		animation.handle_animation()
