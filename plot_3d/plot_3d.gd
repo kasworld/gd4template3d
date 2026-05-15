@@ -2,13 +2,8 @@ extends MultiMeshShape
 class_name Plot3D
 
 var calc_grid :CalcGrid3D
-
 ## posi to instance index
 var plotted :Dictionary[Vector3i,int] = {}
-
-func clear() -> void:
-	set_visible_count(0)
-	plotted.clear()
 
 func init_plot3d_by_texture2d_face_z(aabb: AABB, texture2d :Texture2D, cell_scale :float = 1.0) -> Plot3D:
 	var image := texture2d.get_image()
@@ -35,6 +30,15 @@ func init_plot3d_mesh_calcgrid(mesh :Mesh, cg :CalcGrid3D) -> Plot3D:
 	init_with_color_mesh(mesh, calc_grid.get_grid_count(), false)
 	set_visible_count(0)
 	return self
+
+func clear() -> void:
+	set_visible_count(0)
+	plotted.clear()
+
+func fill_all(co :Color) -> void:
+	for i in calc_grid.get_grid_count():
+		var posi := calc_grid.get_n_th_lanepos(i)
+		plot_at(posi, co)
 
 func plot_at(posi :Vector3i, co :Color) -> void:
 	if co.a <= 0.0 :
@@ -139,17 +143,17 @@ func draw_texture2d_face_x(posi :Vector3i, texture2d :Texture2D) -> void:
 ## for animation
 var cell_rotation_x :float:
 	set(rad):
-		for i in calc_grid.get_grid_count():
+		for i in plotted.size():
 			set_inst_rotation(i, Vector3.RIGHT, rad)
 
 var cell_rotation_y :float:
 	set(rad):
-		for i in calc_grid.get_grid_count():
+		for i in plotted.size():
 			set_inst_rotation(i, Vector3.UP, rad)
 
 var cell_rotation_z :float:
 	set(rad):
-		for i in calc_grid.get_grid_count():
+		for i in plotted.size():
 			set_inst_rotation(i, Vector3.FORWARD, rad)
 
 func make_ani_cell_rotate(aniname :String, axis :int, from :float, to :float, dur_sec :float) -> Dictionary:
