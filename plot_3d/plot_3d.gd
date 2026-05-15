@@ -25,6 +25,34 @@ func init_plot3d_box(aabb: AABB, cell_count :Vector3i, cell_scale :float = 1.0, 
 	mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial(transparent)
 	return init_plot3d_mesh_calcgrid(mesh, cg)
 
+func init_plot3d_plane(aabb: AABB, cell_count :Vector3i, cell_scale :float = 1.0, transparent :bool = false) -> Plot3D:
+	var cg = CalcGrid3D.new(aabb, cell_count)
+	var mesh := PlaneMesh.new()
+	mesh.size = Vector2(cg.unit_size.x,cg.unit_size.y) *cell_scale
+	mesh.material = MakeMultiMeshColorMaterial(transparent)
+	return init_plot3d_mesh_calcgrid(mesh, cg)
+
+func init_plot3d_cylinder(aabb: AABB, cell_count :Vector3i, cell_scale :float = 1.0, radial_segments :int = 64, transparent :bool = false) -> Plot3D:
+	var cg = CalcGrid3D.new(aabb, cell_count)
+	var mesh := CylinderMesh.new()
+	var v2 := Vector2(cg.unit_size.x, cg.unit_size.y)
+	mesh.top_radius = v2.length() / 2 * cell_scale
+	mesh.bottom_radius = v2.length() / 2 * cell_scale
+	mesh.height = cg.unit_size.z
+	mesh.radial_segments = radial_segments
+	mesh.material = MakeMultiMeshColorMaterial(transparent)
+	return init_plot3d_mesh_calcgrid(mesh, cg)
+
+func init_plot3d_sphere(aabb: AABB, cell_count :Vector3i, cell_scale :float = 1.0, transparent :bool = false) -> Plot3D:
+	var cg = CalcGrid3D.new(aabb, cell_count)
+	var mesh := SphereMesh.new()
+	mesh.radius = cg.unit_size.x *cell_scale /2
+	mesh.height = cg.unit_size.y *cell_scale
+	mesh.radial_segments = 4
+	mesh.rings = 1
+	mesh.material = MakeMultiMeshColorMaterial(transparent)
+	return init_plot3d_mesh_calcgrid(mesh, cg)
+
 func init_plot3d_mesh_calcgrid(mesh :Mesh, cg :CalcGrid3D) -> Plot3D:
 	calc_grid = cg
 	init_with_color_mesh(mesh, calc_grid.get_grid_count(), false)
