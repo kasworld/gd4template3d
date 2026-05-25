@@ -637,14 +637,18 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 		).init_params(maze2d, cell_size, WallThick, MakeSubWallRate
 		).init_with_color(NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color()
 		).init_floor_ceiling(grid_size*4, cell_size.x*0.01, 0.9,
-		Color(NamedColors.random_color(), 0.5),
-		Color(NamedColors.random_color(), 0.5),
+		Color(NamedColors.random_color(), 0.9),
+		Color(NamedColors.random_color(), 0.9),
 		)
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Both)
 	for i in 10:
-		maze3d.make_stair(maze3d.get_floor(),CalcGrid3D.xz_Vector3iToVector2i(maze3d.calc_grid.rand_posi()), Maze.DirList.pick_random())
-		maze3d.make_stair(maze3d.get_ceiling(),CalcGrid3D.xz_Vector3iToVector2i(maze3d.calc_grid.rand_posi()), Maze.DirList.pick_random())
+		var posi_floor := maze3d.calc_grid.rand_posi()
+		maze3d.add_stair(posi_floor + Vector3i(0,-1,0), Maze.DirList.pick_random(), NamedColors.random_color())
+		maze3d.make_stair_hole(maze3d.get_floor(), Vector2i(posi_floor.x, posi_floor.z) )
+		var posi_ceiling := maze3d.calc_grid.rand_posi()
+		maze3d.add_stair(posi_ceiling , Maze.DirList.pick_random(), NamedColors.random_color())
+		maze3d.make_stair_hole(maze3d.get_ceiling(), Vector2i(posi_ceiling.x, posi_ceiling.z) )
 	gc.add_child(maze3d)
 	var r := maze3d.calc_grid.unit_size.x /10
 	for i in min(100,grid_size.x*grid_size.y):
@@ -652,6 +656,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 			).init(maze3d, r, r*10,  NamedColors.random_color())
 		maze3d.add_child(mb)
 		maze_balls.append(mb)
+	return Callable()
 	return maze3d_animate
 var maze_ani_i :int
 func maze3d_animate(delta :float) -> void:

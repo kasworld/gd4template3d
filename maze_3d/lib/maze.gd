@@ -172,7 +172,6 @@ func _init(msize :Vector2i) -> void:
 				break
 		if delpos:
 			visted_pos.remove_at(posidx)
-
 func is_in(x :int,y :int) -> bool:
 	return x >=0 && y>=0 && x < width && y < height
 
