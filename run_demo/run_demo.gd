@@ -642,13 +642,17 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 		)
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Both)
-	for i in 10:
-		var posi_floor := maze3d.calc_grid.rand_posi()
-		maze3d.add_stair(posi_floor + Vector3i(0,-1,0), Maze.DirList.pick_random(), NamedColors.random_color())
-		maze3d.make_stair_hole(maze3d.get_floor(), Vector2i(posi_floor.x, posi_floor.z) )
-		var posi_ceiling := maze3d.calc_grid.rand_posi()
-		maze3d.add_stair(posi_ceiling , Maze.DirList.pick_random(), NamedColors.random_color())
-		maze3d.make_stair_hole(maze3d.get_ceiling(), Vector2i(posi_ceiling.x, posi_ceiling.z) )
+	#var posi := Vector3i(0,0,0)
+	var posi := Vector3i(grid_size.x-1 ,0,grid_size.y-1)
+	maze3d.add_stair(posi , Maze.DirList.pick_random(), NamedColors.random_color())
+	maze3d.make_stair_hole(maze3d.get_ceiling(), Vector2i(posi.x, posi.z) )
+	#for i in 10:
+		#var posi_floor := maze3d.calc_grid.rand_posi()
+		#maze3d.add_stair(posi_floor + Vector3i(0,-1,0), Maze.DirList.pick_random(), NamedColors.random_color())
+		#maze3d.make_stair_hole(maze3d.get_floor(), Vector2i(posi_floor.x, posi_floor.z) )
+		#var posi_ceiling := maze3d.calc_grid.rand_posi()
+		#maze3d.add_stair(posi_ceiling , Maze.DirList.pick_random(), NamedColors.random_color())
+		#maze3d.make_stair_hole(maze3d.get_ceiling(), Vector2i(posi_ceiling.x, posi_ceiling.z) )
 	gc.add_child(maze3d)
 	var r := maze3d.calc_grid.unit_size.x /10
 	for i in min(100,grid_size.x*grid_size.y):
