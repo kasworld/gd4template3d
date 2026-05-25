@@ -25,7 +25,7 @@ static func MakeTeamList(team_count :int, ship_per_team :int) -> Array[BattleSho
 		ColorList = ColorList1
 	var rtn :Array[BattleShooterTeam] = []
 	for t in team_count:
-		var ct := BattleShooterTeam.new(ColorList.get_current_and_step_next(), ship_per_team)
+		var ct := BattleShooterTeam.new(ColorList.get_and_next(), ship_per_team)
 		rtn.append(ct)
 	return rtn
 

@@ -88,7 +88,7 @@ var empty_glass_cabinet_iter :ListIter
 func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> void:
 	glass_cabinet_iter = ListIter.new(cabinet_list, true)
 	var run_demo := func(demo :Callable, text :String) -> void:
-		var gc :GlassCabinet = glass_cabinet_iter.get_current_and_step_next()
+		var gc :GlassCabinet = glass_cabinet_iter.get_and_next()
 		var ani_fn :Callable = demo.call(gc)
 		if not ani_fn.is_null():
 			gc.add_animate_func(ani_fn)
@@ -263,7 +263,7 @@ func tetromino_demo(gc :GlassCabinet) -> Callable:
 	return func(_delta :float) -> void:
 		for tt in tetromino_list:
 			tt.animation.handle_animation()
-		var tet :Tetromino = tetromino_iter.get_current_and_step_next()
+		var tet :Tetromino = tetromino_iter.get_and_next()
 		if tet.animation.is_empty():
 			var n := randi_range(0,7)
 			match n:
@@ -308,7 +308,7 @@ var 밝은색목록 :ListIter = ListIter.new(NamedColors.filter_light_color_list
 func ladder_demo(gc :GlassCabinet) -> Callable:
 	var 참가자정보 :Array
 	for i in 8:
-		참가자정보.append( ["출발%d" % [i+1], 밝은색목록.get_current_and_step_next(), "도착%d" % [i+1] ] )
+		참가자정보.append( ["출발%d" % [i+1], 밝은색목록.get_and_next(), "도착%d" % [i+1] ] )
 	ladder = preload("res://사다리게임/사다리게임.tscn").instantiate(
 		).init(gc.cabinet_size, 참가자정보)
 	gc.add_child(ladder)
@@ -464,15 +464,15 @@ func wintertree_animate(delta :float) -> void:
 	winter_tree.장식들얻기().set_inst_color( randi_range(0, winter_tree.장식들얻기().multimesh.instance_count-1),  NamedColors.random_color())
 
 	if ani_ended:
-		color_fn_args.get_current_and_step_next()
-		ani_dir_data.get_current_and_step_next()
+		color_fn_args.get_and_next()
+		ani_dir_data.get_and_next()
 		change_count = 0
 		color_fn = [RandomColor.pure_color, RandomColor.rate_color, random_color2].pick_random()
 		winter_tree.장식들얻기().set_color_all( NamedColors.random_color())
 
 var named_color_list := ListIter.new(NamedColors.color_list)
 func random_color2(_arg ) -> Color:
-	return named_color_list.get_current_and_step_next()
+	return named_color_list.get_and_next()
 
 
 func platonic_solids_demo(gc :GlassCabinet) -> Callable:
