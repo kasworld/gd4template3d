@@ -636,7 +636,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_params(maze2d, cell_size, WallThick, MakeSubWallRate
 		).init_with_color(NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color()
-		).init_floor_ceiling(grid_size*4, cell_size.x*0.01, 0.9,
+		).init_floor_ceiling_plane(grid_size*4, cell_size.x*0.01, 0.9,
 		Color(NamedColors.random_color(), 0.9),
 		Color(NamedColors.random_color(), 0.9),
 		)
@@ -665,7 +665,7 @@ func maze3d_animate(delta :float) -> void:
 	if maze_ani_i% 60 == 0:
 		view_walls = Maze3D.wallview_next(view_walls)
 		maze3d.set_wallpillar_view_mode(view_walls)
-		maze3d.view_floor_ceiling( randi_range(0,3) as Maze3D.FloorCeiling)
+		#maze3d.view_floor_ceiling( randi_range(0,3) as Maze3D.FloorCeiling)
 	maze3d.rotation.x = sin(deg_to_rad(maze_ani_i/1.5)) * PI + PI + PI/4
 
 
