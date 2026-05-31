@@ -144,8 +144,8 @@ func plot3d_demo(gc :GlassCabinet) -> Callable:
 	plot3d.init_plot3d_box(gc.get_aabb().size, gc.cabinet_size, 0.9, false)
 	gc.add_child(plot3d)
 
-	plot3d.draw_texture2d_face_x(Vector3i(0,0,0), preload("res://image/blender.png"))
-	plot3d.draw_texture2d_face_y(Vector3i(0,0,0), preload("res://image/gimp.png"))
+	plot3d.draw_texture2d_face_y(Vector3i(0,0,0), preload("res://image/blender.png"))
+	plot3d.draw_texture2d_face_x(Vector3i(0,0,0), preload("res://image/gimp.png"))
 	plot3d.draw_texture2d_face_z(Vector3i(0,0,0), preload("res://image/me.png"))
 	var cg := plot3d.calc_grid
 	plot3d.draw_x_line(0, cg.grid_size.x, cg.grid_size.y/2, cg.grid_size.z/2, Color.RED)
@@ -636,7 +636,8 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_params(maze2d, cell_size, WallThick, MakeSubWallRate
 		).init_with_color(NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color()
-		).init_floor_ceiling_plane(grid_size*4, cell_size.x*0.01, 0.9,
+		).init_floor_ceiling_box(grid_size*4, cell_size.x*0.01, 0.9,
+		#).init_floor_ceiling_plane(grid_size*4, cell_size.x*0.01, 0.9,
 		Color(NamedColors.random_color(), 0.9),
 		Color(NamedColors.random_color(), 0.9),
 		)
@@ -644,10 +645,16 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Both)
 	for i in 10:
 		var posi_floor := maze3d.calc_grid.rand_posi()
-		maze3d.add_stair(posi_floor + Vector3i(0,-1,0), Maze.DirList.pick_random(), NamedColors.random_color())
+		if randi() %2 ==0:
+			maze3d.add_stair(posi_floor + Vector3i(0,-1,0), Maze.DirList.pick_random(), NamedColors.random_color())
+		else:
+			maze3d.add_ladder(posi_floor + Vector3i(0,-1,0), Maze.DirList.pick_random(), NamedColors.random_color())
 		maze3d.make_stair_hole(maze3d.get_floor(), Vector2i(posi_floor.x, posi_floor.z) )
 		var posi_ceiling := maze3d.calc_grid.rand_posi()
-		maze3d.add_stair(posi_ceiling , Maze.DirList.pick_random(), NamedColors.random_color())
+		if randi() %2 ==0:
+			maze3d.add_stair(posi_ceiling , Maze.DirList.pick_random(), NamedColors.random_color())
+		else:
+			maze3d.add_ladder(posi_ceiling , Maze.DirList.pick_random(), NamedColors.random_color())
 		maze3d.make_stair_hole(maze3d.get_ceiling(), Vector2i(posi_ceiling.x, posi_ceiling.z) )
 	gc.add_child(maze3d)
 	var r := maze3d.calc_grid.unit_size.x /10
@@ -665,7 +672,7 @@ func maze3d_animate(delta :float) -> void:
 	if maze_ani_i% 60 == 0:
 		view_walls = Maze3D.wallview_next(view_walls)
 		maze3d.set_wallpillar_view_mode(view_walls)
-		#maze3d.view_floor_ceiling( randi_range(0,3) as Maze3D.FloorCeiling)
+		maze3d.view_floor_ceiling( randi_range(0,3) as Maze3D.FloorCeiling)
 	maze3d.rotation.x = sin(deg_to_rad(maze_ani_i/1.5)) * PI + PI + PI/4
 
 
