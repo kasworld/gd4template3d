@@ -3,6 +3,8 @@ class_name CabinetDemo
 
 var glass_cabinet_row_list :Array[Node3D]
 var glass_cabinet_list :Array[GlassCabinet]
+var row_rotate_speed :Array[float] = []
+
 
 func init(cabinet_size :Vector3, row_count := 2) -> void:
 	for i in row_count: # glass_cabinet_row
@@ -12,6 +14,7 @@ func init(cabinet_size :Vector3, row_count := 2) -> void:
 		gcr.position.y = cabinet_size.y *(float(i)-float(row_count-1)/2) * 1.05
 		for gc in gcr.get_children():
 			glass_cabinet_list.append(gc)
+		row_rotate_speed.append( randfn(0,0.2))
 
 func make_glass_cabinet_row(cabinet_size :Vector3, count :int, row :int) -> Node3D:
 	var rtn := Node3D.new()
@@ -33,7 +36,4 @@ func show_all_cabinet(b :bool = true) -> void:
 
 func _process(delta: float) -> void:
 	for i in glass_cabinet_row_list.size():
-		if i % 2 == 0:
-			glass_cabinet_row_list[i].rotate_y(delta/10)
-		else:
-			glass_cabinet_row_list[i].rotate_y(-delta/10)
+		glass_cabinet_row_list[i].rotate_y(delta*row_rotate_speed[i])
