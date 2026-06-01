@@ -636,8 +636,8 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_params(maze2d, cell_size, WallThick, MakeSubWallRate
 		).init_with_color(NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color()
-		).init_floor_ceiling_box(grid_size*4, cell_size.x*0.01, 0.9,
-		#).init_floor_ceiling_plane(grid_size*4, cell_size.x*0.01, 0.9,
+		).init_floor_ceiling_box(Vector2i(4,4), cell_size.x*0.01, 0.9,
+		#).init_floor_ceiling_plane(Vector2i(4,4), cell_size.x*0.01, 0.9,
 		Color(NamedColors.random_color(), 0.9),
 		Color(NamedColors.random_color(), 0.9),
 		)
