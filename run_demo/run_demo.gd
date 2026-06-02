@@ -754,6 +754,14 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), Vector2i(16,1), grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.1, NamedColors.random_color())
 	prop.wire_V_rotation_y = PI/4
 	afterfn.call(7, prop)
+	prop = preload("res://table_4_leg/table_4_leg.tscn").instantiate(
+		).init(
+			Vector3(grid_gc.unit_size.x,grid_gc.unit_size.y/20,grid_gc.unit_size.z),
+			Vector3(grid_gc.unit_size.x/20,grid_gc.unit_size.y,grid_gc.unit_size.z/20),
+			NamedColors.random_color(),NamedColors.random_color()
+			)
+	afterfn.call(0, prop)
+
 	return AnimateList.new().init_rotate(node3d_list)
 
 
