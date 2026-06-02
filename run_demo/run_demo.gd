@@ -716,7 +716,7 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 
 func props_demo(gc :GlassCabinet) -> Callable:
 	var node3d_list :Array = []
-	var grid_gc := gc.make_CalcGrid3D( Vector3i(4,2,1))
+	var grid_gc := gc.make_CalcGrid3D( Vector3i(5,3,1))
 	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
 		node3d.position = grid_gc.get_n_th_lanepos(n)
 		gc.add_child(node3d)
@@ -756,12 +756,11 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	afterfn.call(7, prop)
 	prop = preload("res://table_4_leg/table_4_leg.tscn").instantiate(
 		).init(
-			Vector3(grid_gc.unit_size.x,grid_gc.unit_size.y/20,grid_gc.unit_size.z),
-			Vector3(grid_gc.unit_size.x/20,grid_gc.unit_size.y,grid_gc.unit_size.z/20),
+			Vector3(grid_gc.unit_size.x,grid_gc.unit_size.y/20,grid_gc.unit_size.z/5),
+			Vector3(grid_gc.unit_size.x/20,grid_gc.unit_size.y/2,grid_gc.unit_size.z/100),
 			NamedColors.random_color(),NamedColors.random_color()
 			)
-	afterfn.call(0, prop)
-
+	afterfn.call(8, prop)
 	return AnimateList.new().init_rotate(node3d_list)
 
 
