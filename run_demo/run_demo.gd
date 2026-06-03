@@ -1,6 +1,8 @@
 extends Node3D
 class_name RunDemo
 
+static var RandomColorIter := ListIter.new(NamedColors.color_list)
+
 static func MakeSubViewport(n2d :Node2D, size_pixel:Vector2i) -> SubViewport:
 	var sv := SubViewport.new()
 	sv.size = size_pixel
@@ -172,10 +174,10 @@ func flower_demo(gc :GlassCabinet) -> Callable:
 			petal_width_scale = randf_range(0.2, 0.5)
 			#interleave_petal = true
 		fl.init_petal(flower_r, randf_range(flower_r*0.3,flower_r*0.6),
-			petal_count, NamedColors.random_color(), petal_width_scale, petal_radial, interleave_petal)
+			petal_count, RandomColorIter.get_and_next(), petal_width_scale, petal_radial, interleave_petal)
 		if petal_count <= 3:
 			petal_count *=2
-		fl.init_center(randf_range(flower_r*0.1,flower_r*0.5), NamedColors.random_color(), petal_count)
+		fl.init_center(randf_range(flower_r*0.1,flower_r*0.5), RandomColorIter.get_and_next(), petal_count)
 		fl.rotation_axis(Vector3.Axis.AXIS_X)
 		afterfn.call(i,fl)
 	return AnimateList.new().init_rotate_axis(node3d_list, Vector3.Axis.AXIS_Z)
@@ -196,7 +198,7 @@ func manhwa_face_demo(gc :GlassCabinet) -> Callable:
 		face.set_radius(grid_gc.unit_size.x/4)
 		face.set_ear_type(randi_range(0,2))
 		face.set_ear_rad(randf_range(PI/16, PI/3), randfn(0.0,0.1))
-		face.set_face_color(NamedColors.random_color())
+		face.set_face_color(RandomColorIter.get_and_next())
 		face.set_eye_color(colors_light.pick_random(),colors_dark.pick_random())
 		face.set_eye_Sclera_scale(Vector3(randfn(1.0,0.1) , 1, randfn(1.0,0.1)))
 		face.set_eye_Iris_scale(Vector3(randfn(1.0,0.1) , 1, randfn(1.0,0.1)))
@@ -238,7 +240,7 @@ func seven_segment_demo(gc :GlassCabinet) -> Callable:
 		var ss_size := grid_gc.unit_size
 		ss_size.z = (grid_gc.unit_size.z / 100) * (1+ i*1)
 		ss_size *= 0.5
-		ss.init(ss_size, ss_size.x /(i+4.0),  NamedColors.random_color())
+		ss.init(ss_size, ss_size.x /(i+4.0),  RandomColorIter.get_and_next())
 		ss.show_segment_by_flag( SevenSegment.NumToFlag[i])
 		afterfn.call(i, ss)
 	return func(_delta :float) -> void:
@@ -373,13 +375,13 @@ func make_rand_range(v :float, l :float) -> Array:
 	return [r1,r2]
 func new_dialgauge(radius :float, cabinet_size :Vector3) -> DialGauge:
 	return preload("res://dial_gauge/dial_gauge.tscn").instantiate(
-		).init(radius, cabinet_size.z/20, NamedColors.random_color(),NamedColors.random_color(),NamedColors.random_color(),
+		).init(radius, cabinet_size.z/20, RandomColorIter.get_and_next(),RandomColorIter.get_and_next(),RandomColorIter.get_and_next(),
 		).init_range( make_rand_range(0,360), make_rand_range(0,2*PI)
-		).add_dial_num(radius*0.80, cabinet_size.z/100, radius/20, 12, NamedColors.random_color(),
+		).add_dial_num(radius*0.80, cabinet_size.z/100, radius/20, 12, RandomColorIter.get_and_next(),
 		).add_dial_bar(radius*0.92, Vector3(cabinet_size.z/40, cabinet_size.z/200, cabinet_size.z/100),
-			DialGauge.BarAlign.Out, 60, NamedColors.random_color()
+			DialGauge.BarAlign.Out, 60, RandomColorIter.get_and_next()
 		).add_dial_bar(radius*0.92, Vector3(cabinet_size.z/40, cabinet_size.z/200, cabinet_size.z/100),
-			DialGauge.BarAlign.In, 12, NamedColors.random_color()
+			DialGauge.BarAlign.In, 12, RandomColorIter.get_and_next()
 		)
 var dialgauge_list :Array
 func dialgauge_demo(gc :GlassCabinet) -> Callable:
@@ -461,19 +463,14 @@ func wintertree_animate(delta :float) -> void:
 				lines.set_inst_color(i, co)
 			change_count +=1
 			ani_ended = change_count >= winter_tree_inst_index[-1].size()
-	winter_tree.장식들얻기().set_inst_color( randi_range(0, winter_tree.장식들얻기().multimesh.instance_count-1),  NamedColors.random_color())
+	winter_tree.장식들얻기().set_inst_color( randi_range(0, winter_tree.장식들얻기().multimesh.instance_count-1),  RandomColorIter.get_and_next())
 
 	if ani_ended:
 		color_fn_args.get_and_next()
 		ani_dir_data.get_and_next()
 		change_count = 0
-		color_fn = [RandomColor.pure_color, RandomColor.rate_color, random_color2].pick_random()
-		winter_tree.장식들얻기().set_color_all( NamedColors.random_color())
-
-var named_color_list := ListIter.new(NamedColors.color_list)
-func random_color2(_arg ) -> Color:
-	return named_color_list.get_and_next()
-
+		color_fn = [RandomColor.pure_color, RandomColor.rate_color, RandomColorIter.get_and_next].pick_random()
+		winter_tree.장식들얻기().set_color_all( RandomColorIter.get_and_next())
 
 func platonic_solids_demo(gc :GlassCabinet) -> Callable:
 	var node3d_list :Array = []
@@ -503,7 +500,7 @@ func platonic_solids_demo(gc :GlassCabinet) -> Callable:
 		var from :int = ll[2]
 		var to :int = ll[3]
 		var ws :WireSolid = preload("res://wire_solid/wire_solid.tscn").instantiate(
-			).init(face, from, to, grid_gc.unit_size.y/2-wire_width , wire_width, NamedColors.random_color(), wire_width )
+			).init(face, from, to, grid_gc.unit_size.y/2-wire_width , wire_width, RandomColorIter.get_and_next(), wire_width )
 		afterfn.call(i,ws)
 		i +=1
 	return AnimateList.new().init_rotate(node3d_list)
@@ -513,7 +510,7 @@ var tornado_list :Array # [ tornado , AnimateGradient , AnimateGradient ]
 func tornado_demo(gc :GlassCabinet) -> Callable:
 	for i in 4:
 		var tb = preload("res://tornado/tornado.tscn").instantiate(
-			).init_sample(gc.cabinet_size.x/2, gc.cabinet_size.y*0.3, 0.5, NamedColors.random_color(),NamedColors.random_color())
+			).init_sample(gc.cabinet_size.x/2, gc.cabinet_size.y*0.3, 0.5, RandomColorIter.get_and_next(),RandomColorIter.get_and_next())
 		gc.add_child(tb)
 		tornado_list.append([tb, AnimateGradient.new(), AnimateGradient.new()])
 	return tornado_animate
@@ -557,7 +554,7 @@ func wheel_demo(gc :GlassCabinet) -> Callable:
 	color_text_into_list.shuffle()
 	roulette = preload("res://roulette/roulette.tscn").instantiate(
 		).init(0, gc.cabinet_size.y/2, gc.cabinet_size.z/20, color_text_into_list )
-	roulette.색설정하기(NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color() )
+	roulette.색설정하기(RandomColorIter.get_and_next(), RandomColorIter.get_and_next(), RandomColorIter.get_and_next() )
 	roulette.rotation_stopped.connect(wheel결과가결정됨)
 	gc.add_child(roulette)
 	wheel돌리기()
@@ -625,7 +622,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	var minimap :MazeMiniMap = preload("res://maze_3d/maze_mini_map/maze_mini_map.tscn").instantiate()
 	minimap.set_maze(maze2d)
 	minimap.update_size(size_pixel)
-	minimap.set_color(NamedColors.random_color())
+	minimap.set_color(RandomColorIter.get_and_next())
 	minimap.position.x = size_pixel.x/2 - minimap.maze2d_helper.get_width()/2
 	var svp := MakeSubViewport(minimap, size_pixel)
 	var plane := MakePlaneSubViewport(svp, Vector2(gc.cabinet_size.x, gc.cabinet_size.y))
@@ -635,32 +632,32 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_params(maze2d, cell_size, WallThick, MakeSubWallRate
-		).init_with_color(NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color(), NamedColors.random_color()
+		).init_with_color(RandomColorIter.get_and_next(), RandomColorIter.get_and_next(), RandomColorIter.get_and_next(), RandomColorIter.get_and_next()
 		).init_floor_ceiling_box(Vector2i(4,4), cell_size.x*0.01, 0.9,
 		#).init_floor_ceiling_plane(Vector2i(4,4), cell_size.x*0.01, 0.9,
-		Color(NamedColors.random_color(), 0.9),
-		Color(NamedColors.random_color(), 0.9),
+		Color(RandomColorIter.get_and_next(), 0.9),
+		Color(RandomColorIter.get_and_next(), 0.9),
 		)
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Both)
 	for i in 10:
 		var posi_floor := maze3d.calc_grid.rand_posi()
 		if randi() %2 ==0:
-			maze3d.add_stair(posi_floor + Vector3i(0,-1,0), Maze.DirList.pick_random(), NamedColors.random_color())
+			maze3d.add_stair(posi_floor + Vector3i(0,-1,0), Maze.DirList.pick_random(), RandomColorIter.get_and_next())
 		else:
-			maze3d.add_ladder(posi_floor + Vector3i(0,-1,0), Maze.DirList.pick_random(), NamedColors.random_color())
+			maze3d.add_ladder(posi_floor + Vector3i(0,-1,0), Maze.DirList.pick_random(), RandomColorIter.get_and_next())
 		maze3d.make_stair_hole(maze3d.get_floor(), Vector2i(posi_floor.x, posi_floor.z) )
 		var posi_ceiling := maze3d.calc_grid.rand_posi()
 		if randi() %2 ==0:
-			maze3d.add_stair(posi_ceiling , Maze.DirList.pick_random(), NamedColors.random_color())
+			maze3d.add_stair(posi_ceiling , Maze.DirList.pick_random(), RandomColorIter.get_and_next())
 		else:
-			maze3d.add_ladder(posi_ceiling , Maze.DirList.pick_random(), NamedColors.random_color())
+			maze3d.add_ladder(posi_ceiling , Maze.DirList.pick_random(), RandomColorIter.get_and_next())
 		maze3d.make_stair_hole(maze3d.get_ceiling(), Vector2i(posi_ceiling.x, posi_ceiling.z) )
 	gc.add_child(maze3d)
 	var r := maze3d.calc_grid.unit_size.x /10
 	for i in min(100,grid_size.x*grid_size.y):
 		var mb :MazeBall = preload("res://maze_3d/maze_ball/maze_ball.tscn").instantiate(
-			).init(maze3d, r, r*10,  NamedColors.random_color())
+			).init(maze3d, r, r*10,  RandomColorIter.get_and_next())
 		maze3d.add_child(mb)
 		maze_balls.append(mb)
 	return maze3d_animate
@@ -724,16 +721,16 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		return node3d
 	var prop
 	prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
-		).set_color(NamedColors.random_color()).set_size( grid_gc.unit_size.x *0.6, grid_gc.unit_size.x/30, grid_gc.unit_size.x/10, 0.3)
+		).set_color(RandomColorIter.get_and_next()).set_size( grid_gc.unit_size.x *0.6, grid_gc.unit_size.x/30, grid_gc.unit_size.x/10, 0.3)
 	afterfn.call(0, prop)
 	prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
-		).set_color(NamedColors.random_color()).set_size( grid_gc.unit_size.x *0.6, grid_gc.unit_size.x/30, grid_gc.unit_size.x/10, 0.7)
+		).set_color(RandomColorIter.get_and_next()).set_size( grid_gc.unit_size.x *0.6, grid_gc.unit_size.x/30, grid_gc.unit_size.x/10, 0.7)
 	afterfn.call(1, prop)
 	prop = preload("res://valve_handle/valve_handle.tscn").instantiate(
-		).init(grid_gc.unit_size.x/6, grid_gc.unit_size.x/6, 8, NamedColors.random_color())
+		).init(grid_gc.unit_size.x/6, grid_gc.unit_size.x/6, 8, RandomColorIter.get_and_next())
 	afterfn.call(2, prop)
 	prop = preload("res://valve_handle/valve_handle.tscn").instantiate(
-		).init(grid_gc.unit_size.x/6, grid_gc.unit_size.x/10, 4, NamedColors.random_color())
+		).init(grid_gc.unit_size.x/6, grid_gc.unit_size.x/10, 4, RandomColorIter.get_and_next())
 	afterfn.call(3, prop)
 	prop = preload("res://axis_arrow_3d/axis_arrow_3d.tscn").instantiate(
 		).set_colors().set_size(grid_gc.unit_size.length()/10)
@@ -741,17 +738,17 @@ func props_demo(gc :GlassCabinet) -> Callable:
 
 	var grid_size := Vector2i(16,9)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
-		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), grid_size, grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.005, NamedColors.random_color())
-	prop.set_color_H(NamedColors.random_color())
-	prop.set_color_V(NamedColors.random_color())
+		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), grid_size, grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.005, RandomColorIter.get_and_next())
+	prop.set_color_H(RandomColorIter.get_and_next())
+	prop.set_color_V(RandomColorIter.get_and_next())
 	afterfn.call(5, prop)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
-		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), grid_size, grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.1, NamedColors.random_color())
-	prop.set_color_H(NamedColors.random_color())
-	prop.set_color_V(NamedColors.random_color())
+		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), grid_size, grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.1, RandomColorIter.get_and_next())
+	prop.set_color_H(RandomColorIter.get_and_next())
+	prop.set_color_V(RandomColorIter.get_and_next())
 	afterfn.call(6, prop)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
-		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), Vector2i(16,1), grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.1, NamedColors.random_color())
+		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), Vector2i(16,1), grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.1, RandomColorIter.get_and_next())
 	prop.wire_V_rotation_y = PI/4
 	afterfn.call(7, prop)
 	for n in range(node3d_list.size(), grid_gc.get_grid_count()):
@@ -761,7 +758,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		t4l.init(
 			Vector3(unit_size.x/2 * randfn(1,0.5), thick, unit_size.z/2 * randfn(1,0.5)),
 			Vector3(thick,unit_size.y/4 * randfn(1,0.5), thick),
-			NamedColors.random_color(),NamedColors.random_color())
+			RandomColorIter.get_and_next(),RandomColorIter.get_and_next())
 		afterfn.call(n, t4l)
 
 	return AnimateList.new().init_rotate(node3d_list)
@@ -869,7 +866,7 @@ func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
 		[Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK].pick_random(),
 		randf_range(0,a30))
 	var 궤도mat1 := StandardMaterial3D.new()
-	궤도mat1.albedo_color = NamedColors.random_color()
+	궤도mat1.albedo_color = RandomColorIter.get_and_next()
 	var 구mat2 :StandardMaterial3D
 	match i:
 		0,1,2,3:
@@ -881,7 +878,7 @@ func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
 				][i]
 		_:
 			구mat2 = StandardMaterial3D.new()
-			구mat2.albedo_color = NamedColors.random_color()
+			구mat2.albedo_color = RandomColorIter.get_and_next()
 	var os = preload("res://orbit_sphere/orbit_sphere.tscn").instantiate(
 		).궤도설정(diagonal_length, diagonal_length/200, axis1, a120*[0,1,2].pick_random()
 		).구설정(gc.cabinet_size.x/30*rate, gc.cabinet_size.x/50, Vector3.UP
@@ -956,6 +953,6 @@ func make_sub_tree(gc :GlassCabinet, tree_size :Vector3, bar_count :int, shift :
 			preload("res://image/leaf.tres"),
 			].pick_random(), bar_count)
 	else:
-		t.init_bartree_with_color(NamedColors.random_color(), NamedColors.random_color(), bar_count)
+		t.init_bartree_with_color(RandomColorIter.get_and_next(), RandomColorIter.get_and_next(), bar_count)
 	t.init_bartree_transform(tree_size, shift)
 	bartree_list.append(t)
