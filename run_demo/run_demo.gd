@@ -754,15 +754,17 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), Vector2i(16,1), grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.1, NamedColors.random_color())
 	prop.wire_V_rotation_y = PI/4
 	afterfn.call(7, prop)
-	prop = preload("res://table_4_leg/table_4_leg.tscn").instantiate(
-		).init(
-			Vector3(grid_gc.unit_size.x,grid_gc.unit_size.y/20,grid_gc.unit_size.z/5),
-			Vector3(grid_gc.unit_size.x/20,grid_gc.unit_size.y/2,grid_gc.unit_size.z/100),
-			NamedColors.random_color(),NamedColors.random_color()
-			)
-	afterfn.call(8, prop)
-	return AnimateList.new().init_rotate(node3d_list)
+	for n in range(node3d_list.size(), grid_gc.get_grid_count()):
+		var unit_size := grid_gc.unit_size
+		var t4l :Table4Leg = preload("res://table_4_leg/table_4_leg.tscn").instantiate()
+		var thick := unit_size.y/50
+		t4l.init(
+			Vector3(unit_size.x/2 * randfn(1,0.5), thick, unit_size.z/2 * randfn(1,0.5)),
+			Vector3(thick,unit_size.y/4 * randfn(1,0.5), thick),
+			NamedColors.random_color(),NamedColors.random_color())
+		afterfn.call(n, t4l)
 
+	return AnimateList.new().init_rotate(node3d_list)
 
 func plot3d_image_demo(gc :GlassCabinet) -> Callable:
 	gc.show_wall_box(false)
