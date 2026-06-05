@@ -2,6 +2,10 @@ extends Node3D
 class_name SlotReel
 
 signal rotation_stopped(rl :SlotReel)
+
+## center ZERO
+var aabb :AABB
+
 var 번호 :int
 var symbol크기 :Vector2
 var color_text_info_list :Array # [ color , text ]
@@ -27,6 +31,11 @@ func set_reel_color( co :Color) -> void:
 	$Reel.mesh.material.albedo_color = co
 
 func init(n :int, symbol크기a :Vector2, color_text_info_lista :Array) -> SlotReel:
+	var radius := color_text_info_lista.size() * symbol크기a.y / (2*PI)
+	var width := symbol크기a.x
+	var size := Vector3(width, radius*2,radius*2)
+	aabb = AABB(-size/2,size)
+
 	번호 = n
 	symbol크기 = symbol크기a
 	color_text_info_list = color_text_info_lista
