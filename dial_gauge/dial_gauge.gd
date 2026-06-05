@@ -22,11 +22,16 @@ func init_range(v_range :Array, r_range :Array ) -> DialGauge:
 	rad_range = r_range
 	return self
 
+## center ZERO
+var aabb :AABB
+
 func init(radius :float, depth :float,
 	case_color :Color = Color(1,1,1,0.5),
 	center_color :Color = Color(0.5,0.5,0.5),
 	needle_color :Color = Color.RED
 	) -> DialGauge:
+	var size := Vector3(radius*2,radius*2,depth)
+	aabb = AABB(-size/2,size)
 	init_case(radius, depth, case_color )
 	init_center(radius/10, depth/2, center_color)
 	init_needle(radius*0.9, depth*0.3, needle_color)
