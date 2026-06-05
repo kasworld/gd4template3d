@@ -3,6 +3,10 @@ class_name Roulette
 
 signal rotation_stopped(rl :Roulette)
 
+## center ZERO
+var aabb :AABB
+
+
 var id :int
 var 반지름 :float
 var 깊이 :float
@@ -69,6 +73,9 @@ func init_spliter_setting(begin_rate:float, end_rate :float, width :float) -> Ro
 	return self
 
 func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Array, text_size :float = 0.0) -> Roulette:
+	var size := Vector3(반지름a*2,반지름a*2,깊이a)
+	aabb = AABB(-size/2,size)
+
 	id = ida
 	반지름 = 반지름a
 	깊이 = 깊이a
