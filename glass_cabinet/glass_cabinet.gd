@@ -9,28 +9,29 @@ func set_focus_mode(b :bool) -> void:
 func get_focus_mode() -> bool:
 	return focus_mode
 
-var cabinet_size :Vector3
+## center ZERO
+var aabb :AABB
 func get_aabb() -> AABB:
-	return AABB(-cabinet_size/2, cabinet_size)
+	return aabb
 
 func make_CalcGrid3D(grid :Vector3i) -> CalcGrid3D:
 	return CalcGrid3D.new(get_aabb(), grid)
 
 func init(cabinet_size_a :Vector3) -> GlassCabinet:
-	cabinet_size = cabinet_size_a
+	aabb = AABB(-cabinet_size_a/2,cabinet_size_a)
 	$VisibleOnScreenEnabler3D.aabb = get_aabb()
-	$WallBox.mesh.size = cabinet_size
-	var camera_pos := Vector3(0, 0, $FixedCameraLight.calc_z_len_by_fov_size(cabinet_size) + cabinet_size.z)
-	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, camera_pos, cabinet_size.length()*2)
-	$AxisArrow3D.set_size(cabinet_size.length()/10).set_colors()
-	$Title.pixel_size = cabinet_size.y/300
-	$Title.position = Vector3(-cabinet_size.x/2,cabinet_size.y/2,cabinet_size.z/2)
-	$Description.pixel_size = cabinet_size.y/600
-	$Description.position = Vector3(cabinet_size.x/2,-cabinet_size.y/2,cabinet_size.z/2)
-	$WireBox.init_wire_box( cabinet_size, cabinet_size.length()/200, Color.WHITE)
+	$WallBox.mesh.size = aabb.size
+	var camera_pos := Vector3(0, 0, $FixedCameraLight.calc_z_len_by_fov_size(aabb.size) + aabb.size.z)
+	$FixedCameraLight.set_center_pos_far(Vector3.ZERO, camera_pos, aabb.size.length()*2)
+	$AxisArrow3D.set_size(aabb.size.length()/10).set_colors()
+	$Title.pixel_size = aabb.size.y/300
+	$Title.position = Vector3(-aabb.size.x/2,aabb.size.y/2,aabb.size.z/2)
+	$Description.pixel_size = aabb.size.y/600
+	$Description.position = Vector3(aabb.size.x/2,-aabb.size.y/2,aabb.size.z/2)
+	$WireBox.init_wire_box( aabb.size, aabb.size.length()/200, Color.WHITE)
 	$Points.init_spheres_by_position_list(
-		PlatonicSolids.MultiplyPointList(PlatonicSolids.CubePoints, cabinet_size/2),
-		cabinet_size.length()/200, Color.WHITE,
+		PlatonicSolids.MultiplyPointList(PlatonicSolids.CubePoints, aabb.size/2),
+		aabb.size.length()/200, Color.WHITE,
 	)
 	add_spot_lights()
 	return self
@@ -58,11 +59,11 @@ func animate_light(_delta=0) -> void:
 
 
 func add_spot_lights() -> GlassCabinet:
-	var points := PlatonicSolids.MultiplyPointList(PlatonicSolids.CubePoints, cabinet_size/2 )
+	var points := PlatonicSolids.MultiplyPointList(PlatonicSolids.CubePoints, aabb.size/2 )
 	for pos in points:
 		var sl := SpotLight3D.new()
 		$LightContainer.add_child(sl)
-		sl.spot_range = cabinet_size.length()
+		sl.spot_range = aabb.size.length()
 		sl.position = pos
 		sl.look_at_from_position(pos, Vector3.ZERO)
 		sl.light_energy = 100

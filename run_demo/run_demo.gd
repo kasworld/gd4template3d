@@ -143,7 +143,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 
 func plot3d_demo(gc :GlassCabinet) -> Callable:
 	var plot3d :Plot3D = preload("res://plot_3d/plot_3d.tscn").instantiate()
-	plot3d.init_plot3d_box(gc.get_aabb().size, gc.cabinet_size, 0.9, false)
+	plot3d.init_plot3d_box(gc.aabb.size, gc.aabb.size, 0.9, false)
 	gc.add_child(plot3d)
 
 	plot3d.draw_texture2d_face_y(Vector3i(0,0,0), preload("res://image/blender.png"))
@@ -286,7 +286,7 @@ var battleshooter :BattleShooter
 func battle_shooter_demo(gc :GlassCabinet) -> Callable:
 	#gc.set_light_shadow(true, GlassCabinet.BitFlagAllLight)
 	gc.show_description()
-	var sz := gc.cabinet_size
+	var sz := gc.aabb.size
 	battleshooter = preload("res://battle_shooter_3d/battle_shooter.tscn").instantiate(
 		).init(sz)
 	gc.add_child(battleshooter)
@@ -295,7 +295,7 @@ func battle_shooter_demo(gc :GlassCabinet) -> Callable:
 
 var yutgame :윷놀이
 func yutgame_demo(gc :GlassCabinet) -> Callable:
-	yutgame = preload("res://윷놀이/윷놀이.tscn").instantiate().init(gc.cabinet_size)
+	yutgame = preload("res://윷놀이/윷놀이.tscn").instantiate().init(gc.aabb.size)
 	gc.add_child(yutgame)
 	yutgame.game_ended.connect(yutgame_ended)
 	yutgame.new_game()
@@ -312,7 +312,7 @@ func ladder_demo(gc :GlassCabinet) -> Callable:
 	for i in 8:
 		참가자정보.append( ["출발%d" % [i+1], 밝은색목록.get_and_next(), "도착%d" % [i+1] ] )
 	ladder = preload("res://사다리게임/사다리게임.tscn").instantiate(
-		).init(gc.cabinet_size, 참가자정보)
+		).init(gc.aabb.size, 참가자정보)
 	gc.add_child(ladder)
 	ladder.사다리풀이그리기()
 	$"Timer길보기".start(3.0)
@@ -329,7 +329,7 @@ func snakebyte_demo(gc :GlassCabinet) -> Callable:
 	#gc.get_camera_light().get_light().visible = false
 	#gc.lights.set_light_energy(10, BitFlag.MakeFilledFlags( $GlassCabinet.lights.get_size() ))
 	snake_byte_game = preload("res://snake_byte/snake_byte.tscn").instantiate(
-		).init(gc.cabinet_size)
+		).init(gc.aabb.size)
 	gc.add_child(snake_byte_game)
 	snake_byte_game.game_ended.connect(game_ended)
 	snake_byte_game.score_changed.connect(score_changed)
@@ -356,7 +356,7 @@ var samegame_level :int
 func same_game_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
 	samegame = preload("res://same_game/same_game.tscn").instantiate(
-		).init(gc.cabinet_size)
+		).init(gc.aabb.size)
 	gc.add_child(samegame)
 	samegame.game_ended.connect(samegame_ended)
 	samegame.score_changed.connect(update_samegame_score_label)
@@ -385,23 +385,23 @@ func new_dialgauge(radius :float, cabinet_size :Vector3) -> DialGauge:
 		)
 var dialgauge_list :Array
 func dialgauge_demo(gc :GlassCabinet) -> Callable:
-	var radius := gc.cabinet_size.x/5
+	var radius := gc.aabb.size.x/5
 	var grid21 := gc.make_CalcGrid3D(Vector3i(2,1,1))
 	var grid33 := gc.make_CalcGrid3D(Vector3i(3,3,1))
-	var dg = new_dialgauge(radius, gc.cabinet_size)
+	var dg = new_dialgauge(radius, gc.aabb.size)
 	dg.position = grid21.posi_to_lanepos(Vector3i(0,0,0))
 	gc.add_child(dg)
 	dialgauge_list.append([dg, dg.value_range_mid()])
-	dg = new_dialgauge(radius, gc.cabinet_size)
+	dg = new_dialgauge(radius, gc.aabb.size)
 	dg.position = grid21.posi_to_lanepos(Vector3i(1,0,0))
 	gc.add_child(dg)
 	dialgauge_list.append([dg, dg.value_range_mid()])
-	radius = gc.cabinet_size.x/10
-	dg = new_dialgauge(radius, gc.cabinet_size)
+	radius = gc.aabb.size.x/10
+	dg = new_dialgauge(radius, gc.aabb.size)
 	dg.position = grid33.posi_to_lanepos(Vector3i(1,0,0))
 	gc.add_child(dg)
 	dialgauge_list.append([dg, dg.value_range_mid()])
-	dg = new_dialgauge(radius, gc.cabinet_size)
+	dg = new_dialgauge(radius, gc.aabb.size)
 	dg.position = grid33.posi_to_lanepos(Vector3i(1,2,0))
 	gc.add_child(dg)
 	dialgauge_list.append([dg, dg.value_range_mid()])
@@ -416,11 +416,11 @@ func winter_tree_demo(gc :GlassCabinet) -> Callable:
 	var bmesh := PrismMesh.new()
 	bmesh.size = Vector3(1,0.3,1)
 	winter_tree = preload("res://winter_tree/winter_tree.tscn").instantiate(
-		).init(gc.cabinet_size.y, gc.cabinet_size.z/2, gc.cabinet_size.y*2, PI, 1.0,
+		).init(gc.aabb.size.y, gc.aabb.size.z/2, gc.aabb.size.y*2, PI, 1.0,
 		).set_center_color(Color.GREEN)
 	gc.add_child(winter_tree)
 	#$"왼쪽패널/LabelTree".text = "branch count %d" % [ winter_tree.가지들얻기().multimesh.instance_count ]
-	winter_tree.position.y = -gc.cabinet_size.y/2
+	winter_tree.position.y = -gc.aabb.size.y/2
 	winter_tree_inst_index = winter_tree.make_index_array()
 	return wintertree_animate
 
@@ -496,7 +496,7 @@ func platonic_solids_demo(gc :GlassCabinet) -> Callable:
 		[12, 1.0, 9, 18 ],
 	]:
 		var face :int = ll[0]
-		var wire_width :float = ll[1] * gc.cabinet_size.length() /300
+		var wire_width :float = ll[1] * gc.aabb.size.length() /300
 		var from :int = ll[2]
 		var to :int = ll[3]
 		var ws :WireSolid = preload("res://wire_solid/wire_solid.tscn").instantiate(
@@ -510,7 +510,7 @@ var tornado_list :Array # [ tornado , AnimateGradient , AnimateGradient ]
 func tornado_demo(gc :GlassCabinet) -> Callable:
 	for i in 4:
 		var tb = preload("res://tornado/tornado.tscn").instantiate(
-			).init_sample(gc.cabinet_size.x/2, gc.cabinet_size.y*0.3, 0.5, RandomColorIter.get_and_next(),RandomColorIter.get_and_next())
+			).init_sample(gc.aabb.size.x/2, gc.aabb.size.y*0.3, 0.5, RandomColorIter.get_and_next(),RandomColorIter.get_and_next())
 		gc.add_child(tb)
 		tornado_list.append([tb, AnimateGradient.new(), AnimateGradient.new()])
 	return tornado_animate
@@ -527,13 +527,13 @@ func tornado_animate(_delta :float) -> void:
 	var unit_rad := 2*PI/4
 	for i in tornado_list.size():
 		var gc :GlassCabinet = tornado_list[i][0].get_parent()
-		var radius := gc.cabinet_size.z/2
+		var radius := gc.aabb.size.z/2
 		var tt := t+ i
-		tornado_list[i][0].set_transform_all(scale_tornado, shift_tornado_lambda( sin(tt), gc.cabinet_size.x/10) )
+		tornado_list[i][0].set_transform_all(scale_tornado, shift_tornado_lambda( sin(tt), gc.aabb.size.x/10) )
 		tornado_list[i][0].set_color_all(tornado_list[i][1].get_color(),tornado_list[i][2].get_color())
 		tornado_list[i][1].inc_rate()
 		tornado_list[i][2].inc_rate()
-		tornado_list[i][0].position = Vector3(cos(i*unit_rad+t)*radius, sin(i*unit_rad+t*1.7)*radius/2 -gc.cabinet_size.y/4, sin(i*unit_rad+t)*radius)
+		tornado_list[i][0].position = Vector3(cos(i*unit_rad+t)*radius, sin(i*unit_rad+t*1.7)*radius/2 -gc.aabb.size.y/4, sin(i*unit_rad+t)*radius)
 		tornado_list[i][0].rotation.y = -rad*5
 
 var colorlist_dark :Array = NamedColors.filter_dark_color_list()
@@ -553,7 +553,7 @@ func wheel_demo(gc :GlassCabinet) -> Callable:
 	).duplicate()
 	color_text_into_list.shuffle()
 	roulette = preload("res://roulette/roulette.tscn").instantiate(
-		).init(0, gc.cabinet_size.y/2, gc.cabinet_size.z/20, color_text_into_list )
+		).init(0, gc.aabb.size.y/2, gc.aabb.size.z/20, color_text_into_list )
 	roulette.색설정하기(RandomColorIter.get_and_next(), RandomColorIter.get_and_next(), RandomColorIter.get_and_next() )
 	roulette.rotation_stopped.connect(wheel결과가결정됨)
 	gc.add_child(roulette)
@@ -577,7 +577,7 @@ var slot :Slots
 func slotreel_demo(gc :GlassCabinet) -> Callable:
 	gc.show_description()
 	var color_text_into_list := make_color_text_info_list(colorlist_dark, cardlist).duplicate()
-	var symbol크기 := Vector2( gc.cabinet_size.x/20, SlotReel.calc_symbol_ysize(gc.cabinet_size.z/2, color_text_into_list.size() ) )
+	var symbol크기 := Vector2( gc.aabb.size.x/20, SlotReel.calc_symbol_ysize(gc.aabb.size.z/2, color_text_into_list.size() ) )
 	slot = preload("res://slots/slots.tscn").instantiate().init(5, symbol크기, color_text_into_list)
 	gc.add_child(slot)
 	slot.rotation_stopped.connect(슬롯멈춤)
@@ -596,7 +596,7 @@ func _on_timer_reel_timeout() -> void:
 
 func wavegauge_box_demo(gc :GlassCabinet) -> Callable:
 	var wavegauge_box :WaveGauge = preload("res://wave_gauge/wave_gauge.tscn").instantiate().init(
-			Vector3(gc.cabinet_size.x,gc.cabinet_size.y,gc.cabinet_size.z/4),
+			Vector3(gc.aabb.size.x,gc.aabb.size.y,gc.aabb.size.z/4),
 			Vector3i(32,32,8), WaveGauge.color_list, 0.1, false )
 	gc.add_child(wavegauge_box)
 	return func(_delta :float) -> void:
@@ -610,9 +610,9 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_axis_arrow(true)
 	var grid_size := Vector2i(16,9)*1
 	var cell_size := Vector3(
-		max(1,gc.cabinet_size.x/grid_size.x),
-		max(1,gc.cabinet_size.y/grid_size.y),
-		max(1,gc.cabinet_size.y/grid_size.y),
+		max(1,gc.aabb.size.x/grid_size.x),
+		max(1,gc.aabb.size.y/grid_size.y),
+		max(1,gc.aabb.size.y/grid_size.y),
 	) * 0.95
 	var WallThick = cell_size.x *0.1
 	var MakeSubWallRate = 0.1
@@ -625,10 +625,10 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	minimap.set_color(RandomColorIter.get_and_next())
 	minimap.position.x = size_pixel.x/2 - minimap.maze2d_helper.get_width()/2
 	var svp := MakeSubViewport(minimap, size_pixel)
-	var plane := MakePlaneSubViewport(svp, Vector2(gc.cabinet_size.x, gc.cabinet_size.y))
+	var plane := MakePlaneSubViewport(svp, Vector2(gc.aabb.size.x, gc.aabb.size.y))
 	gc.add_child(svp)
 	gc.add_child(plane)
-	plane.position.z = -gc.cabinet_size.z /2
+	plane.position.z = -gc.aabb.size.z /2
 
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_params(maze2d, cell_size, WallThick, MakeSubWallRate
@@ -677,8 +677,8 @@ var trailmesh_radius :float
 var meshtrail_list :Array
 var bound_aabb :AABB
 func meshtrail_demo(gc :GlassCabinet) -> Callable:
-	trailmesh_radius = gc.cabinet_size.length()/100
-	bound_aabb = AABB( -gc.cabinet_size/2, gc.cabinet_size)
+	trailmesh_radius = gc.aabb.size.length()/100
+	bound_aabb = AABB( -gc.aabb.size/2, gc.aabb.size)
 	var mesh := BoxMesh.new()
 	mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial()
 	mesh.size = Vector3(trailmesh_radius*3, trailmesh_radius /5, trailmesh_radius/5)
@@ -842,7 +842,7 @@ func line2d_demo(gc :GlassCabinet) -> Callable:
 	var ml2d = preload("res://move_line_2d/move_line_2d.tscn").instantiate()
 	ml2d.init_with_random(300, 4, 1, size_pixel)
 	var svp := MakeSubViewport(ml2d, size_pixel)
-	var plane := MakePlaneSubViewport(svp, Vector2(gc.cabinet_size.x, gc.cabinet_size.y))
+	var plane := MakePlaneSubViewport(svp, Vector2(gc.aabb.size.x, gc.aabb.size.y))
 	gc.add_child(svp)
 	gc.add_child(plane)
 	return func(delta:float):
@@ -859,7 +859,7 @@ func orbit_demo(gc :GlassCabinet) -> Callable:
 			os.animate_rotate(now, delta)
 func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
 	var rate := float(count -i)/float(count) * 0.5 + 0.5
-	var diagonal_length := gc.cabinet_size.length()/2.5 * rate
+	var diagonal_length := gc.aabb.size.length()/2.5 * rate
 	var a120 := PI*2/3
 	var a30 := PI/6
 	var axis1 := Vector3.UP.rotated(
@@ -881,7 +881,7 @@ func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
 			구mat2.albedo_color = RandomColorIter.get_and_next()
 	var os = preload("res://orbit_sphere/orbit_sphere.tscn").instantiate(
 		).궤도설정(diagonal_length, diagonal_length/200, axis1, a120*[0,1,2].pick_random()
-		).구설정(gc.cabinet_size.x/30*rate, gc.cabinet_size.x/50, Vector3.UP
+		).구설정(gc.aabb.size.x/30*rate, gc.aabb.size.x/50, Vector3.UP
 		).구재질설정(구mat2).궤도재질설정(궤도mat1)
 	gc.add_child(os)
 	orbitsphere_list.append(os)
@@ -890,11 +890,11 @@ func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
 func clock_calendar_demo(gc :GlassCabinet) -> Callable:
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(2,1,1))
 	var calendar :Calendar3D= preload("res://calendar_3d/calendar_3d.tscn").instantiate(
-		).init(gc.cabinet_size.x/2, gc.cabinet_size.y, gc.cabinet_size.z/10, gc.cabinet_size.y/2.0/6 , true )
+		).init(gc.aabb.size.x/2, gc.aabb.size.y, gc.aabb.size.z/10, gc.aabb.size.y/2.0/6 , true )
 	gc.add_child(calendar)
 	#calendar.update_calendar(Calendar3D.make_unix_time(2026,3,7))
 	var clock :AnalogClock3D= preload("res://analog_clock_3d/analog_clock_3d.tscn").instantiate(
-		).init(gc.cabinet_size.x/4, gc.cabinet_size.z/10, gc.cabinet_size.y/2.0/7 , true )
+		).init(gc.aabb.size.x/4, gc.aabb.size.z/10, gc.aabb.size.y/2.0/7 , true )
 	gc.add_child(clock)
 
 	var animation := SimpleAnimation.new()
@@ -924,9 +924,9 @@ func clock_calendar_demo(gc :GlassCabinet) -> Callable:
 var bartree_scene = preload("res://bar_tree/bar_tree.tscn")
 var bartree_list :Array
 func bartree_demo(gc :GlassCabinet) -> Callable:
-	var tree_size := Vector3(gc.cabinet_size.z/3, gc.cabinet_size.y, gc.cabinet_size.z / 30)
-	make_tree3(randi_range(1,7), gc, tree_size, randi_range(20,100), Vector3(-gc.cabinet_size.x/4,-gc.cabinet_size.y/2,0), false)
-	make_tree3(randi_range(1,7), gc, tree_size, randi_range(20,100), Vector3(gc.cabinet_size.x/4,-gc.cabinet_size.y/2,0), true)
+	var tree_size := Vector3(gc.aabb.size.z/3, gc.aabb.size.y, gc.aabb.size.z / 30)
+	make_tree3(randi_range(1,7), gc, tree_size, randi_range(20,100), Vector3(-gc.aabb.size.x/4,-gc.aabb.size.y/2,0), false)
+	make_tree3(randi_range(1,7), gc, tree_size, randi_range(20,100), Vector3(gc.aabb.size.x/4,-gc.aabb.size.y/2,0), true)
 	return func (delta :float) -> void:
 		for bt in bartree_list:
 			bt.rotate_tree_bar_y(delta*10)
