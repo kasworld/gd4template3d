@@ -5,7 +5,6 @@ var glass_cabinet_row_list :Array[Node3D]
 var glass_cabinet_list :Array[GlassCabinet]
 var row_rotate_speed :Array[float] = []
 
-
 func init(cabinet_size :Vector3, row_count := 2) -> void:
 	for i in row_count: # glass_cabinet_row
 		var gcr := make_glass_cabinet_row(cabinet_size, 12, i)
@@ -14,7 +13,7 @@ func init(cabinet_size :Vector3, row_count := 2) -> void:
 		gcr.position.y = cabinet_size.y *(float(i)-float(row_count-1)/2) * 1.05
 		for gc in gcr.get_children():
 			glass_cabinet_list.append(gc)
-		row_rotate_speed.append( randfn(0,0.2))
+	set_rot_speed()
 
 func make_glass_cabinet_row(cabinet_size :Vector3, count :int, row :int) -> Node3D:
 	var rtn := Node3D.new()
@@ -33,6 +32,14 @@ func make_glass_cabinet_row(cabinet_size :Vector3, count :int, row :int) -> Node
 func show_all_cabinet(b :bool = true) -> void:
 	for gcl in glass_cabinet_list:
 		gcl.visible = b
+
+func set_rot_speed() -> void:
+	row_rotate_speed.resize(glass_cabinet_row_list.size())
+	for i in row_rotate_speed.size():
+		var rot_speed := randf_range(0.1,0.3)
+		if randi()%2==0:
+			rot_speed = -rot_speed
+		row_rotate_speed[i] = rot_speed
 
 func _process(delta: float) -> void:
 	for i in glass_cabinet_row_list.size():
