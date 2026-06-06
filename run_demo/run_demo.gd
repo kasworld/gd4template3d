@@ -605,7 +605,7 @@ func wavegauge_box_demo(gc :GlassCabinet) -> Callable:
 
 var maze3d :Maze3D
 var maze_balls :Array
-var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ShortWithPillarCylinder
+var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ShortWithPillarBox
 func maze3d_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_axis_arrow(true)
 	var grid_size := Vector2i(16,9)*1
