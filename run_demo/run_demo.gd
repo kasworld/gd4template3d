@@ -466,11 +466,15 @@ func wintertree_animate(delta :float) -> void:
 	winter_tree.장식들얻기().set_inst_color( randi_range(0, winter_tree.장식들얻기().multimesh.instance_count-1),  RandomColorIter.get_and_next())
 
 	if ani_ended:
-		color_fn_args.get_and_next()
-		ani_dir_data.get_and_next()
+		color_fn_args.next()
+		ani_dir_data.next()
 		change_count = 0
-		color_fn = [RandomColor.pure_color, RandomColor.rate_color, RandomColorIter.get_and_next].pick_random()
+		color_fn = [RandomColor.pure_color, RandomColor.rate_color, random_color2].pick_random()
 		winter_tree.장식들얻기().set_color_all( RandomColorIter.get_and_next())
+
+func random_color2(_arg ) -> Color:
+	return RandomColorIter.get_and_next()
+
 
 func platonic_solids_demo(gc :GlassCabinet) -> Callable:
 	var node3d_list :Array = []
