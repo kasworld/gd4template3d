@@ -67,7 +67,7 @@ func add_spot_lights() -> GlassCabinet:
 		sl.position = pos
 		sl.light_energy = 100
 		sl.spot_angle = 60
-		sl.look_at_from_position(pos, Vector3.ZERO)
+		sl.look_at_from_position(pos, -pos)
 		#sl.shadow_enabled = true
 		#sl.light_color = Color.RED
 		light_list.append(sl)
