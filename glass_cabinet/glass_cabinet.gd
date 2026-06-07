@@ -65,8 +65,9 @@ func add_spot_lights() -> GlassCabinet:
 		$LightContainer.add_child(sl)
 		sl.spot_range = aabb.size.length()
 		sl.position = pos
-		sl.look_at_from_position(pos, Vector3.ZERO)
 		sl.light_energy = 100
+		sl.spot_angle = 60
+		sl.look_at_from_position(pos, Vector3.ZERO)
 		#sl.shadow_enabled = true
 		#sl.light_color = Color.RED
 		light_list.append(sl)
@@ -145,8 +146,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			var fi = FlyNode3D.Key2Info.get(event.keycode)
 			if fi != null:
 				FlyNode3D.fly_node3d($FixedCameraLight, fi)
-
-
 
 ## light list functions
 

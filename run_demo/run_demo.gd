@@ -96,6 +96,8 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 			gc.add_animate_func(ani_fn)
 		gc.set_title_text(text)
 		add_camera_dict.call(gc.get_camera_light(), text)
+		gc.set_light_on(false, gc.GroupFlags.z_n)
+		gc.set_light_on(false, gc.GroupFlags.y_n)
 
 	var run_all := [
 		[bartree_demo, "BarTree"],
