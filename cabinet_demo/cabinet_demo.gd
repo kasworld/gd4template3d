@@ -26,6 +26,8 @@ func make_glass_cabinet_row(cabinet_size :Vector3, count :int, row :int) -> Node
 		gc.position = Vector3(sin(rad)*radius, 0, cos(rad)*radius)
 		gc.set_title_text("%d-%d" % [row+1, i+1]).show_title(true)
 		gc.look_at_from_position(gc.position, Vector3.ZERO, Vector3.UP, true)
+		gc.set_light_on(false, gc.GroupFlags.z_n)
+		gc.set_light_on(false, gc.GroupFlags.y_n)
 		rtn.add_child(gc)
 	return rtn
 
