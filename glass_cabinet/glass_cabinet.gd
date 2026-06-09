@@ -84,6 +84,7 @@ func add_spot_lights() -> GlassCabinet:
 	#Vector3(-1,-1,-1),
 #]
 
+
 func get_axis_arrow() -> AxisArrow3D:
 	return $AxisArrow3D
 
@@ -148,6 +149,18 @@ func _unhandled_input(event: InputEvent) -> void:
 				FlyNode3D.fly_node3d($FixedCameraLight, fi)
 
 ## light list functions
+
+## light pos Vector3 to flag
+const LightVector3ToFlag :Dictionary[Vector3,int] = {
+	Vector3( 1, 1, 1) : 0b00000001,
+	Vector3(-1, 1, 1) : 0b00000010,
+	Vector3( 1,-1, 1) : 0b00000100,
+	Vector3(-1,-1, 1) : 0b00001000,
+	Vector3( 1, 1,-1) : 0b00010000,
+	Vector3(-1, 1,-1) : 0b00100000,
+	Vector3( 1,-1,-1) : 0b01000000,
+	Vector3(-1,-1,-1) : 0b10000000,
+}
 
 ## axis : x:0, y:1, z:2, axis_sign : 1,0,-1
 static func MakeGroupFlags(axis :int, axis_sign :int) -> int:
