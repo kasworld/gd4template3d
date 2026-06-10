@@ -757,7 +757,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	prop.wire_V_rotation_y = PI/4
 	afterfn.call(7, prop)
 	prop = preload("res://arch_door/arch_door.tscn").instantiate(
-		).init(Vector3(unit_size.x,unit_size.y,unit_size.z/10),RandomColorIter.get_and_next())
+		).init(Vector3(unit_size.x,unit_size.y,unit_size.z/20),RandomColorIter.get_and_next())
 	afterfn.call(8, prop)
 
 	for n in range(node3d_list.size(), grid_gc.get_grid_count()):

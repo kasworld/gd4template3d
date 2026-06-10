@@ -3,8 +3,9 @@ class_name ArchDoor
 
 ## face Z+ wall with door
 
+var wall :CSGBox3D
 func init(size :Vector3, co :Color) -> ArchDoor:
-	var wall := CSGBox3D.new()
+	wall = CSGBox3D.new()
 	wall.size = size
 	wall.material = color_material(co)
 	var door_low := CSGBox3D.new()
@@ -22,8 +23,12 @@ func init(size :Vector3, co :Color) -> ArchDoor:
 
 	wall.add_child(door_low)
 	wall.add_child(hole)
-	add_child(wall)
+	#add_child(wall)
+	bake.call_deferred()
 	return self
+
+func bake() -> void:
+	$MeshInstance3D.mesh = wall.bake_static_mesh()
 
 func color_material(co :Color) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
