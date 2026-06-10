@@ -1,5 +1,8 @@
 class_name MazeDemo
 
+const WallDecoRate := 0.05
+const MakeSubWallRate = 0.1
+
 var maze3d :Maze3D
 var maze_balls :Array
 var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ShortWithPillarBox
@@ -12,7 +15,6 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 		max(1,gc.aabb.size.y/grid_size.y),
 	) * 0.95
 	var WallThick = cell_size.x *0.1
-	var MakeSubWallRate = 0.1
 	var maze2d := Maze.new(grid_size)
 
 	var size_pixel :=Vector2(1920,1080)
@@ -30,7 +32,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_params(maze2d, cell_size, WallThick, MakeSubWallRate
 		).init_with_color(RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next()
-		).init_floor_ceiling_box(Vector2i(4,4), cell_size.x*0.01, 0.9,
+		).init_floor_ceiling_box(Vector2i(4,4), cell_size.x*0.05, 0.9,
 		#).init_floor_ceiling_plane(Vector2i(4,4), cell_size.x*0.01, 0.9,
 		Color(RunDemo.RandomColorIter.get_and_next(), 0.9),
 		Color(RunDemo.RandomColorIter.get_and_next(), 0.9),
@@ -40,6 +42,15 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	for i in 10:
 		var posi := maze3d.calc_grid.rand_posi()
 		maze3d.add_child(make_table4leg(Vector2i(posi.x,posi.z)))
+
+	for i in 10:
+		var posi := maze3d.calc_grid.rand_posi()
+		var archdoor :ArchDoor = preload("res://arch_door/arch_door.tscn").instantiate()
+		archdoor.init( Vector3(cell_size.x-WallThick, cell_size.y, WallThick), RunDemo.RandomColorIter.get_and_next() )
+		archdoor.position = maze3d.calc_grid.posi_to_lanepos(posi)
+		if randi()%2==0:
+			archdoor.rotation.y = PI/2
+		maze3d.add_child(archdoor)
 
 	for i in 5:
 		var posi_floor := maze3d.calc_grid.rand_posi()
@@ -81,7 +92,7 @@ func make_table4leg(posi :Vector2i) -> Table4Leg:
 		CalcGrid3D.CalcAxisAlignInner(aabb, t4l.aabb.size, 2, randi_range(-1,1) )
 		)
 	return t4l
-const WallDecoRate := 0.05
+
 var line2d_subviewport :SubViewport
 var minimap_subviewport :SubViewport
 ## add wall deco
@@ -164,4 +175,4 @@ func maze3d_animate(delta :float) -> void:
 		view_walls = Maze3D.wallview_next(view_walls)
 		maze3d.set_wallpillar_view_mode(view_walls)
 		maze3d.view_floor_ceiling( randi_range(0,3) as Maze3D.FloorCeiling)
-	maze3d.rotation.x = sin(deg_to_rad(maze_ani_i/1.5)) * PI + PI + PI/4
+	#maze3d.rotation.x = sin(deg_to_rad(maze_ani_i/1.5)) * PI + PI + PI/4
