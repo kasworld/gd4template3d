@@ -718,6 +718,7 @@ func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 func props_demo(gc :GlassCabinet) -> Callable:
 	var node3d_list :Array = []
 	var grid_gc := gc.make_CalcGrid3D( Vector3i(5,3,1))
+	var unit_size := grid_gc.unit_size
 	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
 		node3d.position = grid_gc.get_n_th_lanepos(n)
 		gc.add_child(node3d)
@@ -725,38 +726,41 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		return node3d
 	var prop
 	prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
-		).set_color(RandomColorIter.get_and_next()).set_size( grid_gc.unit_size.x *0.6, grid_gc.unit_size.x/30, grid_gc.unit_size.x/10, 0.3)
+		).set_color(RandomColorIter.get_and_next()).set_size( unit_size.x *0.6, unit_size.x/30, unit_size.x/10, 0.3)
 	afterfn.call(0, prop)
 	prop = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
-		).set_color(RandomColorIter.get_and_next()).set_size( grid_gc.unit_size.x *0.6, grid_gc.unit_size.x/30, grid_gc.unit_size.x/10, 0.7)
+		).set_color(RandomColorIter.get_and_next()).set_size( unit_size.x *0.6, unit_size.x/30, unit_size.x/10, 0.7)
 	afterfn.call(1, prop)
 	prop = preload("res://valve_handle/valve_handle.tscn").instantiate(
-		).init(grid_gc.unit_size.x/6, grid_gc.unit_size.x/6, 8, RandomColorIter.get_and_next())
+		).init(unit_size.x/6, unit_size.x/6, 8, RandomColorIter.get_and_next())
 	afterfn.call(2, prop)
 	prop = preload("res://valve_handle/valve_handle.tscn").instantiate(
-		).init(grid_gc.unit_size.x/6, grid_gc.unit_size.x/10, 4, RandomColorIter.get_and_next())
+		).init(unit_size.x/6, unit_size.x/10, 4, RandomColorIter.get_and_next())
 	afterfn.call(3, prop)
 	prop = preload("res://axis_arrow_3d/axis_arrow_3d.tscn").instantiate(
-		).set_colors().set_size(grid_gc.unit_size.length()/10)
+		).set_colors().set_size(unit_size.length()/10)
 	afterfn.call(4, prop)
 
 	var grid_size := Vector2i(16,9)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
-		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), grid_size, grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.005, RandomColorIter.get_and_next())
+		).init(Vector2(unit_size.x,unit_size.y), grid_size, unit_size.x*0.01, unit_size.y*0.005, RandomColorIter.get_and_next())
 	prop.set_color_H(RandomColorIter.get_and_next())
 	prop.set_color_V(RandomColorIter.get_and_next())
 	afterfn.call(5, prop)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
-		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), grid_size, grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.1, RandomColorIter.get_and_next())
+		).init(Vector2(unit_size.x,unit_size.y), grid_size, unit_size.x*0.01, unit_size.y*0.1, RandomColorIter.get_and_next())
 	prop.set_color_H(RandomColorIter.get_and_next())
 	prop.set_color_V(RandomColorIter.get_and_next())
 	afterfn.call(6, prop)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
-		).init(Vector2(grid_gc.unit_size.x,grid_gc.unit_size.y), Vector2i(16,1), grid_gc.unit_size.x*0.01, grid_gc.unit_size.y*0.1, RandomColorIter.get_and_next())
+		).init(Vector2(unit_size.x,unit_size.y), Vector2i(16,1), unit_size.x*0.01, unit_size.y*0.1, RandomColorIter.get_and_next())
 	prop.wire_V_rotation_y = PI/4
 	afterfn.call(7, prop)
+	prop = preload("res://arch_door/arch_door.tscn").instantiate(
+		).init(Vector3(unit_size.x,unit_size.y,unit_size.z/10),RandomColorIter.get_and_next())
+	afterfn.call(8, prop)
+
 	for n in range(node3d_list.size(), grid_gc.get_grid_count()):
-		var unit_size := grid_gc.unit_size
 		var t4l :Table4Leg = preload("res://table_4_leg/table_4_leg.tscn").instantiate()
 		var thick := unit_size.y/50
 		t4l.init(
