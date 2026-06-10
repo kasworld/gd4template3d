@@ -16,7 +16,7 @@ func init(size :Vector3, co :Color) -> ArchDoor:
 	var hole := CSGCylinder3D.new()
 	hole.material = color_material(co)
 	hole.radius = size.x/4
-	hole.height = size.z*2
+	hole.height = size.z *2
 	hole.sides = 64
 	hole.rotate_x(PI/2)
 	hole.operation = CSGShape3D.OPERATION_SUBTRACTION
