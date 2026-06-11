@@ -67,7 +67,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 		maze3d.make_stair_hole(maze3d.get_ceiling(), Vector2i(posi_ceiling.x, posi_ceiling.z) )
 	gc.add_child(maze3d)
 
-	maze3d.init_wall_deco(add_wall_deco_at)
+	maze3d.maze_cells.iter_wall(add_wall_deco_at)
 
 	var r := maze3d.calc_grid.unit_size.x /10
 	for i in min(100,grid_size.x*grid_size.y):
