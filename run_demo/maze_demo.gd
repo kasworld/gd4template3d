@@ -32,25 +32,16 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_params(maze2d, cell_size, WallThick, MakeSubWallRate
 		).init_with_color(RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next()
-		).init_floor_ceiling_box(Vector2i(4,4), cell_size.x*0.05, 0.9,
-		#).init_floor_ceiling_plane(Vector2i(4,4), cell_size.x*0.01, 0.9,
+		#).init_floor_ceiling_box(Vector2i(4,4), cell_size.x*0.05, 0.9,
+		).init_floor_ceiling_plane(Vector2i(1,1), cell_size.x*0.01, 0.9,
 		Color(RunDemo.RandomColorIter.get_and_next(), 0.9),
 		Color(RunDemo.RandomColorIter.get_and_next(), 0.9),
 		)
 	maze3d.rotation.x = PI/4
-	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Both)
+	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Off)
 	for i in 10:
 		var posi := maze3d.calc_grid.rand_posi()
 		maze3d.add_child(make_table4leg(Vector2i(posi.x,posi.z)))
-
-	for i in 10:
-		var posi := maze3d.calc_grid.rand_posi()
-		var archdoor :ArchDoor = preload("res://arch_door/arch_door.tscn").instantiate()
-		archdoor.init( Vector3(cell_size.x-WallThick, cell_size.y, WallThick), RunDemo.RandomColorIter.get_and_next() )
-		archdoor.position = maze3d.calc_grid.posi_to_lanepos(posi)
-		if randi()%2==0:
-			archdoor.rotation.y = PI/2
-		maze3d.add_child(archdoor)
 
 	for i in 5:
 		var posi_floor := maze3d.calc_grid.rand_posi()
@@ -68,6 +59,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	gc.add_child(maze3d)
 
 	maze3d.maze_cells.iter_wall(add_wall_deco_at)
+	maze3d.maze_cells.iter_open(add_open_deco_at)
 
 	var r := maze3d.calc_grid.unit_size.x /10
 	for i in min(100,grid_size.x*grid_size.y):
@@ -93,13 +85,23 @@ func make_table4leg(posi :Vector2i) -> Table4Leg:
 		)
 	return t4l
 
+func add_open_deco_at(x :int, y :int, dir_flag :Maze.Flag) -> void:
+	var archdoor :ArchDoor = preload("res://arch_door/arch_door.tscn").instantiate()
+	archdoor.init( Vector3(maze3d.calc_grid.unit_size.x-maze3d.WallThick, maze3d.calc_grid.unit_size.y, maze3d.WallThick), RunDemo.RandomColorIter.get_and_next() )
+	if dir_flag == Maze.Flag.East or dir_flag == Maze.Flag.West:
+		archdoor.position = maze3d.calc_wall_pos_face_V(x,y)
+		archdoor.rotation.y = PI/2
+	else:
+		archdoor.position = maze3d.calc_wall_pos_face_H(x,y)
+	maze3d.add_child(archdoor)
+
 var line2d_subviewport :SubViewport
 var minimap_subviewport :SubViewport
 ## add wall deco
-var deco_order := ListIter.new(range(5))
+var wall_deco_order := ListIter.new(range(5))
 func add_wall_deco_at(x :int, y :int, dir_flag :Maze.Flag) -> void:
 	if randf() < WallDecoRate:
-		match deco_order.get_and_next():
+		match wall_deco_order.get_and_next():
 			0:
 				if line2d_subviewport == null:
 					line2d_subviewport = make_line2d_subvuewport(Vector2i(2000,1500))
@@ -175,4 +177,4 @@ func maze3d_animate(delta :float) -> void:
 		view_walls = Maze3D.wallview_next(view_walls)
 		maze3d.set_wallpillar_view_mode(view_walls)
 		maze3d.view_floor_ceiling( randi_range(0,3) as Maze3D.FloorCeiling)
-	#maze3d.rotation.x = sin(deg_to_rad(maze_ani_i/1.5)) * PI + PI + PI/4
+	maze3d.rotation.x = sin(deg_to_rad(maze_ani_i/1.5)) * PI + PI + PI/4
