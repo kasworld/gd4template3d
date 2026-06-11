@@ -106,7 +106,7 @@ func add_wall_deco_at(x :int, y :int, dir_flag :Maze.Flag) -> void:
 					maze3d.add_child(line2d_subviewport)
 				var b := RunDemo.MakePlaneSubViewport(line2d_subviewport, Vector2(maze3d.calc_grid.unit_size.x, maze3d.calc_grid.unit_size.y))
 				maze3d.add_child(b)
-				b.position = maze3d.deco_pos_by_dir(x,y,dir_flag)
+				b.position = maze3d.wall_deco_pos_by_dir(x,y,dir_flag)
 				#b.rotate_x(PI/2)
 				b.rotate_y(Maze.DirToRadian(Maze.FlagToDir[dir_flag]))
 			1:
@@ -115,7 +115,7 @@ func add_wall_deco_at(x :int, y :int, dir_flag :Maze.Flag) -> void:
 					maze3d.add_child(minimap_subviewport)
 				var b := RunDemo.MakePlaneSubViewport(minimap_subviewport, Vector2(maze3d.calc_grid.unit_size.x, maze3d.calc_grid.unit_size.y))
 				maze3d.add_child(b)
-				b.position = maze3d.deco_pos_by_dir(x,y,dir_flag)
+				b.position = maze3d.wall_deco_pos_by_dir(x,y,dir_flag)
 				#b.rotate_x(PI/2)
 				b.rotate_y(Maze.DirToRadian(Maze.FlagToDir[dir_flag]))
 			2:
@@ -125,7 +125,7 @@ func add_wall_deco_at(x :int, y :int, dir_flag :Maze.Flag) -> void:
 				n.init(maze3d.calc_grid.unit_size.x, maze3d.calc_grid.unit_size.y, depth, 크기기준/12, false)
 				#n.rotate_x(PI/2)
 				n.rotate_y(Maze.DirToRadian(Maze.FlagToDir[dir_flag]))
-				n.position = maze3d.deco_pos_by_dir(x,y,dir_flag)
+				n.position = maze3d.wall_deco_pos_by_dir(x,y,dir_flag)
 				maze3d.add_child(n)
 			3:
 				var depth := 0.1
@@ -134,7 +134,7 @@ func add_wall_deco_at(x :int, y :int, dir_flag :Maze.Flag) -> void:
 				n.init(크기기준/2, depth, 크기기준/16, false)
 				#n.rotate_x(PI/2)
 				n.rotate_y(Maze.DirToRadian(Maze.FlagToDir[dir_flag]))
-				n.position = maze3d.deco_pos_by_dir(x,y,dir_flag)
+				n.position = maze3d.wall_deco_pos_by_dir(x,y,dir_flag)
 				maze3d.add_child(n)
 				n.update_clock(AnalogClock3D.get_localtime_from_system())
 			4: # make bookcase
@@ -149,7 +149,7 @@ func add_wall_deco_at(x :int, y :int, dir_flag :Maze.Flag) -> void:
 				#print_debug(net_size, n.size)
 				n.rotate_y(Maze.DirToRadian(Maze.FlagToDir[dir_flag]))
 				var wall_shift := Maze.FlagToVt2[dir_flag]*maze3d.WallThick/2
-				n.position = maze3d.deco_pos_by_dir(x,y,dir_flag) - Vector3(wall_shift.x,0,wall_shift.y)
+				n.position = maze3d.wall_deco_pos_by_dir(x,y,dir_flag) - Vector3(wall_shift.x,0,wall_shift.y)
 				maze3d.add_child(n)
 
 var move_line_2d_list :Array = []
