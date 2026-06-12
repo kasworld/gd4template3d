@@ -691,12 +691,9 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		).init(Vector2(unit_size.x,unit_size.y), Vector2i(16,1), unit_size.x*0.01, unit_size.y*0.1, RandomColorIter.get_and_next())
 	prop.wire_V_rotation_y = PI/4
 	afterfn.call(7, prop)
-	prop = preload("res://arch_door/arch_door.tscn").instantiate(
-		).init(Vector3(unit_size.x,unit_size.y,unit_size.z/20),RandomColorIter.get_and_next())
-	afterfn.call(8, prop)
 
 	for n in range(node3d_list.size(), grid_gc.get_grid_count()):
-		var t4l :Table4Leg = preload("res://table_4_leg/table_4_leg.tscn").instantiate()
+		var t4l :Table4Leg = preload("res://maze_3d/table_4_leg/table_4_leg.tscn").instantiate()
 		var thick := unit_size.y/50
 		t4l.init(
 			Vector3(unit_size.x/2 * randfn(1,0.5), thick, unit_size.z/2 * randfn(1,0.5)),
