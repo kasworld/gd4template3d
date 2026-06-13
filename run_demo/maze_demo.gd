@@ -31,12 +31,13 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_params(maze2d, cell_size, WallThick, MakeSubWallRate
-		).init_with_color(RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next()
+		).init_with_color(RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next()
 		#).init_floor_ceiling_box(Vector2i(4,4), cell_size.x*0.05, 0.9,
 		).init_floor_ceiling_plane(Vector2i(1,1), cell_size.x*0.01, 0.9,
 		Color(RunDemo.RandomColorIter.get_and_next(), 0.9),
 		Color(RunDemo.RandomColorIter.get_and_next(), 0.9),
 		)
+	maze3d.make_door_by_maze()
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Off)
 	for i in 10:
@@ -59,8 +60,6 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	gc.add_child(maze3d)
 
 	maze3d.maze_cells.iter_wall(add_wall_deco_at)
-	open_deco_co = RunDemo.RandomColorIter.get_and_next()
-	maze3d.maze_cells.iter_open(add_open_deco_at)
 
 	var r := maze3d.calc_grid.unit_size.x /10
 	for i in min(100,grid_size.x*grid_size.y):
@@ -85,17 +84,6 @@ func make_table4leg(posi :Vector2i) -> Table4Leg:
 		CalcGrid3D.CalcAxisAlignInner(aabb, t4l.aabb.size, 2, randi_range(-1,1) )
 		)
 	return t4l
-
-var open_deco_co :Color
-func add_open_deco_at(x :int, y :int, dir_flag :Maze.Flag) -> void:
-	var archdoor :ArchDoor = preload("res://maze_3d/arch_door/arch_door.tscn").instantiate()
-	archdoor.init( Vector3(maze3d.calc_grid.unit_size.x-maze3d.WallThick, maze3d.calc_grid.unit_size.y, maze3d.WallThick), open_deco_co )
-	if dir_flag == Maze.Flag.East or dir_flag == Maze.Flag.West:
-		archdoor.position = maze3d.calc_wall_pos_face_V(x,y)
-		archdoor.rotation.y = PI/2
-	else:
-		archdoor.position = maze3d.calc_wall_pos_face_H(x,y)
-	maze3d.add_child(archdoor)
 
 var line2d_subviewport :SubViewport
 var minimap_subviewport :SubViewport

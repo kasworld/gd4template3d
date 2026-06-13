@@ -19,6 +19,7 @@ var maze_cells :Maze
 var main_wall_mat :StandardMaterial3D
 var sub_wall_mat :StandardMaterial3D
 var pillar_box_mat :StandardMaterial3D
+var door_mat :StandardMaterial3D
 
 func _to_string() -> String:
 	return "Maze3D[calc_grid:%s wall thick:%.1f]" % [
@@ -58,18 +59,20 @@ func init_params( maze2d :Maze, cell_size :Vector3, wall_thick :float, subwall_r
 	PreCalced.WallSize_V_Short = PreCalced.WallSize_V_Long - Vector3(0, 0, wall_thick)
 	return self
 
-func init_with_material(matmain :StandardMaterial3D, matsub :StandardMaterial3D) -> Maze3D:
+func init_with_material(matmain :StandardMaterial3D, matsub :StandardMaterial3D, codoor :Color) -> Maze3D:
 	sub_wall_mat = matsub
 	main_wall_mat = matmain
 	pillar_box_mat = main_wall_mat.duplicate()
 	pillar_box_mat.uv1_scale = Vector3( 3.0/20, 2, 1)
+	door_mat = MakeColorMaterial(codoor)
 	exec_make()
 	return self
 
-func init_with_color(comain :Color, cosub :Color, copillarbox :Color) -> Maze3D:
+func init_with_color(comain :Color, cosub :Color, copillarbox :Color, codoor :Color) -> Maze3D:
 	sub_wall_mat = MakeColorMaterial(Color( cosub, 0.5), true)
 	main_wall_mat = MakeColorMaterial(comain)
 	pillar_box_mat = MakeColorMaterial(copillarbox)
+	door_mat = MakeColorMaterial(codoor)
 	exec_make()
 	return self
 
@@ -145,13 +148,6 @@ func pos_multimeshshape(mms :MultiMeshShape, pos_list :Array) -> void:
 		var t := Transform3D(Basis(), pos_list[i])
 		mms.multimesh.set_instance_transform(i,t)
 
-func make_wall_multi_shape(mms :MultiMeshShape, mat :Material, sz :Vector3, pos_list :Array) -> void:
-	var mesh := BoxMesh.new()
-	mesh.size = sz
-	mesh.material = mat
-	mms.init_with_mesh(mesh, pos_list.size())
-	pos_multimeshshape(mms, pos_list)
-
 func make_wall_by_maze() -> void:
 	var pos_list_V_main :Array
 	var pos_list_H_main :Array
@@ -170,11 +166,35 @@ func make_wall_by_maze() -> void:
 				else:
 					pos_list_H_main.append(calc_wall_pos_face_H(x,y))
 	maze_cells.iter_wall(add_wall_at)
-
 	make_wall_multi_shape($WallContainer/VMain, main_wall_mat, PreCalced.WallSize_V_Long, pos_list_V_main)
 	make_wall_multi_shape($WallContainer/HMain, main_wall_mat, PreCalced.WallSize_H_Long, pos_list_H_main)
 	make_wall_multi_shape($WallContainer/VSub, sub_wall_mat, PreCalced.WallSize_V_Long, pos_list_V_sub)
 	make_wall_multi_shape($WallContainer/HSub, sub_wall_mat, PreCalced.WallSize_H_Long, pos_list_H_sub)
+func make_wall_multi_shape(mms :MultiMeshShape, mat :Material, sz :Vector3, pos_list :Array) -> void:
+	var mesh := BoxMesh.new()
+	mesh.size = sz
+	mesh.material = mat
+	mms.init_with_mesh(mesh, pos_list.size())
+	pos_multimeshshape(mms, pos_list)
+
+func make_door_by_maze() -> void:
+	var pos_list_V :Array
+	var pos_list_H :Array
+	var add_door_at := func(x :int, y :int, dir :Maze.Flag) -> void:
+		match dir:
+			Maze.Flag.West, Maze.Flag.East:
+				pos_list_V.append(calc_wall_pos_face_V(x,y))
+			Maze.Flag.North, Maze.Flag.South:
+				pos_list_H.append(calc_wall_pos_face_H(x,y))
+	maze_cells.iter_open(add_door_at)
+
+	var csgH := ArchDoor.MakeArchDoorMeshH(PreCalced.WallSize_H_Short, door_mat)
+	bake_door.call_deferred($DoorContainer/HDoor,pos_list_H, csgH)
+	var csgV := ArchDoor.MakeArchDoorMeshV(PreCalced.WallSize_V_Short, door_mat)
+	bake_door.call_deferred($DoorContainer/VDoor,pos_list_V, csgV)
+func bake_door(mms :MultiMeshShape, pos_list :Array, csg :CSGShape3D) -> void:
+	mms.init_with_mesh(csg.bake_static_mesh(), pos_list.size())
+	pos_multimeshshape(mms, pos_list)
 
 func calc_wall_pos_face_V(x :int, y :int) -> Vector3:
 	return calc_grid.posi_to_linepos(Vector3i(x,0,y)) + Vector3(0, calc_grid.unit_size.y/2, calc_grid.unit_size.z/2)
@@ -226,6 +246,9 @@ func set_wall_size_long(b :bool) -> void:
 		$WallContainer/VMain.multimesh.mesh.size = PreCalced.WallSize_V_Short
 		$WallContainer/VSub.multimesh.mesh.size = PreCalced.WallSize_V_Short
 
+func view_doors(b :bool) ->void:
+	$DoorContainer.visible = b
+
 enum WallView {Off, Short, Long}
 func view_walls(v :WallView) -> void:
 	match v:
@@ -238,13 +261,8 @@ func view_walls(v :WallView) -> void:
 			$WallContainer.visible = true
 			set_wall_size_long(true)
 
-enum PillarView {Off, Box}
-func view_pillars(v :PillarView) -> void:
-	match v:
-		PillarView.Off:
-			$BoxPillars.visible = false
-		PillarView.Box:
-			$BoxPillars.visible = true
+func view_pillars(b :bool) -> void:
+	$BoxPillars.visible = b
 
 enum WallPillarView {Long, Short, ShortWithPillarBox, Off, OffWithPillarBox}
 static func wallview2str(vd :WallPillarView) -> String:
@@ -257,21 +275,21 @@ func set_wallpillar_view_mode(w :WallPillarView) -> void:
 		WallPillarView.Long:
 			view_walls(WallView.Long)
 			set_wall_size_long(true)
-			view_pillars(PillarView.Off)
+			view_pillars(false)
 		WallPillarView.Short:
 			view_walls(WallView.Short)
 			set_wall_size_long(false)
-			view_pillars(PillarView.Off)
+			view_pillars(false)
 		WallPillarView.ShortWithPillarBox:
 			view_walls(WallView.Short)
 			set_wall_size_long(false)
-			view_pillars(PillarView.Box)
+			view_pillars(true)
 		WallPillarView.Off:
 			view_walls(WallView.Off)
-			view_pillars(PillarView.Off)
+			view_pillars(false)
 		WallPillarView.OffWithPillarBox:
 			view_walls(WallView.Off)
-			view_pillars(PillarView.Box)
+			view_pillars(true)
 
 func bounce_cell(oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	var posi := calc_grid.lanepos_to_posi(oldpos)
