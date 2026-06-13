@@ -59,6 +59,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	gc.add_child(maze3d)
 
 	maze3d.maze_cells.iter_wall(add_wall_deco_at)
+	open_deco_co = RunDemo.RandomColorIter.get_and_next()
 	maze3d.maze_cells.iter_open(add_open_deco_at)
 
 	var r := maze3d.calc_grid.unit_size.x /10
@@ -85,9 +86,10 @@ func make_table4leg(posi :Vector2i) -> Table4Leg:
 		)
 	return t4l
 
+var open_deco_co :Color
 func add_open_deco_at(x :int, y :int, dir_flag :Maze.Flag) -> void:
 	var archdoor :ArchDoor = preload("res://maze_3d/arch_door/arch_door.tscn").instantiate()
-	archdoor.init( Vector3(maze3d.calc_grid.unit_size.x-maze3d.WallThick, maze3d.calc_grid.unit_size.y, maze3d.WallThick), RunDemo.RandomColorIter.get_and_next() )
+	archdoor.init( Vector3(maze3d.calc_grid.unit_size.x-maze3d.WallThick, maze3d.calc_grid.unit_size.y, maze3d.WallThick), open_deco_co )
 	if dir_flag == Maze.Flag.East or dir_flag == Maze.Flag.West:
 		archdoor.position = maze3d.calc_wall_pos_face_V(x,y)
 		archdoor.rotation.y = PI/2
