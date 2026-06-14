@@ -4,8 +4,8 @@ const WallDecoRate := 0.05
 const MakeSubWallRate = 0.1
 
 var maze3d :Maze3D
-var maze_balls :Array
-var view_walls :Maze3D.WallPillarView = Maze3D.WallPillarView.ShortWithPillarBox
+#var maze_balls :Array
+var view_walls :Maze3D.WallPillarDoorView = Maze3D.WallPillarDoorView.WallShortPillarDoor
 func maze3d_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_axis_arrow(true)
 	var grid_size := Vector2i(16,9)*1
@@ -61,12 +61,12 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 
 	maze3d.maze_cells.iter_wall(add_wall_deco_at)
 
-	var r := maze3d.calc_grid.unit_size.x /10
-	for i in min(100,grid_size.x*grid_size.y):
-		var mb :MazeBall = preload("res://maze_3d/maze_ball/maze_ball.tscn").instantiate(
-			).init(maze3d, r, r*10,  RunDemo.RandomColorIter.get_and_next())
-		maze3d.add_child(mb)
-		maze_balls.append(mb)
+	#var r := maze3d.calc_grid.unit_size.x /10
+	#for i in min(100,grid_size.x*grid_size.y):
+		#var mb :MazeBall = preload("res://maze_3d/maze_ball/maze_ball.tscn").instantiate(
+			#).init(maze3d, r, r*10,  RunDemo.RandomColorIter.get_and_next())
+		#maze3d.add_child(mb)
+		#maze_balls.append(mb)
 	return maze3d_animate
 
 func make_table4leg(posi :Vector2i) -> Table4Leg:
@@ -160,11 +160,11 @@ func make_minimap_subvuewport(size_pixel:Vector2i) -> SubViewport:
 
 var maze_ani_i :int
 func maze3d_animate(delta :float) -> void:
-	for mb in maze_balls:
-		mb.bounce(delta)
+	#for mb in maze_balls:
+		#mb.bounce(delta)
 	maze_ani_i += 1
 	if maze_ani_i% 60 == 0:
-		view_walls = Maze3D.wallview_next(view_walls)
-		maze3d.set_wallpillar_view_mode(view_walls)
+		view_walls = Maze3D.wallpillardoorview_next(view_walls)
+		maze3d.set_wallpillardoor_view_mode(view_walls)
 		maze3d.view_floor_ceiling( randi_range(0,3) as Maze3D.FloorCeiling)
 	maze3d.rotation.x = sin(deg_to_rad(maze_ani_i/1.5)) * PI + PI + PI/4
