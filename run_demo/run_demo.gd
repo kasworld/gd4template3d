@@ -693,7 +693,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	afterfn.call(7, prop)
 	prop = preload("res://maze_3d/table_4_leg/table_4_leg.tscn").instantiate()
 	var thick := unit_size.y/50
-	prop.init(Vector3(unit_size.x/2 * randfn(1,0.5), thick, unit_size.z/2 * randfn(1,0.5)),
+	prop.init(Vector3(unit_size.x/3 * randfn(1,0.5), thick, unit_size.z/3 * randfn(1,0.5)),
 		Vector3(thick,unit_size.y/4 * randfn(1,0.5), thick),
 		RandomColorIter.get_and_next(),RandomColorIter.get_and_next())
 	afterfn.call(8, prop)
@@ -704,6 +704,9 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	prop = preload("res://prop_coin.tscn").instantiate()
 	prop.init(unit_size.x/4 , thick, RandomColorIter.get_and_next())
 	afterfn.call(10, prop)
+	prop = preload("res://prop_coin.tscn").instantiate()
+	prop.init(unit_size.x/4 , thick, RandomColorIter.get_and_next(), 4)
+	afterfn.call(11, prop)
 
 	for n in range(node3d_list.size(), grid_gc.get_grid_count()):
 		pass
