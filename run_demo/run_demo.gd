@@ -702,7 +702,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	afterfn.call(9, prop)
 
 	prop = preload("res://prop_coin.tscn").instantiate()
-	prop.init(Vector3(unit_size.x/2 ,unit_size.y/2 , thick), RandomColorIter.get_and_next())
+	prop.init(unit_size.x/4 , thick, RandomColorIter.get_and_next())
 	afterfn.call(10, prop)
 
 	for n in range(node3d_list.size(), grid_gc.get_grid_count()):
