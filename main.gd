@@ -86,19 +86,16 @@ func _ready() -> void:
 	$MovingCameraLightHober.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, CabinetSize.z),  CabinetSize.length()*3)
 	$MovingCameraLightAround.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, CabinetSize.z),  CabinetSize.length()*3)
 	$AxisArrow3D.set_colors().set_size(CabinetSize.length()/20)
-
 	add_camera_dict($CenterCameraLight, "Center")
 	add_camera_dict($FixedCameraLight, "Fixed")
 	add_camera_dict($MovingCameraLightHober, "Hober")
 	add_camera_dict($MovingCameraLightAround, "Around")
-
 	$CabinetDemo.init(CabinetSize, 3)
-
 	var rundemo :RunDemo = preload("res://run_demo/run_demo.tscn").instantiate()
 	add_child(rundemo)
 
 	var run1 := []
-	#run1 = [rundemo.plot3d_demo, "plot3d"]
+	run1 = [rundemo.props_demo, "props_demo"]
 	if not run1.is_empty() :
 		rundemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict, run1)
 		var gc :GlassCabinet = rundemo.used_glass_cabinet_iter.get_current()
@@ -106,10 +103,8 @@ func _ready() -> void:
 	else:
 		rundemo.init($CabinetDemo.glass_cabinet_list, add_camera_dict)
 		$CenterCameraLight.make_current()
-
 	MovingCameraLight.AllLightOn(false)
 	$TourCamera.init_by_glass_cabinet_list($CabinetDemo.glass_cabinet_list)
-
 
 func _on_끝내기_pressed() -> void:
 	get_tree().quit()
