@@ -1,6 +1,8 @@
 extends Node3D
 class_name PropCoin
 
+const RRate := 0.95
+
 ## face Z+
 func init(radius :float, thick :float, co :Color, side :int = 64) -> PropCoin:
 	var wall := MakeCoinMesh(radius, thick, MakeColorMaterial(co), side)
@@ -19,7 +21,7 @@ static func MakeCoinMesh(raidus :float, thick :float, mat :StandardMaterial3D, s
 	csg_main.material = mat
 
 	var csg_front := CSGCylinder3D.new()
-	csg_front.radius = raidus * 0.9
+	csg_front.radius = raidus * RRate
 	csg_front.height = thick /2
 	csg_front.sides = side
 	csg_front.material = mat
@@ -28,7 +30,7 @@ static func MakeCoinMesh(raidus :float, thick :float, mat :StandardMaterial3D, s
 	csg_main.add_child(csg_front)
 
 	var csg_back := CSGCylinder3D.new()
-	csg_back.radius = raidus * 0.9
+	csg_back.radius = raidus * RRate
 	csg_back.height = thick /2
 	csg_back.sides = side
 	csg_back.material = mat

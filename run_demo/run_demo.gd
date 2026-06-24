@@ -678,17 +678,17 @@ func props_demo(gc :GlassCabinet) -> Callable:
 
 	var grid_size := Vector2i(16,9)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
-		).init(Vector2(unit_size.x,unit_size.y), grid_size, unit_size.x*0.01, unit_size.y*0.005, RandomColorIter.get_and_next())
+		).init(Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.005, RandomColorIter.get_and_next())
 	prop.set_color_H(RandomColorIter.get_and_next())
 	prop.set_color_V(RandomColorIter.get_and_next())
 	afterfn.call(5, prop)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
-		).init(Vector2(unit_size.x,unit_size.y), grid_size, unit_size.x*0.01, unit_size.y*0.1, RandomColorIter.get_and_next())
+		).init(Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.1, RandomColorIter.get_and_next())
 	prop.set_color_H(RandomColorIter.get_and_next())
 	prop.set_color_V(RandomColorIter.get_and_next())
 	afterfn.call(6, prop)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
-		).init(Vector2(unit_size.x,unit_size.y), Vector2i(16,1), unit_size.x*0.01, unit_size.y*0.1, RandomColorIter.get_and_next())
+		).init(Vector2(unit_size.x,unit_size.y)*0.7, Vector2i(16,1), unit_size.x*0.01, unit_size.y*0.1, RandomColorIter.get_and_next())
 	prop.wire_V_rotation_y = PI/4
 	afterfn.call(7, prop)
 	prop = preload("res://prop_table_4_leg/prop_table_4_leg.tscn").instantiate()
