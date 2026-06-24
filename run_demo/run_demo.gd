@@ -701,10 +701,10 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	prop.init(Vector3(unit_size.x/2 ,unit_size.y/2 , thick), RandomColorIter.get_and_next())
 	afterfn.call(9, prop)
 
-	prop = preload("res://prop_coin.tscn").instantiate()
+	prop = preload("res://prop_coin/prop_coin.tscn").instantiate()
 	prop.init(unit_size.x/4 , thick, RandomColorIter.get_and_next())
 	afterfn.call(10, prop)
-	prop = preload("res://prop_coin.tscn").instantiate()
+	prop = preload("res://prop_coin/prop_coin.tscn").instantiate()
 	prop.init(unit_size.x/4 , thick, RandomColorIter.get_and_next(), 4)
 	afterfn.call(11, prop)
 

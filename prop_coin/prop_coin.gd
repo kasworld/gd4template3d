@@ -1,8 +1,8 @@
 extends Node3D
-class_name Coin
+class_name PropCoin
 
 ## face Z+
-func init(radius :float, thick :float, co :Color, side :int = 64) -> Coin:
+func init(radius :float, thick :float, co :Color, side :int = 64) -> PropCoin:
 	var wall := MakeCoinMesh(radius, thick, MakeColorMaterial(co), side)
 	bake.call_deferred(wall)
 	return self
