@@ -711,6 +711,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	for n in range(node3d_list.size(), grid_gc.get_grid_count()):
 		pass
 	return AnimateList.new().init_rotate(node3d_list)
+	#return Callable()
 
 func plot3d_image_demo(gc :GlassCabinet) -> Callable:
 	gc.show_wall_box(false)
