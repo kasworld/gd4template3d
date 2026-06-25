@@ -1,7 +1,17 @@
 extends Node3D
 class_name DialGauge
 
-var font := preload("res://font/HakgyoansimBareondotumR.ttf")
+static var font := preload("res://font/HakgyoansimBareondotumR.ttf")
+static func new_text(fsize :float, fdepth :float, mat :Material, text :String) -> MeshInstance3D:
+	var mesh := TextMesh.new()
+	mesh.font = font
+	mesh.depth = fdepth
+	mesh.pixel_size = fsize / 16
+	mesh.text = text
+	mesh.material = mat
+	var sp := MeshInstance3D.new()
+	sp.mesh = mesh
+	return sp
 
 var value_range :Array # [from, to] not min max
 var rad_range :Array # [from, to] not min max
@@ -99,17 +109,6 @@ func add_dial_bar(r :float, bar_size :Vector3, align :BarAlign, step_count :int,
 	sm.set_color_all(co)
 	add_child(sm)
 	return self
-
-func new_text(fsize :float, fdepth :float, mat :Material, text :String) -> MeshInstance3D:
-	var mesh := TextMesh.new()
-	mesh.font = font
-	mesh.depth = fdepth
-	mesh.pixel_size = fsize / 16
-	mesh.text = text
-	mesh.material = mat
-	var sp := MeshInstance3D.new()
-	sp.mesh = mesh
-	return sp
 
 func set_needle_value(v :float) -> void:
 	#v = clampf(v, value_range[0], value_range[1])
