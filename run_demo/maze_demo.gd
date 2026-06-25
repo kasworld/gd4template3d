@@ -167,4 +167,4 @@ func maze3d_animate(_delta :float) -> void:
 		view_walls = Maze3D.wallpillardoorview_next(view_walls)
 		maze3d.set_wallpillardoor_view_mode(view_walls)
 		maze3d.view_floor_ceiling( randi_range(0,3) as Maze3D.FloorCeiling)
-	#maze3d.rotation.x = sin(deg_to_rad(maze_ani_i/1.5)) * PI + PI + PI/4
+	maze3d.rotation.x = sin(deg_to_rad(maze_ani_i/1.5)) * PI + PI + PI/4
