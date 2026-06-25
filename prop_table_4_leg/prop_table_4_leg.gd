@@ -7,10 +7,11 @@ var aabb :AABB
 static func calc_aabb(top_size :Vector3, leg_size :Vector3) -> AABB:
 	var total_size := top_size
 	total_size.y += leg_size.y
-	return AABB(-total_size+top_size/2,total_size)
+	return AABB(-total_size/2,total_size)
 
 func init(top_size :Vector3, leg_size :Vector3, co_top :Color, co_leg :Color) -> PropTable4Leg:
 	aabb = calc_aabb(top_size, leg_size)
+	$MeshInstance3D.position = Vector3(0,leg_size.y/2-top_size.y/2,0)
 	var wall := MakeTableMesh(top_size, leg_size, MakeColorMaterial(co_top), MakeColorMaterial(co_leg))
 	bake.call_deferred(wall)
 	return self
@@ -34,11 +35,11 @@ static func MakeTableMesh(top_size :Vector3, leg_size :Vector3, mat_top :Standar
 		leg.operation = CSGShape3D.OPERATION_UNION
 		legs.append(leg)
 		top.add_child(leg)
-	#var pos_adj := -Vector3(0,leg_size.y/2,0)
-	legs[0].position = Vector3(CalcAxisAlignInner(aabb, leg_size, 0, -1), CalcAxisAlignInner(aabb, leg_size, 1, -1), CalcAxisAlignInner(aabb, leg_size, 2, -1))
-	legs[1].position = Vector3(CalcAxisAlignInner(aabb, leg_size, 0, -1), CalcAxisAlignInner(aabb, leg_size, 1, -1), CalcAxisAlignInner(aabb, leg_size, 2, 1))
-	legs[2].position = Vector3(CalcAxisAlignInner(aabb, leg_size, 0, 1), CalcAxisAlignInner(aabb, leg_size, 1, -1), CalcAxisAlignInner(aabb, leg_size, 2, 1))
-	legs[3].position = Vector3(CalcAxisAlignInner(aabb, leg_size, 0, 1), CalcAxisAlignInner(aabb, leg_size, 1, -1), CalcAxisAlignInner(aabb, leg_size, 2, -1))
+	var pos_adj := -Vector3(0,leg_size.y/2,0)
+	legs[0].position = Vector3(CalcAxisAlignInner(aabb, leg_size, 0, -1), CalcAxisAlignInner(aabb, leg_size, 1, -1), CalcAxisAlignInner(aabb, leg_size, 2, -1)) + pos_adj
+	legs[1].position = Vector3(CalcAxisAlignInner(aabb, leg_size, 0, -1), CalcAxisAlignInner(aabb, leg_size, 1, -1), CalcAxisAlignInner(aabb, leg_size, 2, 1)) + pos_adj
+	legs[2].position = Vector3(CalcAxisAlignInner(aabb, leg_size, 0, 1), CalcAxisAlignInner(aabb, leg_size, 1, -1), CalcAxisAlignInner(aabb, leg_size, 2, 1)) + pos_adj
+	legs[3].position = Vector3(CalcAxisAlignInner(aabb, leg_size, 0, 1), CalcAxisAlignInner(aabb, leg_size, 1, -1), CalcAxisAlignInner(aabb, leg_size, 2, -1)) + pos_adj
 	return top
 
 static func MakeColorMaterial(co :Color, transparent :bool = false) -> StandardMaterial3D:
