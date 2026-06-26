@@ -676,7 +676,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		).set_colors().set_size(unit_size.length()/10)
 	afterfn.call(4, prop)
 
-	var grid_size := Vector2i(16,9)
+	var grid_size := Vector2i(8,5)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
 		).init(Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.005, RandomColorIter.get_and_next())
 	prop.set_color_H(RandomColorIter.get_and_next())
@@ -688,25 +688,31 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	prop.set_color_V(RandomColorIter.get_and_next())
 	afterfn.call(6, prop)
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
-		).init(Vector2(unit_size.x,unit_size.y)*0.7, Vector2i(16,1), unit_size.x*0.01, unit_size.y*0.1, RandomColorIter.get_and_next())
+		).init(Vector2(unit_size.x,unit_size.y)*0.7, Vector2i(8,2), unit_size.x*0.01, unit_size.y*0.1, RandomColorIter.get_and_next())
 	prop.wire_V_rotation_y = PI/4
 	afterfn.call(7, prop)
+
 	prop = preload("res://prop_table_4_leg/prop_table_4_leg.tscn").instantiate()
 	var thick := unit_size.y/50
-	prop.init(Vector3(unit_size.x/3 * randfn(1,0.5), thick, unit_size.z/3 * randfn(1,0.5)),
-		Vector3(thick,unit_size.y/4 * randfn(1,0.5), thick),
+	prop.init(Vector3(unit_size.x/2, thick, unit_size.z/6), Vector3(thick, unit_size.y/3, thick),
 		RandomColorIter.get_and_next(),RandomColorIter.get_and_next())
 	afterfn.call(8, prop)
 	prop = preload("res://maze_3d/prop_arch_door/prop_arch_door.tscn").instantiate()
 	prop.init(Vector3(unit_size.x/2 ,unit_size.y/2 , thick), RandomColorIter.get_and_next())
 	afterfn.call(9, prop)
+	prop = preload("res://maze_3d/prop_stair/prop_stair.tscn").instantiate()
+	prop.init_stair(Vector3(unit_size.x, unit_size.y, unit_size.z/2), Maze.Dir.North, RandomColorIter.get_and_next())
+	afterfn.call(10, prop)
+	prop = preload("res://maze_3d/prop_ladder/prop_ladder.tscn").instantiate()
+	prop.init_ladder(Vector3(unit_size.x, unit_size.y, unit_size.z), Maze.Dir.North, RandomColorIter.get_and_next())
+	afterfn.call(11, prop)
 
 	prop = preload("res://prop_coin/prop_coin.tscn").instantiate()
 	prop.init(unit_size.x/4 , thick, RandomColorIter.get_and_next(), 64, "1원", "일원")
-	afterfn.call(10, prop)
+	afterfn.call(12, prop)
 	prop = preload("res://prop_coin/prop_coin.tscn").instantiate()
 	prop.init(unit_size.x/4 , thick, RandomColorIter.get_and_next(), 4, "5원","오원")
-	afterfn.call(11, prop)
+	afterfn.call(13, prop)
 
 	for n in range(node3d_list.size(), grid_gc.get_grid_count()):
 		pass
