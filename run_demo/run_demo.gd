@@ -700,11 +700,25 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	prop = preload("res://maze_3d/prop_arch_door/prop_arch_door.tscn").instantiate()
 	prop.init(Vector3(unit_size.x/2 ,unit_size.y/2 , thick), RandomColorIter.get_and_next())
 	afterfn.call(9, prop)
-	prop = preload("res://maze_3d/prop_stair/prop_stair.tscn").instantiate()
-	prop.init_stair(Vector3(unit_size.x, unit_size.y, unit_size.z/2), Maze.Dir.North, RandomColorIter.get_and_next())
+
+	# stair
+	#prop.init_stair(Vector3(unit_size.x, unit_size.y, unit_size.z/2), Maze.Dir.North, RandomColorIter.get_and_next())
+	prop = preload("res://wire_net/wire_net.tscn").instantiate()
+	prop.init_wire_H(Vector2(unit_size.x*0.5-unit_size.y/30, unit_size.z*0.45),
+		Vector2i(2,6), unit_size.y/30, unit_size.y/5, RandomColorIter.get_and_next(), false)
+	prop.init_wire_V(Vector2(unit_size.x*0.5, unit_size.z*0.5),
+		Vector2i(2,6), unit_size.y/30, unit_size.y/30, RandomColorIter.get_and_next(), false)
+	prop.wire_H_rotation_x = PI/4
 	afterfn.call(10, prop)
-	prop = preload("res://maze_3d/prop_ladder/prop_ladder.tscn").instantiate()
-	prop.init_ladder(Vector3(unit_size.x, unit_size.y, unit_size.z), Maze.Dir.North, RandomColorIter.get_and_next())
+
+	# ladder
+	#prop.init_ladder(Vector3(unit_size.x, unit_size.y, unit_size.z), Maze.Dir.North, RandomColorIter.get_and_next())
+	prop = preload("res://wire_net/wire_net.tscn").instantiate()
+	prop.init_wire_H(Vector2(unit_size.x*0.5-unit_size.y/30, unit_size.y*0.8),
+		Vector2i(0,6), unit_size.y/30, unit_size.y/30, RandomColorIter.get_and_next(), false)
+	prop.init_wire_V(Vector2(unit_size.x*0.5, unit_size.y),
+		Vector2i(2,6), unit_size.y/30, unit_size.y/30, RandomColorIter.get_and_next(), false)
+
 	afterfn.call(11, prop)
 
 	prop = preload("res://prop_coin/prop_coin.tscn").instantiate()

@@ -110,7 +110,6 @@ func get_ceiling() -> Plot3D:
 
 func add_stair(cell_posi :Vector3i, dir :Maze.Dir, co :Color) -> WireNet:
 	var wn :WireNet = preload("res://wire_net/wire_net.tscn").instantiate()
-	#wn.init_stair(calc_grid.unit_size, dir, co)
 	var unit_size := calc_grid.unit_size
 	wn.init_wire_H(Vector2(unit_size.x*0.5, unit_size.z*0.9),
 		Vector2i(2,6), unit_size.y/20, unit_size.y/5, co, false)
