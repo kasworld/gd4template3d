@@ -17,7 +17,7 @@ static func MakeColorMaterial(co :Color, transparent :bool = false) -> StandardM
 
 static func MakeCSG(net_size :Vector2, grid_count :Vector2i, wire_width :float, wire_height :float, co :Color, transparent :bool = false) -> CSGShape3D:
 	var mat := MakeColorMaterial(co,transparent)
-	var center := make_box(Vector3.ONE, MakeColorMaterial(Color(0,0,0,0), true) )
+	var center := make_box(Vector3.ONE/1000, MakeColorMaterial(Color(0,0,0,0), true) )
 	# make H wire
 	var h_wire_size := Vector3(net_size.x,wire_width, wire_height)
 	var unit_y := net_size.y/(grid_count.y-1) if grid_count.y > 1 else 0.0

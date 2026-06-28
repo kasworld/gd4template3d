@@ -610,8 +610,6 @@ func wavegauge_box_demo(gc :GlassCabinet) -> Callable:
 		wavegauge_box.animate_wave(Time.get_unix_time_from_system())
 
 
-
-
 var trailmesh_radius :float
 var meshtrail_list :Array
 var bound_aabb :AABB
@@ -727,6 +725,11 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	prop = preload("res://prop_coin/prop_coin.tscn").instantiate()
 	prop.init(unit_size.x/4 , thick, RandomColorIter.get_and_next(), 4, "5원","오원")
 	afterfn.call(13, prop)
+
+	prop = preload("res://prop_wire_net/prop_wire_net.tscn").instantiate(
+		).init(Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.005, RandomColorIter.get_and_next())
+	afterfn.call(14, prop)
+
 
 	for n in range(node3d_list.size(), grid_gc.get_grid_count()):
 		pass
