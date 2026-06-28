@@ -42,7 +42,6 @@ static func AddFocusLines(center :CSGShape3D, radius :float, bar_size :Vector3, 
 		wire.operation = CSGShape3D.OPERATION_UNION
 		wire.rotate_z(rad)
 		wire.position = bar_position
-		print_debug(bar_position)
 		center.add_child(wire)
 	return center
 
