@@ -82,32 +82,9 @@ func add_dial_num(r :float, d:float, fsize :float, step_count :int, co :Color ) 
 
 enum BarAlign {In,Mid,Out}
 func add_dial_bar(r :float, bar_size :Vector3, align :BarAlign, step_count :int, co :Color) -> DialGauge:
-	var bar_position := Vector3.ZERO
-	var tf_list := []
-	var rad_step :float = float(rad_range[1] - rad_range[0]) / step_count
-	for i in step_count+1:
-		var rad :float = rad_range[0] + rad_step * i
-		var bar_center := Vector3(cos(rad)*r, sin(rad)*r,  0)
-		match align:
-			BarAlign.In :
-				bar_position = bar_center*(1 - bar_size.x/r/2)
-			BarAlign.Mid :
-				bar_position = bar_center
-			BarAlign.Out :
-				bar_position = bar_center*(1 + bar_size.x/r/2)
-		# make transform from bar_rotation, bar_position, bar_size
-		var t := Transform3D(Basis(), bar_position)
-		t = t.rotated_local(Vector3.BACK, rad)
-		t = t.scaled_local( bar_size )
-		tf_list.append(t)
-	var mesh := BoxMesh.new()
-	mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial()
-	var sm :MultiMeshShape = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_with_color_mesh(mesh, tf_list.size(), false)
-	for i in tf_list.size():
-		sm.multimesh.set_instance_transform(i,tf_list[i])
-	sm.set_color_all(co)
-	add_child(sm)
+	var pfl := preload("res://prop_focus_lines/prop_focus_lines.tscn").instantiate()
+	pfl.init(r,bar_size,align,step_count,rad_range,co)
+	add_child(pfl)
 	return self
 
 func set_needle_value(v :float) -> void:
