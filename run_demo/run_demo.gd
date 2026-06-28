@@ -675,16 +675,28 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	afterfn.call(4, prop)
 
 	var grid_size := Vector2i(8,5)
-	prop = preload("res://wire_net/wire_net.tscn").instantiate(
-		).init(Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.005, RandomColorIter.get_and_next())
-	prop.set_color_H(RandomColorIter.get_and_next())
-	prop.set_color_V(RandomColorIter.get_and_next())
+	var center = PropWireNet.MakeDummyCenter()
+	PropWireNet.AddHWire(center,
+		Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.005,
+		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+	PropWireNet.AddVWire(center,
+		Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.005,
+		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+	prop = preload("res://prop_wire_net/prop_wire_net.tscn").instantiate()
+	prop.bake.call_deferred(center)
 	afterfn.call(5, prop)
-	prop = preload("res://wire_net/wire_net.tscn").instantiate(
-		).init(Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.1, RandomColorIter.get_and_next())
-	prop.set_color_H(RandomColorIter.get_and_next())
-	prop.set_color_V(RandomColorIter.get_and_next())
+
+	center = PropWireNet.MakeDummyCenter()
+	PropWireNet.AddHWire(center,
+		Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.1,
+		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+	PropWireNet.AddVWire(center,
+		Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.1,
+		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+	prop = preload("res://prop_wire_net/prop_wire_net.tscn").instantiate()
+	prop.bake.call_deferred(center)
 	afterfn.call(6, prop)
+
 	prop = preload("res://wire_net/wire_net.tscn").instantiate(
 		).init(Vector2(unit_size.x,unit_size.y)*0.7, Vector2i(8,2), unit_size.x*0.01, unit_size.y*0.1, RandomColorIter.get_and_next())
 	prop.wire_V_rotation_y = PI/4
@@ -700,7 +712,6 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	afterfn.call(9, prop)
 
 	# stair
-	#prop.init_stair(Vector3(unit_size.x, unit_size.y, unit_size.z/2), Maze.Dir.North, RandomColorIter.get_and_next())
 	prop = preload("res://wire_net/wire_net.tscn").instantiate()
 	prop.init_wire_H(Vector2(unit_size.x*0.5-unit_size.y/30, unit_size.z*0.45),
 		Vector2i(2,6), unit_size.y/30, unit_size.y/5, RandomColorIter.get_and_next(), false)
@@ -710,13 +721,15 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	afterfn.call(10, prop)
 
 	# ladder
-	#prop.init_ladder(Vector3(unit_size.x, unit_size.y, unit_size.z), Maze.Dir.North, RandomColorIter.get_and_next())
-	prop = preload("res://wire_net/wire_net.tscn").instantiate()
-	prop.init_wire_H(Vector2(unit_size.x*0.5-unit_size.y/30, unit_size.y*0.8),
-		Vector2i(0,6), unit_size.y/30, unit_size.y/30, RandomColorIter.get_and_next(), false)
-	prop.init_wire_V(Vector2(unit_size.x*0.5, unit_size.y),
-		Vector2i(2,6), unit_size.y/30, unit_size.y/30, RandomColorIter.get_and_next(), false)
-
+	center = PropWireNet.MakeDummyCenter()
+	PropWireNet.AddHWire(center,
+		Vector2(unit_size.x*0.5-unit_size.y/30, unit_size.y*0.8), Vector2i(0,6), unit_size.y/30, unit_size.y/30,
+		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+	PropWireNet.AddVWire(center,
+		Vector2(unit_size.x*0.5, unit_size.y), Vector2i(2,6), unit_size.y/30, unit_size.y/30,
+		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+	prop = preload("res://prop_wire_net/prop_wire_net.tscn").instantiate()
+	prop.bake.call_deferred(center)
 	afterfn.call(11, prop)
 
 	prop = preload("res://prop_coin/prop_coin.tscn").instantiate()
