@@ -739,8 +739,8 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	prop.init(unit_size.x/4 , thick, RandomColorIter.get_and_next(), 4, "5원","오원")
 	afterfn.call(13, prop)
 
-	prop = preload("res://prop_wire_net/prop_wire_net.tscn").instantiate(
-		).init(Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.005, RandomColorIter.get_and_next())
+	prop = preload("res://prop_focus_lines/prop_focus_lines.tscn").instantiate(
+		).init(unit_size.x/3, Vector3(unit_size.x/4,unit_size.y/50,unit_size.z/80), PropFocusLines.Align.Mid, 36, [0,PI*1.5], RandomColorIter.get_and_next())
 	afterfn.call(14, prop)
 
 

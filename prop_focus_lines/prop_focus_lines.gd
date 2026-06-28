@@ -22,8 +22,9 @@ static func MakeDummyCenter() -> CSGShape3D:
 	var center := make_csg_box(Vector3.ONE/1000, MakeColorMaterial(Color(0,0,0,0), true) )
 	return center
 
-## add focus lines
+## add x-y focus lines, face z+
 ## rad_range : [start,end]
+## bar_size.x == bar len
 static func AddFocusLines(center :CSGShape3D, radius :float, bar_size :Vector3, align :Align, step_count :int, rad_range :Array, mat :StandardMaterial3D) -> CSGShape3D:
 	var bar_position := Vector3.ZERO
 	var rad_step :float = float(rad_range[1] - rad_range[0]) / step_count
@@ -39,8 +40,9 @@ static func AddFocusLines(center :CSGShape3D, radius :float, bar_size :Vector3, 
 				bar_position = bar_center*(1 + bar_size.x/radius/2)
 		var wire := make_csg_box(bar_size, mat)
 		wire.operation = CSGShape3D.OPERATION_UNION
+		wire.rotate_z(rad)
 		wire.position = bar_position
-		wire.rotate_z(-rad)
+		print_debug(bar_position)
 		center.add_child(wire)
 	return center
 
