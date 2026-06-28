@@ -36,8 +36,8 @@ func show_arrow(b :bool) -> void:
 func show_label(b :bool) -> void:
 	$IDLabel.visible = b
 
-func set_spliters_color(co :Color) -> void:
-	$Wheel/Spliters.set_color_all(co)
+#func set_spliters_color(co :Color) -> void:
+	#$Wheel/Spliters.set_color_all(co)
 
 func set_back_color(co :Color) -> void:
 	$"Wheel/원판".mesh.material.albedo_color = co
@@ -85,7 +85,13 @@ func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Arr
 	$Wheel.init(반지름, 깊이, color_text_info_list, text_size)
 	$Wheel.rotation_stopped.connect(결과가결정됨)
 
-	$Wheel/Spliters.init_집중선(반지름, spliter_시작비율, spliter_끝비율, spliter_width, 깊이, color_text_info_list.size(), Color.WHITE )
+	var rad_shift := PI/color_text_info_list.size()
+	$Wheel/Spliters.init(
+		반지름*spliter_끝비율,
+		Vector3( (spliter_끝비율-spliter_시작비율)*반지름, spliter_width, 깊이),
+		PropFocusLines.Align.In,
+		color_text_info_list.size(), [0+rad_shift,PI*2+rad_shift],
+		Color.WHITE )
 
 	# for debug
 	$IDLabel.text = "%s" % id
