@@ -55,7 +55,7 @@ func init(r :float, d :float, fsize :float, backplane:bool=true) -> AnalogClock3
 	$Donut.rotation.x = -PI/2
 	$BackPlane.visible = backplane
 	make_hands(r, d)
-	make_dial_line_multi(r*0.88, d, BarAlign.Mid)
+	make_dial_line(r*0.88, d, BarAlign.Mid)
 	make_dial_text(r*0.95, d, fsize*0.8, range(0,60,5))
 	make_dial_text(r*0.8, d, fsize, [12,1,2,3,4,5,6,7,8,9,10,11] )
 	return self
@@ -88,7 +88,7 @@ static func MakeColorMaterial(co :Color, transparent :bool = false) -> StandardM
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA if transparent else BaseMaterial3D.TRANSPARENCY_DISABLED
 	return material
 
-func make_dial_line_multi(radius :float, depth:float, align :BarAlign):
+func make_dial_line(radius :float, depth:float, align :BarAlign):
 	var mat := MakeColorMaterial(colors.dial_1, false)
 	var bar_height := depth*0.2
 	var bar_size :Vector3
