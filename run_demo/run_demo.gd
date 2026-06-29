@@ -697,9 +697,15 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	prop.bake.call_deferred(center)
 	afterfn.call(6, prop)
 
-	prop = preload("res://wire_net/wire_net.tscn").instantiate(
-		).init(Vector2(unit_size.x,unit_size.y)*0.7, Vector2i(8,2), unit_size.x*0.01, unit_size.y*0.1, RandomColorIter.get_and_next())
-	prop.wire_V_rotation_y = PI/4
+	center = PropWireNet.MakeDummyCenter()
+	PropWireNet.AddHWire(center,
+		Vector2(unit_size.x,unit_size.y)*0.7, Vector2i(8,2), unit_size.x*0.01, unit_size.y*0.1,
+		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+	PropWireNet.AddVWire(center,
+		Vector2(unit_size.x,unit_size.y)*0.7, Vector2i(8,2), unit_size.x*0.01, unit_size.y*0.1,
+		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false), Vector3(0,PI/4,0))
+	prop = preload("res://prop_wire_net/prop_wire_net.tscn").instantiate()
+	prop.bake.call_deferred(center)
 	afterfn.call(7, prop)
 
 	prop = preload("res://prop_table_4_leg/prop_table_4_leg.tscn").instantiate()
@@ -712,12 +718,15 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	afterfn.call(9, prop)
 
 	# stair
-	prop = preload("res://wire_net/wire_net.tscn").instantiate()
-	prop.init_wire_H(Vector2(unit_size.x*0.5-unit_size.y/30, unit_size.z*0.45),
-		Vector2i(2,6), unit_size.y/30, unit_size.y/5, RandomColorIter.get_and_next(), false)
-	prop.init_wire_V(Vector2(unit_size.x*0.5, unit_size.z*0.5),
-		Vector2i(2,6), unit_size.y/30, unit_size.y/30, RandomColorIter.get_and_next(), false)
-	prop.wire_H_rotation_x = PI/4
+	center = PropWireNet.MakeDummyCenter()
+	PropWireNet.AddHWire(center,
+		Vector2(unit_size.x*0.5-unit_size.y/30, unit_size.z*0.45), Vector2i(2,6), unit_size.y/30, unit_size.y/5,
+		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false), Vector3(PI/4,0,0))
+	PropWireNet.AddVWire(center,
+		Vector2(unit_size.x*0.5, unit_size.z*0.5),Vector2i(2,6), unit_size.y/30, unit_size.y/30,
+		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+	prop = preload("res://prop_wire_net/prop_wire_net.tscn").instantiate()
+	prop.bake.call_deferred(center)
 	afterfn.call(10, prop)
 
 	# ladder
