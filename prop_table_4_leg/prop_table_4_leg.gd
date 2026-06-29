@@ -19,23 +19,23 @@ func init(top_size :Vector3, leg_size :Vector3, co_top :Color, co_leg :Color) ->
 func bake(csg :CSGShape3D) -> void:
 	$MeshInstance3D.mesh = csg.bake_static_mesh()
 
-static func make_box(box_size :Vector3, box_mat :StandardMaterial3D) -> CSGShape3D:
-	var box := CSGBox3D.new()
-	box.size = box_size
-	box.material = box_mat
-	return box
-
 static func MakeTableMesh(top_size :Vector3, leg_size :Vector3, mat_top :StandardMaterial3D, mat_leg :StandardMaterial3D) -> CSGShape3D:
-	var top := make_box(top_size,mat_top)
+	var top := MakeCSGBox(top_size,mat_top)
 	var y := -leg_size.y/2 - top_size.y/2
 	var x :=  top_size.x/2 - leg_size.x/2
 	var z :=  top_size.z/2 - leg_size.z/2
 	for pos in [Vector3(x, y, z), Vector3(x, y,-z), Vector3(-x, y, z), Vector3(-x, y,-z)]:
-		var leg := make_box(leg_size,mat_leg)
+		var leg := MakeCSGBox(leg_size,mat_leg)
 		leg.operation = CSGShape3D.OPERATION_UNION
 		leg.position = pos
 		top.add_child(leg)
 	return top
+
+static func MakeCSGBox(box_size :Vector3, box_mat :StandardMaterial3D) -> CSGShape3D:
+	var box := CSGBox3D.new()
+	box.size = box_size
+	box.material = box_mat
+	return box
 
 static func MakeColorMaterial(co :Color, transparent :bool = false) -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()

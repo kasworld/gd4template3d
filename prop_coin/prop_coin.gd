@@ -12,31 +12,23 @@ func init(radius :float, thick :float, co :Color, side :int = 64, front :String 
 func bake(csg :CSGShape3D) -> void:
 	$MeshInstance3D.mesh = csg.bake_static_mesh()
 
-static func make_cylinder(raidus :float, thick :float, mat :StandardMaterial3D, side :int = 64) -> CSGShape3D:
-	var csg := CSGCylinder3D.new()
-	csg.radius = raidus
-	csg.height = thick
-	csg.sides = side
-	csg.material = mat
-	return csg
-
 ## face Z+
 static func MakeCoinMesh(raidus :float, thick :float, mat :StandardMaterial3D, side :int = 64, front :String ="", back :String="") -> CSGShape3D:
-	var csg_main := make_cylinder(raidus, thick, mat, side)
+	var csg_main := MakeCSGCylinder(raidus, thick, mat, side)
 
-	var csg_front := make_cylinder(raidus* RRate, thick/2, mat, side)
+	var csg_front := MakeCSGCylinder(raidus* RRate, thick/2, mat, side)
 	csg_front.position.y = thick /2
 	csg_front.operation = CSGShape3D.OPERATION_SUBTRACTION
 	csg_main.add_child(csg_front)
 
-	var csg_back := make_cylinder(raidus* RRate, thick/2, mat, side)
+	var csg_back := MakeCSGCylinder(raidus* RRate, thick/2, mat, side)
 	csg_back.position.y = -thick /2
 	csg_back.operation = CSGShape3D.OPERATION_SUBTRACTION
 	csg_main.add_child(csg_back)
 
 	if not front.is_empty():
 		var front_text := CSGMesh3D.new()
-		front_text.mesh = make_text_mesh(raidus*1.5/back.length(), thick/4, mat, front)
+		front_text.mesh = MakeTextMesh(raidus*1.5/back.length(), thick/4, mat, front)
 		front_text.material = mat
 		front_text.operation = CSGShape3D.OPERATION_UNION
 		front_text.rotate_x(-PI/2)
@@ -45,7 +37,7 @@ static func MakeCoinMesh(raidus :float, thick :float, mat :StandardMaterial3D, s
 
 	if not back.is_empty():
 		var back_text := CSGMesh3D.new()
-		back_text.mesh = make_text_mesh(raidus*1.5/back.length(), thick/4, mat, back)
+		back_text.mesh = MakeTextMesh(raidus*1.5/back.length(), thick/4, mat, back)
 		back_text.material = mat
 		back_text.operation = CSGShape3D.OPERATION_UNION
 		back_text.rotate_x(PI/2)
@@ -55,8 +47,16 @@ static func MakeCoinMesh(raidus :float, thick :float, mat :StandardMaterial3D, s
 	csg_main.rotate_x(PI/2)
 	return csg_main
 
+static func MakeCSGCylinder(raidus :float, thick :float, mat :StandardMaterial3D, side :int = 64) -> CSGShape3D:
+	var csg := CSGCylinder3D.new()
+	csg.radius = raidus
+	csg.height = thick
+	csg.sides = side
+	csg.material = mat
+	return csg
+
 static var font := preload("res://font/HakgyoansimBareondotumR.ttf")
-static func make_text_mesh(fsize :float, fdepth :float, mat :Material, text :String) -> Mesh:
+static func MakeTextMesh(fsize :float, fdepth :float, mat :Material, text :String) -> Mesh:
 	var mesh := TextMesh.new()
 	mesh.font = font
 	mesh.depth = fdepth
