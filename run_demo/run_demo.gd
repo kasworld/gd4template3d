@@ -744,16 +744,15 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	afterfn.call(11, prop)
 
 	prop = preload("res://prop_coin/prop_coin.tscn").instantiate()
-	prop.init(unit_size.x/4 , thick, RandomColorIter.get_and_next(), 64, "1원", "일원")
+	prop.init(unit_size.x/4 , thick, RandomColorIter.get_and_next(), 64, "앞", "뒤")
 	afterfn.call(12, prop)
 	prop = preload("res://prop_coin/prop_coin.tscn").instantiate()
-	prop.init(unit_size.x/4 , thick, RandomColorIter.get_and_next(), 4, "5원","오원")
+	prop.init(unit_size.x/4 , thick, RandomColorIter.get_and_next(), 4, "앞","뒤")
 	afterfn.call(13, prop)
 
 	prop = preload("res://prop_focus_lines/prop_focus_lines.tscn").instantiate(
 		).init(unit_size.x/3, Vector3(unit_size.x/4,unit_size.y/50,unit_size.z/80), PropFocusLines.Align.Mid, 36, [0,PI*1.5], RandomColorIter.get_and_next())
 	afterfn.call(14, prop)
-
 
 	for n in range(node3d_list.size(), grid_gc.get_grid_count()):
 		pass
