@@ -710,7 +710,9 @@ func props_demo(gc :GlassCabinet) -> Callable:
 
 	prop = preload("res://prop_table_4_leg/prop_table_4_leg.tscn").instantiate()
 	var thick := unit_size.y/50
-	prop.init(Vector3(unit_size.x/2, thick, unit_size.z/6), Vector3(thick, unit_size.y/3, thick),
+	prop.init(
+		Vector3(unit_size.x/2, unit_size.y/3, unit_size.z/6),
+		thick, thick, thick,
 		RandomColorIter.get_and_next(),RandomColorIter.get_and_next())
 	afterfn.call(8, prop)
 	prop = preload("res://maze_3d/prop_arch_door/prop_arch_door.tscn").instantiate()

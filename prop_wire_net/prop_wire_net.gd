@@ -11,26 +11,6 @@ func init(net_size :Vector2, grid_count :Vector2i, wire_width :float, wire_heigh
 	bake.call_deferred(center)
 	return self
 
-func bake(csg :CSGShape3D) -> void:
-	$MeshInstance3D.mesh = csg.bake_static_mesh()
-
-static func MakeCSGBox(box_size :Vector3, box_mat :StandardMaterial3D) -> CSGShape3D:
-	var box := CSGBox3D.new()
-	box.size = box_size
-	box.material = box_mat
-	return box
-
-static func MakeColorMaterial(co :Color, transparent :bool = false) -> StandardMaterial3D:
-	var material := StandardMaterial3D.new()
-	material.albedo_color = co
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA if transparent else BaseMaterial3D.TRANSPARENCY_DISABLED
-	return material
-
-## make dummy center
-static func MakeDummyCenter() -> CSGShape3D:
-	var center := MakeCSGBox(Vector3.ONE/1000, MakeColorMaterial(Color(0,0,0,0), true) )
-	return center
-
 ## add H wire
 static func AddHWire(center :CSGShape3D, net_size :Vector2, grid_count :Vector2i, wire_width :float, wire_height :float, mat :StandardMaterial3D, rot := Vector3.ZERO) -> CSGShape3D:
 	# make H wire
@@ -57,4 +37,24 @@ static func AddVWire(center :CSGShape3D, net_size :Vector2, grid_count :Vector2i
 		wire.position = pos
 		wire.rotation = rot
 		center.add_child(wire)
+	return center
+
+func bake(csg :CSGShape3D) -> void:
+	$MeshInstance3D.mesh = csg.bake_static_mesh()
+
+static func MakeCSGBox(box_size :Vector3, box_mat :StandardMaterial3D) -> CSGShape3D:
+	var box := CSGBox3D.new()
+	box.size = box_size
+	box.material = box_mat
+	return box
+
+static func MakeColorMaterial(co :Color, transparent :bool = false) -> StandardMaterial3D:
+	var material := StandardMaterial3D.new()
+	material.albedo_color = co
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA if transparent else BaseMaterial3D.TRANSPARENCY_DISABLED
+	return material
+
+## make dummy center
+static func MakeDummyCenter() -> CSGShape3D:
+	var center := MakeCSGBox(Vector3.ONE/1000, MakeColorMaterial(Color(0,0,0,0), true) )
 	return center
