@@ -49,7 +49,7 @@ func init(n :int, symbol크기a :Vector2, color_text_info_lista :Array) -> SlotR
 		add_child(k)
 		symbol_list.append(k)
 
-	$Spoke.init(r*0.99,Vector3(r*0.99,symbol크기.x*0.02, symbol크기.x*0.2),PropFocusLines.Align.In, 8, [0,2*PI], Color.WHITE)
+	$Spoke.init(r*0.99,Vector3(r*0.99,symbol크기.x*0.02, symbol크기.x*0.2),CSG.Align.In, 8, [0,2*PI], Color.WHITE)
 	$Spoke.rotate_y(PI/2)
 
 	$Reel.mesh.material.albedo_color = Color.WHITE

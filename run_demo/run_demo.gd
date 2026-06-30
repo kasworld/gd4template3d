@@ -675,35 +675,35 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	afterfn.call(4, prop)
 
 	var grid_size := Vector2i(8,5)
-	var center = PropWireNet.MakeDummyCenter()
-	PropWireNet.AddHWire(center,
+	var center = CSG.MakeDummyCenter()
+	CSG.AddHWire(center,
 		Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.005,
-		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false))
-	PropWireNet.AddVWire(center,
+		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+	CSG.AddVWire(center,
 		Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.005,
-		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
 	prop = preload("res://prop_wire_net/prop_wire_net.tscn").instantiate()
 	prop.bake.call_deferred(center)
 	afterfn.call(5, prop)
 
-	center = PropWireNet.MakeDummyCenter()
-	PropWireNet.AddHWire(center,
+	center = CSG.MakeDummyCenter()
+	CSG.AddHWire(center,
 		Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.1,
-		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false))
-	PropWireNet.AddVWire(center,
+		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+	CSG.AddVWire(center,
 		Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.1,
-		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
 	prop = preload("res://prop_wire_net/prop_wire_net.tscn").instantiate()
 	prop.bake.call_deferred(center)
 	afterfn.call(6, prop)
 
-	center = PropWireNet.MakeDummyCenter()
-	PropWireNet.AddHWire(center,
+	center = CSG.MakeDummyCenter()
+	CSG.AddHWire(center,
 		Vector2(unit_size.x,unit_size.y)*0.7, Vector2i(8,2), unit_size.x*0.01, unit_size.y*0.1,
-		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false))
-	PropWireNet.AddVWire(center,
+		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+	CSG.AddVWire(center,
 		Vector2(unit_size.x,unit_size.y)*0.7, Vector2i(8,2), unit_size.x*0.01, unit_size.y*0.1,
-		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false), Vector3(0,PI/4,0))
+		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), Vector3(0,PI/4,0))
 	prop = preload("res://prop_wire_net/prop_wire_net.tscn").instantiate()
 	prop.bake.call_deferred(center)
 	afterfn.call(7, prop)
@@ -720,25 +720,25 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	afterfn.call(9, prop)
 
 	# stair
-	center = PropWireNet.MakeDummyCenter()
-	PropWireNet.AddHWire(center,
+	center = CSG.MakeDummyCenter()
+	CSG.AddHWire(center,
 		Vector2(unit_size.x*0.5-unit_size.y/30, unit_size.z*0.45), Vector2i(2,6), unit_size.y/30, unit_size.y/5,
-		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false), Vector3(PI/4,0,0))
-	PropWireNet.AddVWire(center,
+		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), Vector3(PI/4,0,0))
+	CSG.AddVWire(center,
 		Vector2(unit_size.x*0.5, unit_size.z*0.5),Vector2i(2,6), unit_size.y/30, unit_size.y/30,
-		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
 	prop = preload("res://prop_wire_net/prop_wire_net.tscn").instantiate()
 	prop.bake.call_deferred(center)
 	afterfn.call(10, prop)
 
 	# ladder
-	center = PropWireNet.MakeDummyCenter()
-	PropWireNet.AddHWire(center,
+	center = CSG.MakeDummyCenter()
+	CSG.AddHWire(center,
 		Vector2(unit_size.x*0.5-unit_size.y/30, unit_size.y*0.8), Vector2i(0,6), unit_size.y/30, unit_size.y/30,
-		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false))
-	PropWireNet.AddVWire(center,
+		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+	CSG.AddVWire(center,
 		Vector2(unit_size.x*0.5, unit_size.y), Vector2i(2,6), unit_size.y/30, unit_size.y/30,
-		PropWireNet.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
 	prop = preload("res://prop_wire_net/prop_wire_net.tscn").instantiate()
 	prop.bake.call_deferred(center)
 	afterfn.call(11, prop)
@@ -751,7 +751,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	afterfn.call(13, prop)
 
 	prop = preload("res://prop_focus_lines/prop_focus_lines.tscn").instantiate(
-		).init(unit_size.x/3, Vector3(unit_size.x/4,unit_size.y/50,unit_size.z/80), PropFocusLines.Align.Mid, 36, [0,PI*1.5], RandomColorIter.get_and_next())
+		).init(unit_size.x/3, Vector3(unit_size.x/4,unit_size.y/50,unit_size.z/80), CSG.Align.Mid, 36, [0,PI*1.5], RandomColorIter.get_and_next())
 	afterfn.call(14, prop)
 
 	for n in range(node3d_list.size(), grid_gc.get_grid_count()):

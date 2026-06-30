@@ -89,7 +89,7 @@ func init(ida :int, 반지름a :float, 깊이a :float, color_text_info_list :Arr
 	$Wheel/Spliters.init(
 		반지름*spliter_끝비율,
 		Vector3( (spliter_끝비율-spliter_시작비율)*반지름, spliter_width, 깊이),
-		PropFocusLines.Align.In,
+		CSG.Align.In,
 		color_text_info_list.size(), [0+rad_shift,PI*2+rad_shift],
 		Color.WHITE )
 
