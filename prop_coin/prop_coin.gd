@@ -7,7 +7,8 @@ const RRate := 0.95
 func init(radius :float, thick :float, co :Color, side :int = 64, front :String ="", back :String="") -> PropCoin:
 	var center := MakeDummyCenter()
 	center = AddCoinCSG(center, radius, thick, MakeColorMaterial(co), side)
-	center = AddTextCSG(center, radius, thick, MakeColorMaterial(co), front, back)
+	center = SubCoinCSG(center, radius*RRate, thick/2, MakeColorMaterial(co), side)
+	center = AddTextCSG(center, radius, thick/2, MakeColorMaterial(co), front, back)
 	bake.call_deferred(center)
 	return self
 
@@ -16,12 +17,16 @@ static func AddCoinCSG(center :CSGShape3D, raidus :float, thick :float, mat :Sta
 	var csg_main := MakeCSGCylinder(raidus, thick, mat, side)
 	center.add_child(csg_main)
 	#csg_main.rotate_x(PI/2)
-	var csg_front := MakeCSGCylinder(raidus* RRate, thick/2, mat, side)
-	csg_front.position.y = thick /2
+	return center
+
+## face Y+
+static func SubCoinCSG(center :CSGShape3D, raidus :float, thick :float, mat :StandardMaterial3D, side :int = 64) -> CSGShape3D:
+	var csg_front := MakeCSGCylinder(raidus, thick, mat, side)
+	csg_front.position.y = thick
 	csg_front.operation = CSGShape3D.OPERATION_SUBTRACTION
 	center.add_child(csg_front)
-	var csg_back := MakeCSGCylinder(raidus* RRate, thick/2, mat, side)
-	csg_back.position.y = -thick /2
+	var csg_back := MakeCSGCylinder(raidus, thick, mat, side)
+	csg_back.position.y = -thick
 	csg_back.operation = CSGShape3D.OPERATION_SUBTRACTION
 	center.add_child(csg_back)
 	return center
@@ -30,19 +35,19 @@ static func AddCoinCSG(center :CSGShape3D, raidus :float, thick :float, mat :Sta
 static func AddTextCSG(center :CSGShape3D, raidus :float, thick :float, mat :StandardMaterial3D, front :String ="", back :String="") -> CSGShape3D:
 	if not front.is_empty():
 		var front_text := CSGMesh3D.new()
-		front_text.mesh = MakeTextMesh(raidus*1.5/back.length(), thick/2, mat, front)
+		front_text.mesh = MakeTextMesh(raidus*1.5/back.length(), thick, mat, front)
 		front_text.material = mat
 		front_text.operation = CSGShape3D.OPERATION_UNION
 		front_text.rotate_x(-PI/2)
-		front_text.position.y = thick/4
+		front_text.position.y = thick/2
 		center.add_child(front_text)
 	if not back.is_empty():
 		var back_text := CSGMesh3D.new()
-		back_text.mesh = MakeTextMesh(raidus*1.5/back.length(), thick/2, mat, back)
+		back_text.mesh = MakeTextMesh(raidus*1.5/back.length(), thick, mat, back)
 		back_text.material = mat
 		back_text.operation = CSGShape3D.OPERATION_UNION
 		back_text.rotate_x(PI/2)
-		back_text.position.y = -thick/4
+		back_text.position.y = -thick/2
 		center.add_child(back_text)
 	return center
 
