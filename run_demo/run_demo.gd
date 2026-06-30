@@ -682,7 +682,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	CSG.AddVWire(center,
 		Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.005,
 		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
-	prop = CSG.DifferedBake(center)
+	prop = CSG.DefferedBake(center)
 	afterfn.call(5, prop)
 
 	center = CSG.MakeDummyCenter()
@@ -692,7 +692,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	CSG.AddVWire(center,
 		Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.1,
 		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
-	prop = CSG.DifferedBake(center)
+	prop = CSG.DefferedBake(center)
 	afterfn.call(6, prop)
 
 	center = CSG.MakeDummyCenter()
@@ -702,7 +702,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	CSG.AddVWire(center,
 		Vector2(unit_size.x,unit_size.y)*0.7, Vector2i(8,2), unit_size.x*0.01, unit_size.y*0.1,
 		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), Vector3(0,PI/4,0))
-	prop = CSG.DifferedBake(center)
+	prop = CSG.DefferedBake(center)
 	afterfn.call(7, prop)
 
 	prop = preload("res://prop_table_4_leg/prop_table_4_leg.tscn").instantiate()
@@ -724,7 +724,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	CSG.AddVWire(center,
 		Vector2(unit_size.x*0.5, unit_size.z*0.5),Vector2i(2,6), unit_size.y/30, unit_size.y/30,
 		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
-	prop = CSG.DifferedBake(center)
+	prop = CSG.DefferedBake(center)
 	afterfn.call(10, prop)
 
 	# ladder
@@ -735,7 +735,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	CSG.AddVWire(center,
 		Vector2(unit_size.x*0.5, unit_size.y), Vector2i(2,6), unit_size.y/30, unit_size.y/30,
 		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
-	prop = CSG.DifferedBake(center)
+	prop = CSG.DefferedBake(center)
 	afterfn.call(11, prop)
 
 	prop = preload("res://prop_coin/prop_coin.tscn").instantiate()

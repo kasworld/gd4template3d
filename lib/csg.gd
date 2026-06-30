@@ -1,6 +1,6 @@
 class_name CSG
 
-static func DifferedBake(csg :CSGShape3D) -> MeshInstance3D:
+static func DefferedBake(csg :CSGShape3D) -> MeshInstance3D:
 	var mi := MeshInstance3D.new()
 	bake.call_deferred(mi,csg)
 	return mi
