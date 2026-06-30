@@ -5,25 +5,28 @@ const RRate := 0.95
 
 ## face Y+
 func init(radius :float, thick :float, co :Color, side :int = 64, front :String ="", back :String="") -> PropCoin:
-	var center := MakeCoinCSG(radius, thick, MakeColorMaterial(co), side)
+	var center := MakeDummyCenter()
+	center = AddCoinCSG(center, radius, thick, MakeColorMaterial(co), side)
 	center = AddTextCSG(center, radius, thick, MakeColorMaterial(co), front, back)
 	bake.call_deferred(center)
 	return self
 
 ## face Y+
-static func MakeCoinCSG(raidus :float, thick :float, mat :StandardMaterial3D, side :int = 64) -> CSGShape3D:
+static func AddCoinCSG(center :CSGShape3D, raidus :float, thick :float, mat :StandardMaterial3D, side :int = 64) -> CSGShape3D:
 	var csg_main := MakeCSGCylinder(raidus, thick, mat, side)
+	center.add_child(csg_main)
 	#csg_main.rotate_x(PI/2)
 	var csg_front := MakeCSGCylinder(raidus* RRate, thick/2, mat, side)
 	csg_front.position.y = thick /2
 	csg_front.operation = CSGShape3D.OPERATION_SUBTRACTION
-	csg_main.add_child(csg_front)
+	center.add_child(csg_front)
 	var csg_back := MakeCSGCylinder(raidus* RRate, thick/2, mat, side)
 	csg_back.position.y = -thick /2
 	csg_back.operation = CSGShape3D.OPERATION_SUBTRACTION
-	csg_main.add_child(csg_back)
-	return csg_main
+	center.add_child(csg_back)
+	return center
 
+## face Y+
 static func AddTextCSG(center :CSGShape3D, raidus :float, thick :float, mat :StandardMaterial3D, front :String ="", back :String="") -> CSGShape3D:
 	if not front.is_empty():
 		var front_text := CSGMesh3D.new()
