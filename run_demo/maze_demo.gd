@@ -14,7 +14,8 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 		max(1,gc.aabb.size.y/grid_size.y),
 		max(1,gc.aabb.size.y/grid_size.y),
 	) * 0.95
-	var WallThick = cell_size.x *0.1
+	var wall_thick_rate := 0.25
+	var WallThick = cell_size.x *wall_thick_rate
 	var maze2d := Maze.new(grid_size)
 
 	var size_pixel :=Vector2(1920,1080)
@@ -33,7 +34,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 		).init_params(maze2d, cell_size, WallThick, MakeSubWallRate
 		).init_with_color(RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next()
 		#).init_floor_ceiling_box(Vector2i(4,4), cell_size.x*0.05, 0.9,
-		).init_floor_ceiling_plane(Vector2i(1,1), cell_size.x*0.01, 0.9,
+		).init_floor_ceiling_plane(Vector2i(1,1), cell_size.x*0.01, 1.0-wall_thick_rate,
 		Color(RunDemo.RandomColorIter.get_and_next(), 0.9),
 		Color(RunDemo.RandomColorIter.get_and_next(), 0.9),
 		)
