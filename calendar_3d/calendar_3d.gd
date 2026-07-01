@@ -46,8 +46,7 @@ var colors := {
 var calendar_labels := []
 
 func get_color_mat(co: Color)->Material:
-	var mat := MultiMeshShape.MakeMultiMeshColorMaterial()
-	mat.albedo_color = co
+	var mat := CSG.MakeColorMaterial(co)
 	#mat.metallic = 1
 	#mat.clearcoat = true
 	return mat

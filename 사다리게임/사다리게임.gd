@@ -199,6 +199,5 @@ func 기둥만들기(h :float, r :float, co :Color)->MeshInstance3D:
 	sp.mesh.bottom_radius = r
 	sp.mesh.top_radius = r
 	sp.mesh.radial_segments = 8 #clampi( int(r*4) , 64, 360)
-	sp.mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial()
-	sp.mesh.material.albedo_color = co
+	sp.mesh.material = CSG.MakeColorMaterial(co)
 	return sp

@@ -8,8 +8,7 @@ func init(반지름 :float, 높이 :float, 색깔 :Color, 각수 :int = 64) -> �
 	mesh.top_radius = 반지름
 	mesh.height = 높이
 	mesh.radial_segments = 각수
-	mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial()
-	mesh.material.albedo_color = 색깔
+	mesh.material = CSG.MakeColorMaterial(색깔)
 	rotation.x = PI/2
 	return self
 

@@ -141,8 +141,7 @@ func init0(ani :SimpleAnimation, t :Type, t_num :int) -> void:
 	type = t
 
 func init1() -> void:
-	$MeshInstance3D.mesh.material = MultiMeshShape.MakeMultiMeshColorMaterial()
-	$MeshInstance3D.mesh.material.albedo_color = BattleShooter.TeamList[team_number].color
+	$MeshInstance3D.mesh.material = CSG.MakeColorMaterial(BattleShooter.TeamList[team_number].color)
 	#animation.animation_ended.connect(animation_ended)
 
 ## end spawn animation
