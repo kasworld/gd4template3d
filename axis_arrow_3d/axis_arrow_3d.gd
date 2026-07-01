@@ -8,7 +8,7 @@ func set_colors(colist :Array = colors) -> AxisArrow3D:
 		$Arrows.get_child(i).set_material( make_color_material(colist[i]) )
 	return self
 
-func make_color_material(co :Color) -> StandardMaterial3D:
+static func make_color_material(co :Color) -> StandardMaterial3D:
 	var mat := CSG.MakeColorMaterial(co)
 	mat.metallic = 1.0
 	mat.clearcoat_enabled = true
