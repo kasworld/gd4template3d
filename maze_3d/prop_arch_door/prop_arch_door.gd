@@ -10,10 +10,9 @@ func init(size :Vector3, co :Color) -> PropArchDoor:
 func bake(csg :CSGShape3D) -> void:
 	$MeshInstance3D.mesh = csg.bake_static_mesh()
 
-static var hole_rate := 0.8
 
 ## face Z+ wall with door
-static func MakeArchDoorMeshH(size :Vector3, mat :StandardMaterial3D) -> CSGShape3D:
+static func MakeArchDoorMeshH(size :Vector3, mat :StandardMaterial3D, hole_rate := 0.8) -> CSGShape3D:
 	var wall := CSG.MakeCSGBox(size,mat)
 	var door_low := CSG.MakeCSGBox(Vector3(size.x*hole_rate,size.y*hole_rate,size.z),mat)
 	door_low.operation = CSGShape3D.OPERATION_SUBTRACTION
@@ -26,7 +25,7 @@ static func MakeArchDoorMeshH(size :Vector3, mat :StandardMaterial3D) -> CSGShap
 	return wall
 
 ## face X+ wall with door
-static func MakeArchDoorMeshV(size :Vector3, mat :StandardMaterial3D) -> CSGShape3D:
+static func MakeArchDoorMeshV(size :Vector3, mat :StandardMaterial3D, hole_rate := 0.8) -> CSGShape3D:
 	var wall := CSG.MakeCSGBox(size,mat)
 	var door_low := CSG.MakeCSGBox(Vector3(size.x,size.y*hole_rate,size.z*hole_rate),mat)
 	door_low.operation = CSGShape3D.OPERATION_SUBTRACTION

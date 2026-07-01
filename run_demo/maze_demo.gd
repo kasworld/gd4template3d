@@ -38,7 +38,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 		Color(RunDemo.RandomColorIter.get_and_next(), 0.9),
 		Color(RunDemo.RandomColorIter.get_and_next(), 0.9),
 		)
-	maze3d.make_door_by_maze(RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next())
+	maze3d.make_door_by_maze(RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next(), 1.0)
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Off)
 	for i in 10:
