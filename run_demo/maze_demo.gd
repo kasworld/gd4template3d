@@ -1,7 +1,9 @@
 class_name MazeDemo
 
-const WallDecoRate := 0.05
-const MakeSubWallRate = 0.1
+var WallDecoRate := 0.05
+var MakeSubWallRate = 0.1
+var WallThickRate := 0.05
+var DoorHoleRate := 0.9
 
 var maze3d :Maze3D
 #var maze_balls :Array
@@ -14,8 +16,7 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 		max(1,gc.aabb.size.y/grid_size.y),
 		max(1,gc.aabb.size.y/grid_size.y),
 	) * 0.95
-	var wall_thick_rate := 0.25
-	var WallThick = cell_size.x *wall_thick_rate
+	var WallThick = cell_size.x *WallThickRate
 	var maze2d := Maze.new(grid_size)
 
 	var size_pixel :=Vector2(1920,1080)
@@ -30,15 +31,16 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	gc.add_child(plane)
 	plane.position.z = -gc.aabb.size.z /2
 
+	var floor_ceiling_height :float = 0.0 # cell_size.y *0.01
 	maze3d = preload("res://maze_3d/maze_3d.tscn").instantiate(
 		).init_params(maze2d, cell_size, WallThick, MakeSubWallRate
 		).init_with_color(RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next()
 		#).init_floor_ceiling_box(Vector2i(4,4), cell_size.x*0.05, 0.9,
-		).init_floor_ceiling_plane(Vector2i(1,1), cell_size.x*0.01, 1.0-wall_thick_rate,
+		).init_floor_ceiling_plane(Vector2i(1,1), floor_ceiling_height, 1.0-WallThickRate,
 		Color(RunDemo.RandomColorIter.get_and_next(), 0.9),
 		Color(RunDemo.RandomColorIter.get_and_next(), 0.9),
 		)
-	maze3d.make_door_by_maze(RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next(), 1.0)
+	maze3d.make_door_by_maze(RunDemo.RandomColorIter.get_and_next(), RunDemo.RandomColorIter.get_and_next(), DoorHoleRate)
 	maze3d.rotation.x = PI/4
 	maze3d.view_floor_ceiling(Maze3D.FloorCeiling.Off)
 	for i in 10:
