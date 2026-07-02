@@ -12,9 +12,9 @@ func maze3d_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_axis_arrow(true)
 	var grid_size := Vector2i(16,9)*1
 	var cell_size := Vector3(
-		max(1,gc.aabb.size.x/grid_size.x),
-		max(1,gc.aabb.size.y/grid_size.y),
-		max(1,gc.aabb.size.y/grid_size.y),
+		gc.aabb.size.x/grid_size.x,
+		gc.aabb.size.y/grid_size.y,
+		gc.aabb.size.y/grid_size.y,
 	) * 0.95
 	var WallThick = cell_size.x *WallThickRate
 	var maze2d := Maze.new(grid_size)
