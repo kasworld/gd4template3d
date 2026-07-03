@@ -137,6 +137,7 @@ func 세로화살표위치(x :int, y :int) -> Vector3:
 
 func 화살표추가_아래쪽(참가자번호 :int, x :int, y1 :int , y2 :int):
 	if y1 == y2:
+		print_debug("참가자번호 %s, x %s, y1 %s, y2 %s" %[참가자번호,x,y1,y2])
 		return
 	var p1 := 세로화살표위치(x,y1)
 	var p2 := 세로화살표위치(x,y2)
@@ -146,9 +147,11 @@ func 화살표추가_아래쪽(참가자번호 :int, x :int, y1 :int , y2 :int):
 	a.position = (p1+p2)/2
 	$"풀이길".add_child(a)
 	a.add_to_group("%d" % 참가자번호)
-	#return a
 
-func 화살표추가_왼쪽(참가자번호 :int, x1 :int, x2 :int , y :int) -> Arrow3D:
+func 화살표추가_왼쪽(참가자번호 :int, x1 :int, x2 :int , y :int):
+	if x1 == x2:
+		print_debug("참가자번호 %s, x1 %s, x2 %s, y %s" %[참가자번호,x1,x2,y])
+		return
 	var p1 := 세로화살표위치(x1,y)
 	var p2 := 세로화살표위치(x2,y)
 	var a :Arrow3D = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
@@ -158,9 +161,11 @@ func 화살표추가_왼쪽(참가자번호 :int, x1 :int, x2 :int , y :int) -> 
 	a.rotate_y(기둥간각도 * (x1+x2)/2)
 	$"풀이길".add_child(a)
 	a.add_to_group("%d" % 참가자번호)
-	return a
 
-func 화살표추가_오른쪽(참가자번호 :int, x1 :int, x2 :int , y :int) -> Arrow3D:
+func 화살표추가_오른쪽(참가자번호 :int, x1 :int, x2 :int , y :int):
+	if x1 == x2:
+		print_debug("참가자번호 %s, x1 %s, x2 %s, y %s" %[참가자번호,x1,x2,y])
+		return
 	var p1 := 세로화살표위치(x1,y)
 	var p2 := 세로화살표위치(x2,y)
 	var a :Arrow3D = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
@@ -170,7 +175,6 @@ func 화살표추가_오른쪽(참가자번호 :int, x1 :int, x2 :int , y :int) 
 	a.rotate_y(기둥간각도 * (x1+x2)/2)
 	$"풀이길".add_child(a)
 	a.add_to_group("%d" % 참가자번호)
-	return a
 
 func 길하나보기(n :int) -> void:
 	for i in 세로줄수:
