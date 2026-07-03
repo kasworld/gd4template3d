@@ -7,7 +7,7 @@ var DoorHoleRate := 0.9
 
 var maze3d :Maze3D
 #var maze_balls :Array
-var view_walls :Maze3D.WallPillarDoorView = Maze3D.WallPillarDoorView.WallShortPillarDoor
+var view_walls :Maze3D.WallPillarDoorView = Maze3D.WallPillarDoorView.WallPillarDoor
 func maze3d_demo(gc :GlassCabinet) -> Callable:
 	#gc.show_axis_arrow(true)
 	var grid_size := Vector2i(16,9)*1
