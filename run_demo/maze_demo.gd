@@ -93,13 +93,14 @@ var minimap_subviewport :SubViewport
 ## add wall deco
 var wall_deco_order := ListIter.new(range(5))
 func add_wall_deco_at(x :int, y :int, dir_flag :Maze.Flag) -> void:
+	var cell_size := maze3d.calc_grid.unit_size - Vector3(maze3d.WallThick,0,maze3d.WallThick)
 	if randf() < WallDecoRate:
 		match wall_deco_order.get_and_next():
 			0:
 				if line2d_subviewport == null:
 					line2d_subviewport = make_line2d_subvuewport(Vector2i(2000,1500))
 					maze3d.add_child(line2d_subviewport)
-				var b := RunDemo.MakePlaneSubViewport(line2d_subviewport, Vector2(maze3d.calc_grid.unit_size.x, maze3d.calc_grid.unit_size.y))
+				var b := RunDemo.MakePlaneSubViewport(line2d_subviewport, Vector2(cell_size.x, cell_size.y))
 				maze3d.add_child(b)
 				b.position = maze3d.wall_deco_pos_by_dir(x,y,dir_flag)
 				#b.rotate_x(PI/2)
@@ -108,23 +109,23 @@ func add_wall_deco_at(x :int, y :int, dir_flag :Maze.Flag) -> void:
 				if minimap_subviewport == null:
 					minimap_subviewport = make_minimap_subvuewport(Vector2i(2000,1500))
 					maze3d.add_child(minimap_subviewport)
-				var b := RunDemo.MakePlaneSubViewport(minimap_subviewport, Vector2(maze3d.calc_grid.unit_size.x, maze3d.calc_grid.unit_size.y))
+				var b := RunDemo.MakePlaneSubViewport(minimap_subviewport, Vector2(cell_size.x, cell_size.y))
 				maze3d.add_child(b)
 				b.position = maze3d.wall_deco_pos_by_dir(x,y,dir_flag)
 				#b.rotate_x(PI/2)
 				b.rotate_y(Maze.DirToRadian(Maze.FlagToDir[dir_flag]))
 			2:
 				var depth := 0.1
-				var 크기기준 :float = min(maze3d.calc_grid.unit_size.x, maze3d.calc_grid.unit_size.y,maze3d.calc_grid.unit_size.z)
+				var 크기기준 :float = min(cell_size.x, cell_size.y,cell_size.z)
 				var n :Node3D = preload("res://calendar_3d/calendar_3d.tscn").instantiate()
-				n.init(maze3d.calc_grid.unit_size.x, maze3d.calc_grid.unit_size.y, depth, 크기기준/12, false)
+				n.init(cell_size.x, cell_size.y, depth, 크기기준/12, false)
 				#n.rotate_x(PI/2)
 				n.rotate_y(Maze.DirToRadian(Maze.FlagToDir[dir_flag]))
 				n.position = maze3d.wall_deco_pos_by_dir(x,y,dir_flag)
 				maze3d.add_child(n)
 			3:
 				var depth := 0.1
-				var 크기기준 :float = min(maze3d.calc_grid.unit_size.x, maze3d.calc_grid.unit_size.y,maze3d.calc_grid.unit_size.z)
+				var 크기기준 :float = min(cell_size.x, cell_size.y,cell_size.z)
 				var n :Node3D = preload("res://analog_clock_3d/analog_clock_3d.tscn").instantiate()
 				n.init(크기기준/2, depth, 크기기준/16, false)
 				#n.rotate_x(PI/2)
@@ -134,7 +135,7 @@ func add_wall_deco_at(x :int, y :int, dir_flag :Maze.Flag) -> void:
 				n.update_clock(AnalogClock3D.get_localtime_from_system())
 			4: # make bookcase
 				var n :Node3D = preload("res://wire_net/wire_net.tscn").instantiate()
-				var net_size := Vector2(maze3d.calc_grid.unit_size.x-maze3d.WallThick*2,maze3d.calc_grid.unit_size.y)
+				var net_size := Vector2(cell_size.x-maze3d.WallThick*2,cell_size.y)
 				n.init(
 					net_size,
 					Vector2i(4,8),
