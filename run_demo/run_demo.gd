@@ -729,19 +729,25 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	prop = CSG.DefferedBake(center)
 	afterfn.call(10, prop)
 
-	var mat := CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false)
 	center = CSG.MakeDummyCenter()
-	CSG.AddCoinCSG(center, unit_size.x/4, thick, mat, 64)
-	CSG.AddCoinCSGFrontBack(center, unit_size.x/4*0.9, thick/2, thick/2, mat, 64)
-	CSG.SubCoinTextCSG(center, unit_size.x/4, thick/2, thick*0.8, mat, "앞", "뒤")
+	CSG.AddCoinCSG(center, unit_size.x/4, thick, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), 64)
+	CSG.AddCoinCSGFrontBack(center, unit_size.x/4*0.9, thick/2, thick/2, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), 64)
+	CSG.SubCoinTextCSG(center, unit_size.x/4, thick/2, thick*0.8, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), "앞", "뒤")
 	prop = CSG.DefferedBake(center)
 	afterfn.call(11, prop)
 
-	prop = preload("res://prop_coin/prop_coin.tscn").instantiate()
-	prop.init(unit_size.x/4 , thick, RandomColorIter.get_and_next(), 64, "앞", "뒤")
+	center = CSG.MakeDummyCenter()
+	CSG.AddCoinCSG(center, unit_size.x/4, thick, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), 64)
+	CSG.SubCoinCSGFrontBack(center, unit_size.x/4*0.9, thick/2, thick/2, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), 64)
+	CSG.AddCoinTextCSG(center, unit_size.x/4, thick/4, thick*0.5, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), "앞", "뒤")
+	prop = CSG.DefferedBake(center)
 	afterfn.call(12, prop)
-	prop = preload("res://prop_coin/prop_coin.tscn").instantiate()
-	prop.init(unit_size.x/4 , thick, RandomColorIter.get_and_next(), 4, "앞","뒤")
+
+	center = CSG.MakeDummyCenter()
+	CSG.AddCoinCSG(center, unit_size.x/4, thick, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), 4)
+	CSG.SubCoinCSGFrontBack(center, unit_size.x/4*0.9, thick/2, thick/2, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), 4)
+	CSG.AddCoinTextCSG(center, unit_size.x/4, thick/4, thick*0.5, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), "앞", "뒤")
+	prop = CSG.DefferedBake(center)
 	afterfn.call(13, prop)
 
 	prop = preload("res://prop_focus_lines/prop_focus_lines.tscn").instantiate(
