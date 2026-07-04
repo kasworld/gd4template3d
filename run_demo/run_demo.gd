@@ -674,7 +674,18 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		).set_colors().set_size(unit_size.length()/10)
 	afterfn.call(4, prop)
 
+	prop = preload("res://prop_table_4_leg/prop_table_4_leg.tscn").instantiate()
+	var thick := unit_size.y/50
+	prop.init(Vector3(unit_size.x/2, unit_size.y/3, unit_size.z/6),
+		thick, thick, thick,
+		RandomColorIter.get_and_next(),RandomColorIter.get_and_next())
+	afterfn.call(5, prop)
+	prop = preload("res://maze_3d/prop_arch_door/prop_arch_door.tscn").instantiate()
+	prop.init(Vector3(unit_size.x/2 ,unit_size.y/2 , thick), RandomColorIter.get_and_next())
+	afterfn.call(6, prop)
+
 	var grid_size := Vector2i(8,5)
+	# net
 	var center = CSG.MakeDummyCenter()
 	CSG.AddHWire(center,
 		Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.005,
@@ -683,38 +694,18 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.005,
 		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
 	prop = CSG.DefferedBake(center)
-	afterfn.call(5, prop)
-
-	center = CSG.MakeDummyCenter()
-	CSG.AddHWire(center,
-		Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.1,
-		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
-	CSG.AddVWire(center,
-		Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.1,
-		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
-	prop = CSG.DefferedBake(center)
-	afterfn.call(6, prop)
-
-	center = CSG.MakeDummyCenter()
-	CSG.AddHWire(center,
-		Vector2(unit_size.x,unit_size.y)*0.7, Vector2i(8,2), unit_size.x*0.01, unit_size.y*0.1,
-		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
-	CSG.AddVWire(center,
-		Vector2(unit_size.x,unit_size.y)*0.7, Vector2i(8,2), unit_size.x*0.01, unit_size.y*0.1,
-		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), Vector3(0,PI/4,0))
-	prop = CSG.DefferedBake(center)
 	afterfn.call(7, prop)
 
-	prop = preload("res://prop_table_4_leg/prop_table_4_leg.tscn").instantiate()
-	var thick := unit_size.y/50
-	prop.init(
-		Vector3(unit_size.x/2, unit_size.y/3, unit_size.z/6),
-		thick, thick, thick,
-		RandomColorIter.get_and_next(),RandomColorIter.get_and_next())
+	# bookcase
+	center = CSG.MakeDummyCenter()
+	CSG.AddHWire(center,
+		Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.1,
+		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+	CSG.AddVWire(center,
+		Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.1,
+		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+	prop = CSG.DefferedBake(center)
 	afterfn.call(8, prop)
-	prop = preload("res://maze_3d/prop_arch_door/prop_arch_door.tscn").instantiate()
-	prop.init(Vector3(unit_size.x/2 ,unit_size.y/2 , thick), RandomColorIter.get_and_next())
-	afterfn.call(9, prop)
 
 	# stair
 	center = CSG.MakeDummyCenter()
@@ -725,7 +716,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		Vector2(unit_size.x*0.5, unit_size.z*0.5),Vector2i(2,6), unit_size.y/30, unit_size.y/30,
 		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
 	prop = CSG.DefferedBake(center)
-	afterfn.call(10, prop)
+	afterfn.call(9, prop)
 
 	# ladder
 	center = CSG.MakeDummyCenter()
@@ -735,6 +726,14 @@ func props_demo(gc :GlassCabinet) -> Callable:
 	CSG.AddVWire(center,
 		Vector2(unit_size.x*0.5, unit_size.y), Vector2i(2,6), unit_size.y/30, unit_size.y/30,
 		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+	prop = CSG.DefferedBake(center)
+	afterfn.call(10, prop)
+
+	var mat := CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false)
+	center = CSG.MakeDummyCenter()
+	CSG.AddCoinCSG(center, unit_size.x/4, thick, mat, 64)
+	CSG.AddCoinCSGFrontBack(center, unit_size.x/4*0.9, thick/2, thick/2, mat, 64)
+	CSG.SubCoinTextCSG(center, unit_size.x/4, thick/2, thick*0.8, mat, "앞", "뒤")
 	prop = CSG.DefferedBake(center)
 	afterfn.call(11, prop)
 

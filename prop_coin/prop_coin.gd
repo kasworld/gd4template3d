@@ -7,8 +7,8 @@ const RRate := 0.95
 func init(radius :float, thick :float, co :Color, side :int = 64, front :String ="", back :String="") -> PropCoin:
 	var center := CSG.MakeDummyCenter()
 	center = CSG.AddCoinCSG(center, radius, thick, CSG.MakeColorMaterial(co), side)
-	center = CSG.SubCoinCSG(center, radius*RRate, thick/2, CSG.MakeColorMaterial(co), side)
-	center = CSG.AddCoinTextCSG(center, radius, thick/2, CSG.MakeColorMaterial(co), front, back)
+	center = CSG.SubCoinCSGFrontBack(center, radius*RRate, thick/2, thick/2, CSG.MakeColorMaterial(co), side)
+	center = CSG.AddCoinTextCSG(center, radius, thick/2, thick/4, CSG.MakeColorMaterial(co), front, back)
 	bake.call_deferred(center)
 	return self
 
