@@ -117,6 +117,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		[plot3d_grid_demo, "Plot3d Grid"],
 		[plot3d_image_demo, "Plot3d Image"],
 		[props_demo, "Props"],
+		[csg_demo, "CSG"],
 		[same_game_demo, "Same Game"],
 		[seven_segment_demo, "Seven Segment 3D"],
 		[slotreel_demo, "SlotReel"],
@@ -674,15 +675,32 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		).set_colors().set_size(unit_size.length()/10)
 	afterfn.call(4, prop)
 
+
+	for n in range(node3d_list.size(), grid_gc.get_grid_count()):
+		pass
+	return AnimateList.new().init_rotate(node3d_list)
+	#return Callable()
+
+func csg_demo(gc :GlassCabinet) -> Callable:
+	var node3d_list :Array = []
+	var grid_gc := gc.make_CalcGrid3D( Vector3i(5,3,1))
+	var unit_size := grid_gc.unit_size
+	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
+		node3d.position = grid_gc.get_n_th_lanepos(n)
+		gc.add_child(node3d)
+		node3d_list.append(node3d)
+		return node3d
+	var prop
+
 	prop = preload("res://prop_table_4_leg/prop_table_4_leg.tscn").instantiate()
 	var thick := unit_size.y/50
 	prop.init(Vector3(unit_size.x/2, unit_size.y/3, unit_size.z/6),
 		thick, thick, thick,
 		RandomColorIter.get_and_next(),RandomColorIter.get_and_next())
-	afterfn.call(5, prop)
+	afterfn.call(0, prop)
 	prop = preload("res://maze_3d/prop_arch_door/prop_arch_door.tscn").instantiate()
 	prop.init(Vector3(unit_size.x/2 ,unit_size.y/2 , thick), RandomColorIter.get_and_next())
-	afterfn.call(6, prop)
+	afterfn.call(1, prop)
 
 	var grid_size := Vector2i(8,5)
 	# net
@@ -694,7 +712,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.005,
 		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
 	prop = CSG.DefferedBake(center)
-	afterfn.call(7, prop)
+	afterfn.call(2, prop)
 
 	# bookcase
 	center = CSG.MakeDummyCenter()
@@ -705,7 +723,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		Vector2(unit_size.x,unit_size.y)*0.7, grid_size, unit_size.x*0.01, unit_size.y*0.1,
 		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
 	prop = CSG.DefferedBake(center)
-	afterfn.call(8, prop)
+	afterfn.call(3, prop)
 
 	# stair
 	center = CSG.MakeDummyCenter()
@@ -716,7 +734,7 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		Vector2(unit_size.x*0.5, unit_size.z*0.5),Vector2i(2,6), unit_size.y/30, unit_size.y/30,
 		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
 	prop = CSG.DefferedBake(center)
-	afterfn.call(9, prop)
+	afterfn.call(4, prop)
 
 	# ladder
 	center = CSG.MakeDummyCenter()
@@ -727,37 +745,39 @@ func props_demo(gc :GlassCabinet) -> Callable:
 		Vector2(unit_size.x*0.5, unit_size.y), Vector2i(2,6), unit_size.y/30, unit_size.y/30,
 		CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
 	prop = CSG.DefferedBake(center)
-	afterfn.call(10, prop)
+	afterfn.call(5, prop)
 
 	center = CSG.MakeDummyCenter()
 	CSG.AddCoinCSG(center, unit_size.x/4, thick, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), 64)
 	CSG.AddCoinCSGFrontBack(center, unit_size.x/4*0.9, thick/2, thick/2, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), 64)
 	CSG.SubCoinTextCSG(center, unit_size.x/4, thick/2, thick*0.8, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), "앞", "뒤")
 	prop = CSG.DefferedBake(center)
-	afterfn.call(11, prop)
+	afterfn.call(6, prop)
 
 	center = CSG.MakeDummyCenter()
 	CSG.AddCoinCSG(center, unit_size.x/4, thick, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), 64)
 	CSG.SubCoinCSGFrontBack(center, unit_size.x/4*0.9, thick/2, thick/2, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), 64)
 	CSG.AddCoinTextCSG(center, unit_size.x/4, thick/4, thick*0.5, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), "앞", "뒤")
 	prop = CSG.DefferedBake(center)
-	afterfn.call(12, prop)
+	afterfn.call(7, prop)
 
 	center = CSG.MakeDummyCenter()
 	CSG.AddCoinCSG(center, unit_size.x/4, thick, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), 4)
 	CSG.SubCoinCSGFrontBack(center, unit_size.x/4*0.9, thick/2, thick/2, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), 4)
 	CSG.AddCoinTextCSG(center, unit_size.x/4, thick/4, thick*0.5, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), "앞", "뒤")
 	prop = CSG.DefferedBake(center)
-	afterfn.call(13, prop)
+	afterfn.call(8, prop)
 
 	prop = preload("res://prop_focus_lines/prop_focus_lines.tscn").instantiate(
 		).init(unit_size.x/3, Vector3(unit_size.x/4,unit_size.y/50,unit_size.z/80), CSG.Align.Mid, 36, [0,PI*1.5], RandomColorIter.get_and_next())
-	afterfn.call(14, prop)
+	afterfn.call(9, prop)
 
 	for n in range(node3d_list.size(), grid_gc.get_grid_count()):
 		pass
 	return AnimateList.new().init_rotate(node3d_list)
 	#return Callable()
+
+
 
 func plot3d_image_demo(gc :GlassCabinet) -> Callable:
 	gc.show_wall_box(false)
