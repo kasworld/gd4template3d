@@ -142,7 +142,7 @@ func 화살표추가_아래쪽(참가자번호 :int, x :int, y1 :int , y2 :int):
 	var p1 := 세로화살표위치(x,y1)
 	var p2 := 세로화살표위치(x,y2)
 	var a :Arrow3D = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
-		).set_size( (p1-p2).length(),  화살표반지름, 화살표반지름*2 ).set_color(참가자정보[참가자번호][1])
+		).set_size( p1.distance_to(p2),  화살표반지름, 화살표반지름*2 ).set_color(참가자정보[참가자번호][1])
 	a.rotate_z(PI)
 	a.position = (p1+p2)/2
 	$"풀이길".add_child(a)
@@ -155,7 +155,7 @@ func 화살표추가_왼쪽(참가자번호 :int, x1 :int, x2 :int , y :int):
 	var p1 := 세로화살표위치(x1,y)
 	var p2 := 세로화살표위치(x2,y)
 	var a :Arrow3D = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
-		).set_size( (p1-p2).length(), 화살표반지름, 화살표반지름*2 ).set_color(참가자정보[참가자번호][1])
+		).set_size( p1.distance_to(p2), 화살표반지름, 화살표반지름*2 ).set_color(참가자정보[참가자번호][1])
 	a.rotate_z(PI/2)
 	a.position = (p1+p2)/2 -가로화살표위치보정
 	a.rotate_y(기둥간각도 * (x1+x2)/2)
@@ -169,7 +169,7 @@ func 화살표추가_오른쪽(참가자번호 :int, x1 :int, x2 :int , y :int):
 	var p1 := 세로화살표위치(x1,y)
 	var p2 := 세로화살표위치(x2,y)
 	var a :Arrow3D = preload("res://arrow_3d/arrow_3d.tscn").instantiate(
-		).set_size( (p1-p2).length(), 화살표반지름, 화살표반지름*2 ).set_color(참가자정보[참가자번호][1])
+		).set_size( p1.distance_to(p2), 화살표반지름, 화살표반지름*2 ).set_color(참가자정보[참가자번호][1])
 	a.rotate_z(-PI/2)
 	a.position = (p1+p2)/2 +가로화살표위치보정
 	a.rotate_y(기둥간각도 * (x1+x2)/2)
