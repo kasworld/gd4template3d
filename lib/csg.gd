@@ -8,6 +8,18 @@ static func DefferedBake(csg :CSGShape3D) -> MeshInstance3D:
 static func bake(mi :MeshInstance3D, csg :CSGShape3D) -> void:
 	mi.mesh = csg.bake_static_mesh()
 
+static func AddArrow3D(center :CSGShape3D, l :float, body_radius :float, head_radius :float, body_rate :float, mat :StandardMaterial3D) -> CSGShape3D:
+	var head_rate := 1.0 - body_rate
+	var shift_rate := (head_rate-body_rate)/2
+	var body := MakeCSGCylinder(body_radius, l *body_rate, mat, 64 )
+	body.position = Vector3(0,-l*body_rate/2-shift_rate*l,0)
+	center.add_child(body)
+	var head := MakeCSGCone(head_radius, l *head_rate, mat, 64)
+	head.position = Vector3(0,l*head_rate/2-shift_rate*l,0)
+	center.add_child(head)
+	return center
+
+
 ## add H wire
 static func AddHWire(center :CSGShape3D, net_size :Vector2, grid_count :Vector2i, wire_width :float, wire_height :float, mat :StandardMaterial3D, rot := Vector3.ZERO) -> CSGShape3D:
 	# make H wire
@@ -171,6 +183,11 @@ static func MakeCSGCylinder(raidus :float, thick :float, mat :StandardMaterial3D
 	csg.height = thick
 	csg.sides = side
 	csg.material = mat
+	return csg
+
+static func MakeCSGCone(raidus :float, thick :float, mat :StandardMaterial3D, side :int = 64) -> CSGShape3D:
+	var csg := MakeCSGCylinder(raidus,thick,mat,side)
+	csg.cone = true
 	return csg
 
 static func MakeCSGBox(box_size :Vector3, box_mat :StandardMaterial3D) -> CSGShape3D:

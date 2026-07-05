@@ -772,6 +772,17 @@ func csg_demo(gc :GlassCabinet) -> Callable:
 		).init(unit_size.x/3, Vector3(unit_size.x/4,unit_size.y/50,unit_size.z/80), CSG.Align.Mid, 36, [0,PI*1.5], RandomColorIter.get_and_next())
 	afterfn.call(9, prop)
 
+	# csg arrow3d
+	center = CSG.MakeDummyCenter()
+	CSG.AddArrow3D(center, unit_size.x *0.6, unit_size.x/30, unit_size.x/10, 0.3, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+	prop = CSG.DefferedBake(center)
+	afterfn.call(10, prop)
+
+	center = CSG.MakeDummyCenter()
+	CSG.AddArrow3D(center, unit_size.x *0.6, unit_size.x/30, unit_size.x/10, 0.7, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false))
+	prop = CSG.DefferedBake(center)
+	afterfn.call(11, prop)
+
 	for n in range(node3d_list.size(), grid_gc.get_grid_count()):
 		pass
 	return AnimateList.new().init_rotate(node3d_list)
