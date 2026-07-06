@@ -173,7 +173,7 @@ func 화살표추가_오른쪽(참가자번호 :int, x1 :int, x2 :int , y :int):
 	$"풀이길".add_child(a)
 	a.add_to_group("%d" % 참가자번호)
 
-func make_arrow_3d(l :float, body_r :float, head_r :float, body_rate :float, co :Color) -> MeshInstance3D:
+static func make_arrow_3d(l :float, body_r :float, head_r :float, body_rate :float, co :Color) -> MeshInstance3D:
 	var center := CSG.MakeDummyCenter()
 	CSG.AddArrow3D(center, l, body_r, head_r, body_rate, CSG.MakeColorMaterial(co, false))
 	return CSG.DefferedBake(center)

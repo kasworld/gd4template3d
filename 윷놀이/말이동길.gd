@@ -131,13 +131,15 @@ func 종점눈번호() -> int:
 	return 바깥길[-1]
 
 func 화살표추가(p1 :Vector3, p2 :Vector3) -> void:
-	var 화살표 :Arrow3D = preload("res://arrow_3d/arrow_3d.tscn").instantiate()
-	var t1 := (p1-p2)*0.8+p2
-	var t2 := (p2-p1)*0.8+p1
-	화살표.set_size((t1-t2).length(),화살표두께, 화살표두께*4).set_color(화살표색)
+	var 화살표 := make_arrow_3d(p1.distance_to(p2)*0.6,화살표두께, 화살표두께*4,0.7, 화살표색)
 	var temp := p2-p1
 	var v2 := Vector2(temp.x, temp.y)
 	var a2 := v2.angle()
 	화살표.rotate_z( a2 -PI/2 )
 	화살표.position = (p1+p2)/2
 	$"화살표통".add_child(화살표)
+
+static func make_arrow_3d(l :float, body_r :float, head_r :float, body_rate :float, co :Color) -> MeshInstance3D:
+	var center := CSG.MakeDummyCenter()
+	CSG.AddArrow3D(center, l, body_r, head_r, body_rate, CSG.MakeColorMaterial(co, false))
+	return CSG.DefferedBake(center)
