@@ -747,6 +747,7 @@ func csg_demo(gc :GlassCabinet) -> Callable:
 	prop = CSG.DefferedBake(center)
 	afterfn.call(5, prop)
 
+	# coin
 	center = CSG.MakeDummyCenter()
 	CSG.AddCoinCSG(center, unit_size.x/4, thick, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), 64)
 	CSG.AddCoinCSGFrontBack(center, unit_size.x/4*0.9, thick/2, thick/2, CSG.MakeColorMaterial(RandomColorIter.get_and_next(), false), 64)
@@ -768,6 +769,7 @@ func csg_demo(gc :GlassCabinet) -> Callable:
 	prop = CSG.DefferedBake(center)
 	afterfn.call(8, prop)
 
+	# focus line
 	prop = preload("res://prop_focus_lines/prop_focus_lines.tscn").instantiate(
 		).init(unit_size.x/3, Vector3(unit_size.x/4,unit_size.y/50,unit_size.z/80), CSG.Align.Mid, 36, [0,PI*1.5], RandomColorIter.get_and_next())
 	afterfn.call(9, prop)
