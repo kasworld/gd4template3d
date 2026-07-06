@@ -20,18 +20,22 @@ func _to_string() -> String:
 func debug_str() -> String:
 	return "%s말%d %s %s" % [속한편, 말번호, 위치.keys()[말위치], 지나온눈번호들]
 
-func init(t :YutTeam, 반지름 :float, 높이 :float, n:int, hide_num :bool = false) -> 말:
+func init(t :YutTeam, 반지름 :float, 높이 :float, n:int) -> 말:
 	속한편 = t
 	말번호 = n
 	반지름 = 반지름*1.0 * t.인자.크기보정
-	$"다각기둥".init(반지름, 높이, t.인자.색, t.인자.모양)
-	$"번호".text = "%d" % 말번호
-	$"번호".visible = not hide_num
-	$"번호".modulate = t.인자.색
-	$"번호".pixel_size = 반지름 /30
-	#$"번호".position.z = 높이
+	var shape:=모양만들기(반지름, 높이, n, t.인자.색, t.인자.모양)
+	shape.rotate_x(PI/2)
+	add_child(shape)
 	달말로만들기()
 	return self
+
+static func 모양만들기(반지름 :float, 높이 :float, n:int, co :Color, side :int) -> MeshInstance3D:
+	var center := CSG.MakeDummyCenter()
+	CSG.AddCoinCSG(center, 반지름, 높이, CSG.MakeColorMaterial(co, false), side)
+	CSG.SubCoinCSGFrontBack(center, 반지름*0.9, 높이/2, 높이/2, CSG.MakeColorMaterial(co.darkened(0.2), false), side)
+	CSG.AddCoinTextCSG(center, 반지름, 높이/4, 높이*0.5, CSG.MakeColorMaterial(co.lightened(0.2), false), "%s" % n, "%s" % n)
+	return CSG.DefferedBake(center)
 
 func 초기상태인가() -> bool:
 	return 말위치 == 위치.달말통 and 지나온눈번호들.is_empty()
