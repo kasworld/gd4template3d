@@ -887,11 +887,12 @@ func orbit_demo(gc :GlassCabinet) -> Callable:
 		for os in orbitsphere_list:
 			os.animate_rotate(now, delta)
 func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
-	var rate := float(count -i)/float(count) * 0.5 + 0.5
-	var diagonal_length := gc.aabb.size.length()/2.5 * rate
-	var a120 := PI*2/3
+	var rate := float(count -i)/float(count) + 0.1 #* 0.5 + 0.5
+	var diagonal_length := gc.aabb.size.y/2.0 * rate * randfn(1,0.1)
+	var a120 := PI*2.0/3.0
 	var a30 := PI/6
-	var axis1 := Vector3.UP.rotated(
+	var 시작각도 :float = a120*[0,1,2].pick_random()
+	var 궤도축 := Vector3.RIGHT.rotated(
 		[Vector3.RIGHT, Vector3.LEFT, Vector3.FORWARD, Vector3.BACK].pick_random(),
 		randf_range(0,a30))
 	var 궤도mat1 := StandardMaterial3D.new()
@@ -909,8 +910,8 @@ func add_orbitsphere(gc :GlassCabinet, i :int, count :int) -> void:
 			구mat2 = StandardMaterial3D.new()
 			구mat2.albedo_color = RandomColorIter.get_and_next()
 	var os = preload("res://orbit_sphere/orbit_sphere.tscn").instantiate(
-		).궤도설정(diagonal_length, diagonal_length/200, axis1, a120*[0,1,2].pick_random()
-		).구설정(gc.aabb.size.x/30*rate, gc.aabb.size.x/50, Vector3.UP
+		).궤도설정(diagonal_length, gc.aabb.size.length()/5 / diagonal_length * [1,-1].pick_random() , 궤도축, 시작각도
+		).구설정(diagonal_length/20, diagonal_length/10, Vector3.UP
 		).구재질설정(구mat2).궤도재질설정(궤도mat1)
 	gc.add_child(os)
 	orbitsphere_list.append(os)
