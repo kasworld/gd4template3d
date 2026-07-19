@@ -117,6 +117,7 @@ func init(cabinet_list :Array, add_camera_dict :Callable, run1 :Array =[]) -> vo
 		[plot3d_grid_demo, "Plot3d Grid"],
 		[plot3d_image_demo, "Plot3d Image"],
 		[props_demo, "Props"],
+		[blender_demo, "Blender"],
 		[csg_demo, "CSG"],
 		[same_game_demo, "Same Game"],
 		[seven_segment_demo, "Seven Segment 3D"],
@@ -649,9 +650,24 @@ func get_color_ByPosition(pos :Vector3) -> Color:
 func bounce_fn(_oldpos:Vector3, pos :Vector3, radius :float) -> Dictionary:
 	return Bounce.v3f(pos, bound_aabb, radius)
 
+func blender_demo(gc :GlassCabinet) -> Callable:
+	var node3d_list :Array = []
+	var grid_gc := gc.make_CalcGrid3D( Vector3i(1,1,1))
+	var unit_size := grid_gc.unit_size
+	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
+		node3d.position = grid_gc.get_n_th_lanepos(n)
+		gc.add_child(node3d)
+		node3d_list.append(node3d)
+		return node3d
+	var prop = preload("res://blender_demo/dia.blend").instantiate()
+	prop.scale = Vector3(10,10,10)
+	afterfn.call(0,prop)
+	return AnimateList.new().init_rotate(node3d_list)
+
+
 func props_demo(gc :GlassCabinet) -> Callable:
 	var node3d_list :Array = []
-	var grid_gc := gc.make_CalcGrid3D( Vector3i(5,3,1))
+	var grid_gc := gc.make_CalcGrid3D( Vector3i(3,2,1))
 	var unit_size := grid_gc.unit_size
 	var afterfn := func(n :int, node3d :Node3D) -> Node3D:
 		node3d.position = grid_gc.get_n_th_lanepos(n)
